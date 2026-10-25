@@ -69,7 +69,7 @@ export default function FindByRegion() {
   });
 
     return (
-      <section id="regions" className="relative py-10 lg:py-14 t-bg-surface2 px-5 lg:px-8 overflow-hidden">
+      <section id="regions" className="relative py-6 lg:py-10 t-bg-surface2 px-5 lg:px-8 overflow-hidden">
       {/* Background accent glow — pine green, complementing the orange genre section above */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -bottom-24 left-[6%] w-96 h-96 rounded-full opacity-[0.06] dark:opacity-[0.09] blur-[100px]" style={{ background: "var(--accent-green)" }} />
@@ -77,14 +77,13 @@ export default function FindByRegion() {
       </div>
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="mb-6 lg:mb-8">
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
+        <div className="mb-3 lg:mb-5">
+          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-2 uppercase">
             DISCOVER BY REGION
           </p>
-          <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+          <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight">
             Adventure Lives in Every Corner
           </h2>
-          <div className="mt-4 w-12 h-0.5 bg-[#ff5100] rounded-full" />
         </div>
 
         {/* Grid */}

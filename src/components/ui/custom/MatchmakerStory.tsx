@@ -79,7 +79,8 @@ const BEATS = [
 ];
 const CYCLE_MS = BEATS[1].ms / 3;
 
-export default function MatchmakerStory({ you, samples, group }: { you: ACE; samples: StorySample[]; group: StoryGroup }) {
+/** `cta` is the way in — it sits in the card's footer and lights up as each run of the story finishes */
+export default function MatchmakerStory({ you, samples, group, cta }: { you: ACE; samples: StorySample[]; group: StoryGroup; cta: { href: string; label: string; note: string } }) {
   const [beat, setBeat] = useState(0);
   const [sub, setSub] = useState(0); // which trek beat 2 is showing
   const [grown, setGrown] = useState(false);
@@ -374,6 +375,15 @@ export default function MatchmakerStory({ you, samples, group }: { you: ACE; sam
         </div>
       </div>
 
+      {/* The way in, part of the card; it lights up once the sample group is in */}
+      <div className="relative flex items-center gap-3 mt-4 pt-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+        <p className="flex-1 min-w-0 text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>{cta.note}</p>
+        <Link href={cta.href} className="ms-cta group shrink-0 inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full text-[12px] font-semibold text-white" data-hot={(inGroup && groupReady) || undefined}>
+          {cta.label}
+          <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+        </Link>
+      </div>
+
       <style>{`
         .ms-card { --ms-grid: rgba(var(--fg-rgb, 255,255,255), 0.09);
                    background: linear-gradient(160deg, var(--bg-surface) 0%, var(--bg-card) 100%);
@@ -385,9 +395,13 @@ export default function MatchmakerStory({ you, samples, group }: { you: ACE; sam
         .ms-pane { grid-area: 1 / 1; min-width: 0; opacity: 0; visibility: hidden; transform: translateY(6px);
                    transition: opacity 0.4s ease, transform 0.45s cubic-bezier(0.22,1,0.36,1), visibility 0s linear 0.4s; }
         .ms-pane.ms-on { opacity: 1; visibility: visible; transform: none; transition-delay: 0.1s, 0.1s, 0s; }
+        .ms-cta { background: #ff5100; transition: background .3s; }
+        .ms-cta:hover { background: #ff6a24; }
+        .ms-cta[data-hot] { animation: msCtaPulse 1.4s ease-out infinite; }
+        @keyframes msCtaPulse { 0% { box-shadow: 0 0 0 0 rgba(255,81,0,0.5); } 100% { box-shadow: 0 0 0 10px rgba(255,81,0,0); } }
         .ms-fill { width: 0; animation: msFill linear forwards; }
         @keyframes msFill { to { width: 100%; } }
-        @media (prefers-reduced-motion: reduce) { .ms-pane { transition: none; transform: none; } .ms-gap { animation: none; } }
+        @media (prefers-reduced-motion: reduce) { .ms-pane { transition: none; transform: none; } .ms-gap, .ms-cta[data-hot] { animation: none; } }
       `}</style>
     </div>
   );

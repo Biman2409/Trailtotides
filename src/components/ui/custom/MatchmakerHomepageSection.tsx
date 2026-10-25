@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, HelpCircle, RotateCcw } from "lucide-react";
-import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
+import { ArrowRight, RotateCcw } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { type StoredProfile } from "@/lib/matchmaker";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
@@ -52,7 +51,7 @@ function timeAgo(iso?: string): string | null {
 /** Warm band that fades into the page at top and bottom — no textures or glows. */
 function Band({ children }: { children: React.ReactNode }) {
   return (
-    <section id="matchmaker" className="relative py-10 sm:py-14 lg:py-20 px-5 lg:px-8 overflow-hidden bg-[#faf3e8] dark:bg-[#1a1410]">
+    <section id="matchmaker" className="relative py-6 lg:py-10 px-5 lg:px-8 overflow-hidden bg-[#faf3e8] dark:bg-[#1a1410]">
       <SectionTexture kind="trail" color="#ff5100" at="78% 50%" opacity={0.22} />
       <div className="absolute inset-x-0 top-0 h-24 pointer-events-none" style={{ background: "linear-gradient(to bottom, var(--bg-page), transparent)" }} />
       <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none" style={{ background: "linear-gradient(to top, var(--bg-page), transparent)" }} />
@@ -110,50 +109,30 @@ function DefaultCTA() {
 
   return (
     <Band>
-      <div className="grid lg:grid-cols-[1fr_380px] gap-8 sm:gap-10 lg:gap-16 items-center">
+      <div className="grid lg:grid-cols-[1fr_380px] gap-4 lg:gap-10 items-center">
         {/* Left: promise and action */}
         <div className="min-w-0">
           <Eyebrow />
-          <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
+          <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-2">
             Adventures built for <span className="text-[#ff5100]">your body</span>
           </h2>
-          <p className="text-sm sm:text-base leading-relaxed max-w-xl" style={{ color: "var(--text-secondary)" }}>
-            Tell us about your fitness and experience. We&apos;ll rate every adventure for you, so you know what you&apos;re ready for before you book.
+          {/* The full explanation lives on /ace — a quiet link at the end of the line */}
+          <p className="text-sm leading-relaxed max-w-xl" style={{ color: "var(--text-secondary)" }}>
+            Tell us about your fitness and experience. We&apos;ll rate every adventure for you, so you know what you&apos;re ready for before you book.{" "}
+            <Link href="/ace" className="font-medium underline underline-offset-2 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+              How it works
+            </Link>
           </p>
-
-          {/* The full explanation lives on /ace; quiet so it doesn't compete with the button */}
-          <Link
-            href="/ace"
-            className="group inline-flex items-center gap-1.5 mt-5 sm:mt-6 text-xs font-medium hover:text-[var(--text-primary)] transition-colors"
-            style={{ color: "var(--text-tertiary)" }}
-          >
-            <HelpCircle className="w-3.5 h-3.5 group-hover:text-[#ff7d47] transition-colors" />
-            How it works
-            <ArrowRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-          </Link>
         </div>
 
-        {/* Right: what the result looks like, with the way in right under it */}
-        <div className="flex flex-col items-center gap-5 min-w-0">
+        {/* Right: what the result looks like, with the way in built into it */}
+        <div className="min-w-0">
           <MatchmakerStory
             you={SAMPLE_ACE}
             samples={samples.map(({ a, score }) => ({ id: a.id, name: a.name, image: a.heroImage, ace: getACE(a), score }))}
             group={sampleGroup(samples)}
+            cta={{ href: "/matchmaker", label: "Take assessment", note: "That's a sample. Yours takes 2 minutes." }}
           />
-          <Link
-            href="/matchmaker"
-            className="group shrink-0 inline-flex items-center gap-2 h-10 pl-1 pr-3.5 sm:pr-4 rounded-full text-white text-[13px] font-semibold tracking-tight hover:-translate-y-0.5 hover:brightness-110 transition-all duration-200"
-            style={{
-              background: "linear-gradient(135deg, #ff7a3d 0%, #ff5100 55%, #e94600 100%)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), 0 8px 22px -6px rgba(255,81,0,0.6)",
-            }}
-          >
-            <span className="w-8 h-8 rounded-full flex items-center justify-center bg-white/20 ring-1 ring-white/30 group-hover:bg-white/30 transition-colors">
-              <MatchmakerMark className="w-4 h-4" />
-            </span>
-            Take assessment
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
         </div>
       </div>
     </Band>
@@ -179,7 +158,7 @@ function ProfileSummary({ profile, ace, stale }: { profile: StoredProfile; ace: 
 
   return (
     <Band>
-      <div className="grid lg:grid-cols-[1fr_340px] gap-10 lg:gap-16 items-center">
+      <div className="grid lg:grid-cols-[1fr_340px] gap-5 lg:gap-10 items-center">
         <div className="min-w-0">
           <Eyebrow />
           <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">

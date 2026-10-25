@@ -37,10 +37,10 @@ export default function AdventureRail({ id, eyebrow, title, subtitle, action, it
   if (items.length === 0) return null;
 
   return (
-    <section id={id} className={`relative overflow-hidden py-14 lg:py-20 ${className}`}>
+    <section id={id} className={`relative overflow-hidden py-6 lg:py-10 ${className}`}>
       {backdrop}
       <div className="relative max-w-7xl mx-auto px-5 lg:px-8">
-        <div className="flex items-end justify-between gap-4 mb-6 lg:mb-8">
+        <div className="flex items-end justify-between gap-4 mb-3 lg:mb-4">
           <div className="min-w-0">
             <div className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-2 uppercase flex items-center gap-1.5">{eyebrow}</div>
             <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight">{title}</h2>

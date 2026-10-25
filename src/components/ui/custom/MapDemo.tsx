@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight, LocateFixed, MousePointer2 } from "lucide-react";
+import { ArrowRight, ArrowUpRight, LocateFixed, Map as MapIcon, MousePointer2 } from "lucide-react";
 import { INDIA_PATH, PROJ } from "@/lib/passportVisuals";
 import { DEMO_SPOTS, type DemoGenre } from "@/lib/mapDemoSpots";
 
@@ -86,13 +86,16 @@ const BEATS = [
   { caption: "Zoom into a region", ms: 3200 },
   { caption: "Or see what's near you", ms: 3600 },
   { caption: "Tap a pin for the details", ms: 4400 },
+  // The tour ends on the way in: the pointer taps the demo's own "Open map" button
+  { caption: "Then open the full map", ms: 2800 },
 ];
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const easeOutBack = (t: number) => { const c = 1.7; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
-export default function MapDemo({ pins: real }: { pins: MapDemoPin[] }) {
+/** `cta` is the way into the real thing — it lives inside the demo, and the tour ends by tapping it */
+export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: { href: string; label: string } }) {
   const pins: Pin[] = useMemo(() => [
     ...real.filter((p) => GENRE_OF[p.type]).map((p) => ({
       slug: p.slug, name: p.name, genre: GENRE_OF[p.type], ...toXY(p.lng, p.lat), lat: p.lat, lng: p.lng,
@@ -116,6 +119,7 @@ export default function MapDemo({ pins: real }: { pins: MapDemoPin[] }) {
   const [onScreen, setOnScreen] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [cursor, setCursor] = useState<{ x: number; y: number; click: number } | null>(null);
+  const [ctaHot, setCtaHot] = useState(false);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -123,6 +127,7 @@ export default function MapDemo({ pins: real }: { pins: MapDemoPin[] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const hudRef = useRef<HTMLSpanElement>(null);
   const locateRef = useRef<HTMLButtonElement>(null);
+  const ctaRef = useRef<HTMLAnchorElement>(null);
   const chipRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   // Everything the frame loop reads lives in refs
@@ -314,7 +319,7 @@ export default function MapDemo({ pins: real }: { pins: MapDemoPin[] }) {
     const press = (pt: { x: number; y: number } | null) => pt && setCursor((c) => ({ ...pt, click: (c?.click ?? 0) + 1 }));
     let act: ReturnType<typeof setTimeout> | undefined;
     if (step === 0) {
-      setGenre(null); setMode({ kind: "all" }); setTarget(HOME); setSelected(null);
+      setGenre(null); setMode({ kind: "all" }); setTarget(HOME); setSelected(null); setCtaHot(false);
       setCursor((c) => c ?? (() => { const r = rootRef.current?.getBoundingClientRect(); return r ? { x: r.width * 0.84, y: r.height * 0.8, click: 0 } : null; })());
     } else if (step === 1) {
       press(elPoint(chipRefs.current.Trekking));
@@ -327,13 +332,16 @@ export default function MapDemo({ pins: real }: { pins: MapDemoPin[] }) {
     } else if (step === 4) {
       press(pinPoint(tourPin, NEAR));
       act = setTimeout(() => setSelected(tourPin.slug), ARRIVE);
+    } else if (step === 5) {
+      press(elPoint(ctaRef.current));
+      act = setTimeout(() => setCtaHot(true), ARRIVE);
     }
     const t = setTimeout(() => setStep((s) => (s + 1) % BEATS.length), BEATS[step].ms + (step === 0 && !revealed ? SWEEP_MS : 0));
     return () => { clearTimeout(t); clearTimeout(act); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, touring, onScreen]);
 
-  const takeOver = () => { if (touring) { setTouring(false); setCursor(null); } };
+  const takeOver = () => { if (touring) { setTouring(false); setCursor(null); setCtaHot(false); } };
   const replay = () => { setStep(0); setGenre(null); setMode({ kind: "all" }); setTarget(HOME); setSelected(null); setCursor(null); setTouring(true); };
 
   // Hit-test the canvas: the nearest visible pin within reach of the pointer
@@ -541,26 +549,33 @@ export default function MapDemo({ pins: real }: { pins: MapDemoPin[] }) {
           )}
         </div>
 
-        {/* Tour caption / replay */}
-        <div className="flex items-center justify-between gap-3 mt-2.5 h-6 px-0.5">
-          {touring ? (
-            <>
-              <p key={step} className="md-cap text-[12px] font-semibold text-white/90 truncate">
-                <span className="tabular-nums mr-1.5" style={{ color: "#7edc96" }}>0{step + 1}</span>
-                {BEATS[step].caption}
-              </p>
-              <div className="flex items-center gap-1 shrink-0">
-                {BEATS.map((_, i) => (
-                  <span key={i} className="h-1 rounded-full transition-all duration-500" style={{ width: i === step ? 16 : 5, background: i === step ? "#7edc96" : "rgba(255,255,255,0.15)" }} />
-                ))}
-              </div>
-            </>
-          ) : (
-            <>
-              <p className="text-[12px] text-white/50 truncate">Your turn: filter, zoom, locate.</p>
-              <button type="button" onClick={replay} className="text-[11px] font-semibold text-[#7edc96] hover:underline shrink-0">Replay tour</button>
-            </>
-          )}
+        {/* Tour caption, progress, and the way into the real map */}
+        <div className="flex items-center gap-3 mt-2.5 px-0.5">
+          <div className="flex-1 min-w-0">
+            {touring ? (
+              <>
+                <p key={step} className="md-cap text-[12px] font-semibold text-white/90 truncate">
+                  <span className="tabular-nums mr-1.5" style={{ color: "#7edc96" }}>0{step + 1}</span>
+                  {BEATS[step].caption}
+                </p>
+                <div className="flex items-center gap-1 mt-1">
+                  {BEATS.map((_, i) => (
+                    <span key={i} className="h-1 rounded-full transition-all duration-500" style={{ width: i === step ? 16 : 5, background: i === step ? "#7edc96" : "rgba(255,255,255,0.15)" }} />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-[12px] text-white/55 truncate">Your turn: filter, zoom, locate.</p>
+                <button type="button" onClick={replay} className="text-[11px] font-semibold text-[#7edc96] hover:underline">Replay tour</button>
+              </>
+            )}
+          </div>
+          <Link ref={ctaRef} href={cta.href} className="md-cta group shrink-0 inline-flex items-center gap-1.5 h-8 pl-3 pr-3 rounded-full text-[12px] font-semibold" data-hot={ctaHot || undefined}>
+            <MapIcon className="w-3.5 h-3.5" />
+            {cta.label}
+            <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
         </div>
       </div>
 
@@ -600,6 +615,10 @@ export default function MapDemo({ pins: real }: { pins: MapDemoPin[] }) {
                      backdrop-filter: blur(6px); transition: color .3s, background .3s, box-shadow .3s; }
         .md-locate:hover { color: #fff; }
         .md-locate[data-on] { color: #06121f; background: #60a5fa; box-shadow: 0 0 18px rgba(96,165,250,0.6); }
+        .md-cta { color: #07160b; background: #5fb873; transition: background .3s, box-shadow .3s, transform .3s; }
+        .md-cta:hover { background: #7fd692; }
+        .md-cta[data-hot] { background: #7fd692; animation: mdCtaPulse 1.4s ease-out infinite; }
+        @keyframes mdCtaPulse { 0% { box-shadow: 0 0 0 0 rgba(127,214,146,0.55); } 100% { box-shadow: 0 0 0 10px rgba(127,214,146,0); } }
         .md-card { animation: mdIn 0.45s cubic-bezier(0.22,1,0.36,1) both; }
         @keyframes mdIn { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: none; } }
         .md-cap, .md-badge { animation: mdIn 0.4s ease both; }
@@ -609,7 +628,7 @@ export default function MapDemo({ pins: real }: { pins: MapDemoPin[] }) {
         @keyframes mdRipple { from { transform: scale(0.3); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
         @media (prefers-reduced-motion: reduce) {
           .md-cursor { transition-duration: 0.01ms; }
-          .md-ripple, .md-sea, .md-scan, .md-region { animation: none; }
+          .md-ripple, .md-sea, .md-scan, .md-region, .md-cta[data-hot] { animation: none; }
         }
       `}</style>
     </div>

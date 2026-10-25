@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ChevronDown, ChevronRight, Crown, Map } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronRight, Crown } from "lucide-react";
 import HeroCTAs from "@/components/ui/custom/HeroCTAs";
 import HeroPromise from "@/components/ui/custom/HeroPromise";
 import MatchmakerHomepageSection from "@/components/ui/custom/MatchmakerHomepageSection";
@@ -160,16 +160,16 @@ export default function HomePage() {
         />
 
         {/* ── EDITOR'S CHOICE — one large feature, five around it ── */}
-        <section id="featured-adventures" className="py-14 lg:py-20 px-5 lg:px-8 t-bg-surface2 topo">
+        <section id="featured-adventures" className="py-6 lg:py-10 px-5 lg:px-8 t-bg-surface2 topo">
           <div className="max-w-7xl mx-auto">
             <FadeUp>
-              <div className="flex items-end justify-between gap-4 mb-8 lg:mb-10">
+              <div className="flex items-end justify-between gap-4 mb-3 lg:mb-5">
                 <div>
                   <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-2 flex items-center gap-1.5 uppercase">
                     <Crown className="w-3.5 h-3.5 fill-[#ff5100]" />
                     Editor&apos;s Choice
                   </p>
-                  <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+                  <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight">
                     Adventures of a Lifetime
                   </h2>
                 </div>
@@ -184,7 +184,7 @@ export default function HomePage() {
             </FadeUp>
 
             {/* Phones swipe through the picks sideways; wider screens get the feature grid */}
-            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
+            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
               {featuredAdventures.map((adventure, i) => (
                 <div key={adventure.id} className={`snap-start shrink-0 w-[78vw] sm:w-auto ${i === 0 ? "sm:col-span-2 lg:row-span-2" : ""}`}>
                   {/* The section is already titled Editor's Choice — no per-card badge */}
@@ -193,7 +193,7 @@ export default function HomePage() {
               ))}
             </div>
 
-            <div className="sm:hidden mt-6">
+            <div className="sm:hidden mt-3">
               <Link href="/explore" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#ff5100]">
                 View all adventures
                 <ArrowRight className="w-4 h-4" />
@@ -209,7 +209,7 @@ export default function HomePage() {
         <FindByRegion />
 
         {/* ── MAP CTA — warm surface, green only as the accent; edges fade into the page ── */}
-        <section id="map-cta" className="relative py-10 sm:py-14 lg:py-20 px-5 lg:px-8 overflow-hidden t-bg-surface">
+        <section id="map-cta" className="relative py-6 lg:py-10 px-5 lg:px-8 overflow-hidden t-bg-surface">
           <div className="absolute inset-0 pointer-events-none">
             <Image
               src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=80"
@@ -232,7 +232,7 @@ export default function HomePage() {
             <div className="absolute inset-x-0 bottom-0 h-24" style={{ background: "linear-gradient(to top, var(--bg-page), transparent)" }} />
           </div>
 
-          <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_380px] gap-6 sm:gap-10 lg:gap-16 items-center">
+          <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_380px] gap-4 lg:gap-10 items-center">
             <FadeUp>
               <div className="max-w-2xl">
                 <div className="mb-2">
@@ -240,31 +240,17 @@ export default function HomePage() {
                     Adventure Map
                   </p>
                 </div>
-                <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
+                <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-2">
                   India&apos;s Adventures, <span className="text-[#5fb873]">Mapped</span>
                 </h2>
-                <p className="text-sm sm:text-base leading-relaxed w-full max-w-lg" style={{ color: "var(--text-secondary)" }}>
+                <p className="text-sm leading-relaxed w-full max-w-lg" style={{ color: "var(--text-secondary)" }}>
                   Every trail, summit and coast — one map. Filter by type, cluster by region, tap to explore.
                 </p>
               </div>
             </FadeUp>
-            {/* The way in sits right under the demo it opens */}
-            <div className="flex flex-col items-center gap-5 min-w-0">
-              <MapDemo pins={mapPins} />
-              <Link
-                href="/map"
-                className="group shrink-0 inline-flex items-center gap-2 h-10 pl-1 pr-3.5 sm:pr-4 rounded-full text-[13px] font-semibold tracking-tight text-[#07160b] hover:-translate-y-0.5 hover:brightness-110 transition-all duration-200"
-                style={{
-                  background: "linear-gradient(135deg, #7fd692 0%, #5fb873 55%, #4c9f60 100%)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35), 0 8px 22px -6px rgba(95,184,115,0.55)",
-                }}
-              >
-                <span className="w-8 h-8 rounded-full flex items-center justify-center bg-black/15 ring-1 ring-black/10 group-hover:bg-black/20 transition-colors">
-                  <Map className="w-4 h-4" />
-                </span>
-                Open map
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
+            {/* The way in lives inside the demo; its tour ends by tapping it */}
+            <div className="min-w-0">
+              <MapDemo pins={mapPins} cta={{ href: "/map", label: "Open map" }} />
             </div>
           </div>
         </section>
@@ -273,10 +259,10 @@ export default function HomePage() {
         <MatchmakerHomepageSection />
 
         {/* ── STORIES ──────────────────────────────────────── */}
-        <section id="stories" className="py-14 lg:py-20 px-5 lg:px-8 t-bg-page topo">
+        <section id="stories" className="py-6 lg:py-10 px-5 lg:px-8 t-bg-page topo">
           <div className="max-w-7xl mx-auto">
             <FadeUp>
-              <div className="flex items-end justify-between mb-8 lg:mb-10">
+              <div className="flex items-end justify-between mb-3 lg:mb-5">
                 <div>
                   <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-2 uppercase">
                     From the Trails
@@ -296,10 +282,12 @@ export default function HomePage() {
               </div>
             </FadeUp>
 
-            {/* Columns follow the number of stories, so two stories fill the row instead of leaving a hole */}
-            <div className={`grid grid-cols-1 gap-5 lg:gap-7 ${featuredStories.length >= 3 ? "sm:grid-cols-2 md:grid-cols-3" : featuredStories.length === 2 ? "sm:grid-cols-2" : "max-w-2xl"}`}>
+            {/* Phones swipe through stories sideways; wider screens get columns that follow the number of stories */}
+            <div className={`flex sm:grid gap-3 lg:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0 ${featuredStories.length >= 3 ? "sm:grid-cols-2 md:grid-cols-3" : featuredStories.length === 2 ? "sm:grid-cols-2" : "sm:max-w-2xl"}`}>
               {featuredStories.map((story) => (
-                <StoryCard key={story.id} story={story} />
+                <div key={story.id} className="snap-start shrink-0 w-[82vw] sm:w-auto">
+                  <StoryCard story={story} />
+                </div>
               ))}
             </div>
           </div>
