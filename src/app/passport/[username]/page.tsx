@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { publicPassportUserId } from "@/lib/passportData";
+import Passport from "@/app/profile/Passport";
 
 // Someone's Adventure Passport, for anyone with the link. Only shown when its owner turned
 // "Public Adventure Passport" on in Settings; otherwise it's a 404, same as no such user.
@@ -26,7 +27,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PublicPassportPage({ params }: Props) {
   const { username } = await params;
   if (!(await publicPassportUserId(username))) notFound();
-  const src = (page: string) => `/api/passport?u=${encodeURIComponent(username)}&page=${page}`;
 
   return (
     <>
@@ -35,12 +35,7 @@ export default async function PublicPassportPage({ params }: Props) {
         <div className="max-w-5xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-2">Adventure Passport</p>
           <h1 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-6">@{username}</h1>
-          <div className="grid md:grid-cols-2 gap-4">
-            {/* eslint-disable-next-line @next/next/no-img-element -- generated images, already sized */}
-            <img src={src("stats")} alt={`@${username}'s passport: rank, badges and stats`} className="w-full rounded-2xl" style={{ border: "1px solid var(--border-subtle)" }} />
-            {/* eslint-disable-next-line @next/next/no-img-element -- generated images, already sized */}
-            <img src={src("map")} alt={`@${username}'s passport: adventures on the map`} className="w-full rounded-2xl" style={{ border: "1px solid var(--border-subtle)" }} />
-          </div>
+          <Passport publicUsername={username} />
           <div className="mt-8 rounded-2xl p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
             <div className="min-w-0">
               <p className="font-semibold" style={{ color: "var(--text-primary)" }}>Start your own passport</p>

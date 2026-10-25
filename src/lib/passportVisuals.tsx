@@ -3,7 +3,7 @@
 // server-rendered share images (src/app/api/passport/route.tsx, next/og —
 // which restricts JSX to explicit display:"flex" and forbids bare Fragments
 // and CSS calc()) and the interactive client-side book
-// (src/app/profile/PassportBook.tsx). Every component here obeys those
+// (src/app/profile/Passport.tsx). Every component here obeys those
 // restrictions so it renders correctly in both contexts.
 
 import { TYPE_ICON_DEFS } from "@/lib/mapMarkerIcons";
@@ -17,28 +17,9 @@ export function fmtDate(d: Date) { return `${d.getDate()} ${MONTHS[d.getMonth()]
 export function parseISODate(s: string) { const [y, m, d] = s.split("-").map(Number); return new Date(y, (m || 1) - 1, d || 1); }
 export function fmtNumber(n: number) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 export function truncate(s: string, n: number) { return s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s; }
-export function tint(hex: string, alpha: number) {
-  const h = hex.replace("#", "");
-  const r = parseInt(h.substring(0, 2), 16);
-  const g = parseInt(h.substring(2, 4), 16);
-  const b = parseInt(h.substring(4, 6), 16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
-
-// Reference pixel size the map+stamp layout is computed and drawn at — the
-// share image uses it natively, the interactive book scales a container to
-// this size and shrinks it back down with a CSS transform to fit responsively.
-export const PASSPORT_MAP_W = 640, PASSPORT_MAP_H = 731;
-
 export const DIFFICULTY_LEVEL: Record<string, number> = { Easy: 1, Moderate: 2, Hard: 3, Advanced: 4, Extreme: 5 };
 export const DIFFICULTY_COLOR: Record<string, string> = { Easy: "#10b981", Moderate: "#38bdf8", Hard: "#a78bfa", Advanced: "#ff5100", Extreme: "#ef4444" };
-// A stamp's size is the one visible signal of how hard the adventure was.
-export const DIFFICULTY_STAMP_SIZE: Record<string, number> = { Easy: 84, Moderate: 100, Hard: 118, Advanced: 138, Extreme: 160 };
 
-// Simplified India outline (mainland + a few largest islands), decimated from
-// public/india-boundary.geojson, projected into a fixed 420x480 coordinate
-// space. Stamp positions use the same projection so they line up with the
-// silhouette regardless of what pixel size the map is rendered at.
 export const INDIA_PATH =
   "M138.8,65.7 L143.5,65.5 L147.5,64.7 L151.2,61.8 L156.6,59.7 L161.9,59.7 L166.3,60.4 L169.3,63.8 L172.5,65.7 L176.4,64.7 L176.2,68.5 L174.8,73.8 L170.6,76.5 L167.2,79.7 L165.9,83.1 L162.1,85.6 L158,87.1 L158,91 L159.4,95.7 L163.7,96.6 L164.3,100.5 L165.1,104.6 L161,106.1 L157.4,107.4 L154.9,103.8 L150.9,105.8 L153.1,110 L155.4,114.1 L156.5,118.3 L156.1,122.2 L159.7,120.5 L162.8,123.3 L166.1,126.6 L170.8,127.3 L175.2,129.6 L177.2,132.7 L182.2,134.3 L186.3,137.2 L182.8,139.1 L179.1,142.3 L177.3,145.8 L176.4,149.7 L173.7,153.7 L178.1,158.2 L181.9,159 L186.2,161.3 L190.9,164.9 L195.9,167.5 L201.4,168.8 L207.9,170.8 L211.7,173.6 L217.8,175.6 L223.4,175 L227.2,174.2 L231.1,175.3 L235.6,177.7 L238.5,180.8 L242.3,182.8 L247.7,182.2 L251.4,186.1 L256.5,185.9 L263.2,188 L267.9,186.4 L272.2,188.2 L277.9,187.6 L281.9,187.5 L282.8,182.4 L280.5,178.5 L281.1,173.6 L283,169.1 L285,167 L289.4,165.6 L292.2,169.2 L291,173.9 L291.2,177.6 L292.7,180.7 L297,182.8 L302.2,183.2 L306.5,184.1 L312.2,181.8 L318.1,183.4 L325,183.2 L331.2,182.7 L336.1,181.1 L335.2,176.7 L333.6,174.1 L329.2,173 L331.9,170.1 L336.6,169.1 L340.9,169.1 L343.4,165.7 L348.2,162.8 L352.2,159 L357.5,157.8 L361.8,155.4 L365.9,152.7 L369.4,149.8 L373.8,151.1 L378.2,151.9 L381.8,150.9 L385.9,148.7 L390.8,149.3 L391.3,152.9 L394.8,154.2 L397.1,157.7 L394.5,160.1 L397.7,158.8 L401,161.9 L405.6,163.3 L407,167.3 L403.3,170.1 L401,173.6 L403.7,178 L400.3,177.8 L396.8,175.4 L391.7,176.6 L387.4,179.8 L383.5,182.5 L379.2,185 L376.2,187.8 L377.2,192.6 L375.7,197.1 L372.2,200.8 L369.4,204.6 L370.9,208.7 L367.6,213.4 L364.9,219.2 L362.1,222.2 L357.3,220.8 L353.5,219.8 L353.4,223.7 L353.3,228.8 L352.6,233.6 L350.2,235.5 L349.5,240.4 L350,244.8 L348.1,247.9 L345.1,246.5 L342.6,247.2 L342.1,242.7 L340.9,237.8 L339.6,233.2 L339,228.6 L337.6,225.4 L334.2,224.5 L333,228.6 L332.2,233.1 L328.4,234.2 L326.3,231.1 L325.3,231.2 L323.4,226.4 L324.2,223.4 L326.2,219.9 L329.8,218.2 L332.5,218.4 L334.4,215.7 L337.6,213.2 L338.2,208.7 L340.2,207.6 L336.2,205.2 L330.8,205.3 L326.1,205.1 L320.8,205 L316,205 L310.6,204.6 L305.2,203.4 L305.6,198.2 L305.6,194.3 L303.2,191.4 L302.6,192.6 L299.3,193.5 L295.9,190.8 L293.5,187.8 L294.8,190.4 L291,189.8 L289.8,188.9 L286.2,186.3 L286.8,187.6 L284.9,190.9 L282,194.4 L284.4,197 L287.7,200.4 L291.8,201.2 L293.3,204.3 L289.2,204.6 L286.6,206.9 L283.8,208.3 L281.2,211.2 L284.5,215.3 L289.7,216.6 L290.5,220.8 L288.2,223.9 L290.2,227.5 L290.1,230.5 L293.5,231.8 L292.7,236 L293.2,240.2 L294.5,244.7 L294.2,248.8 L295,252.1 L292.5,252.6 L291.1,252.6 L290.7,248.1 L288.9,247.5 L287.6,249.8 L286.8,252.5 L285.9,251.9 L284.1,253.9 L282.6,248.6 L281.3,245.3 L280.5,249.3 L275.7,252.7 L270.2,254 L266.3,256.4 L265.7,261.9 L267,264.8 L264.8,267.2 L264,269.7 L262.9,271.1 L259.1,274.9 L255.1,276.7 L249.3,278.3 L246.5,279.7 L241.3,283 L237,286.8 L234.1,290.8 L231,294.7 L226.7,298.6 L221.4,301.3 L217.9,305.1 L213.3,308.6 L208.2,311.2 L202.8,316.8 L204.4,317.1 L204.1,319.7 L202.5,321.7 L197.6,323.9 L193.2,324.2 L188.5,327.4 L186.1,332.1 L183.3,332.5 L180.4,330.7 L175.6,334.3 L173.5,339.1 L173.7,345.5 L174.7,350.5 L174.6,356.1 L175.9,361.7 L176.6,366.5 L175.7,371.7 L174.5,376.4 L171.6,381.1 L169.5,386.7 L170,391.5 L170.4,396.4 L170.5,404.1 L167.5,405.4 L164.6,405.7 L161.8,410.1 L158.4,415 L159.6,419.5 L157.3,420.2 L152.1,421.8 L147.6,425.2 L147,429.1 L144,433.3 L139.1,436.1 L133.5,433.5 L129.2,428.9 L126.2,424.6 L125.6,424.1 L124.1,420.5 L122.6,417 L121.6,410.7 L120.7,408.5 L119.2,404 L117.2,399.5 L116.2,395.4 L115,391.7 L112,387.1 L109,383.6 L106.3,380.1 L103.9,374.9 L102.4,371.4 L101,365.7 L100.4,361.4 L99.3,357.6 L97.2,352.8 L96.3,349.7 L95,346.8 L93.2,344.5 L90.5,340.6 L89.6,337.1 L87.8,334.1 L85.2,329.9 L83.5,325.7 L82.8,323.6 L83.5,322.1 L82.6,320.6 L81.6,316.6 L81.6,314.4 L81.1,311.5 L80.2,307.6 L78.8,302.9 L77.7,299.8 L78.8,299.5 L76.8,296.9 L76.6,294.1 L77.6,292 L77.4,289 L77.2,286.6 L75.1,289 L75.6,285.1 L75.6,283.9 L75.4,281.6 L73.6,277.6 L74.2,273.5 L75.9,268.6 L76.3,264.9 L75.6,262 L75,260.5 L72.8,260.3 L72.6,257.8 L74.2,255 L76.4,252.5 L71.5,252.5 L74.4,248.3 L71.3,247.3 L75.4,244.7 L72.5,244 L69,243.7 L67.2,247.8 L67.5,250.5 L67.9,253.7 L65.5,258.8 L60.8,261 L57.3,262.8 L52.2,264.7 L48,265.4 L42.9,262.9 L37.7,259.2 L33.3,254.2 L28.4,250.1 L23.7,245.4 L24.2,242.5 L27.7,244.2 L31.6,243 L34.4,242.4 L38.1,240.5 L41.3,237.9 L41.7,235.3 L39,234.7 L34.9,236.4 L31.4,237.6 L27.7,236.7 L23.8,234.9 L19.1,232.4 L18.9,230.4 L16.9,228 L17,225.4 L20.5,222.8 L16.2,224.1 L14.3,226.7 L14.1,225.3 L13.1,224.1 L16,221.3 L20.6,218.3 L23.4,217.5 L28.8,217.2 L34.2,218.6 L39.2,216.8 L45,215.2 L48.2,217.9 L52.4,215.2 L51.9,211.4 L49.1,205.3 L46.3,200.2 L42.2,198.2 L38.5,193.6 L39.7,186.9 L33.3,184.9 L31,179.4 L35.6,174.7 L39.2,169.3 L44.9,166.6 L49.6,170.7 L56.4,168.6 L62.6,167.5 L66.3,162.3 L69.3,156.7 L74.6,153.9 L79.1,149.9 L82.1,144.1 L86,139.5 L90.9,136.9 L90.8,133.5 L94.1,130.6 L97,127.3 L100.5,124.6 L98.6,122.2 L99.3,118.5 L99.5,114.3 L103.8,111.9 L108.6,110.9 L108,107.5 L103.7,106.5 L100.1,104.4 L99.9,102.6 L94.2,101.1 L88,98.6 L86.2,93.2 L85.8,87.2 L83.3,80.9 L86.8,76.8 L91.9,73.7 L90.6,69.7 L88.4,65.2 L81.8,63.3 L78.5,60.6 L72.8,61 L72,55.3 L78.4,51.1 L84.6,48.9 L86.9,46.8 L93.3,46.3 L101,44.5 L106.8,44.8 L111,48.9 L117.7,51.2 L131,60.9 Z M348.7,362.1 L348.7,363 L348.3,363.7 L349.1,364.1 L349.1,364.9 L348.8,365.2 L348.2,364.8 L347.7,364.7 L348,365.3 L348.4,365.6 L348.7,366.1 L348.8,366.6 L348.6,367.4 L348.6,368.2 L348.3,369 L347.6,369.4 L347.4,368.7 L346.9,368.6 L346.7,368.9 L346.9,369.5 L347.2,370.2 L346.8,369.7 L346.4,370.4 L346.2,371.1 L345.4,370.7 L345.3,369.9 L345.4,369.5 L345.4,368.7 L345.5,368.3 L345.8,367.8 L345.5,367.5 L345.8,366.6 L345.9,366.1 L346,365.5 L345.9,364.8 L346.5,364.3 L346.3,364.1 L346.4,363.3 L347.1,362.8 L347.4,362.3 L347.9,362.1 L348.4,361.9 Z M344.1,380 L344.4,380.6 L344.7,381.3 L344.6,382.1 L344.4,382.4 L345.2,382.4 L344.5,382.7 L344.6,383.4 L344.4,384.2 L344.8,384 L345.3,384.4 L345.2,385.2 L345,386 L344.8,386.9 L344.2,387.1 L344,387.6 L344,388.1 L344.3,387.5 L344.6,387.9 L344.7,388.7 L344.4,389.5 L344.1,389.8 L343.3,389.5 L343.1,388.9 L343,388.3 L342.8,387.9 L342.7,387 L342.1,387 L342,386 L342,385.2 L341.6,384.9 L342,384.1 L342.5,384.3 L342.8,385.1 L342.8,384.2 L342.9,383.4 L343,382.5 L343,381.7 L343.3,380.8 L343.6,380.5 L344,379.8 Z M346.8,370.7 L346.9,371 L347.2,371.4 L347.4,371.9 L347.3,372.5 L347.6,373 L347.9,373.5 L347.7,373.9 L347.6,374.5 L347.6,374.8 L347.7,375.4 L347.8,376 L347.7,376.5 L347.3,376.6 L347.3,376.9 L347,377.4 L346.7,377 L346.3,376.8 L346.2,376.9 L346.7,377.2 L346.3,377.3 L345.7,377.2 L345.5,376.9 L345.7,377.3 L346,377.8 L346.4,378.2 L346.5,378.6 L346,378.9 L345.5,378.8 L345,378.9 L344.4,379 L344.1,378.5 L344.1,377.9 L344.1,377.3 L344.1,376.7 L344.1,376.2 L344.1,375.6 L344.2,375 L344.1,374.7 L344.6,374.4 L344.9,374 L345.2,374.4 L345.2,373.8 L345.1,373.8 L344.6,374 L344.6,373.5 L344.5,372.9 L344.5,372.3 L344.5,371.8 L344.6,371.8 L345.2,371.9 L345.3,371.2 L345.8,371 L346.2,371.2 L346.7,370.9 L346.8,370.7 Z";
 
@@ -99,13 +80,6 @@ export function mulberry32(seed: number) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
-// A real ink stamp is never exactly the same size twice — a ±8% seeded
-// wobble on top of the difficulty-tier base size, so two adventures in the
-// same tier don't look like clones of each other.
-export function sizeJitter(seed: number): number {
-  return 0.92 + mulberry32(seed * 13 + 5)() * 0.16;
-}
-
 export type StampDomain = "engine" | "chassis" | "elements" | "mind";
 export interface ACELike { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; nerve: number }
 /** Which ACE domain an adventure leans on hardest — decides the stamp's shape family. */
@@ -119,17 +93,6 @@ export function dominantDomain(ace: ACELike): StampDomain {
   return (Object.keys(sums) as StampDomain[]).reduce((best, d) => (sums[d] > sums[best] ? d : best), "engine");
 }
 
-// Small 5-point star — used for the rank badge icon, not a stamp shape.
-export function starVertices(cx: number, cy: number, rOuter: number, rInner: number, points: number, rotateDeg = -90): [number, number][] {
-  const verts: [number, number][] = [];
-  const step = Math.PI / points;
-  for (let i = 0; i < points * 2; i++) {
-    const r = i % 2 === 0 ? rOuter : rInner;
-    const angle = i * step + (rotateDeg * Math.PI) / 180;
-    verts.push([cx + r * Math.cos(angle), cy + r * Math.sin(angle)]);
-  }
-  return verts;
-}
 // A scalloped seal outline built from two harmonics — the second, weaker
 // ripple keeps any single stamp from looking like a stamped-out template of
 // every other one. Used by the "scallop" immigration-stamp family below.
@@ -433,52 +396,3 @@ export const RADAR_AXIS_SHORT: Record<string, string> = {
   stamina: "STA", power: "PWR", strength: "STR", agility: "AGI",
   water: "WTR", altitude: "ALT", focus: "FOC", nerve: "NRV",
 };
-
-/**
- * A short physics relaxation in real pixel space: every stamp repels its
- * neighbors by its own visual radius (including the postmark tick burst),
- * pulled back toward its true geographic location by a weak spring each
- * step, then clamped to the map bounds — so the layout stays close to the
- * real map but nothing actually overlaps. Returns dispX/dispY as percentages
- * of (mapW, mapH), same coordinate space `project()` already uses.
- */
-export function declutterStamps<T extends { lng: number; lat: number; difficulty: string; slug: string }>(
-  items: T[], mapW: number, mapH: number
-): (T & { dispX: number; dispY: number; stampScale: number })[] {
-  // Shrinks faster with more stamps so a full map stays mostly over India instead of piling up
-  const stampScale = items.length <= 6 ? 1 : Math.max(0.55, 1 - (items.length - 6) * 0.036);
-  type Node = T & { x: number; y: number; ox: number; oy: number; r: number };
-  const nodes: Node[] = items.map((s) => {
-    const { xPct, yPct } = project(s.lng, s.lat);
-    const size = (DIFFICULTY_STAMP_SIZE[s.difficulty] ?? 100) * stampScale * sizeJitter(hashSeed(s.slug));
-    const x = (xPct / 100) * mapW, y = (yPct / 100) * mapH;
-    return { ...s, x, y, ox: x, oy: y, r: size * 0.57 };
-  });
-  const PADDING = 5;
-  for (let iter = 0; iter < 400; iter++) {
-    for (const n of nodes) {
-      n.x += (n.ox - n.x) * 0.02;
-      n.y += (n.oy - n.y) * 0.02;
-    }
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = nodes[i], b = nodes[j];
-        const dx = b.x - a.x, dy = b.y - a.y;
-        const minDist = a.r + b.r + PADDING;
-        let dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < minDist) {
-          if (dist < 0.001) dist = 0.001;
-          const overlap = (minDist - dist) / 2;
-          const ux = dx / dist, uy = dy / dist;
-          a.x -= ux * overlap; a.y -= uy * overlap;
-          b.x += ux * overlap; b.y += uy * overlap;
-        }
-      }
-    }
-    for (const n of nodes) {
-      n.x = Math.max(n.r, Math.min(mapW - n.r, n.x));
-      n.y = Math.max(n.r, Math.min(mapH - n.r, n.y));
-    }
-  }
-  return nodes.map((n) => ({ ...n, dispX: (n.x / mapW) * 100, dispY: (n.y / mapH) * 100, stampScale }));
-}

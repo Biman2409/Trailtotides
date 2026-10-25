@@ -7,9 +7,8 @@ import { getAchievements, nextBadges } from "@/lib/achievements";
 import { getTier } from "@/lib/xp";
 import { loadUserBadges } from "@/lib/userAchievements";
 import {
-  RADAR_AXES, dominantDomain, declutterStamps, deriveTripTrophies,
+  RADAR_AXES, dominantDomain, deriveTripTrophies, project,
   DIFFICULTY_LEVEL, hashSeed, type TripTrophy,
-  PASSPORT_MAP_W, PASSPORT_MAP_H,
 } from "@/lib/passportVisuals";
 
 const PHOTO_BUCKET = "adventure-photos";
@@ -42,10 +41,14 @@ export interface PassportStamp {
   difficulty: string;
   state: string;
   seed: number;
-  dispX: number;
-  dispY: number;
-  stampScale: number;
+  /** Position on the India map, as % of its width/height */
+  xPct: number;
+  yPct: number;
 }
+
+/** One slot in the stamp collection: every adventure, done or not */
+export interface CollectionSlot { slug: string; name: string; type: string; done: boolean; date: string | null; seed: number; difficulty: string }
+export interface CollectionState { state: string; slots: CollectionSlot[]; done: number }
 
 export interface AdventureLogEntry {
   slug: string;
@@ -80,14 +83,15 @@ export interface PassportData {
   nextBadge: { name: string; hint: string; have: number; need: number } | null;
   recentStamps: { name: string; state: string; date: string }[];
   totalBadges: number;
-  badges: { id: string; name: string; icon: string; color: string }[];
-  badgeOverflow: number;
+  /** Every earned badge, rarest first */
+  badges: { id: string; name: string; icon: string; color: string; description: string }[];
   logPages: AdventureLogEntry[];
+  /** Every completed adventure, newest first */
   stamps: PassportStamp[];
-  stampOverflow: number;
+  /** Every adventure on the site by state — states with the most stamps first */
+  collection: CollectionState[];
+  totalCollectable: number;
 }
-
-const MAP_W = PASSPORT_MAP_W, MAP_H = PASSPORT_MAP_H;
 
 /** Everything the Adventure Passport needs — computed once, shared by the
  * JSON API (interactive book) and the share-image routes (next/og), so the
@@ -116,7 +120,8 @@ export async function computePassportData(origin: string, demoMode?: string | nu
   let entries: { slug: string; date: string; note?: string }[] = [];
   if (DEBUG_DEMO) {
     const count = DEBUG_DEMO === "many" ? 24 : DEBUG_DEMO === "empty" ? 0 : 6;
-    entries = adventures.slice(0, count).map((a, i) => ({ slug: a.slug, date: `2024-${String((i % 12) + 1).padStart(2, "0")}-1${i % 9}` }));
+    // Every other adventure, so the demo spreads across states
+    entries = adventures.filter((_, i) => i % 2 === 0).slice(0, count).map((a, i) => ({ slug: a.slug, date: `2024-${String((i % 12) + 1).padStart(2, "0")}-1${i % 9}` }));
   } else {
     const { data: blob } = await admin.storage.from("wishlists").download(`triplog-${user.id}.json`);
     if (blob) {
@@ -165,30 +170,36 @@ export async function computePassportData(origin: string, demoMode?: string | nu
   const engagement = DEBUG_DEMO ? { ...userBadges.engagement, completed: entries.length } : userBadges.engagement;
   const allEarnedBadges = DEBUG_DEMO ? getAchievements(userBadges.ace, userBadges.totalXP, engagement) : userBadges.earned;
   // Rarest first — getAchievements already lists them that way
-  const badges = allEarnedBadges.slice(0, 6).map((b) => ({ id: b.id, name: b.name, icon: b.icon, color: b.color }));
+  const badges = allEarnedBadges.map((b) => ({ id: b.id, name: b.name, icon: b.icon, color: b.color, description: b.description }));
   const [next] = nextBadges(new Set(allEarnedBadges.map((b) => b.id)), userBadges.ace, userBadges.totalXP, engagement, 1);
   const nextBadge = next ? { name: next.badge.name, ...next.progress } : null;
   const tier = getTier(userBadges.totalXP);
   const recentStamps = stampsRaw.slice(0, 3).map((s) => ({ name: s.adv.name, state: s.adv.state, date: s.date }));
 
-  const shown = stampsRaw.slice(0, 18);
-  const stampOverflow = stampsRaw.length - shown.length;
-  const declutteredStamps = declutterStamps(
-    shown.map((s) => ({ slug: s.adv.slug, lng: s.adv.lng, lat: s.adv.lat, difficulty: s.difficulty })),
-    MAP_W, MAP_H
-  );
-  const stamps: PassportStamp[] = shown.map((s, i) => ({
-    slug: s.adv.slug,
-    name: s.adv.name,
-    type: s.adv.type,
-    date: s.date,
-    difficulty: s.difficulty,
-    state: s.adv.state,
-    seed: hashSeed(s.adv.slug),
-    dispX: declutteredStamps[i].dispX,
-    dispY: declutteredStamps[i].dispY,
-    stampScale: declutteredStamps[i].stampScale,
-  }));
+  const stamps: PassportStamp[] = stampsRaw.map((s) => {
+    const { xPct, yPct } = project(s.adv.lng, s.adv.lat);
+    return {
+      slug: s.adv.slug, name: s.adv.name, type: s.adv.type, date: s.date,
+      difficulty: s.difficulty, state: s.adv.state, seed: hashSeed(s.adv.slug), xPct, yPct,
+    };
+  });
+
+  // The stamp collection: a slot for every adventure, grouped by state
+  const doneBySlug = new Map(stampsRaw.map((s) => [s.adv.slug, s.date]));
+  const byState = new Map<string, CollectionSlot[]>();
+  for (const a of adventures) {
+    const date = doneBySlug.get(a.slug) ?? null;
+    const slot: CollectionSlot = { slug: a.slug, name: a.name, type: a.type, done: date !== null, date, seed: hashSeed(a.slug), difficulty: computeDifficulty(getACE(a)) };
+    byState.set(a.state, [...(byState.get(a.state) ?? []), slot]);
+  }
+  const collection: CollectionState[] = [...byState.entries()]
+    .map(([state, slots]) => ({
+      state,
+      // Stamped first (newest first), then the rest by name
+      slots: slots.sort((a, b) => Number(b.done) - Number(a.done) || (b.date ?? "").localeCompare(a.date ?? "") || a.name.localeCompare(b.name)),
+      done: slots.filter((x) => x.done).length,
+    }))
+    .sort((a, b) => b.done - a.done || a.state.localeCompare(b.state));
 
   // ─── Adventure log pages — one per notable completed adventure: a photo
   // (the user's own upload if they made one, else the adventure's own hero
@@ -246,9 +257,9 @@ export async function computePassportData(origin: string, demoMode?: string | nu
     hasAceData, userAce, topAxis, aceScore,
     level: { name: tier.name, color: tier.color }, totalXP: userBadges.totalXP,
     nextBadge, recentStamps,
-    totalBadges: allEarnedBadges.length, badges, badgeOverflow: allEarnedBadges.length - badges.length,
+    totalBadges: allEarnedBadges.length, badges,
     logPages,
-    stamps, stampOverflow,
+    stamps, collection, totalCollectable: adventures.length,
   };
 }
 
