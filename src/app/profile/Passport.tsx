@@ -14,7 +14,7 @@ import {
 } from "@/lib/passportVisuals";
 import { ALL_BADGES, badgeFace, type Achievement } from "@/lib/achievements";
 import { useBadgeRarity } from "@/lib/useBadgeRarity";
-import { BADGE_GOLD } from "@/components/ui/custom/BadgeIcon";
+import { BADGE_GOLD, PinnacleMedal } from "@/components/ui/custom/BadgeIcon";
 
 // The Adventure Passport: a closed cover, then one page at a time (swipe, arrows or
 // keys). ID page → where you've been → badges → a page per trip → the full logbook →
@@ -195,7 +195,7 @@ function BadgesPage({ data, badges, part, parts }: { data: PassportData; badges:
     ? { label: pickedEarned ? "earned" : "locked", name: pickedFace.name, line: pickedProgress?.hint || pickedFace.description, progress: pickedProgress, rare: rarityOf(pickedFace.id) }
     : data.nextBadge && { label: "next badge", name: data.nextBadge.name, line: data.nextBadge.hint, progress: data.nextBadge, rare: null };
   return (
-    <PageFrame kicker={parts > 1 ? `Endorsements · ${part} of ${parts}` : "Endorsements"} title={`${data.totalBadges} of ${ALL_BADGES.length} badges`}>
+    <PageFrame kicker={parts > 1 ? `Badges · ${part} of ${parts}` : "Badges"} title={`${data.totalBadges} of ${ALL_BADGES.length} badges`}>
       {/* Every badge has a seal: earned ones inked in orange (the pinnacle ones filled), the rest an outline to earn. Tap one for what it is. */}
       <div className="grid grid-cols-5 gap-x-1.5 gap-y-2 content-start">
         {badges.map((b, i) => {
@@ -213,19 +213,20 @@ function BadgesPage({ data, badges, part, parts }: { data: PassportData; badges:
               className="flex flex-col items-center gap-1 text-center rounded-lg transition-colors hover:bg-[var(--pp-wash)]"
               style={on ? { background: "var(--pp-wash)" } : undefined}
             >
-              <span
-                className="relative w-11 h-11 rounded-full flex items-center justify-center overflow-hidden"
-                style={!earned
-                  ? { border: "1.5px dashed var(--pp-line)", outline: b.tier === "tier1" ? "1px dashed var(--pp-line)" : undefined, outlineOffset: 2, color: "var(--pp-muted)", opacity: 0.75 }
-                  : accent
-                    // Pinnacle: the same gradient, double ring and shine as the Trophy Cabinet
-                    ? { background: "linear-gradient(140deg, #ffb070 0%, #ff6a1a 38%, #ff5100 55%, #b33a00 100%)", boxShadow: `0 0 0 2px var(--pp-paper), 0 0 0 3.5px ${ORANGE}, 0 4px 14px rgba(255,81,0,0.35)`, color: "#fff" }
+              {accent ? (
+                // Pinnacle: the same medal as the Trophy Cabinet, with the paper showing between ring and coin
+                <PinnacleMedal size={46} gap="var(--pp-paper)"><BadgeIcon name={face.icon} size={18} color="#fff" /></PinnacleMedal>
+              ) : (
+                <span
+                  className="relative w-11 h-11 rounded-full flex items-center justify-center"
+                  style={!earned
+                    ? { border: "1.5px dashed var(--pp-line)", outline: b.tier === "tier1" ? "1px dashed var(--pp-line)" : undefined, outlineOffset: 2, color: "var(--pp-muted)", opacity: 0.75 }
                     // Others inked orange — secret ones in gold — and stamped at a slight angle
                     : { border: `1.5px solid ${b.secret ? BADGE_GOLD : ORANGE}`, background: b.secret ? `${BADGE_GOLD}1f` : "transparent", outline: "1px dashed var(--pp-line)", outlineOffset: 2, transform: `rotate(${((i * 37) % 13) - 6}deg)`, color: b.secret ? BADGE_GOLD : ORANGE }}
-              >
-                {accent && <span className="badge-shine" aria-hidden />}
-                <span className="relative flex"><BadgeIcon name={face.icon} size={18} color="currentColor" /></span>
-              </span>
+                >
+                  <BadgeIcon name={face.icon} size={18} color="currentColor" />
+                </span>
+              )}
               <span className="text-[11px] leading-tight line-clamp-2" style={{ color: earned ? "var(--pp-ink)" : "var(--pp-muted)" }}>{face.name}</span>
             </button>
           );
