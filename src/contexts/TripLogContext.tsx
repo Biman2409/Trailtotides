@@ -71,8 +71,10 @@ export function TripLogProvider({ children }: { children: React.ReactNode }) {
     const isNew = !current.find(e => e.slug === slug);
     const next = isNew ? [...current, entry] : current.map(e => e.slug === slug ? entry : e);
     setLog(next);
-    if (userId) saveTripLog(next); else lsSet(next);
-    if (isNew && userId) awardXP("trip_log", slug);
+    if (!userId) { lsSet(next); return; }
+    // Saved before the XP call, which checks badges against the saved log
+    await saveTripLog(next);
+    if (isNew) awardXP("trip_log", slug);
   }, [userId]);
 
   const unmark = useCallback(async (slug: string) => {

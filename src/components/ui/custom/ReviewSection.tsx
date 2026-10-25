@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Star, Trash2, Loader2, ChevronDown, Plus } from "lucide-react";
 import Image from "next/image";
-import { awardXP } from "@/lib/awardXP";
+import { awardXP, revokeXP } from "@/lib/awardXP";
 import { useTripLog } from "@/contexts/TripLogContext";
 
 interface Review {
@@ -181,7 +181,11 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
     setDeleting(id);
     try {
       const res = await fetch(`/api/reviews?id=${id}`, { method: "DELETE" });
-      if (res.ok) setReviews((prev) => prev.filter((r) => r.id !== id));
+      if (res.ok) {
+        setReviews((prev) => prev.filter((r) => r.id !== id));
+        // Review XP is once per adventure: give it back when their last review here goes
+        if (!reviews.some((r) => r.id !== id && r.user_id === currentUserId)) revokeXP("review", slug);
+      }
     } finally {
       setDeleting(null);
     }

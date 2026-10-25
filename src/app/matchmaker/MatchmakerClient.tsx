@@ -26,6 +26,7 @@ import { adventures as ALL_ADVENTURES } from "@/lib/data";
 import { getACE, computeMatchScore, type ACE, type AceAxis } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
 import { awardXP } from "@/lib/awardXP";
+import { createClient } from "@/lib/supabase/client";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
 import {
   CAPABILITY_QUESTIONS, DECAY_QUESTIONS, MEDICAL_QUESTIONS, buildMedicalFlags,
@@ -873,6 +874,15 @@ function ResultsScreen({
 }) {
   const { userAxes, adventures: enriched, trainingPlan, rawAxes, decayNotes } = result;
 
+  // Badges are for signed-in explorers only
+  const [signedIn, setSignedIn] = useState(false);
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => setSignedIn(!!user));
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => setSignedIn(!!session?.user));
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
   // Reached from a trek page (?from=slug): offer the way back
   const searchParams = useSearchParams();
   const fromSlug = searchParams.get("from");
@@ -1085,7 +1095,7 @@ function ResultsScreen({
       )}
 
       {/* ── ACHIEVEMENTS ────────────────────────────────────────────────────── */}
-      {achievements.length > 0 && (
+      {signedIn && achievements.length > 0 && (
         <FadeInSection>
           <div className={`${panel} p-5 sm:p-7`} style={panelStyle}>
             <SectionTexture kind="tides" color="#ffc46b" at="100% 100%" opacity={0.1} />
@@ -1389,7 +1399,9 @@ export default function MatchmakerClient() {
     saveProfile(profile);
     setSavedProfile(profile);
     clearProgress();
-    awardXP("ace_complete");
+    const savedToServer = saveProfileToServer(profile);
+    // After the save: badges are checked against the result stored on the account
+    savedToServer.then(() => awardXP("ace_complete"));
 
     if (mode !== "quick") {
       // Medical answers → flags only, saved to a completely separate store.
@@ -1398,9 +1410,7 @@ export default function MatchmakerClient() {
       // no per-field atomicity, so two overlapping POSTs can each read a
       // stale snapshot and the later write silently clobbers the earlier
       // one's change. Chaining avoids that race.
-      saveProfileToServer(profile).then(() => saveMedicalFlagsToServer(medicalFlags));
-    } else {
-      saveProfileToServer(profile);
+      savedToServer.then(() => saveMedicalFlagsToServer(medicalFlags));
     }
 
     setResult(buildResult(userAxes as unknown as Record<string, number>, decayNotes.length > 0 ? { rawAxes: rawAxes as Record<string, number>, decayNotes } : undefined));

@@ -1,19 +1,16 @@
 import { toast } from "sonner";
 import { XP_LABELS, type XPAction } from "@/lib/xp";
-import { getAchievements } from "@/lib/achievements";
-import type { Achievement } from "@/lib/achievements";
+import { ALL_BADGES, type Achievement } from "@/lib/achievements";
 
-const EARNED_KEY = "earned_achievement_ids";
+// Before badges were tracked on the account, each browser kept its own list of the ones
+// it had announced. It's sent once to seed the account's list, then dropped.
+const LEGACY_EARNED_KEY = "earned_achievement_ids";
 
-function loadEarned(): Set<string> {
+function takeLegacyEarned(): string[] | undefined {
   try {
-    const raw = localStorage.getItem(EARNED_KEY);
-    return raw ? new Set(JSON.parse(raw)) : new Set();
-  } catch { return new Set(); }
-}
-
-function saveEarned(ids: Set<string>) {
-  try { localStorage.setItem(EARNED_KEY, JSON.stringify([...ids])); } catch {}
+    const raw = localStorage.getItem(LEGACY_EARNED_KEY);
+    return raw ? (JSON.parse(raw) as string[]) : undefined;
+  } catch { return undefined; }
 }
 
 function dispatchXPUpdate() {
@@ -22,65 +19,36 @@ function dispatchXPUpdate() {
   }
 }
 
+/** Badges earned since the last check — the account remembers which were already announced */
 async function checkNewTrophies(): Promise<Achievement[]> {
   try {
-    const { loadProfile } = await import("@/lib/matchmaker");
-    const profile = loadProfile();
-    if (!profile?.ace) return [];
-
-    const res = await fetch("/api/xp");
+    const known = takeLegacyEarned();
+    const res = await fetch("/api/achievements", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ known }),
+    });
     if (!res.ok) return [];
-    const data = await res.json();
-
-    const totalXP: number = data.xp ?? 0;
-    const events: { action: string; adventure_slug?: string }[] = data.events ?? [];
-    const uniq = (action: string) =>
-      new Set(events.filter(e => e.action === action).map(e => e.adventure_slug)).size;
-    const engagement = {
-      completed:  uniq("trip_log"),
-      reviews:    uniq("review"),
-      wishlisted: uniq("wishlist"),
-      photos:     uniq("photo"),
-      compares:   uniq("compare"),
-    };
-
-    const all = getAchievements(profile.ace, totalXP, engagement);
-    const earned = loadEarned();
-    const newOnes = all.filter(a => !earned.has(a.id));
-
-    if (newOnes.length > 0) {
-      newOnes.forEach(a => earned.add(a.id));
-      saveEarned(earned);
-    }
-
-    return newOnes;
+    if (known) { try { localStorage.removeItem(LEGACY_EARNED_KEY); } catch {} }
+    const { newIds } = (await res.json()) as { newIds: string[] };
+    return ALL_BADGES.filter((b) => newIds.includes(b.id));
   } catch { return []; }
 }
 
 function showTrophyToast(trophy: Achievement) {
-  const tierColors: Record<string, string> = {
-    tier1: "#fbbf24",
-    tier2: "#f97316",
-    tier3: "#60a5fa",
-  };
-  const color = tierColors[trophy.tier] ?? "#60a5fa";
+  toast(`Badge unlocked: ${trophy.name}`, {
+    description: trophy.description,
+    duration: 6000,
+    action: {
+      label: "View",
+      onClick: () => { window.location.href = "/profile#trophies"; },
+    },
+  });
+}
 
-  toast(
-    `🏆 Trophy Unlocked — ${trophy.name}`,
-    {
-      description: `${trophy.description} · View in your profile`,
-      duration: 5000,
-      style: {
-        background: "#0f1923",
-        border: `1px solid ${color}40`,
-        color: "#fff",
-      },
-      action: {
-        label: "View",
-        onClick: () => { window.location.href = "/profile#trophies"; },
-      },
-    }
-  );
+/** Look for newly earned badges and announce them. Also for unlocks that give no XP of their own. */
+export async function announceNewTrophies(): Promise<void> {
+  (await checkNewTrophies()).forEach(showTrophyToast);
 }
 
 export async function awardXP(action: XPAction, slug?: string): Promise<void> {
@@ -93,16 +61,11 @@ export async function awardXP(action: XPAction, slug?: string): Promise<void> {
     if (!res.ok) return;
     const data = await res.json();
     if (data.awarded) {
-      toast.success(`+${data.xp} XP · ${XP_LABELS[action]}`, {
-        duration: 2500,
-        style: { background: "#0f1923", border: "1px solid rgba(255,81,0,0.3)", color: "#fff" },
-      });
+      toast.success(`+${data.xp} XP · ${XP_LABELS[action]}`, { duration: 2500 });
       dispatchXPUpdate();
-
-      // Check for newly unlocked trophies
-      const newTrophies = await checkNewTrophies();
-      newTrophies.forEach(t => showTrophyToast(t));
     }
+    // Even with no XP (e.g. the 10th wishlist save) a count-based badge may have unlocked
+    await announceNewTrophies();
   } catch {
     // Silent — XP is non-critical
   }

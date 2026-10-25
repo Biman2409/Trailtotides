@@ -3,9 +3,11 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { findUserByUsername } from "@/lib/resolveUsername";
 import { adventures, type Adventure } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
-import { getAchievements } from "@/lib/achievements";
+import { getAchievements, nextBadges } from "@/lib/achievements";
+import { getTier } from "@/lib/xp";
+import { loadUserBadges } from "@/lib/userAchievements";
 import {
-  RADAR_AXES, getAceRank, dominantDomain, declutterStamps, deriveTripTrophies,
+  RADAR_AXES, dominantDomain, declutterStamps, deriveTripTrophies,
   DIFFICULTY_LEVEL, hashSeed, type TripTrophy,
   PASSPORT_MAP_W, PASSPORT_MAP_H,
 } from "@/lib/passportVisuals";
@@ -70,7 +72,13 @@ export interface PassportData {
   hasAceData: boolean;
   userAce: Record<string, number>;
   topAxis: string;
-  aceRank: { label: string; color: string } | null;
+  /** XP level — the one rank the passport shows */
+  level: { name: string; color: string };
+  totalXP: number;
+  /** Sum of the 8 ACE skills, out of 40; null before the assessment */
+  aceScore: number | null;
+  nextBadge: { name: string; hint: string; have: number; need: number } | null;
+  recentStamps: { name: string; state: string; date: string }[];
   totalBadges: number;
   badges: { id: string; name: string; icon: string; color: string }[];
   badgeOverflow: number;
@@ -149,25 +157,19 @@ export async function computePassportData(origin: string, demoMode?: string | nu
   const userAce: Record<string, number> = Object.fromEntries(RADAR_AXES.map((ax) => [ax, userAceRaw?.[ax] ?? 0]));
   const hasAceData = RADAR_AXES.some((ax) => userAce[ax] > 0);
   const topAxis = RADAR_AXES.reduce((best, ax) => (userAce[ax] > userAce[best] ? ax : best), RADAR_AXES[0]);
-  const aceSum = RADAR_AXES.reduce((sum, ax) => sum + userAce[ax], 0);
-  const aceRank = hasAceData ? getAceRank(aceSum) : null;
+  const aceScore = hasAceData ? Math.round(RADAR_AXES.reduce((sum, ax) => sum + userAce[ax], 0)) : null;
 
   // Achievement badges — same source as the Trophy Cabinet on /profile.
-  const { data: xpBlob } = await admin.storage.from("user-data").download(`xp/${user.id}.json`);
-  let xpEvents: { action: string; adventure_slug?: string; xp?: number; revoked?: boolean }[] = [];
-  if (xpBlob) {
-    try { xpEvents = JSON.parse(await xpBlob.text()); } catch { xpEvents = []; }
-  }
-  const activeXp = xpEvents.filter((e) => !e.revoked);
-  const totalXP = activeXp.reduce((sum, e) => sum + (e.xp ?? 0), 0);
-  const uniqBy = (action: string) => new Set(activeXp.filter((e) => e.action === action).map((e) => e.adventure_slug)).size;
-  const engagement = {
-    completed: uniqBy("trip_log"), reviews: uniqBy("review"),
-    wishlisted: uniqBy("wishlist"), photos: uniqBy("photo"), compares: uniqBy("compare"),
-  };
-  const badgeAce = { stamina: userAce.stamina, power: userAce.power, strength: userAce.strength, agility: userAce.agility, water: userAce.water, altitude: userAce.altitude, focus: userAce.focus, nerve: userAce.nerve };
-  const allEarnedBadges = getAchievements(badgeAce, totalXP, engagement);
+  const userBadges = await loadUserBadges(admin, user);
+  // Demo trips aren't in a stored trip log, so count them here
+  const engagement = DEBUG_DEMO ? { ...userBadges.engagement, completed: entries.length } : userBadges.engagement;
+  const allEarnedBadges = DEBUG_DEMO ? getAchievements(userBadges.ace, userBadges.totalXP, engagement) : userBadges.earned;
+  // Rarest first — getAchievements already lists them that way
   const badges = allEarnedBadges.slice(0, 6).map((b) => ({ id: b.id, name: b.name, icon: b.icon, color: b.color }));
+  const [next] = nextBadges(new Set(allEarnedBadges.map((b) => b.id)), userBadges.ace, userBadges.totalXP, engagement, 1);
+  const nextBadge = next ? { name: next.badge.name, ...next.progress } : null;
+  const tier = getTier(userBadges.totalXP);
+  const recentStamps = stampsRaw.slice(0, 3).map((s) => ({ name: s.adv.name, state: s.adv.state, date: s.date }));
 
   const shown = stampsRaw.slice(0, 18);
   const stampOverflow = stampsRaw.length - shown.length;
@@ -241,7 +243,9 @@ export async function computePassportData(origin: string, demoMode?: string | nu
     name, username, avatarUrl, passportNo, issueDateISO,
     totalAdventures: stampsRaw.length, statesCount,
     hardest: hardest ? { name: hardest.adv.name, type: hardest.adv.type, difficulty: hardest.difficulty } : null,
-    hasAceData, userAce, topAxis, aceRank,
+    hasAceData, userAce, topAxis, aceScore,
+    level: { name: tier.name, color: tier.color }, totalXP: userBadges.totalXP,
+    nextBadge, recentStamps,
     totalBadges: allEarnedBadges.length, badges, badgeOverflow: allEarnedBadges.length - badges.length,
     logPages,
     stamps, stampOverflow,

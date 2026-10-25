@@ -3,7 +3,7 @@ import { computePassportData, publicPassportUserId } from "@/lib/passportData";
 import {
   INK, PAPER, GOLD, INDIA_PATH, RADAR_AXES, RADAR_AXIS_LABELS, RADAR_AXIS_SHORT,
   DIFFICULTY_COLOR, DIFFICULTY_STAMP_SIZE, DIFFICULTY_LEVEL,
-  fmtDate, truncate, tint, ptsStr, polygonVertices, radarVertices, starVertices,
+  fmtDate, fmtNumber, parseISODate, truncate, tint, ptsStr, polygonVertices, radarVertices,
   sizeJitter, TypeIcon, ImmigrationStamp, stateStampStyle, BadgeIcon,
   PASSPORT_MAP_W, PASSPORT_MAP_H,
 } from "@/lib/passportVisuals";
@@ -28,9 +28,11 @@ export async function GET(req: Request) {
   }
   const {
     name, username, avatarUrl, passportNo, issueDateISO,
-    totalAdventures, statesCount, hardest, hasAceData, userAce, topAxis, aceRank,
+    totalAdventures, statesCount, hardest, hasAceData, userAce, topAxis, aceScore,
+    level, totalXP, nextBadge, recentStamps,
     totalBadges, badges, badgeOverflow, stamps, stampOverflow,
   } = data;
+  const sectionLabel = { fontSize: 11, fontWeight: 700, letterSpacing: 2, color: INK, opacity: 0.5 } as const;
   const issueDate = new Date(issueDateISO);
 
   const statsPage = (
@@ -78,6 +80,7 @@ export async function GET(req: Request) {
           {[
             { label: "NAME / NOM", value: name },
             { label: "USERNAME", value: username ? `@${username}` : "—" },
+            { label: "LEVEL", value: `${level.name} · ${fmtNumber(totalXP)} XP` },
           ].map((f) => (
             <div key={f.label} style={{ display: "flex", flexDirection: "column", borderBottom: "1px dashed rgba(36,26,18,0.22)", paddingBottom: 8 }}>
               <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, color: INK, opacity: 0.45 }}>{f.label}</span>
@@ -139,12 +142,9 @@ export async function GET(req: Request) {
         <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
             <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: INK, opacity: 0.5 }}>{"CAPABILITY PROFILE"}</span>
-            {aceRank && (
-              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 5, padding: "3px 9px 3px 7px", borderRadius: 999, background: tint(aceRank.color, 0.16), border: `1px solid ${aceRank.color}` }}>
-                <svg width={9} height={9} viewBox="0 0 10 10">
-                  <polygon points={ptsStr(starVertices(5, 5, 5, 2.1, 5))} fill={aceRank.color} />
-                </svg>
-                <span style={{ fontSize: 8, fontWeight: 800, letterSpacing: 0.6, color: aceRank.color }}>{aceRank.label.toUpperCase()}</span>
+            {aceScore != null && (
+              <div style={{ display: "flex", padding: "3px 9px", borderRadius: 999, border: `1px solid rgba(36,26,18,0.4)` }}>
+                <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: 0.6, color: INK }}>{`ACE ${aceScore}/40`}</span>
               </div>
             )}
           </div>
@@ -177,6 +177,39 @@ export async function GET(req: Request) {
           <span style={{ fontSize: 11, color: INK, opacity: 0.4, marginTop: 6 }}>{"Complete adventures and take the ACE assessment to start unlocking badges"}</span>
         )}
       </div>
+
+      {nextBadge && (
+        <div style={{ display: "flex", flexDirection: "column", marginTop: 16, zIndex: 1 }}>
+          <span style={sectionLabel}>{"NEXT BADGE"}</span>
+          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 12, marginTop: 8 }}>
+            <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: INK }}>{nextBadge.name}</span>
+              <span style={{ fontSize: 10, color: INK, opacity: 0.5, marginTop: 2 }}>{nextBadge.hint}</span>
+            </div>
+            {nextBadge.need > 1 && (
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: INK }}>{`${fmtNumber(nextBadge.have)} / ${fmtNumber(nextBadge.need)}`}</span>
+                <div style={{ display: "flex", width: 90, height: 4, borderRadius: 2, background: "rgba(36,26,18,0.12)" }}>
+                  <div style={{ display: "flex", width: Math.round((nextBadge.have / nextBadge.need) * 90), height: 4, borderRadius: 2, background: "#ff5100" }} />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {recentStamps.length > 0 && (
+        <div style={{ display: "flex", flexDirection: "column", marginTop: 16, zIndex: 1 }}>
+          <span style={sectionLabel}>{"RECENT STAMPS"}</span>
+          {recentStamps.map((s) => (
+            <div key={`${s.name}-${s.date}`} style={{ display: "flex", flexDirection: "row", alignItems: "baseline", gap: 10, marginTop: 7, paddingBottom: 6, borderBottom: "1px dashed rgba(36,26,18,0.18)" }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: INK, flex: 1 }}>{truncate(s.name, 34)}</span>
+              <span style={{ fontSize: 10, color: INK, opacity: 0.5 }}>{s.state}</span>
+              <span style={{ fontSize: 10, fontWeight: 700, color: INK, opacity: 0.6, width: 82, textAlign: "right" }}>{fmtDate(parseISODate(s.date))}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div style={{ display: "flex", flex: 1 }} />
 

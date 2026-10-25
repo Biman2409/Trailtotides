@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Camera, Loader2, Trash2, X, ZoomIn, Upload } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
-import { awardXP } from "@/lib/awardXP";
+import { awardXP, revokeXP } from "@/lib/awardXP";
 import { useTripLog } from "@/contexts/TripLogContext";
 
 interface Photo {
@@ -112,7 +112,12 @@ export default function PhotoGallery({ slug, currentUserId, onCount }: Props) {
     setDeleting(id);
     try {
       const res = await fetch(`/api/photos?id=${id}&slug=${encodeURIComponent(slug)}`, { method: "DELETE" });
-      if (res.ok) setPhotos((prev) => prev.filter((p) => p.id !== id));
+      if (res.ok) {
+        setPhotos((prev) => prev.filter((p) => p.id !== id));
+        // XP counts up to 3 photos per adventure — give one back only once fewer than that remain
+        const mineLeft = photos.filter((p) => p.user_id === currentUserId && p.id !== id).length;
+        if (mineLeft < 3) revokeXP("photo", slug);
+      }
     } finally {
       setDeleting(null);
     }

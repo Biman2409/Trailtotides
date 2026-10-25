@@ -8,7 +8,7 @@ import type { PassportData, AdventureLogEntry } from "@/lib/passportData";
 import {
   INK, PAPER, GOLD, INDIA_PATH, DIFFICULTY_COLOR, DIFFICULTY_STAMP_SIZE, DIFFICULTY_LEVEL,
   RADAR_AXES, RADAR_AXIS_LABELS, RADAR_AXIS_SHORT, PASSPORT_MAP_W, PASSPORT_MAP_H,
-  fmtDate, parseISODate, truncate, tint, ptsStr, polygonVertices, radarVertices, starVertices,
+  fmtDate, fmtNumber, parseISODate, truncate, tint, ptsStr, polygonVertices, radarVertices,
   sizeJitter, TypeIcon, ImmigrationStamp, stateStampStyle, BadgeIcon,
 } from "@/lib/passportVisuals";
 // PassportData is a type-only import — safe even though passportData.ts
@@ -154,10 +154,9 @@ function StatsPage({ data, onShare, sharing }: { data: PassportData; onShare: ()
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-2 px-2.5 pb-2 pt-1.5" style={{ borderTop: "1px dashed rgba(36,26,18,0.22)" }}>
+        <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 px-2.5 pb-2 pt-1.5" style={{ borderTop: "1px dashed rgba(36,26,18,0.22)" }}>
           {[
-            { label: "TYPE", value: "P" },
-            { label: "CODE", value: "TTT" },
+            { label: "LEVEL", value: `${data.level.name} · ${fmtNumber(data.totalXP)} XP` },
             { label: "PASSPORT NO.", value: data.passportNo },
             { label: "ISSUED", value: fmtDate(issueDate) },
           ].map((f) => (
@@ -197,14 +196,13 @@ function StatsPage({ data, onShare, sharing }: { data: PassportData; onShare: ()
       <div className="mt-2" style={{ borderBottom: "1px dashed rgba(36,26,18,0.3)" }} />
 
       <div className="flex flex-row items-center gap-2.5 mt-2">
-        <RadarChart ace={data.userAce} hasData={data.hasAceData} size={88} />
+        <RadarChart ace={data.userAce} hasData={data.hasAceData} size={78} />
         <div className="flex flex-col flex-1 min-w-0">
           <div className="flex flex-row items-center justify-between gap-1.5">
             <span className="text-[8px] font-bold tracking-wider" style={{ color: INK, opacity: 0.5 }}>CAPABILITY</span>
-            {data.aceRank && (
-              <div className="flex flex-row items-center gap-1 px-1.5 py-0.5 rounded-full shrink-0" style={{ background: tint(data.aceRank.color, 0.16), border: `1px solid ${data.aceRank.color}` }}>
-                <svg width={7} height={7} viewBox="0 0 10 10"><polygon points={ptsStr(starVertices(5, 5, 5, 2.1, 5))} fill={data.aceRank.color} /></svg>
-                <span className="text-[6.5px] font-extrabold" style={{ color: data.aceRank.color }}>{data.aceRank.label.toUpperCase()}</span>
+            {data.aceScore != null && (
+              <div className="px-1.5 py-0.5 rounded-full shrink-0" style={{ border: "1px solid rgba(36,26,18,0.4)" }}>
+                <span className="text-[7px] font-extrabold" style={{ color: INK }}>{`ACE ${data.aceScore}/40`}</span>
               </div>
             )}
           </div>
@@ -232,6 +230,25 @@ function StatsPage({ data, onShare, sharing }: { data: PassportData; onShare: ()
           <span className="text-[9px] mt-1" style={{ color: INK, opacity: 0.4 }}>Complete adventures to start unlocking badges</span>
         )}
       </div>
+
+      {data.nextBadge && (
+        // One line — the page has no room to spare
+        <div className="flex flex-row items-center gap-2 mt-1.5" title={data.nextBadge.hint}>
+          <span className="text-[8px] font-bold tracking-wider shrink-0" style={{ color: INK, opacity: 0.5 }}>NEXT</span>
+          <span className="text-[9px] font-bold truncate flex-1 min-w-0" style={{ color: INK }}>
+            {data.nextBadge.name}
+            <span className="font-normal" style={{ opacity: 0.55 }}>{` · ${data.nextBadge.hint}`}</span>
+          </span>
+          {data.nextBadge.need > 1 && (
+            <>
+              <span className="text-[8px] font-bold shrink-0" style={{ color: INK }}>{`${fmtNumber(data.nextBadge.have)}/${fmtNumber(data.nextBadge.need)}`}</span>
+              <div className="w-10 h-[3px] rounded-full overflow-hidden shrink-0" style={{ background: "rgba(36,26,18,0.12)" }}>
+                <div className="h-full rounded-full" style={{ width: `${Math.round((data.nextBadge.have / data.nextBadge.need) * 100)}%`, background: "#ff5100" }} />
+              </div>
+            </>
+          )}
+        </div>
+      )}
 
       <div className="flex-1 min-h-1.5" />
 

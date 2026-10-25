@@ -15,6 +15,7 @@ export const GOLD = "#c9a24d";
 export const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 export function fmtDate(d: Date) { return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`; }
 export function parseISODate(s: string) { const [y, m, d] = s.split("-").map(Number); return new Date(y, (m || 1) - 1, d || 1); }
+export function fmtNumber(n: number) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 export function truncate(s: string, n: number) { return s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s; }
 export function tint(hex: string, alpha: number) {
   const h = hex.replace("#", "");
@@ -433,19 +434,6 @@ export const RADAR_AXIS_SHORT: Record<string, string> = {
   water: "WTR", altitude: "ALT", focus: "FOC", nerve: "NRV",
 };
 
-// ACE rank — same tiers as the /ace page's "Adventure Rank" ladder, keyed
-// off the sum of all 8 self-assessment axes (max 40).
-export const ACE_RANKS = [
-  { min: 40, label: "Apex", color: "#a78bfa" },
-  { min: 32, label: "Vanguard", color: "#f97316" },
-  { min: 24, label: "Trailblazer", color: "#f59e0b" },
-  { min: 16, label: "Navigator", color: "#4ade80" },
-  { min: 8, label: "Pathfinder", color: "#22d3ee" },
-];
-export function getAceRank(sum: number) {
-  return ACE_RANKS.find((r) => sum >= r.min) ?? null;
-}
-
 /**
  * A short physics relaxation in real pixel space: every stamp repels its
  * neighbors by its own visual radius (including the postmark tick burst),
@@ -457,7 +445,8 @@ export function getAceRank(sum: number) {
 export function declutterStamps<T extends { lng: number; lat: number; difficulty: string; slug: string }>(
   items: T[], mapW: number, mapH: number
 ): (T & { dispX: number; dispY: number; stampScale: number })[] {
-  const stampScale = items.length <= 8 ? 1 : Math.max(0.64, 1 - (items.length - 8) * 0.028);
+  // Shrinks faster with more stamps so a full map stays mostly over India instead of piling up
+  const stampScale = items.length <= 6 ? 1 : Math.max(0.55, 1 - (items.length - 6) * 0.036);
   type Node = T & { x: number; y: number; ox: number; oy: number; r: number };
   const nodes: Node[] = items.map((s) => {
     const { xPct, yPct } = project(s.lng, s.lat);
