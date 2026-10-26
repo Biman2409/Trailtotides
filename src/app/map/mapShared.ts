@@ -29,6 +29,8 @@ export interface BaseStyle {
   /** … or a raster tile URL (drawn by Leaflet) */
   url?: string;
   dark?: boolean;
+  /** Hillshade strength for vector styles (defaults: 0.55 dark, 0.35 light) */
+  relief?: number;
 }
 
 export type LayerKey = "map" | "terrain";
@@ -41,11 +43,16 @@ export const BASE_LAYERS: Record<LayerKey, BaseStyle> = {
     maxZoom: 16,
     attribution: `${OPENFREEMAP_CREDIT} · Elevation: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a>`,
   },
+  // OpenFreeMap's colourful "liberty" style (forest, water, roads and trails) with strong
+  // hillshade: reads like a topo map and comes off the same fast CDN as Default. (OpenTopoMap,
+  // used before, is a volunteer server: ~1s a tile and throttled, so it often never finished.)
   terrain: {
     label: "Terrain",
-    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-    maxZoom: 17,
-    attribution: `${OSM_CREDIT}, SRTM · Style © <a href="https://opentopomap.org" target="_blank" rel="noopener">OpenTopoMap</a> (CC-BY-SA)`,
+    style: "https://tiles.openfreemap.org/styles/liberty",
+    dark: false,
+    relief: 0.7,
+    maxZoom: 16,
+    attribution: `${OPENFREEMAP_CREDIT} · Elevation: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a>`,
   },
 };
 
@@ -68,14 +75,14 @@ export async function createBaseLayer(leaflet: typeof L, cfg: BaseStyle, classNa
   const layer = (leaflet as any).maplibreGL({ style: cfg.style, interactive: false, attributionControl: false });
   // MapLibre's own attribution box is off; Leaflet's control shows the credit instead
   layer.getAttribution = () => cfg.attribution;
-  layer.on("add", () => tuneStyle(layer.getMaplibreMap(), !!cfg.dark));
+  layer.on("add", () => tuneStyle(layer.getMaplibreMap(), !!cfg.dark, cfg.relief));
   return layer;
 }
 
 // English labels (the styles show local scripts beside them) and shaded relief under the labels,
 // from the Terrarium elevation tiles (public, keyless)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function tuneStyle(gl: any, dark: boolean) {
+function tuneStyle(gl: any, dark: boolean, relief?: number) {
   const add = () => {
     if (gl.getSource("ttt-dem")) return;
     for (const l of gl.getStyle().layers) {
@@ -90,8 +97,8 @@ function tuneStyle(gl: any, dark: boolean) {
     gl.addLayer({
       id: "ttt-hillshade", type: "hillshade", source: "ttt-dem",
       paint: dark
-        ? { "hillshade-exaggeration": 0.55, "hillshade-shadow-color": "#000000", "hillshade-highlight-color": "rgba(255,255,255,0.16)", "hillshade-accent-color": "#000000" }
-        : { "hillshade-exaggeration": 0.35, "hillshade-shadow-color": "#6b6b6b", "hillshade-highlight-color": "#ffffff", "hillshade-accent-color": "#8a8a8a" },
+        ? { "hillshade-exaggeration": relief ?? 0.55, "hillshade-shadow-color": "#000000", "hillshade-highlight-color": "rgba(255,255,255,0.16)", "hillshade-accent-color": "#000000" }
+        : { "hillshade-exaggeration": relief ?? 0.35, "hillshade-shadow-color": "#4a4a3f", "hillshade-highlight-color": "#ffffff", "hillshade-accent-color": "#6b6b5c" },
     }, firstLabel);
   };
   // "style.load" fires once the style is parsed; "load" waits for a full first render, which can

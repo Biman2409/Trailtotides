@@ -520,8 +520,8 @@ export default function MapClient() {
             </aside>
 
             <div className="absolute z-[1000] top-3 flex items-center gap-1.5" style={{ right: 56 }}>
-              <button type="button" onClick={() => apiRef.current?.reset()} className="tm-glass rounded-xl h-10 px-3 text-[11.5px] font-semibold text-white/70 hover:text-white inline-flex items-center gap-1.5" title="Show all of India">
-                <Compass className="w-3.5 h-3.5" /> All of India
+              <button type="button" onClick={() => apiRef.current?.reset()} className="tm-glass rounded-xl h-10 px-3 text-[11.5px] font-semibold text-white/70 hover:text-white inline-flex items-center gap-1.5" title="Back to the whole of India">
+                <Compass className="w-3.5 h-3.5" /> Reset View
               </button>
               {layersMenu}
             </div>

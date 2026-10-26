@@ -453,6 +453,9 @@ export default function MapCanvas(props: Props) {
 
 const MAP_CSS = `
   .tm-map { background: #0b0d10; }
+  /* Leaflet's corner controls (zoom, ⓘ, credits) sit under the page's own overlays, so menus
+     like Map style open over them instead of the ⓘ poking through */
+  .tm-map .leaflet-top, .tm-map .leaflet-bottom { z-index: 990; }
   /* Map credits: hidden behind the ⓘ until tapped, then small and quiet, but readable */
   .tm-map .leaflet-control-attribution { display: none; background: rgba(11,13,16,0.82) !important; color: rgba(255,255,255,0.55) !important; font-size: 9.5px !important; line-height: 1.4; padding: 3px 8px !important; border-radius: 8px; margin: 6px 12px 0 0 !important; max-width: min(70vw, 420px); text-align: right; }
   .tm-map.tm-credits-open .leaflet-control-attribution { display: block; }

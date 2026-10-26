@@ -6,9 +6,10 @@ import { BASE_LAYERS, type LayerKey } from "./mapShared";
 
 // Map style and your own overlays, tucked behind one button so the screen keeps to filters.
 
+// A real crop of each style (the Himalayan foothills over Nepal), so the choice shows what you get
 const SWATCH: Record<LayerKey, string> = {
-  map: "linear-gradient(135deg, #2a2d31 0%, #3a3d42 45%, #23262a 100%)",
-  terrain: "linear-gradient(135deg, #d9d2b8 0%, #b8c79c 50%, #e6dcc2 100%)",
+  map: "#23262a url(/map/style-default.jpg) center / cover no-repeat",
+  terrain: "#d9d2b8 url(/map/style-terrain.jpg) center / cover no-repeat",
 };
 
 export default function LayersMenu({
