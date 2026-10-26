@@ -33,6 +33,8 @@ import { Emphasis, stripEmphasis } from "@/lib/emphasis";
 import RecalibrationNudge from "./RecalibrationNudge";
 import MedicalCautionNote from "./MedicalCautionNote";
 import ExploreBackLink from "./ExploreBackLink";
+import TrailSection from "./TrailSection";
+import { getTrail } from "@/lib/trails";
 import NearbyAdventuresMap from "./NearbyAdventuresMap";
 import BookingSidebarCard from "./BookingSidebarCard";
 import { haversineKm } from "@/lib/geo";
@@ -210,6 +212,7 @@ export default async function ExperiencePage({ params }: Props) {
 
 
   const destination = destinationFor(adventure);
+  const trail = getTrail(slug);
   const relatedByState = adventures
     .filter((a) => a.id !== adventure.id && a.state === adventure.state)
     .slice(0, 6);
@@ -430,7 +433,7 @@ export default async function ExperiencePage({ params }: Props) {
         <HeroActions adventure={adventure} />
       </section>
 
-      <SectionNav />
+      <SectionNav hasTrail={!!trail} />
 
       {/* Everything below the hero sits on the same topographic texture as the home page */}
       <div className="topo">
@@ -485,6 +488,13 @@ export default async function ExperiencePage({ params }: Props) {
                   />
                 </p>
               </AccordionSection>
+
+              {/* The trail, for treks that have one mapped: route, elevation, stops, offline GPX */}
+              {trail && (
+                <AccordionSection id="trail" label="the route" title="The trail" defaultOpen>
+                  <TrailSection trail={trail} slug={adventure.slug} name={adventure.name} />
+                </AccordionSection>
+              )}
 
               {/* Safety & Prep — before suitability and booking, and open, so people
                   see the risks before choosing who to go with */}

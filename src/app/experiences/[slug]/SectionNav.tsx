@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-const NAV_ITEMS = [
+const ALL_ITEMS = [
   { id: "overview", label: "Overview" },
+  { id: "trail", label: "Trail" },
   { id: "safety", label: "Safety" },
   { id: "suitability", label: "Suitability" },
   { id: "book-this-adventure", label: "Book" },
   { id: "community", label: "Reviews" },
 ];
 
-export default function SectionNav() {
+export default function SectionNav({ hasTrail = false }: { hasTrail?: boolean }) {
+  // "Trail" only on adventures that have one mapped
+  const NAV_ITEMS = hasTrail ? ALL_ITEMS : ALL_ITEMS.filter((i) => i.id !== "trail");
   const [active, setActive] = useState(NAV_ITEMS[0].id);
 
   useEffect(() => {
@@ -30,7 +33,7 @@ export default function SectionNav() {
 
     sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
-  }, []);
+  }, [hasTrail]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Calm style: plain text links, the active one marked by a thin orange rule
   return (
