@@ -1,11 +1,28 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Stethoscope } from "lucide-react";
+import { useCurrentUserId } from "@/lib/useCurrentUserId";
 
 /**
  * Renders already-derived advisory strings only — never the user's raw
- * medical flags. deriveMedicalCautions() runs server-side in page.tsx so
- * health disclosures never reach client-side JS for a page anyone can view.
+ * medical flags. /api/ace-medical/cautions derives them server-side, so the
+ * page itself stays the same static HTML for everyone.
  */
-export default function MedicalCautionNote({ notes }: { notes: string[] }) {
+export default function MedicalCautionNote({ slug }: { slug: string }) {
+  const userId = useCurrentUserId();
+  const [notes, setNotes] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!userId) { setNotes([]); return; }
+    let cancelled = false;
+    fetch(`/api/ace-medical/cautions?slug=${encodeURIComponent(slug)}`)
+      .then((r) => (r.ok ? r.json() : { notes: [] }))
+      .then((d: { notes?: string[] }) => { if (!cancelled) setNotes(d.notes ?? []); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [userId, slug]);
+
   if (notes.length === 0) return null;
 
   return (

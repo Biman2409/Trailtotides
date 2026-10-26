@@ -24,7 +24,14 @@ export const metadata: Metadata = {
 
 export default function ExplorePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen" />}>
+    // The page reads its filters from the address, so it draws in the browser. The fallback is
+    // what crawlers get in the HTML: the same heading the page shows, until it takes over.
+    <Suspense fallback={
+      <div className="min-h-screen">
+        <h1 className="sr-only">Find your next adventure</h1>
+        <p className="sr-only">Browse treks, bike trips, rafting and more across India and Nepal, filtered by type, region, difficulty, season, duration and price.</p>
+      </div>
+    }>
       <ExploreClient />
     </Suspense>
   );

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import type { AdventureType } from "@/lib/data";
 import { loadProfile } from "@/lib/matchmaker";
+import { useCurrentUserId } from "@/lib/useCurrentUserId";
 import type { ACE } from "@/lib/ace";
 
 interface Item {
@@ -525,7 +526,6 @@ export default function PackingList({
   bestSeason = "",
   adventureAce,
   slug,
-  loggedIn = false,
 }: {
   adventureType: AdventureType;
   difficulty: string;
@@ -533,8 +533,8 @@ export default function PackingList({
   bestSeason?: string;
   adventureAce: ACE;
   slug: string;
-  loggedIn?: boolean;
 }) {
+  const loggedIn = !!useCurrentUserId();
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [open, setOpen] = useState(false);
   const [userAce, setUserAce] = useState<ACE | null>(null);

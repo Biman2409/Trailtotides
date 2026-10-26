@@ -29,7 +29,13 @@ export default function MatchmakerPage() {
       <ScrollToTop />
       <Navbar />
       <main className="min-h-screen relative">
-        <Suspense>
+        {/* Drawn in the browser; the fallback gives crawlers the page's heading */}
+        <Suspense fallback={
+          <div className="min-h-screen">
+            <h1 className="sr-only">Adventure Matchmaker: adventures built for your body</h1>
+            <p className="sr-only">Tell us about your fitness and experience, and we&apos;ll rate every adventure for you: ready, a stretch, or not yet.</p>
+          </div>
+        }>
           <MatchmakerClient />
         </Suspense>
       </main>

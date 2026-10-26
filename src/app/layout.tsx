@@ -143,9 +143,6 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  alternates: {
-    canonical: BASE_URL,
-  },
   // The real Search Console token, set in Vercel; no tag at all until then
   ...(process.env.GOOGLE_SITE_VERIFICATION ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } } : {}),
 };

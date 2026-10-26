@@ -13,10 +13,11 @@ const SITE = "https://www.trailtotides.com";
 const ORANGE = "#ff5100";
 
 export const metadata: Metadata = {
-  title: "Trekking & Adventure Destinations in India and Nepal",
-  description: `Treks and adventures in ${DESTINATIONS.slice(0, 4).map((d) => d.name).join(", ")} and more, compared by difficulty, days, season and price. Matched to your fitness, run by verified operators.`,
+  title: "Trekking Destinations in India & Nepal",
+  description: `Treks and adventures in ${DESTINATIONS.slice(0, 4).map((d) => d.name).join(", ")} and more, compared by difficulty, days, season and price, matched to your fitness.`,
   alternates: { canonical: `${SITE}/destinations` },
-  openGraph: { title: "Destinations — Trail to Tides", url: `${SITE}/destinations`, type: "website" },
+  // Listing its own openGraph replaces the site default, so the share image is restated here
+  openGraph: { title: "Destinations — Trail to Tides", url: `${SITE}/destinations`, type: "website", images: [{ url: `${SITE}/opengraph-image`, width: 1200, height: 630, alt: "Trail to Tides destinations" }] },
 };
 
 export default function DestinationsPage() {

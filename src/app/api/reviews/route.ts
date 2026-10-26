@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { adventures } from "@/lib/data";
 import { rateLimit } from "@/lib/rateLimit";
 import { z } from "zod";
@@ -107,6 +108,8 @@ export async function POST(req: NextRequest) {
     console.error("reviews POST error:", error);
     return NextResponse.json({ error: "Could not submit review" }, { status: 500 });
   }
+  // The adventure page is cached; refresh its rating
+  revalidatePath(`/experiences/${slug}`);
   return NextResponse.json({ review: { ...data, avatar_id } });
 }
 
@@ -119,15 +122,17 @@ export async function DELETE(req: NextRequest) {
   const id = req.nextUrl.searchParams.get("id");
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
 
-  const { error } = await admin
+  const { data: deleted, error } = await admin
     .from("reviews")
     .delete()
     .eq("id", id)
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .select("adventure_slug");
 
   if (error) {
     console.error("reviews DELETE error:", error);
     return NextResponse.json({ error: "Could not delete review" }, { status: 500 });
   }
+  deleted?.forEach((r) => revalidatePath(`/experiences/${r.adventure_slug}`));
   return NextResponse.json({ success: true });
 }

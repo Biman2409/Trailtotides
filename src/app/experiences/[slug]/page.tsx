@@ -6,7 +6,7 @@ import Link from "next/link";
 import { type OperatorCardData } from "./OperatorCard";
 import OperatorsSection from "./OperatorsSection";
 import { QUOTE_REQUESTS } from "@/lib/features";
-import { ChevronLeft, ArrowRight, Star } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import GradingPill from "@/components/ui/custom/GradingPill";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -15,8 +15,7 @@ import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
 import ACEProfileSection from "./ACEProfileSection";
 import HeroActions from "./HeroActions";
-import ReviewSection from "@/components/ui/custom/ReviewSection";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
 import { getApprovedOperatorsForAdventure } from "@/app/auth/operator-actions";
@@ -33,8 +32,7 @@ import SimilarTabs from "./SimilarTabs";
 import { Emphasis, stripEmphasis } from "@/lib/emphasis";
 import RecalibrationNudge from "./RecalibrationNudge";
 import MedicalCautionNote from "./MedicalCautionNote";
-import { deriveMedicalCautions } from "@/lib/medicalCautions";
-import type { MedicalFlags } from "@/lib/matchmakerQuestions";
+import ExploreBackLink from "./ExploreBackLink";
 import NearbyAdventuresMap from "./NearbyAdventuresMap";
 import BookingSidebarCard from "./BookingSidebarCard";
 import { haversineKm } from "@/lib/geo";
@@ -61,7 +59,6 @@ const EASIER_TIER_KM = 400;
 
 interface Props {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ from?: string }>;
 }
 
 // One tab's worth of cards in the Similar Adventures row
@@ -109,8 +106,10 @@ export async function generateStaticParams() {
   return adventures.map((a) => ({ slug: a.slug }));
 }
 
-// Always re-render to pick up newly approved operator submissions
-export const dynamic = "force-dynamic";
+// Static HTML, rebuilt at most every 10 minutes to pick up newly approved operators and
+// reviews. Everything per visitor (sign-in, health notes, the Explore page they came from)
+// is read in the browser, so Google and every visitor get the cached page.
+export const revalidate = 600;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -123,15 +122,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const altitude = parseInt(altitudeOf(adventure).replace(/,/g, ""), 10) >= 1000 ? altitudeOf(adventure) : "";
   // "Verified" only when we've actually verified one of the operators
   const anyVerified = adventure.operators.some((o) => o.verified);
-  const description = [
+  // Google shows about 160 characters: drop the least useful parts until it fits
+  const describe = (season: boolean, close: string) => [
     `${adventure.name}, ${adventure.state}: ${difficulty.toLowerCase()}, ${adventure.durationDays}`,
     altitude ? `, up to ${altitude}` : "",
-    adventure.bestSeason ? `. Best ${adventure.bestSeason}` : "",
+    season && adventure.bestSeason ? `. Best ${adventure.bestSeason}` : "",
     price ? `. From ${inr(price)} with ${anyVerified ? "verified" : "local"} operators` : "",
-    ". Compare and book, matched to your fitness.",
+    close,
   ].join("");
+  const description = [
+    describe(true, ". Compare and book, matched to your fitness."),
+    describe(true, ". Compare and book."),
+    describe(false, ". Compare and book."),
+  ].find((d) => d.length <= 160) ?? describe(false, ".");
+  // And about 60 characters of title: keep the brand suffix only when it fits
+  const fullTitle = `${adventure.name}: Difficulty, Cost & Best Time`;
+  const title = fullTitle.length + " | Trail to Tides".length <= 60
+    ? fullTitle
+    : { absolute: fullTitle.length <= 60 ? fullTitle : `${adventure.name}: Cost & Best Time` };
   return {
-    title: `${adventure.name}: Difficulty, Cost & Best Time`,
+    title,
     description,
     keywords: [
       adventure.name,
@@ -159,9 +169,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ExperiencePage({ params, searchParams }: Props) {
+export default async function ExperiencePage({ params }: Props) {
   const { slug } = await params;
-  const { from } = await searchParams;
   const adventure = adventures.find((a) => a.slug === slug);
   if (!adventure) notFound();
 
@@ -174,8 +183,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const PAGE_SIZE = 12;
   const adventureIndex = adventures.findIndex((a) => a.slug === slug);
   const fallbackPage = adventureIndex >= 0 ? Math.ceil((adventureIndex + 1) / PAGE_SIZE) : 1;
-  const fromPage = from ? parseInt(from, 10) : null;
-  const explorePage = fromPage && fromPage > 0 ? fromPage : fallbackPage;
 
   const ace = getACE(adventure);
   const difficulty = computeDifficulty(ace);
@@ -187,19 +194,10 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const showPhysicalExhaustionWarning = ace.stamina >= 5 || ace.power >= 5;
   const showWaterWarning = ace.water >= 4;
 
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const currentUserId = user?.id;
-
-  // Derived server-side so the user's raw medical flags never reach client
-  // JS on a page anyone can view — only these already-computed advisory
-  // strings get passed down.
-  const medicalFlags = (user?.user_metadata?.ace_medical as MedicalFlags | undefined) ?? null;
-  const medicalCautions = deriveMedicalCautions(medicalFlags, adventure);
-
   // The trek's own rating: traveller reviews, the same set the Reviews card
   // shows (real ones plus seed reviews, de-duped by id)
   const seedReviews = adventure.seedReviews ?? [];
+  const supabase = await createAdminClient();
   const { data: dbReviews } = await supabase.from("reviews").select("id, rating").eq("adventure_slug", slug);
   const dbReviewIds = new Set((dbReviews ?? []).map((r) => r.id));
   const reviewRatings = [
@@ -387,14 +385,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/45 to-transparent" />
 
         {/* Back button */}
-        <Link
-          href={`/explore?page=${explorePage}&scroll=${slug}`}
-          className="absolute top-20 left-5 lg:left-8 z-20 flex items-center gap-2 text-white/60 hover:text-white transition-all text-sm font-medium backdrop-blur-md px-3 sm:px-4 py-2 rounded-full"
-          style={{ background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.12)" }}
-        >
-          <ChevronLeft className="w-4 h-4" />
-          <span className="hidden sm:inline">All Adventures</span>
-        </Link>
+        <ExploreBackLink slug={slug} fallbackPage={fallbackPage} />
 
         {/* Hero text */}
         <div className="relative z-10 max-w-7xl mx-auto px-5 lg:px-8 pb-6 md:pb-8 w-full">
@@ -511,7 +502,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                         showWater={showWaterWarning}
                       />
                     )}
-                    <MedicalCautionNote notes={medicalCautions} />
+                    <MedicalCautionNote slug={adventure.slug} />
                   </div>
 
                   <PackingList
@@ -521,7 +512,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     bestSeason={adventure.bestSeason}
                     adventureAce={ace}
                     slug={adventure.slug}
-                    loggedIn={!!currentUserId}
                   />
                 </div>
               </AccordionSection>
@@ -592,11 +582,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
               {/* Community */}
               <AccordionSection id="community" label="community" title="Traveller reviews" defaultOpen>
-                <CommunityCards
-                  slug={adventure.slug}
-                  currentUserId={currentUserId}
-                  reviews={<ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} operators={allOperators} />}
-                />
+                <CommunityCards slug={adventure.slug} adventureType={adventure.type} adventureName={adventure.name} operators={allOperators} />
               </AccordionSection>
 
               {/* Tags */}

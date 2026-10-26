@@ -148,8 +148,9 @@ export async function adminDeleteReview(reviewId: string) {
   const authError = await requireAdmin();
   if (authError) return authError;
   const admin = adminAuth();
-  const { error } = await admin.from("reviews").delete().eq("id", reviewId);
+  const { data: deleted, error } = await admin.from("reviews").delete().eq("id", reviewId).select("adventure_slug");
   if (error) return { error: error.message };
+  deleted?.forEach((r) => revalidatePath(`/experiences/${r.adventure_slug}`));
   return { success: true };
 }
 

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/authz";
 import { callbackLink } from "@/lib/authLinks";
@@ -315,6 +316,8 @@ export async function updateOperatorSubmission(formData: FormData) {
     exact_dates,
     status: "pending", // re-submit for review on any edit
   });
+  // An approved listing is hidden again until re-approved
+  if (existing.status === "approved") revalidatePath(`/experiences/${existing.adventure_slug}`);
 
   return { success: "Changes submitted for review." };
 }
@@ -377,6 +380,8 @@ export async function approveOperatorSubmission(submissionId: string) {
   // Ensure the operator's profile row has role = "operator"
   await adminClient.from("profiles").update({ role: "operator" }).eq("id", sub.operator_id);
 
+  // The adventure page is cached; show the new operator now
+  revalidatePath(`/experiences/${sub.adventure_slug}`);
   return { success: "Approved." };
 }
 
@@ -395,5 +400,6 @@ export async function rejectOperatorSubmission(submissionId: string) {
     ...sub,
     status: "rejected",
   });
+  revalidatePath(`/experiences/${sub.adventure_slug}`);
   return { success: "Rejected." };
 }

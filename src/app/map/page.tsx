@@ -16,5 +16,11 @@ export const metadata: Metadata = {
 };
 
 export default function MapPage() {
-  return <MapClient />;
+  return (
+    <>
+      {/* The map is the page; this names it for screen readers and search */}
+      <h1 className="sr-only">Adventure map of India and Nepal</h1>
+      <MapClient />
+    </>
+  );
 }
