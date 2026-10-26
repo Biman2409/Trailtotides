@@ -13,12 +13,17 @@ const client = hasGeminiKey
   ? new OpenAI({
       apiKey: process.env.GEMINI_API_KEY,
       baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+      // A stuck model mustn't freeze the chat: give up and try the next one
+      timeout: 20_000,
+      maxRetries: 0,
     })
   : null;
 
-// Tried in order. GEMINI_MODEL (set in Vercel) swaps the first one without a code change,
-// for when Google retires a model.
-const GEMINI_MODELS = [...new Set([process.env.GEMINI_MODEL || "gemini-2.5-flash", "gemini-2.5-flash-lite"])];
+// Tried in order. The lite models answer in a few seconds on the free tier (the full Flash
+// ones can hang for minutes); the "latest" alias follows Google's newest lite model, so the
+// chat keeps working when they retire one, as they did gemini-2.5-flash for new keys.
+// GEMINI_MODEL (set in Vercel) swaps the first one without a code change.
+const GEMINI_MODELS = [...new Set([process.env.GEMINI_MODEL || "gemini-3.5-flash-lite", "gemini-flash-lite-latest"])];
 
 // ─── Dynamically derive available vs coming-soon types ────────────────────────
 
