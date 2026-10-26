@@ -73,15 +73,34 @@ const PHYSICAL_AXES: AceAxis[] = ["stamina", "power", "strength", "agility"];
 const ALL_AXES: AceAxis[] = ["stamina", "power", "strength", "agility", "water", "altitude", "focus", "nerve"];
 
 // ── Calibration ───────────────────────────────────────────────────────────────
-// The two calibration answers (1 = worst, 5 = best) are averaged; the average sets one
-// multiplier on the four physical axes. Only the worst answer to both halves them.
-const CALIBRATION_BY_AVERAGE: Record<string, number> = {
-  "5": 1.0, "4.5": 0.97, "4": 0.94, "3.5": 0.9, "3": 0.85, "2.5": 0.79, "2": 0.72, "1.5": 0.63, "1": 0.5,
-};
+// Capability answers describe someone's level when they last performed at it; calibration
+// estimates how much of that has faded since. It follows the detraining research:
+// - Fitness fades at different rates: aerobic endurance fastest (VO2max drops ~7% in the first
+//   3 weeks off and ~15-20% by 2-3 months), then power, then maximal strength (largely kept for
+//   3-4 weeks), and balance/footwork slowest, since much of it is skill.
+// - Most of the loss comes in the first few months, then it levels off.
+// - Ongoing training preserves it: about 2 hard sessions a week maintain endurance and 1 a week
+//   maintains strength, so current activity shields most of the loss even after a long gap.
+// loss(axis) = MAX_LOSS[axis] × RECENCY_SHARE[recency] × (1 − ACTIVITY_SHIELD[activity])
+type Tier = 1 | 2 | 3 | 4 | 5;
 
-/** The average of the two calibration tiers decides the multiplier. */
-export function computeDecayMultiplier(recencyTier: 1 | 2 | 3 | 4 | 5, activityTier: 1 | 2 | 3 | 4 | 5): number {
-  return CALIBRATION_BY_AVERAGE[String((recencyTier + activityTier) / 2)] ?? 1;
+/** The share of each physical axis lost after a year or more with no training at all. */
+const MAX_LOSS: Partial<Record<AceAxis, number>> = { stamina: 0.4, power: 0.3, strength: 0.25, agility: 0.15 };
+
+/** How much of the maximum loss has happened, by recency tier (1 = over a year ago, 5 = this month). */
+const RECENCY_SHARE: Record<Tier, number> = { 1: 1, 2: 0.85, 3: 0.7, 4: 0.45, 5: 0.1 };
+
+/** How much of that loss current activity prevents, by activity tier (1 = sedentary, 5 = daily). */
+const ACTIVITY_SHIELD: Record<Tier, number> = { 1: 0, 2: 0.15, 3: 0.5, 4: 0.75, 5: 0.9 };
+
+/** The calibration multiplier for each physical axis (non-physical axes aren't calibrated). */
+export function computeDecayMultipliers(recencyTier: Tier, activityTier: Tier): Partial<Record<AceAxis, number>> {
+  const out: Partial<Record<AceAxis, number>> = {};
+  PHYSICAL_AXES.forEach((axis) => {
+    const loss = MAX_LOSS[axis]! * RECENCY_SHARE[recencyTier] * (1 - ACTIVITY_SHIELD[activityTier]);
+    out[axis] = Math.round((1 - loss) * 100) / 100;
+  });
+  return out;
 }
 
 // ── Health ────────────────────────────────────────────────────────────────────
@@ -113,7 +132,8 @@ export const MIN_TOTAL_MULTIPLIER = 0.5;
 export interface AceComputationResult {
   ace: ACE;
   rawAxes: Record<AceAxis, number>;
-  decayMultiplier: number;
+  /** Calibration multiplier per physical axis (empty if calibration wasn't answered) */
+  decayMultipliers: Partial<Record<AceAxis, number>>;
   /** Health answers that lowered a score, and on which axes */
   health: HealthEffect[];
   /** The combined multiplier each axis got (after the 50% floor) */
@@ -147,12 +167,12 @@ export function computeAceFromAnswers(
     rawAxes[axis] = vals.length === 2 ? combineDualAxis(vals[0], vals[1]) : vals.length === 1 ? clamp(vals[0]) : 1;
   });
 
-  // 2. Calibration — the average of the two answers, physical axes only.
+  // 2. Calibration — per physical axis, from recency and current activity together.
   const recencyOpt = DECAY_QUESTIONS[0].options.find((o) => o.v === decayAnswers[DECAY_QUESTIONS[0].key]);
   const activityOpt = DECAY_QUESTIONS[1].options.find((o) => o.v === decayAnswers[DECAY_QUESTIONS[1].key]);
-  const decayMultiplier = recencyOpt && activityOpt
-    ? computeDecayMultiplier(recencyOpt.tier, activityOpt.tier)
-    : 1.0; // both questions are mandatory in the UI — this is a safe fallback, not the expected path
+  const decayMultipliers = recencyOpt && activityOpt
+    ? computeDecayMultipliers(recencyOpt.tier, activityOpt.tier)
+    : {}; // both questions are mandatory in the UI — this is a safe fallback, not the expected path
 
   // 3. Health — every effect that applies, stacked per axis.
   const health = healthEffects(medicalFlags);
@@ -160,12 +180,12 @@ export function computeAceFromAnswers(
   const ace = { ...rawAxes } as ACE;
   const totalMultiplier = {} as Record<AceAxis, number>;
   ALL_AXES.forEach((axis) => {
-    let m = PHYSICAL_AXES.includes(axis) ? decayMultiplier : 1;
+    let m = decayMultipliers[axis] ?? 1;
     health.forEach((h) => { m *= h.axes[axis] ?? 1; });
     m = Math.max(MIN_TOTAL_MULTIPLIER, m);
     totalMultiplier[axis] = m;
     ace[axis] = clamp(Math.round(rawAxes[axis] * m));
   });
 
-  return { ace, rawAxes, decayMultiplier, health, totalMultiplier };
+  return { ace, rawAxes, decayMultipliers, health, totalMultiplier };
 }

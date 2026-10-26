@@ -1358,18 +1358,19 @@ export default function MatchmakerClient() {
 
     // Health answers become flags first; the scoring reads the flags (never the raw answers)
     const medicalFlags = buildMedicalFlags(finalAnswers, jointNote);
-    const { ace: userAxes, rawAxes, decayMultiplier, health } = computeAceFromAnswers(scoringAnswers, scoringAnswers, medicalFlags);
+    const { ace: userAxes, rawAxes, decayMultipliers, health } = computeAceFromAnswers(scoringAnswers, scoringAnswers, medicalFlags);
 
     // Say exactly what lowered which scores, so the result can be read
     const decayNotes: string[] = [];
-    if (decayMultiplier < 1) {
-      decayNotes.push(`Calibration (how recently and how often you're active): Stamina, Power, Strength and Agility ×${decayMultiplier.toFixed(2)}.`);
-    }
     const axisName = (k: string) => k.charAt(0).toUpperCase() + k.slice(1);
+    const decayed = Object.entries(decayMultipliers).filter(([, m]) => (m as number) < 1);
+    if (decayed.length) {
+      decayNotes.push(`Calibration (how recently and how often you're active — endurance fades fastest, balance slowest): ${decayed.map(([k, m]) => `${axisName(k)} ×${(m as number).toFixed(2)}`).join(", ")}.`);
+    }
     health.forEach((h) => {
       decayNotes.push(`${h.label}: ${Object.entries(h.axes).map(([k, m]) => `${axisName(k)} ×${(m as number).toFixed(2)}`).join(", ")}.`);
     });
-    if (decayMultiplier < 1 || health.length) {
+    if (decayed.length || health.length) {
       decayNotes.push("Adjustments multiply together, but no score drops by more than half.");
     }
     const unsure = CAPABILITY_QUESTIONS.filter((q) => finalAnswers[q.key] === NOT_SURE).map((q) => q.axis);

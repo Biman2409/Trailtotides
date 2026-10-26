@@ -145,14 +145,14 @@ export const CAPABILITY_QUESTIONS: CapabilityQuestion[] = [
   {
     key: "altitude-1",
     axis: "Altitude",
-    question: "What's the highest altitude you've spent a night at, and how did your body handle it?",
-    hint: "e.g., relevant for Himalayan treks, high mountain passes on a motorcycle expedition, or high-altitude paragliding launch sites.",
+    question: "What's the highest altitude you've spent a night at without getting properly sick?",
+    hint: "A mild headache or breathlessness that passed is normal. \"Properly sick\" means a pounding headache with nausea or vomiting, unusual exhaustion, or having to descend. e.g., Leh is ~3,500m, Everest Base Camp ~5,360m.",
     options: [
-      { v: "A", l: "Never been above 2,000m" },
-      { v: "B", l: "2,000–3,500m — no issues" },
-      { v: "C", l: "3,500–4,500m — mild headache or breathlessness that passed" },
-      { v: "D", l: "4,500–5,500m — handled it well" },
-      { v: "E", l: "5,500m+ — handled it well" },
+      { v: "A", l: "Never slept above 2,500m — or I got properly sick when I did" },
+      { v: "B", l: "2,500–3,500m" },
+      { v: "C", l: "3,500–4,500m" },
+      { v: "D", l: "4,500–5,500m" },
+      { v: "E", l: "5,500m+" },
     ],
   },
   {
@@ -185,8 +185,8 @@ export const CAPABILITY_QUESTIONS: CapabilityQuestion[] = [
 
 // ─── Decay / rustiness questions ───────────────────────────────────────────
 // Exactly 2, mandatory (no skip — nothing sensitive about "when did you last
-// exercise"). NOT scored as their own ACE axis: the worse of the two tiers
-// becomes a multiplier applied only to stamina/power/strength/agility.
+// exercise"). NOT scored as their own ACE axis: together they set a separate
+// multiplier for each of stamina/power/strength/agility (see computeDecayMultipliers).
 
 export interface DecayOption {
   v: "A" | "B" | "C" | "D" | "E";
@@ -218,13 +218,13 @@ export const DECAY_QUESTIONS: DecayQuestion[] = [
   {
     key: "decay-activity",
     title: "Current Activity Level",
-    question: "How physically active are you right now, in a typical week?",
+    question: "In a typical week right now, how many times do you exercise hard enough to breathe heavily or work your muscles (30+ minutes — a run, gym session, sport, hike, ride)?",
     options: [
-      { v: "A", l: "Mostly sedentary", tier: 1 },
-      { v: "B", l: "Light activity (occasional walks, light chores)", tier: 2 },
-      { v: "C", l: "Moderate — active 1–2 times/week", tier: 3 },
-      { v: "D", l: "Regularly active — 3–4 times/week", tier: 4 },
-      { v: "E", l: "Very active — daily or near-daily training/sport", tier: 5 },
+      { v: "A", l: "Never — mostly sedentary", tier: 1 },
+      { v: "B", l: "Rarely — light walks or chores, no real workouts", tier: 2 },
+      { v: "C", l: "1–2 times a week", tier: 3 },
+      { v: "D", l: "3–4 times a week", tier: 4 },
+      { v: "E", l: "5+ times a week", tier: 5 },
     ],
   },
 ];
