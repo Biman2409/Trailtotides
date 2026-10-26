@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Fraunces, Great_Vibes, Caveat, Permanent_Marker } from "next/font/google";
 import "./globals.css";
-import { VisualEditsMessenger } from "orchids-visual-edits";
-import Script from "next/script";
 import CompareWrapper from "@/components/ui/custom/CompareWrapper";
 import NavigationScrollReset from "@/components/ui/custom/NavigationScrollReset";
 import MobileBottomNav from "@/components/ui/custom/MobileBottomNav";
@@ -229,18 +227,11 @@ export default function RootLayout({
             ]),
           }}
         />
-        <Script
-          id="orchids-browser-logs"
-          src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/scripts/orchids-browser-logs.js"
-          strategy="afterInteractive"
-          data-orchids-project-id="71778e38-df00-4ed2-869a-028f1f2862c1"
-        />
         <Suspense fallback={null}>
           <NavigationScrollReset />
         </Suspense>
         <CompareWrapper>
             {children}
-            <VisualEditsMessenger />
           </CompareWrapper>
           <MobileBottomNav />
           <Toaster position="bottom-center" richColors />
