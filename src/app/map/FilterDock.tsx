@@ -3,11 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Shapes, MapPin, LocateFixed, Loader2, Check, Search, X, Navigation } from "lucide-react";
-import { adventures, type Adventure, type AdventureType } from "@/lib/data";
-import { typeIconSvg } from "@/lib/mapMarkerIcons";
+import { adventures, type Adventure } from "@/lib/data";
 import { toggleSelection } from "@/lib/filterOptions";
-import { TYPE_OPTIONS, STATE_COUNTS, type AdventureFilterState } from "@/components/ui/custom/AdventureFilters";
-import { genreOf } from "./mapShared";
+import { STATE_COUNTS, CategoryList, categoryLabel, type AdventureFilterState } from "@/components/ui/custom/AdventureFilters";
 
 // The three filters the map keeps on screen — what kind, where, near me — as one dock.
 // Everything else lives under Filters. Type and Where write the same state as the panel.
@@ -16,7 +14,6 @@ type Menu = "type" | "where" | "near" | null;
 type Place = { place_id: number; display_name: string; lat: string; lon: string };
 
 export const RADII = [100, 250, 500] as const;
-const TYPE_COUNTS = adventures.reduce<Record<string, number>>((n, a) => ({ ...n, [a.type]: (n[a.type] ?? 0) + 1 }), {});
 const MAX_STATE = STATE_COUNTS[0]?.[1] ?? 1;
 
 export default function FilterDock({
@@ -62,8 +59,8 @@ export default function FilterDock({
 
   const toggle = (m: Menu) => setOpen((cur) => (cur === m ? null : m));
 
-  const typeLabel = !f.types.length ? "Type" : f.types.length === 1 ? f.types[0] : `${f.types[0]} +${f.types.length - 1}`;
-  const whereLabel = !f.states.length ? "Where" : f.states.length === 1 ? f.states[0] : `${f.states[0]} +${f.states.length - 1}`;
+  const typeLabel = categoryLabel("type", f);
+  const whereLabel = categoryLabel("region", f);
   const nearLabel = nearMe ? (radius ? `${radius} km` : "Near me") : "Near me";
 
   return (
@@ -83,7 +80,7 @@ export default function FilterDock({
       </div>
 
       {open && (
-        <div className="tm-menu absolute left-0 right-0 top-full mt-2 z-[1100]" role="dialog" aria-label={open === "type" ? "Adventure type" : open === "where" ? "Where" : "Near me"}>
+        <div className="tm-menu absolute left-0 right-0 top-full mt-2 z-[1100]" role="dialog" aria-label={open === "type" ? "Adventure type" : open === "where" ? "Region" : "Near me"}>
           {open === "type" && <TypeMenu f={f} set={set} />}
           {open === "where" && <WhereMenu f={f} set={set} onPlace={(...a) => { onPlace(...a); setOpen(null); }} onAdventure={(a) => { onAdventure(a); setOpen(null); }} />}
           {open === "near" && <NearMenu nearMe={nearMe} loading={nearLoading} radius={radius} onRadius={onRadius} onToggle={() => { onNearMe(); if (nearMe) setOpen(null); }} />}
@@ -107,33 +104,15 @@ function DockPill({ icon, label, on, open, onClick, tone = "orange" }: {
 
 /* ── Type: tiles with the map's own pin icon, a count and their share of the map ── */
 
+// The same Earth / Water / Snow / Air lists as Explore's Type button
 function TypeMenu({ f, set }: { f: AdventureFilterState; set: (p: Partial<AdventureFilterState>) => void }) {
-  const total = adventures.length;
   return (
-    <div className="p-3">
+    <div className="p-3 max-h-[min(60vh,420px)] overflow-y-auto tm-scroll">
       <div className="flex items-center justify-between mb-2.5">
         <p className="tm-label !mb-0">Adventure type</p>
         {f.types.length > 0 && <button type="button" onClick={() => set({ types: [] })} className="text-[11px] font-semibold text-[#ff9a66] hover:underline">All types</button>}
       </div>
-      <div className="grid grid-cols-2 gap-2">
-        {TYPE_OPTIONS.map((t: AdventureType) => {
-          const on = f.types.includes(t);
-          const n = TYPE_COUNTS[t] ?? 0;
-          const g = genreOf(t);
-          return (
-            <button key={t} type="button" aria-pressed={on} onClick={() => toggleSelection(f.types, t, (v) => set({ types: v }))}
-              className="tm-tile" data-on={on || undefined} style={{ "--g": g.color, "--glow": g.glow } as React.CSSProperties}>
-              <span className="tm-tile-icon" dangerouslySetInnerHTML={{ __html: typeIconSvg(t, 16, "#15110e") }} />
-              <span className="min-w-0 text-left">
-                <span className="block text-[12.5px] font-semibold truncate">{t}</span>
-                <span className="block text-[10.5px] opacity-60">{n} adventure{n === 1 ? "" : "s"}</span>
-              </span>
-              {on && <Check className="w-3.5 h-3.5 ml-auto shrink-0" />}
-              <span className="tm-tile-bar" style={{ width: `${Math.max(4, (n / total) * 100)}%` }} />
-            </button>
-          );
-        })}
-      </div>
+      <CategoryList kind="type" f={f} set={set} columns={1} />
     </div>
   );
 }
@@ -199,8 +178,15 @@ function WhereMenu({ f, set, onPlace, onAdventure }: {
           </Group>
         )}
 
-        {states.length > 0 && (
-          <Group title={query ? "States" : "Where our adventures are"} action={f.states.length > 0 && !query ? <button type="button" onClick={() => set({ states: [] })} className="text-[11px] font-semibold text-[#ff9a66] hover:underline">Anywhere</button> : null}>
+        {/* No search yet: the regions, each with its states, as on Explore's Region button */}
+        {!query && (
+          <Group title="Regions" action={f.states.length > 0 ? <button type="button" onClick={() => set({ states: [] })} className="text-[11px] font-semibold text-[#ff9a66] hover:underline">Anywhere</button> : null}>
+            <div className="px-1.5 pb-1"><CategoryList kind="region" f={f} set={set} columns={1} /></div>
+          </Group>
+        )}
+
+        {query && states.length > 0 && (
+          <Group title="States">
             {states.map(([s, n]) => {
               const on = f.states.includes(s);
               return (

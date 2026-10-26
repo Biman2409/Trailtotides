@@ -21,12 +21,12 @@ import { bucketFor } from "@/lib/fitness";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
 import { currentMonthIndexIST } from "@/lib/homeCuration";
 import {
-  MONTHS, SORT_LABELS, formatAltitude, latestPriceCheck, searchSuggestions, sortAdventures,
+  SORT_LABELS, formatAltitude, latestPriceCheck, searchSuggestions, sortAdventures,
   type SortKey,
 } from "@/lib/exploreHelpers";
 import {
-  NO_FILTERS, filtersFromParams, writeFilterParams, filterAdventures, panelCount as countPanel, anyFilter,
-  QuickFilterChips, GenreChips, FilterPanel, type AdventureFilterState,
+  NO_FILTERS, filtersFromParams, writeFilterParams, filterAdventures, anyFilter,
+  CategoryBar, FilterPanel, type AdventureFilterState,
 } from "@/components/ui/custom/AdventureFilters";
 
 type View = "grid" | "list";
@@ -37,7 +37,6 @@ export default function ExploreClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const monthIdx = currentMonthIndexIST();
-  const thisMonth = MONTHS[monthIdx];
   const { ace: fitAce, ready: profileReady } = useFitnessProfile();
 
   // ── State, initialised from the link (old single-value params still work) ──
@@ -86,7 +85,8 @@ export default function ExploreClient() {
   // New filters start from the top of the list again
   useEffect(() => { setShown(PAGE); }, [f, region, sortKey]);
 
-  const panelCount = countPanel(f);
+  // The Filters badge counts only what's inside the panel; Type and Region show on their own buttons
+  const extraCount = f.diffs.length + f.durs.length + f.months.length + (f.maxPrice ? 1 : 0) + (f.fit ? 1 : 0) + (f.editorOnly ? 1 : 0);
   const anyActive = anyFilter(f) || !!region;
   const search = f.search;
   const suggestions = results.length === 0 && search ? searchSuggestions(adventures, search) : [];
@@ -142,16 +142,6 @@ export default function ExploreClient() {
             )}
           </div>
 
-          <button
-            onClick={() => setFiltersOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-colors"
-            style={panelCount > 0 ? { background: "#ff5100", color: "#fff" } : { background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
-          >
-            <SlidersHorizontal className="w-4 h-4" />
-            <span className="hidden sm:inline">Filters</span>
-            {panelCount > 0 && <span className="text-xs font-bold">{panelCount}</span>}
-          </button>
-
           <label className="hidden md:flex items-center gap-2 text-sm ml-auto" style={{ color: "var(--text-tertiary)" }}>
             Sort
             <select
@@ -182,12 +172,24 @@ export default function ExploreClient() {
           </div>
         </div>
 
-        {/* ── Genres: every kind of adventure, unfolding into its activity types ── */}
-        <GenreChips f={f} set={set} className="max-w-7xl mx-auto px-5 lg:px-8 pb-2" />
-
-        {/* ── Quick chips: the filters most people want, one tap away ── */}
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 pb-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar">
-          <QuickFilterChips f={f} set={set} thisMonth={thisMonth} hasFit={!!fitAce} />
+        {/* ── Two broad categories, as on the home page, then everything else under Filters ── */}
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 pb-2.5">
+          <CategoryBar
+            f={f} set={set}
+            trailing={
+              <button
+                onClick={() => setFiltersOpen(true)}
+                className="inline-flex items-center gap-2 h-11 px-4 rounded-xl text-sm font-medium whitespace-nowrap transition-colors"
+                style={extraCount > 0
+                  ? { background: "#ff5100", color: "#fff", border: "1px solid #ff5100" }
+                  : { background: "var(--bg-card)", color: "var(--text-primary)", border: "1px solid var(--border-default)" }}
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                Filters
+                {extraCount > 0 && <span className="text-xs font-bold">{extraCount}</span>}
+              </button>
+            }
+          />
         </div>
       </div>
 

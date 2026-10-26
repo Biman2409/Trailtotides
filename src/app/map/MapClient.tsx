@@ -22,7 +22,7 @@ import { currentMonthIndexIST } from "@/lib/homeCuration";
 import { SORT_LABELS, sortAdventures, type SortKey } from "@/lib/exploreHelpers";
 import {
   NO_FILTERS, filtersFromParams, writeFilterParams, filterAdventures, panelCount, anyFilter,
-  FilterPanel, GenreChips, type AdventureFilterState,
+  FilterPanel, type AdventureFilterState,
 } from "@/components/ui/custom/AdventureFilters";
 import MapCanvas, { type MapApi, type UserPhoto, type CompletedAdventure } from "./MapCanvas";
 import FilterDock from "./FilterDock";
@@ -511,7 +511,6 @@ export default function MapClient() {
               <div className="p-3 space-y-2 border-b border-white/[0.06]">
                 <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} />
                 {dock(false)}
-                <GenreChips f={f} set={set} />
                 {statusLine}
                 {legendLine}
               </div>
@@ -532,11 +531,7 @@ export default function MapClient() {
         {mounted && !desktop && (
           <>
             <div className="absolute z-[1000] top-2 inset-x-2">{dock(true)}</div>
-            {/* Genres float under the dock, beside the layers button */}
-            <div className="absolute z-[999] inset-x-2 flex items-start gap-2" style={{ top: 56 }}>
-              <GenreChips f={f} set={set} className="tm-genres-float flex-1 min-w-0" />
-              {layersMenu}
-            </div>
+            <div className="absolute z-[999] right-2" style={{ top: 56 }}>{layersMenu}</div>
 
             <MobileSheet height={sheetH} state={sheet} onState={setSheet} areaH={areaH}>
               {/* An open adventure gets the whole sheet: on a phone the card is the point, so
@@ -616,11 +611,7 @@ function MobileSheet({ height, state, onState, areaH, children }: {
 }
 
 const PAGE_CSS = `
-  .tm-page { background: #0b0d10; color: #fff; }
-  /* Genre and type chips floating over the map on phones: glass so they read over the tiles */
-  .tm-genres-float .ttt-genre, .tm-genres-float .ttt-type:not([data-on]) { background: rgba(17,20,24,0.86); backdrop-filter: blur(14px); }
-  .tm-genres-float .ttt-genre[data-on] { background: color-mix(in srgb, var(--g) 18%, rgba(17,20,24,0.92)); }
-  .tm-glass { background: rgba(17,20,24,0.86); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  .tm-page { background: #0b0d10; color: #fff; }  .tm-glass { background: rgba(17,20,24,0.86); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2);
               border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 16px 48px rgba(0,0,0,0.45); }
   @media (prefers-reduced-transparency: reduce) { .tm-glass { background: #121519; backdrop-filter: none; } }
   .tm-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }

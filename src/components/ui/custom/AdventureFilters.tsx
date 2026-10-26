@@ -4,12 +4,13 @@
 // write it in the link, one filter function, the quick chips and the full panel. Keeping
 // them here means both pages always offer exactly the same filters.
 
-import { useEffect, useRef } from "react";
-import { X, Crown } from "lucide-react";
-import { adventures } from "@/lib/data";
+import { useEffect, useRef, useState } from "react";
+import { X, Crown, ChevronDown, Shapes, MapPin } from "lucide-react";
+import { adventures, getLowestPrice } from "@/lib/data";
 import type { AdventureType, Difficulty, Duration, Month } from "@/lib/data";
 import { toggleSelection as toggle, GENRE_GROUPS } from "@/lib/filterOptions";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
+import { REGION_STATES, REGION_ORDER } from "@/lib/regionGroups";
 import { MONTHS, SORT_LABELS, type SortKey } from "@/lib/exploreHelpers";
 
 export type { FitFilter, AdventureFilterState } from "@/lib/adventureFilterState";
@@ -81,93 +82,174 @@ export function FilterChip({ on, onClick, children, dot, icon }: { on: boolean; 
   );
 }
 
-/* ── Genre chips: every kind of adventure at a glance ─────────────────────────── */
+/* ── Type and Region: the two broad categories, as on the home page ────────────── */
 
-// Mountain → ocean, as on the home page's Find your format. Each genre shows its count (or
-// "Soon"); opening one filters to it and unfolds every activity type in it, live ones to pick
-// from and the rest marked Soon, so the whole range is always in view. They work on the same
-// type filter as the panel, so links and the Explore ↔ map hand-off carry them.
+// Type is Earth / Water / Snow / Air (the home page's "Find your format"); Region is the home
+// page's "Find by region". Each group lists everything under it, live ones to pick and the rest
+// marked Soon, so the whole range is in view. Tapping a group's name picks all its live
+// entries. They drive the same type and state filters as before, so links and the Explore ↔ map
+// hand-off carry them.
+
+type CatEntry = { key: string; n: number; icon?: React.ReactNode };
+type CatGroup = { label: string; light: string; dark: string; entries: CatEntry[] };
+
 const GENRE_LOOK: Record<string, { light: string; dark: string }> = {
   Earth: { light: "#b45309", dark: "#ff9a66" },
+  Water: { light: "#0e7490", dark: "#6ff0e0" },
   Snow:  { light: "#4f46e5", dark: "#b9c3ff" },
   Air:   { light: "#a16207", dark: "#ffd27a" },
-  Water: { light: "#0e7490", dark: "#6ff0e0" },
 };
-const GENRE_ORDER = ["Earth", "Snow", "Air", "Water"];
-const TYPE_COUNTS = adventures.reduce<Record<string, number>>((acc, a) => { acc[a.type] = (acc[a.type] ?? 0) + 1; return acc; }, {});
+const REGION_LOOK = { light: "#15803d", dark: "#7edc96" };
 
-export function GenreChips({ f, set, className = "" }: {
+const TYPE_COUNTS = adventures.reduce<Record<string, number>>((acc, a) => { acc[a.type] = (acc[a.type] ?? 0) + 1; return acc; }, {});
+const stateCount = (s: string) => adventures.filter((a) => a.state.includes(s)).length;
+
+export const TYPE_GROUPS: CatGroup[] = ["Earth", "Water", "Snow", "Air"].map((label) => {
+  const g = GENRE_GROUPS.find((x) => x.label === label)!;
+  return { label, ...GENRE_LOOK[label], entries: g.types.map((t) => ({ key: t, n: TYPE_COUNTS[t] ?? 0, icon: ADVENTURE_TYPE_ICONS[t]?.(12) })) };
+});
+
+export const REGION_GROUPS: CatGroup[] = REGION_ORDER.map((label) => ({
+  label, ...REGION_LOOK,
+  entries: REGION_STATES[label].map((s) => ({ key: s, n: stateCount(s) })),
+}));
+
+const groupTotal = (g: CatGroup, field: "types" | "states") =>
+  field === "types"
+    ? g.entries.reduce((s, e) => s + e.n, 0)
+    // A region's adventures, each counted once even when it lists two of the region's states
+    : adventures.filter((a) => g.entries.some((e) => e.n && a.state.includes(e.key))).length;
+
+/** Every group in a category with all its entries; the body of the Type and Region menus */
+export function CategoryList({ kind, f, set, columns = 2 }: {
+  kind: "type" | "region";
   f: AdventureFilterState;
   set: (patch: Partial<AdventureFilterState>) => void;
-  className?: string;
+  /** Groups side by side on wide screens */
+  columns?: 1 | 2;
 }) {
-  const genres = GENRE_ORDER.map((label) => GENRE_GROUPS.find((g) => g.label === label)!).filter(Boolean);
-  const isOpen = (types: AdventureType[]) => types.some((t) => f.types.includes(t));
-  const open = genres.filter((g) => isOpen(g.types));
+  const field = kind === "type" ? "types" : "states";
+  const groups = kind === "type" ? TYPE_GROUPS : REGION_GROUPS;
+  const picked = f[field] as string[];
+  const write = (v: string[]) => set({ [field]: v } as Partial<AdventureFilterState>);
+  const sorted = [...groups].sort((a, b) => (groupTotal(b, field) ? 1 : 0) - (groupTotal(a, field) ? 1 : 0));
 
   return (
-    <div className={`ttt-genres ${className}`}>
-      <style>{GENRE_CSS}</style>
-      <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
-        {genres.map((g) => {
-          const live = g.types.filter((t) => TYPE_COUNTS[t]);
-          const n = live.reduce((s, t) => s + TYPE_COUNTS[t], 0);
-          const on = isOpen(g.types);
-          const look = GENRE_LOOK[g.label];
-          return (
-            <button key={g.label} type="button" aria-pressed={on} disabled={!n}
-              title={n ? `${n} ${g.label} adventure${n > 1 ? "s" : ""}` : `${g.label} adventures are coming soon`}
-              // Opening a genre picks all its live types; closing it drops them
-              onClick={() => set({ types: on ? f.types.filter((t) => !g.types.includes(t)) : [...new Set([...f.types, ...live])] })}
-              className="ttt-genre" style={{ "--g-l": look.light, "--g-d": look.dark } as React.CSSProperties} data-on={on || undefined}>
-              <span className="ttt-genre-dot" />{g.label}
-              <span className="ttt-genre-n">{n || "Soon"}</span>
+    <div className={`ttt-cats grid gap-x-5 gap-y-3.5 ${columns === 2 ? "sm:grid-cols-2" : ""}`}>
+      <style>{CAT_CSS}</style>
+      {sorted.map((g) => {
+        const live = g.entries.filter((e) => e.n).map((e) => e.key);
+        const total = groupTotal(g, field);
+        const allOn = live.length > 0 && live.every((k) => picked.includes(k));
+        const look = { "--g-l": g.light, "--g-d": g.dark } as React.CSSProperties;
+        return (
+          <div key={g.label} style={look}>
+            <button type="button" disabled={!total} aria-pressed={allOn}
+              onClick={() => write(allOn ? picked.filter((k) => !live.includes(k)) : [...new Set([...picked, ...live])])}
+              className="ttt-cat-head" data-on={allOn || undefined}
+              title={total ? `All of ${g.label}` : `${g.label} adventures are coming soon`}>
+              <span className="ttt-cat-dot" />{g.label}
+              <span className="ttt-cat-n">{total || "Soon"}</span>
             </button>
-          );
-        })}
-      </div>
-      {open.length > 0 && (
-        <div className="ttt-types flex gap-1.5 overflow-x-auto no-scrollbar mt-1.5">
-          {open.flatMap((g) => g.types.map((t) => {
-            const n = TYPE_COUNTS[t] ?? 0;
-            const on = f.types.includes(t);
-            const look = GENRE_LOOK[g.label];
-            return (
-              <button key={t} type="button" aria-pressed={on} disabled={!n} title={n ? undefined : `${t} is coming soon`}
-                onClick={() => toggle(f.types, t, (v) => set({ types: v }))}
-                className="ttt-type" style={{ "--g-l": look.light, "--g-d": look.dark } as React.CSSProperties} data-on={on || undefined}>
-                <span className="opacity-90 grid place-items-center">{ADVENTURE_TYPE_ICONS[t]?.(11)}</span>
-                {t}<span className="ttt-type-n">{n || "Soon"}</span>
+            <div className="flex flex-wrap gap-1.5 mt-1.5">
+              {g.entries.map((e) => {
+                const on = picked.includes(e.key);
+                return (
+                  <button key={e.key} type="button" disabled={!e.n} aria-pressed={on}
+                    onClick={() => toggle(picked, e.key, write)}
+                    className="ttt-cat-item" data-on={on || undefined} title={e.n ? undefined : `${e.key} is coming soon`}>
+                    {e.icon && <span className="grid place-items-center opacity-90">{e.icon}</span>}
+                    {e.key}<span className="ttt-cat-item-n">{e.n || "Soon"}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** "Type" / "Region" with what's picked: "Trekking +2" */
+export function categoryLabel(kind: "type" | "region", f: AdventureFilterState) {
+  const picked = kind === "type" ? f.types : f.states;
+  const name = kind === "type" ? "Type" : "Region";
+  return !picked.length ? name : picked.length === 1 ? picked[0] : `${picked[0]} +${picked.length - 1}`;
+}
+
+/** The two category buttons, each opening its list in a popover; extra buttons go at the end */
+export function CategoryBar({ f, set, trailing }: {
+  f: AdventureFilterState;
+  set: (patch: Partial<AdventureFilterState>) => void;
+  trailing?: React.ReactNode;
+}) {
+  const [open, setOpen] = useState<"type" | "region" | null>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => { if (!wrapRef.current?.contains(e.target as Node)) setOpen(null); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(null); };
+    document.addEventListener("pointerdown", onDown);
+    window.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("pointerdown", onDown); window.removeEventListener("keydown", onKey); };
+  }, [open]);
+
+  const btn = (kind: "type" | "region", icon: React.ReactNode) => {
+    const n = (kind === "type" ? f.types : f.states).length;
+    const isOpen = open === kind;
+    return (
+      <button type="button" onClick={() => setOpen(isOpen ? null : kind)} aria-expanded={isOpen}
+        className="inline-flex items-center gap-2 h-11 px-4 rounded-xl text-sm font-medium transition-colors min-w-0"
+        style={n || isOpen
+          ? { background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)" }
+          : { background: "var(--bg-card)", color: "var(--text-primary)", border: "1px solid var(--border-default)" }}>
+        <span className="shrink-0">{icon}</span>
+        <span className="truncate max-w-[9rem]">{categoryLabel(kind, f)}</span>
+        <ChevronDown className={`w-3.5 h-3.5 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+      </button>
+    );
+  };
+
+  return (
+    <div ref={wrapRef} className="relative flex items-center gap-2 flex-wrap">
+      {btn("type", <Shapes className="w-4 h-4" />)}
+      {btn("region", <MapPin className="w-4 h-4" />)}
+      {trailing}
+      {open && (
+        <div className="absolute left-0 top-full mt-2 z-[60] w-[min(92vw,620px)] max-h-[min(70vh,560px)] overflow-y-auto rounded-2xl p-4 shadow-2xl"
+          style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }} role="dialog" aria-label={open === "type" ? "Adventure type" : "Region"}>
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>{open === "type" ? "Adventure type" : "Region"}</p>
+            {(open === "type" ? f.types : f.states).length > 0 && (
+              <button type="button" onClick={() => set(open === "type" ? { types: [] } : { states: [] })} className="text-[12px] font-semibold text-[#ff7d47] hover:underline">
+                {open === "type" ? "All types" : "Anywhere"}
               </button>
-            );
-          }))}
+            )}
+          </div>
+          <CategoryList kind={open} f={f} set={set} />
         </div>
       )}
     </div>
   );
 }
 
-const GENRE_CSS = `
-.ttt-genre, .ttt-type { --g: var(--g-l); }
-.dark .ttt-genre, .dark .ttt-type { --g: var(--g-d); }
-.ttt-genre { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 7px 0 10px; border-radius: 999px;
-  font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: var(--chip-bg, transparent); border: 1px solid var(--border-default); transition: all .2s; }
-.ttt-genre:hover:not(:disabled) { color: var(--text-primary); border-color: color-mix(in srgb, var(--g) 55%, transparent); }
-.ttt-genre[data-on] { color: var(--g); background: color-mix(in srgb, var(--g) 13%, transparent); border-color: color-mix(in srgb, var(--g) 55%, transparent);
-  box-shadow: 0 0 16px -6px color-mix(in srgb, var(--g) 70%, transparent); }
-.ttt-genre:disabled { opacity: .55; cursor: default; }
-.ttt-genre-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--g); box-shadow: 0 0 8px color-mix(in srgb, var(--g) 60%, transparent); }
-.ttt-genre-n { font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 999px; background: color-mix(in srgb, var(--g) 14%, transparent); color: var(--g); }
-.ttt-types { animation: tttUnfold .25s ease-out both; }
-@keyframes tttUnfold { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
-.ttt-type { flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 6px 0 9px; border-radius: 9px; font-size: 12px; font-weight: 600;
-  color: var(--text-secondary); background: var(--chip-bg, transparent); border: 1px solid color-mix(in srgb, var(--g) 30%, transparent); transition: all .2s; }
-.ttt-type:hover:not(:disabled) { color: var(--text-primary); }
-.ttt-type[data-on] { color: #fff; background: var(--g); border-color: var(--g); }
-.dark .ttt-type[data-on] { color: #15110e; }
-.ttt-type:disabled { opacity: .45; cursor: default; border-style: dashed; }
-.ttt-type-n { font-size: 10.5px; opacity: .7; }
-@media (prefers-reduced-motion: reduce) { .ttt-types { animation: none; } }
+const CAT_CSS = `
+.ttt-cats > div { --g: var(--g-l); }
+.dark .ttt-cats > div { --g: var(--g-d); }
+.ttt-cat-head { display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 700; color: var(--text-primary); border-radius: 8px; padding: 2px 6px 2px 2px; transition: color .2s; }
+.ttt-cat-head:hover:not(:disabled), .ttt-cat-head[data-on] { color: var(--g); }
+.ttt-cat-head:disabled { color: var(--text-tertiary); cursor: default; }
+.ttt-cat-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--g); box-shadow: 0 0 8px color-mix(in srgb, var(--g) 60%, transparent); }
+.ttt-cat-head:disabled .ttt-cat-dot { opacity: .45; box-shadow: none; }
+.ttt-cat-n { font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 999px; background: color-mix(in srgb, var(--g) 14%, transparent); color: var(--g); }
+.ttt-cat-item { display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 6px 0 9px; border-radius: 9px; font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); background: var(--bg-card); border: 1px solid color-mix(in srgb, var(--g) 30%, transparent); transition: all .2s; }
+.ttt-cat-item:hover:not(:disabled) { color: var(--text-primary); border-color: color-mix(in srgb, var(--g) 60%, transparent); }
+.ttt-cat-item[data-on] { color: #fff; background: var(--g); border-color: var(--g); }
+.dark .ttt-cat-item[data-on] { color: #15110e; }
+.ttt-cat-item:disabled { opacity: .45; cursor: default; border-style: dashed; background: transparent; }
+.ttt-cat-item-n { font-size: 10.5px; opacity: .7; }
 `;
 
 /* ── Full panel: bottom sheet on phones, side drawer on larger screens ──────── */
@@ -215,29 +297,34 @@ export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun 
               <Opt key={k} on={sortKey === k} onClick={() => setSort(k)}>{SORT_LABELS[k]}</Opt>
             ))}
           </Section>
-          <Section title="Activity">
-            {TYPE_OPTIONS.map((t) => <Opt key={t} on={f.types.includes(t)} onClick={() => toggle(f.types, t, (v) => set({ types: v }))}>{t}</Opt>)}
+          {/* Type and Region have their own buttons; this panel holds everything broader */}
+          <PriceSlider value={f.maxPrice} onChange={(v) => set({ maxPrice: v })} />
+          <Section title="Season: when do you want to go?">
+            <Opt on={f.months.length === 1 && f.months[0] === THIS_MONTH} onClick={() => set({ months: f.months.length === 1 && f.months[0] === THIS_MONTH ? [] : [THIS_MONTH] })}>
+              <span className="inline-flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />In season now</span>
+            </Opt>
+            <div className="w-full grid grid-cols-6 gap-1.5 mt-1">
+              {MONTHS.map((m) => (
+                <Opt key={m} on={f.months.includes(m)} onClick={() => toggle(f.months, m, (v) => set({ months: v }))} block>{m}</Opt>
+              ))}
+            </div>
           </Section>
-          <Section title="Where">
-            {STATE_COUNTS.map(([s, n]) => (
-              <Opt key={s} on={f.states.includes(s)} onClick={() => toggle(f.states, s, (v) => set({ states: v }))}>{s} <span className="opacity-50">{n}</span></Opt>
-            ))}
-          </Section>
-          <Section title="When do you want to go?">
-            {MONTHS.map((m) => <Opt key={m} on={f.months.includes(m)} onClick={() => toggle(f.months, m, (v) => set({ months: v }))}>{m}</Opt>)}
+          <Section title="Duration">
+            {DURATIONS.map((d) => <Opt key={d} on={f.durs.includes(d)} onClick={() => toggle(f.durs, d, (v) => set({ durs: v }))}>{d}</Opt>)}
           </Section>
           <Section title="Difficulty">
             {DIFFICULTIES.map((d) => <Opt key={d} on={f.diffs.includes(d)} onClick={() => toggle(f.diffs, d, (v) => set({ diffs: v }))}>{d}</Opt>)}
           </Section>
-          <Section title="Length">
-            {DURATIONS.map((d) => <Opt key={d} on={f.durs.includes(d)} onClick={() => toggle(f.durs, d, (v) => set({ durs: v }))}>{d}</Opt>)}
-          </Section>
-          <Section title="Budget (starting price)">
-            {PRICE_STEPS.map((v) => (
-              <Opt key={v} on={f.maxPrice === v} onClick={() => set({ maxPrice: v })}>
-                {v === 0 ? "Any" : `Under ₹${v / 1000}k`}
-              </Opt>
-            ))}
+          {hasProfile && (
+            <Section title="Your fitness">
+              <Opt on={f.fit === "ready"} onClick={() => set({ fit: f.fit === "ready" ? null : "ready" })}>Ready for me</Opt>
+              <Opt on={f.fit === "stretch"} onClick={() => set({ fit: f.fit === "stretch" ? null : "stretch" })}>A stretch</Opt>
+            </Section>
+          )}
+          <Section title="Picks">
+            <Opt on={f.editorOnly} onClick={() => set({ editorOnly: !f.editorOnly })}>
+              <span className="inline-flex items-center gap-1.5"><Crown className="w-3.5 h-3.5" />Editor&apos;s Choice</span>
+            </Opt>
           </Section>
         </div>
 
@@ -263,12 +350,55 @@ function Section({ title, children, className = "" }: { title: string; children:
   );
 }
 
-function Opt({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
+const THIS_MONTH = MONTHS[new Date().getMonth()];
+
+// The slider runs from the cheapest starting price to the dearest, in ₹1,000 steps; the far
+// right end means any price
+const PRICES = adventures.map((a) => getLowestPrice(a)).filter((p): p is number => p !== null && p > 0);
+const PRICE_MIN = Math.floor(Math.min(...PRICES) / 1000) * 1000;
+const PRICE_MAX = Math.ceil(Math.max(...PRICES) / 5000) * 5000;
+const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
+
+function PriceSlider({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  const shown = value || PRICE_MAX;
+  const within = value ? PRICES.filter((p) => p <= value).length : PRICES.length;
+  const pct = ((shown - PRICE_MIN) / (PRICE_MAX - PRICE_MIN)) * 100;
+  return (
+    <div>
+      <div className="flex items-baseline justify-between mb-2.5">
+        <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Budget: starting price</p>
+        <p className="text-[13px] font-semibold tabular-nums" style={{ color: value ? "#ff7d47" : "var(--text-secondary)" }}>
+          {value ? `Up to ${inr(value)}` : "Any price"}
+        </p>
+      </div>
+      <input
+        type="range" min={PRICE_MIN} max={PRICE_MAX} step={1000} value={shown}
+        onChange={(e) => { const v = Number(e.target.value); onChange(v >= PRICE_MAX ? 0 : v); }}
+        aria-label="Highest starting price"
+        className="ttt-range w-full"
+        style={{ background: `linear-gradient(to right, #ff5100 ${pct}%, var(--border-default) ${pct}%)` }}
+      />
+      <div className="flex justify-between mt-1.5 text-[11px] tabular-nums" style={{ color: "var(--text-tertiary)" }}>
+        <span>{inr(PRICE_MIN)}</span>
+        <span>{within} adventure{within === 1 ? "" : "s"}</span>
+        <span>{inr(PRICE_MAX)}+</span>
+      </div>
+      <style>{`
+        .ttt-range { -webkit-appearance: none; appearance: none; height: 4px; border-radius: 999px; outline: none; }
+        .ttt-range::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 2px solid #ff5100; box-shadow: 0 2px 6px rgba(0,0,0,0.3); cursor: pointer; }
+        .ttt-range::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid #ff5100; cursor: pointer; }
+        .ttt-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(255,81,0,0.3); }
+      `}</style>
+    </div>
+  );
+}
+
+function Opt({ on, onClick, children, block }: { on: boolean; onClick: () => void; children: React.ReactNode; block?: boolean }) {
   return (
     <button
       onClick={onClick}
       aria-pressed={on}
-      className="px-3 py-1.5 rounded-lg text-[13px] font-medium transition-colors"
+      className={`px-3 py-1.5 rounded-lg text-[13px] font-medium transition-colors ${block ? "w-full px-0" : ""}`}
       style={on
         ? { background: "rgba(255,81,0,0.14)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)" }
         : { background: "var(--bg-card)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)" }}

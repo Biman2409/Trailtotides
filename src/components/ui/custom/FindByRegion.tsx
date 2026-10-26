@@ -7,20 +7,13 @@ import Image from "next/image";
 import { regions, adventures } from "@/lib/data";
 import type { AdventureType } from "@/lib/data";
 import CardFooterLink from "./CardFooterLink";
+import { REGION_STATES } from "@/lib/regionGroups";
 import SectionTexture from "./SectionTexture";
 
 const LAND_TYPES: AdventureType[] = ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Motorcycling", "Cycling", "Jeep Safari", "Caving", "Urban Adventure"];
 
-const regionSubRegions: Record<string, string[]> = {
-  "Himalayas": ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
-  "Western Ghats": ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"],
-  "Eastern Ghats": ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"],
-  "Desert": ["Rajasthan", "Gujarat"],
-  "Coast": ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
-  "Islands": ["Andaman & Nicobar", "Lakshadweep"],
-  "Northeast": ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
-  "Urban": ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"]
-};
+// Shared with the Region filter on Explore and the map
+const regionSubRegions = REGION_STATES;
 
 const regionIcons: Record<string, React.ReactNode> = {
   "Himalayas": <MountainSnow className="w-5 h-5" />,
