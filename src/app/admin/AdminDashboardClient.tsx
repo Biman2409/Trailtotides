@@ -14,8 +14,7 @@ import ThemeToggleButton from "@/components/ui/custom/ThemeToggleButton";
 import { getTier, getTierLabel } from "@/lib/tiers";
 import { ACE_AXES, ACE_AXIS_LABELS, ACE_AXIS_COLORS } from "@/lib/ace";
 import {
-  LayoutDashboard, Users, Building2, Inbox, BookOpen, Star, UsersRound,
-  Search, Download, ExternalLink, LogOut, Trash2, Ban, UserCheck, RotateCcw, Send,
+  LayoutDashboard, Users, Building2, Inbox, BookOpen, Star,   Search, Download, ExternalLink, LogOut, Trash2, Ban, UserCheck, RotateCcw, Send,
   CheckCircle2, XCircle, Copy, ChevronDown, ChevronRight, Loader2, Mail, Phone, Globe,
   Image as ImageIcon, MessageSquare, FileText, Clock, Sparkles, Heart, Bookmark, Map as MapIcon,
   MailOpen, Reply,
@@ -56,13 +55,6 @@ type Review = { id: string; adventure_slug: string; user_id: string; username: s
 
 type Photo = { id: string; slug: string; user_id: string; username: string; avatar_id: number | null; caption: string; url: string; path: string; created_at: string };
 
-export type GroupRow = { id: string; name: string; invite_code: string; created_at: string; members: number };
-
-export type QuoteRow = {
-  id: string; user_id: string; slug: string; operators: string[] | null; start_date: string | null;
-  flexible: boolean | null; group_size: number | null; message: string | null; created_at: string;
-};
-
 type Counts = { wishlists: number; savedSearches: number; adventures: number; destinations: number };
 
 const SECTIONS = [
@@ -72,7 +64,6 @@ const SECTIONS = [
   { key: "stories",   label: "Stories",           icon: BookOpen },
   { key: "community", label: "Reviews & photos",  icon: Star },
   { key: "operators", label: "Operators",         icon: Building2 },
-  { key: "groups",    label: "Groups & requests", icon: UsersRound },
 ] as const;
 type SectionKey = typeof SECTIONS[number]["key"];
 
@@ -267,7 +258,7 @@ function Stars({ n }: { n: number }) {
 
 export default function AdminDashboardClient({
   profiles, currentUserId, messages = [], storySubmissions = [], operatorProfiles = [], operatorSubmissions = [],
-  reviews = [], photos = [], groups = [], quotes = [], counts, adventureNames,
+  reviews = [], photos = [], counts, adventureNames,
 }: {
   profiles: Profile[];
   currentUserId: string;
@@ -277,8 +268,6 @@ export default function AdminDashboardClient({
   operatorSubmissions?: OperatorSubmission[];
   reviews?: Review[];
   photos?: Photo[];
-  groups?: GroupRow[];
-  quotes?: QuoteRow[];
   counts: Counts;
   adventureNames: Record<string, string>;
 }) {
@@ -293,7 +282,6 @@ export default function AdminDashboardClient({
   const marks = useInboxMarks();
   const { toast, show: showToast } = useToast();
   const advName = (slug: string) => adventureNames[slug] ?? slug;
-  const emailOf = (userId: string) => people.find((p) => p.id === userId)?.email ?? null;
 
   // The section lives in the address (#people), so a reload or a shared link opens the same place
   useEffect(() => {
@@ -331,7 +319,6 @@ export default function AdminDashboardClient({
   const weekAgo = subDays(new Date(), 7);
   const newThisWeek = people.filter((p) => parseISO(p.created_at) >= weekAgo).length;
   const withAce = people.filter((p) => p.ace).length;
-  const quotesThisWeek = quotes.filter((q) => parseISO(q.created_at) >= weekAgo).length;
 
   const badges: Partial<Record<SectionKey, number>> = {
     inbox: unread, stories: pendingStories, operators: pendingSubs,
@@ -374,12 +361,10 @@ export default function AdminDashboardClient({
       ...inbox.map((m) => ({ at: m.created_at, icon: MessageSquare, tone: "ok" as const, text: `Message from ${m.name ?? m.email}`, sub: m.message.slice(0, 80), to: "inbox" as const })),
       ...stories.map((s) => ({ at: s.created_at, icon: BookOpen, tone: "brand" as const, text: `Story: ${s.title}`, sub: `${s.author_name} · ${s.status}`, to: "stories" as const })),
       ...subs.map((s) => ({ at: s.created_at, icon: Building2, tone: "info" as const, text: `${s.company_name || s.operator_name} listed ${advName(s.adventure_slug)}`, sub: `₹${s.price_from} · ${s.status}`, to: "operators" as const })),
-      ...groups.map((g) => ({ at: g.created_at, icon: UsersRound, tone: "ok" as const, text: `Group Match “${g.name}” started`, sub: `${g.members} member${g.members === 1 ? "" : "s"}`, to: "groups" as const })),
-      ...quotes.map((q) => ({ at: q.created_at, icon: Send, tone: "brand" as const, text: `Quote request for ${advName(q.slug)}`, sub: emailOf(q.user_id) ?? undefined, to: "groups" as const })),
     ];
     return ev.filter((e) => e.at).sort((a, b) => b.at.localeCompare(a.at));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [people, reviewList, photoList, inbox, stories, subs, groups, quotes]);
+  }, [people, reviewList, photoList, inbox, stories, subs]);
 
   // Signups per day for the last 30 days
   const signups30 = useMemo(() => {
@@ -399,7 +384,6 @@ export default function AdminDashboardClient({
     stories:   { eyebrow: "Field stories", title: "Stories", blurb: "Submitted stories waiting for review, and everything already published." },
     community: { eyebrow: "Community", title: "Reviews & photos", blurb: "What travellers post on adventure pages. Remove anything that breaks the rules." },
     operators: { eyebrow: "Partners", title: "Operators", blurb: "Operator accounts and the prices and dates they submit for approval." },
-    groups:    { eyebrow: "Matchmaker", title: "Groups & requests", blurb: "Group Matches people have started, and quote requests sent to operators." },
   };
   const meta = sectionMeta[section];
 
@@ -499,11 +483,9 @@ export default function AdminDashboardClient({
               pendingStories={pendingStories}
               pendingSubs={pendingSubs}
               lowReviews={lowReviews.length}
-              quotesThisWeek={quotesThisWeek}
-              groups={groups.length}
               reviews={reviewList.length}
               photos={photoList.length}
-              quotes={quotes.length}
+              messages={inbox.length}
               counts={counts}
               stories={stories}
               activity={activity}
@@ -546,7 +528,6 @@ export default function AdminDashboardClient({
               onDecide={(s, approve) => run(s.id, () => (approve ? approveOperatorSubmission(s.id) : rejectOperatorSubmission(s.id)), approve ? "Approved: now live on the adventure page" : "Rejected", () => setSubs((l) => l.map((x) => (x.id === s.id ? { ...x, status: approve ? "approved" : "rejected" } : x))))}
             />
           )}
-          {section === "groups" && <GroupsSection groups={groups} quotes={quotes} advName={advName} emailOf={emailOf} />}
         </div>
       </main>
     </div>
@@ -570,8 +551,8 @@ function Wordmark() {
 
 function Overview(props: {
   go: (k: SectionKey) => void; people: Profile[]; newThisWeek: number; withAce: number; unread: number;
-  pendingStories: number; pendingSubs: number; lowReviews: number; quotesThisWeek: number; groups: number;
-  reviews: number; photos: number; quotes: number; counts: Counts; stories: StorySubmission[];
+  pendingStories: number; pendingSubs: number; lowReviews: number;
+  reviews: number; photos: number; messages: number; counts: Counts; stories: StorySubmission[];
   activity: { at: string; icon: typeof Users; tone: keyof typeof TONE; text: string; sub?: string; to: SectionKey }[];
   signups30: { date: Date; n: number }[];
 }) {
@@ -581,7 +562,6 @@ function Overview(props: {
     { n: props.pendingSubs, label: "operator listings to approve", to: "operators" as const, icon: Building2 },
     { n: props.unread, label: "unread messages", to: "inbox" as const, icon: Inbox },
     { n: props.lowReviews, label: "reviews rated 2★ or lower", to: "community" as const, icon: Star },
-    { n: props.quotesThisWeek, label: "quote requests this week", to: "groups" as const, icon: Send },
   ].filter((t) => t.n > 0);
 
   const ranks = new Map<string, number>();
@@ -593,10 +573,10 @@ function Overview(props: {
   const kpis = [
     { label: "Accounts", value: people.length, sub: props.newThisWeek ? `+${props.newThisWeek} this week` : "None new this week", icon: Users, to: "people" as const },
     { label: "ACE profiles", value: props.withAce, sub: `${people.length ? Math.round((props.withAce / people.length) * 100) : 0}% of accounts`, icon: Sparkles, to: "people" as const },
-    { label: "Group Matches", value: props.groups, sub: "started", icon: UsersRound, to: "groups" as const },
-    { label: "Wishlist saves", value: props.counts.wishlists, sub: `${props.counts.savedSearches} saved searches`, icon: Heart, to: "people" as const },
+    { label: "Wishlist saves", value: props.counts.wishlists, sub: "across all accounts", icon: Heart, to: "people" as const },
+    { label: "Saved searches", value: props.counts.savedSearches, sub: "with alerts on", icon: Bookmark, to: "people" as const },
     { label: "Reviews", value: props.reviews, sub: `${props.photos} photo${props.photos === 1 ? "" : "s"}`, icon: Star, to: "community" as const },
-    { label: "Quote requests", value: props.quotes, sub: props.quotesThisWeek ? `${props.quotesThisWeek} this week` : "None this week", icon: Send, to: "groups" as const },
+    { label: "Messages", value: props.messages, sub: props.unread ? `${props.unread} unread` : "All read", icon: Inbox, to: "inbox" as const },
   ];
 
   return (
@@ -1118,55 +1098,6 @@ function OperatorsSection({ operators, subs, advName, loadingId, onDecide }: {
           </div>
         ) : <Card><Empty icon={Building2} title="No operator accounts yet" hint="Operators sign up at /auth/operator-signup." /></Card>}
       </section>
-    </div>
-  );
-}
-
-// ── Groups & requests ──────────────────────────────────────────────────────────
-
-function GroupsSection({ groups, quotes, advName, emailOf }: { groups: GroupRow[]; quotes: QuoteRow[]; advName: (s: string) => string; emailOf: (id: string) => string | null }) {
-  return (
-    <div className="grid lg:grid-cols-2 gap-5 items-start">
-      <Card>
-        <CardTitle eyebrow="Matchmaker" title={`Group Matches · ${groups.length}`} />
-        {groups.length ? (
-          <ul className="divide-y" style={{ borderColor: "var(--border-subtle)" }}>
-            {groups.map((g) => (
-              <li key={g.id} className="flex items-center gap-3 py-3">
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${TONE.ok}`}><UsersRound className="w-4 h-4" /></div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-semibold t-text truncate">{g.name}</p>
-                  <p className="text-[12px] t-text-3">{g.members} member{g.members === 1 ? "" : "s"} · {ago(g.created_at)}</p>
-                </div>
-                <span className="font-mono text-[11px] t-text-3">{g.invite_code}</span>
-              </li>
-            ))}
-          </ul>
-        ) : <Empty icon={UsersRound} title="No Group Matches yet" hint="They appear here when someone starts one from their Matchmaker results." />}
-      </Card>
-
-      <Card>
-        <CardTitle eyebrow="Operators" title={`Quote requests · ${quotes.length}`} />
-        {quotes.length ? (
-          <ul className="space-y-3">
-            {quotes.map((q) => (
-              <li key={q.id} className="rounded-xl p-3" style={{ background: "var(--bg-page)" }}>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Link href={`/experiences/${q.slug}`} className="text-[13px] font-semibold t-text hover:text-[#ff5100]">{advName(q.slug)}</Link>
-                  <span className="text-[11px] t-text-3 ml-auto">{ago(q.created_at)}</span>
-                </div>
-                <p className="text-[12px] t-text-2 mt-0.5">
-                  {emailOf(q.user_id) ?? "Unknown account"}
-                  {q.group_size ? ` · ${q.group_size} people` : ""}
-                  {q.start_date ? ` · from ${day(q.start_date)}${q.flexible ? " (flexible)" : ""}` : ""}
-                </p>
-                {q.operators?.length ? <p className="text-[11px] t-text-3 mt-0.5">To {q.operators.join(", ")}</p> : null}
-                {q.message && <p className="text-[12px] t-text-2 mt-1.5">{q.message}</p>}
-              </li>
-            ))}
-          </ul>
-        ) : <Empty icon={Bookmark} title="No quote requests yet" hint="Quote requests are switched off on the site for now (QUOTE_REQUESTS in features.ts)." />}
-      </Card>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import AdminDashboardClient, { type GroupRow, type QuoteRow } from "./AdminDashboardClient";
+import AdminDashboardClient from "./AdminDashboardClient";
 import { getAllOperatorProfiles, getAllOperatorSubmissions } from "@/app/auth/operator-actions";
 import { adminGetAllReviews, adminGetAllPhotos } from "./actions";
 import { adventures } from "@/lib/data";
@@ -34,16 +34,12 @@ export default async function AdminPage() {
     { data: profiles },
     { data: messages },
     { data: { users: authUsers } },
-    { data: groups },
-    { data: quotes },
     wishlistCount,
     savedSearchCount,
   ] = await Promise.all([
     adminClient.from("profiles").select("*").order("created_at", { ascending: false }),
     adminClient.from("contact_messages").select("*").order("created_at", { ascending: false }),
     adminClient.auth.admin.listUsers({ perPage: 1000 }),
-    adminClient.from("match_groups").select("id, name, invite_code, created_at, match_group_members(count)").order("created_at", { ascending: false }).limit(200),
-    adminClient.from("quote_requests").select("id, user_id, slug, operators, start_date, flexible, group_size, message, created_at").order("created_at", { ascending: false }).limit(200),
     count("wishlists"),
     count("saved_searches"),
   ]);
@@ -137,14 +133,6 @@ export default async function AdminPage() {
     }
   }
 
-  const groupRows: GroupRow[] = (groups ?? []).map((g) => ({
-    id: g.id as string,
-    name: (g.name as string | null) ?? "Untitled group",
-    invite_code: g.invite_code as string,
-    created_at: g.created_at as string,
-    members: (g.match_group_members as { count: number }[] | null)?.[0]?.count ?? 0,
-  }));
-
   return (
     <AdminDashboardClient
       profiles={enrichedProfiles}
@@ -155,8 +143,6 @@ export default async function AdminPage() {
       operatorSubmissions={operatorSubmissions}
       reviews={reviews}
       photos={photos}
-      groups={groupRows}
-      quotes={(quotes ?? []) as QuoteRow[]}
       counts={{ wishlists: wishlistCount, savedSearches: savedSearchCount, adventures: adventures.length, destinations: DESTINATIONS.length }}
       adventureNames={Object.fromEntries(adventures.map((a) => [a.slug, a.name]))}
     />
