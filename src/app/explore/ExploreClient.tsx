@@ -26,7 +26,7 @@ import {
 } from "@/lib/exploreHelpers";
 import {
   NO_FILTERS, filtersFromParams, writeFilterParams, filterAdventures, panelCount as countPanel, anyFilter,
-  QuickFilterChips, FilterPanel, type AdventureFilterState,
+  QuickFilterChips, GenreChips, FilterPanel, type AdventureFilterState,
 } from "@/components/ui/custom/AdventureFilters";
 
 type View = "grid" | "list";
@@ -181,6 +181,9 @@ export default function ExploreClient() {
             ))}
           </div>
         </div>
+
+        {/* ── Genres: every kind of adventure, unfolding into its activity types ── */}
+        <GenreChips f={f} set={set} className="max-w-7xl mx-auto px-5 lg:px-8 pb-2" />
 
         {/* ── Quick chips: the filters most people want, one tap away ── */}
         <div className="max-w-7xl mx-auto px-5 lg:px-8 pb-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar">

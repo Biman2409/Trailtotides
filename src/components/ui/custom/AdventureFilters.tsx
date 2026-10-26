@@ -8,7 +8,8 @@ import { useEffect, useRef } from "react";
 import { X, Crown } from "lucide-react";
 import { adventures } from "@/lib/data";
 import type { AdventureType, Difficulty, Duration, Month } from "@/lib/data";
-import { toggleSelection as toggle } from "@/lib/filterOptions";
+import { toggleSelection as toggle, GENRE_GROUPS } from "@/lib/filterOptions";
+import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import { MONTHS, SORT_LABELS, type SortKey } from "@/lib/exploreHelpers";
 
 export type { FitFilter, AdventureFilterState } from "@/lib/adventureFilterState";
@@ -79,6 +80,95 @@ export function FilterChip({ on, onClick, children, dot, icon }: { on: boolean; 
     </button>
   );
 }
+
+/* ── Genre chips: every kind of adventure at a glance ─────────────────────────── */
+
+// Mountain → ocean, as on the home page's Find your format. Each genre shows its count (or
+// "Soon"); opening one filters to it and unfolds every activity type in it, live ones to pick
+// from and the rest marked Soon, so the whole range is always in view. They work on the same
+// type filter as the panel, so links and the Explore ↔ map hand-off carry them.
+const GENRE_LOOK: Record<string, { light: string; dark: string }> = {
+  Earth: { light: "#b45309", dark: "#ff9a66" },
+  Snow:  { light: "#4f46e5", dark: "#b9c3ff" },
+  Air:   { light: "#a16207", dark: "#ffd27a" },
+  Water: { light: "#0e7490", dark: "#6ff0e0" },
+};
+const GENRE_ORDER = ["Earth", "Snow", "Air", "Water"];
+const TYPE_COUNTS = adventures.reduce<Record<string, number>>((acc, a) => { acc[a.type] = (acc[a.type] ?? 0) + 1; return acc; }, {});
+
+export function GenreChips({ f, set, className = "" }: {
+  f: AdventureFilterState;
+  set: (patch: Partial<AdventureFilterState>) => void;
+  className?: string;
+}) {
+  const genres = GENRE_ORDER.map((label) => GENRE_GROUPS.find((g) => g.label === label)!).filter(Boolean);
+  const isOpen = (types: AdventureType[]) => types.some((t) => f.types.includes(t));
+  const open = genres.filter((g) => isOpen(g.types));
+
+  return (
+    <div className={`ttt-genres ${className}`}>
+      <style>{GENRE_CSS}</style>
+      <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
+        {genres.map((g) => {
+          const live = g.types.filter((t) => TYPE_COUNTS[t]);
+          const n = live.reduce((s, t) => s + TYPE_COUNTS[t], 0);
+          const on = isOpen(g.types);
+          const look = GENRE_LOOK[g.label];
+          return (
+            <button key={g.label} type="button" aria-pressed={on} disabled={!n}
+              title={n ? `${n} ${g.label} adventure${n > 1 ? "s" : ""}` : `${g.label} adventures are coming soon`}
+              // Opening a genre picks all its live types; closing it drops them
+              onClick={() => set({ types: on ? f.types.filter((t) => !g.types.includes(t)) : [...new Set([...f.types, ...live])] })}
+              className="ttt-genre" style={{ "--g-l": look.light, "--g-d": look.dark } as React.CSSProperties} data-on={on || undefined}>
+              <span className="ttt-genre-dot" />{g.label}
+              <span className="ttt-genre-n">{n || "Soon"}</span>
+            </button>
+          );
+        })}
+      </div>
+      {open.length > 0 && (
+        <div className="ttt-types flex gap-1.5 overflow-x-auto no-scrollbar mt-1.5">
+          {open.flatMap((g) => g.types.map((t) => {
+            const n = TYPE_COUNTS[t] ?? 0;
+            const on = f.types.includes(t);
+            const look = GENRE_LOOK[g.label];
+            return (
+              <button key={t} type="button" aria-pressed={on} disabled={!n} title={n ? undefined : `${t} is coming soon`}
+                onClick={() => toggle(f.types, t, (v) => set({ types: v }))}
+                className="ttt-type" style={{ "--g-l": look.light, "--g-d": look.dark } as React.CSSProperties} data-on={on || undefined}>
+                <span className="opacity-90 grid place-items-center">{ADVENTURE_TYPE_ICONS[t]?.(11)}</span>
+                {t}<span className="ttt-type-n">{n || "Soon"}</span>
+              </button>
+            );
+          }))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const GENRE_CSS = `
+.ttt-genre, .ttt-type { --g: var(--g-l); }
+.dark .ttt-genre, .dark .ttt-type { --g: var(--g-d); }
+.ttt-genre { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 7px 0 10px; border-radius: 999px;
+  font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: var(--chip-bg, transparent); border: 1px solid var(--border-default); transition: all .2s; }
+.ttt-genre:hover:not(:disabled) { color: var(--text-primary); border-color: color-mix(in srgb, var(--g) 55%, transparent); }
+.ttt-genre[data-on] { color: var(--g); background: color-mix(in srgb, var(--g) 13%, transparent); border-color: color-mix(in srgb, var(--g) 55%, transparent);
+  box-shadow: 0 0 16px -6px color-mix(in srgb, var(--g) 70%, transparent); }
+.ttt-genre:disabled { opacity: .55; cursor: default; }
+.ttt-genre-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--g); box-shadow: 0 0 8px color-mix(in srgb, var(--g) 60%, transparent); }
+.ttt-genre-n { font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 999px; background: color-mix(in srgb, var(--g) 14%, transparent); color: var(--g); }
+.ttt-types { animation: tttUnfold .25s ease-out both; }
+@keyframes tttUnfold { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.ttt-type { flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 6px 0 9px; border-radius: 9px; font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); background: var(--chip-bg, transparent); border: 1px solid color-mix(in srgb, var(--g) 30%, transparent); transition: all .2s; }
+.ttt-type:hover:not(:disabled) { color: var(--text-primary); }
+.ttt-type[data-on] { color: #fff; background: var(--g); border-color: var(--g); }
+.dark .ttt-type[data-on] { color: #15110e; }
+.ttt-type:disabled { opacity: .45; cursor: default; border-style: dashed; }
+.ttt-type-n { font-size: 10.5px; opacity: .7; }
+@media (prefers-reduced-motion: reduce) { .ttt-types { animation: none; } }
+`;
 
 /* ── Full panel: bottom sheet on phones, side drawer on larger screens ──────── */
 
