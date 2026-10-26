@@ -35,7 +35,7 @@ type Profile = { id: string; name: string; grade: string; color: string; values:
 const RISHIKESH_RAFTING: Profile = {
   id: "rishikesh-river-rafting", name: "Rishikesh River Rafting", grade: "Moderate", color: "var(--ace-water)",
   values: [2, 2, 1, 2, 4, 0, 2, 1], blurb: "The Ganga's rapids, close to town and at low altitude.",
-  slug: "rishikesh-river-rafting", image: "https://images.unsplash.com/photo-1718431108073-7f61fb5dfefb?w=1600&q=80",
+  slug: "rishikesh-river-rafting",
 };
 
 const AXES = [
@@ -132,10 +132,11 @@ const panel: React.CSSProperties = { background: "var(--ace-panel)", border: "1p
 
 /* ── Page ─────────────────────────────────────────────────────── */
 
-export default function AceContent({ treks }: { treks: AceTrek[] }) {
+export default function AceContent({ treks, raftingImage }: { treks: AceTrek[]; raftingImage?: string }) {
   const profiles: Profile[] = [
     ...treks.map(t => ({ id: t.slug, name: t.name, grade: t.grade, color: `var(--lv-${t.tone})`, values: t.values, blurb: t.blurb, slug: t.slug, image: t.image })),
-    RISHIKESH_RAFTING,
+    // The adventure's own hero, looked up on the server, so the two always match
+    { ...RISHIKESH_RAFTING, image: raftingImage ?? RISHIKESH_RAFTING.image },
   ];
   return (
     <MotionConfig reducedMotion="user">

@@ -33,7 +33,7 @@ export default function ACEPage() {
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
       <Navbar />
-      <AceContent treks={treks} />
+      <AceContent treks={treks} raftingImage={adventures.find(a => a.slug === "rishikesh-river-rafting")?.heroImage} />
       <Footer />
     </div>
   );

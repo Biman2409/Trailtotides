@@ -219,8 +219,26 @@ export default function MapCanvas(props: Props) {
         zoomControl: false, attributionControl: false, zoomSnap: 0.5,
       });
       leaflet.control.zoom({ position: "topright" }).addTo(map);
-      // Map credits (required by OSM, OpenFreeMap and OpenTopoMap) under the zoom buttons: the
-      // bottom corners are taken by the compare tray and, on phones, the results sheet
+      // Map credits (required by OSM, OpenFreeMap and OpenTopoMap) behind a small ⓘ under the
+      // zoom buttons, as on the adventure page's Nearby map: tap to show, tap again to hide.
+      // Top right because the bottom corners hold the compare tray and, on phones, the results
+      // sheet; Leaflet stacks top controls downward, so the credit opens below the button.
+      const CreditToggle = leaflet.Control.extend({
+        onAdd() {
+          const btn = leaflet.DomUtil.create("button", "tm-credit-btn");
+          btn.type = "button";
+          btn.textContent = "i";
+          btn.setAttribute("aria-label", "Map credits");
+          btn.setAttribute("aria-expanded", "false");
+          leaflet.DomEvent.disableClickPropagation(btn);
+          leaflet.DomEvent.on(btn, "click", () => {
+            const open = container.classList.toggle("tm-credits-open");
+            btn.setAttribute("aria-expanded", String(open));
+          });
+          return btn;
+        },
+      });
+      new CreditToggle({ position: "topright" }).addTo(map);
       leaflet.control.attribution({ position: "topright", prefix: false }).addTo(map);
       mapRef.current = map;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -435,11 +453,15 @@ export default function MapCanvas(props: Props) {
 
 const MAP_CSS = `
   .tm-map { background: #0b0d10; }
-  /* Map credits: small and quiet, but readable */
-  .tm-map .leaflet-control-attribution { background: rgba(11,13,16,0.72) !important; color: rgba(255,255,255,0.5) !important; font-size: 9.5px !important; line-height: 1.4; padding: 2px 7px !important; border-radius: 8px; margin: 8px 12px 0 0 !important; max-width: min(70vw, 420px); text-align: right; }
-  .tm-map .leaflet-control-attribution a { color: rgba(255,255,255,0.7) !important; }
+  /* Map credits: hidden behind the ⓘ until tapped, then small and quiet, but readable */
+  .tm-map .leaflet-control-attribution { display: none; background: rgba(11,13,16,0.82) !important; color: rgba(255,255,255,0.55) !important; font-size: 9.5px !important; line-height: 1.4; padding: 3px 8px !important; border-radius: 8px; margin: 6px 12px 0 0 !important; max-width: min(70vw, 420px); text-align: right; }
+  .tm-map.tm-credits-open .leaflet-control-attribution { display: block; }
+  .tm-map .leaflet-control-attribution a { color: rgba(255,255,255,0.75) !important; }
+  .tm-credit-btn { width: 20px; height: 20px; margin: 8px 12px 0 0 !important; border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+    font: italic 600 11px/1 Georgia, serif; cursor: pointer; background: rgba(11,13,16,0.6); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.14); }
+  .tm-credit-btn:hover, .tm-map.tm-credits-open .tm-credit-btn { color: #ff5100; border-color: rgba(255,81,0,0.5); }
   /* Phones and tablets: the filter dock and Layers button cover the top-right corner, so sit below them */
-  @media (max-width: 1023px) { .tm-map .leaflet-control-attribution { margin-top: 108px !important; } }
+  @media (max-width: 1023px) { .tm-credit-btn { margin-top: 108px !important; } }
 
   .tm-pin { position: relative; width: 34px; height: 34px; display: grid; place-items: center; transition: transform .25s cubic-bezier(.2,1.4,.4,1), opacity .35s, filter .35s; }
   .tm-pin-core { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
