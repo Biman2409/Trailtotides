@@ -29,10 +29,12 @@ export type AceTrek = {
 
 type Profile = { id: string; name: string; grade: string; color: string; values: number[]; blurb: string; slug?: string; image?: string };
 
-// Ganga rapids up to Class IV; low altitude and close to town, so altitude 0 and nerve stays low
+// Same scores as the adventure page (total 14, Moderate): water is the real ask; low altitude
+// and close to town, so altitude 0 and nerve stays low
 const RISHIKESH_RAFTING: Profile = {
-  id: "rishikesh-rafting", name: "Rishikesh River Rafting", grade: "Class III–IV", color: "var(--ace-water)",
-  values: [2, 3, 2, 2, 4, 0, 3, 2], blurb: "The Ganga's rapids, close to town and at low altitude.",
+  id: "rishikesh-river-rafting", name: "Rishikesh River Rafting", grade: "Moderate", color: "var(--ace-water)",
+  values: [2, 2, 1, 2, 4, 0, 2, 1], blurb: "The Ganga's rapids, close to town and at low altitude.",
+  slug: "rishikesh-river-rafting", image: "https://images.unsplash.com/photo-1718431108073-7f61fb5dfefb?w=1600&q=80",
 };
 
 const AXES = [

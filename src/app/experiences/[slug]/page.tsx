@@ -119,12 +119,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const difficulty = computeDifficulty(getACE(adventure));
   // What people search for an adventure: how hard, how long, how high, when, how much
   const price = lowestPrice(adventure);
-  const altitude = altitudeOf(adventure);
+  // Height only matters up high (not for a river run at 380m)
+  const altitude = parseInt(altitudeOf(adventure).replace(/,/g, ""), 10) >= 1000 ? altitudeOf(adventure) : "";
+  // "Verified" only when we've actually verified one of the operators
+  const anyVerified = adventure.operators.some((o) => o.verified);
   const description = [
     `${adventure.name}, ${adventure.state}: ${difficulty.toLowerCase()}, ${adventure.durationDays}`,
     altitude ? `, up to ${altitude}` : "",
     adventure.bestSeason ? `. Best ${adventure.bestSeason}` : "",
-    price ? `. From ${inr(price)} with verified operators` : "",
+    price ? `. From ${inr(price)} with ${anyVerified ? "verified" : "local"} operators` : "",
     ". Compare and book, matched to your fitness.",
   ].join("");
   return {

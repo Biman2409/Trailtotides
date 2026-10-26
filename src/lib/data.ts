@@ -1800,8 +1800,9 @@ export const adventures: Adventure[] = [
     whoFor: "First-timers on the Shivpuri run: no rafting experience or swimming needed, the guide teaches you on the bank · Groups, friends and families with teenagers (14+) · Fit, confident swimmers wanting bigger water on the Kaudiyala run · A one-day trip from Delhi or a break between Uttarakhand treks",
     whoNot: "Children under 14 · Pregnancy, heart conditions, recent surgery or seizures · Anyone who panics in water and can't follow the guide's commands · Non-swimmers on the full Kaudiyala run · Travel in July–August, when rafting is closed for the monsoon",
     safetyNotes: "Raft only with a government-licensed operator: helmets, life jackets and a trained guide on every raft, ideally with a safety kayaker. Keep your life jacket fastened at all times, including the calm swims. If you fall in, float on your back, feet first and downstream, and wait for the rope or the kayak. Rafting closes from July to mid-September when the river floods; spring water is cold and autumn flows are higher, so ask for a wetsuit top early in the season. The Kaudiyala run's Grade IV rapids flip rafts more often; most operators set 18 as the minimum age there.",
-    // Matches the Rishikesh rafting profile on the ACE page
-    ace: { stamina:2, power:3, strength:2, agility:2, water:4, altitude:0, focus:3, nerve:2 },
+    // Matches the Rishikesh rafting profile on the ACE page. Totals 14, so it reads Moderate:
+    // water is the real ask; steady paddling, nothing to carry, town and road always close.
+    ace: { stamina:2, power:2, strength:1, agility:2, water:4, altitude:0, focus:2, nerve:1 },
     operators: [
       { name: "Red Chilli Adventure", verified: false, priceFrom: "₹1,500", googleRating: 0, website: "https://www.redchilliadventure.com/collections/rafting-on-ganga-rishikesh", priceCheckedAt: "2026-10-26" },
       { name: "Camp Ganga Vatika", verified: false, priceFrom: "₹1,000", googleRating: 0, website: "https://campgangavatika.com/shivpuri-rafting.php", priceCheckedAt: "2026-10-26" },
