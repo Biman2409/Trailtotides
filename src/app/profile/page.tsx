@@ -151,7 +151,7 @@ export default async function ProfilePage() {
             {/* Name + meta */}
             <div className="flex-1 min-w-0 pb-1">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight truncate" style={{ color: "var(--text-primary)" }}>
+                <h1 className="min-w-0 max-w-full text-2xl sm:text-3xl font-black tracking-tight leading-tight truncate" style={{ color: "var(--text-primary)" }}>
                   {displayName}
                 </h1>
                 {profile.public_id && (
@@ -173,8 +173,8 @@ export default async function ProfilePage() {
                   <Calendar className="w-3.5 h-3.5" />
                   Joined {profile.created_at ? format(new Date(profile.created_at), "MMMM yyyy") : "Recently"}
                 </span>
-                <span className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-tertiary)" }}>
-                  <Mail className="w-3.5 h-3.5" />
+                <span className="flex items-center gap-1.5 text-xs min-w-0 break-all" style={{ color: "var(--text-tertiary)" }}>
+                  <Mail className="w-3.5 h-3.5 shrink-0" />
                   {profile.email}
                 </span>
               </div>

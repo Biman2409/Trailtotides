@@ -54,14 +54,15 @@ export default function TrekStreakCounter() {
           { value: stats.states,    delta: stats.wishStatesNew, label: "regions",          icon: Globe  },
           { value: stats.totalDays, delta: stats.wishDaysMore,  label: "days in the wild", icon: Sun    },
         ].map(({ value, delta, label, icon: Icon }, i) => (
-          <div key={label} className="flex items-center gap-2.5 px-3 py-3 min-w-0" style={i < 2 ? { borderRight: "1px solid var(--border-subtle)" } : {}}>
-            <Icon className="w-4 h-4 shrink-0" style={{ color: value > 0 ? ORANGE : "var(--text-muted)" }} />
+          // A third of a phone is too narrow for icon and label side by side: drop the icon, let the label wrap
+          <div key={label} className="flex items-center gap-2.5 px-2.5 sm:px-3 py-3 min-w-0" style={i < 2 ? { borderRight: "1px solid var(--border-subtle)" } : {}}>
+            <Icon className="hidden sm:block w-4 h-4 shrink-0" style={{ color: value > 0 ? ORANGE : "var(--text-muted)" }} />
             <span className="min-w-0">
               <span className="flex items-baseline gap-1">
                 <span className="text-[18px] leading-none font-semibold tabular-nums" style={{ color: "var(--text-primary)" }}>{value}</span>
                 {showDelta && delta > 0 && <span className="text-[12px] tabular-nums" style={{ color: "var(--text-tertiary)" }}>+{delta}</span>}
               </span>
-              <span className="block text-[12px] mt-1 tracking-[0.06em] lowercase truncate" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>{label}</span>
+              <span className="block text-[12px] leading-tight mt-1 tracking-[0.06em] lowercase sm:truncate" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>{label}</span>
             </span>
           </div>
         ))}

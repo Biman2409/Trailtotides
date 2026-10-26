@@ -131,8 +131,8 @@ export default function ACEProfileSection() {
         </div>
       </div>
 
-      {/* Radar — below on mobile */}
-      <div className="sm:hidden px-5 pb-5 pt-4 flex flex-col gap-2" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+      {/* Radar — below on mobile, shrinking to fit the narrowest phones */}
+      <div className="sm:hidden px-4 pb-5 pt-4 flex flex-col gap-2 [&>svg]:w-full [&>svg]:max-w-[260px] [&>svg]:h-auto [&>svg]:self-center" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         {breakdown(260)}
       </div>
     </div>
