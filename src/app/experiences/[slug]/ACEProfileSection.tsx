@@ -2,16 +2,20 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, RotateCcw, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind, ChevronUp, Layers } from "lucide-react";
-import ACERadar from "@/components/ui/custom/ACERadar";
+import { ArrowRight, RotateCcw, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind, ChevronUp, Layers, Columns2, Check } from "lucide-react";
+import AceRadar, { AXIS_KEYS, AXIS_NAMES, axisColor } from "@/app/ace/AceRadar";
+import { ACE_THEME_CSS, BUCKET_VAR, tint } from "@/app/ace/aceTheme";
+import { bucketFor } from "@/lib/fitness";
 import GradingPill from "@/components/ui/custom/GradingPill";
-import { ACE_AXIS_COLORS, ACE_AXIS_LABELS, ACE_DOMAINS } from "@/lib/ace";
+import { ACE_AXIS_COLORS, ACE_AXIS_LABELS, computeMatchScore } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
 import type { ACE, AceAxis } from "@/lib/ace";
 
 interface Props {
   ace: ACE;
   slug: string;
+  /** The adventure's name, for the chart legend */
+  name: string;
   showAltitudeWarning: boolean;
   showFatalFallWarning: boolean;
   showExtremeIsolationWarning: boolean;
@@ -33,14 +37,6 @@ const AXIS_ICONS: Record<string, React.ReactNode> = {
   nerve:    <Wind     className="w-3 h-3" />,
 };
 
-// Short, deliberate labels for the compact domain-grid cells — the full
-// ACE_AXIS_LABELS names don't fit and were being cut into illegible
-// ellipsis fragments ("Stamina" -> "St…") by a `truncate` class.
-const AXIS_LABELS_SHORT: Record<AceAxis, string> = {
-  stamina: "STA", power: "PWR", strength: "STR", agility: "AGI",
-  water: "WTR", altitude: "ALT", focus: "FOC", nerve: "NRV",
-};
-
 const TRAINING_TIPS: Record<string, string> = {
   stamina:  "Build aerobic base with 3–4 weekly runs or hikes. Progress to back-to-back long days.",
   power:    "Add interval training and steep hill repeats to develop explosive leg power.",
@@ -52,72 +48,7 @@ const TRAINING_TIPS: Record<string, string> = {
   nerve:    "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
 };
 
-function DotScale({ filled, color, dim }: { filled: number; color: string; dim?: boolean }) {
-  return (
-    <div className="flex gap-[3px]">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <div
-          key={i}
-          className="w-2.5 h-2.5 rounded-full"
-          style={{
-            background: i < filled
-              ? dim ? `${color}70` : color
-              : "rgba(var(--fg-rgb),0.06)",
-            boxShadow: i < filled && !dim ? `0 0 4px ${color}60` : "none",
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; userVal: number }) {
-  const color = ACE_AXIS_COLORS[axis];
-  const icon = AXIS_ICONS[axis];
-  const label = AXIS_LABELS_SHORT[axis];
-  const meets = userVal >= trekVal;
-  const gap = trekVal - userVal;
-
-  return (
-    <div
-      className="flex flex-col gap-2 rounded-xl p-2.5"
-      style={{
-        background: meets ? `${color}08` : "rgba(239,68,68,0.05)",
-        border: meets ? `1px solid ${color}22` : "1px solid rgba(239,68,68,0.15)",
-      }}
-    >
-      {/* Axis name + badge */}
-      <div className="flex items-center justify-between gap-1">
-        <div className="flex items-center gap-1 min-w-0">
-          <span style={{ color: meets ? color : "#f87171" }} className="shrink-0 opacity-80">{icon}</span>
-          <span className="text-[9px] font-bold tracking-wide" style={{ color: meets ? "rgba(var(--fg-rgb),0.7)" : "#f87171" }}>{label}</span>
-        </div>
-        <span
-          className="shrink-0 text-[8px] font-black px-1.5 py-0.5 rounded-full leading-none"
-          style={{ background: meets ? "rgba(74,222,128,0.12)" : "rgba(239,68,68,0.15)", color: meets ? "#4ade80" : "#f87171" }}
-        >
-          {meets ? "✓" : `+${gap}`}
-        </span>
-      </div>
-      {/* Trek row */}
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center justify-between">
-          <span className="text-[7px] font-semibold uppercase tracking-wider" style={{ color: "rgba(var(--fg-rgb),0.32)" }}>Trek</span>
-        </div>
-        <DotScale filled={trekVal} color={color} dim />
-      </div>
-      {/* You row */}
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center justify-between">
-          <span className="text-[7px] font-semibold uppercase tracking-wider" style={{ color: "rgba(var(--fg-rgb),0.32)" }}>You</span>
-        </div>
-        <DotScale filled={userVal} color={meets ? color : "#f87171"} />
-      </div>
-    </div>
-  );
-}
-
-export default function ACEProfileSection({ ace, slug, bare }: Props) {
+export default function ACEProfileSection({ ace, slug, name, bare }: Props) {
   const [userAce, setUserAce] = useState<ACE | null>(null);
   // Overlap is the default — more compact than side-by-side (especially
   // when an adventure's requirements are low/near-zero, which leaves the
@@ -129,6 +60,20 @@ export default function ACEProfileSection({ ace, slug, bare }: Props) {
     const p = loadProfile();
     if (p) setUserAce(p.ace);
   }, []);
+
+  // The ACE page's chart and gap list, in its axis order
+  const trekValues = AXIS_KEYS.map(k => ace[k] ?? 0);
+  const userValues = userAce ? AXIS_KEYS.map(k => userAce[k] ?? 0) : null;
+  const shortName = name.replace(/ Trek$/, "");
+  const match = userAce && userValues ? (() => {
+    const score = computeMatchScore(userAce, ace);
+    const bucket = bucketFor(score);
+    const gaps = trekValues
+      .map((need, k) => ({ k, need, have: userValues[k] }))
+      .filter(g => g.need > g.have)
+      .sort((x, y) => (y.need - y.have) - (x.need - x.have));
+    return { score, bucket, color: BUCKET_VAR[bucket.key], gaps };
+  })() : null;
 
   const axes = Object.keys(ace) as AceAxis[];
   const gaps = userAce
@@ -177,7 +122,7 @@ export default function ACEProfileSection({ ace, slug, bare }: Props) {
             </p>
             <div style={{ width: 1, height: 20, background: "rgba(var(--fg-rgb),0.07)" }} />
             <p className="text-[11px] text-black/40 dark:text-white/35 leading-snug flex-1">
-              {readyCount === totalAxes ? "You meet all requirements" : `${totalAxes - readyCount} axes need work`}
+              {readyCount === totalAxes ? "You meet all requirements" : `${totalAxes - readyCount} ${totalAxes - readyCount === 1 ? "score needs" : "scores need"} work`}
             </p>
             <button
               onClick={() => setOverlapped(o => !o)}
@@ -188,100 +133,87 @@ export default function ACEProfileSection({ ace, slug, bare }: Props) {
                 color: overlapped ? "#ff7d47" : "rgba(var(--fg-rgb),0.4)",
               }}
             >
-              <Layers className="w-3 h-3" />
-              {overlapped ? "Split view" : "Overlap view"}
+              {overlapped ? <Columns2 className="w-3 h-3" /> : <Layers className="w-3 h-3" />}
+              {overlapped ? "Side by side" : "Overlap"}
             </button>
           </div>
         )}
 
-        {/* Radar views */}
-        <div className="p-4">
-          {overlapped && userAce ? (
-            /* ── Overlap view ── */
-            <div className="flex flex-col sm:flex-row gap-3 items-start">
-
-              {/* Radar — in a box */}
-              <div
-                className="flex flex-col items-center justify-between gap-2.5 shrink-0 rounded-2xl p-3 self-stretch"
-                style={{
-                  background: "rgba(var(--fg-rgb),0.03)",
-                  border: "1px solid rgba(var(--fg-rgb),0.08)",
-                }}
-              >
-                <ACERadar ace={ace} userAce={userAce} size={214} showLabels />
-                {/* Legend */}
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-5 h-[2px] rounded-full bg-[#ff5100]" />
-                    <span className="text-[8px] text-black/40 dark:text-white/35 font-semibold uppercase tracking-widest">Trek</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <svg width="16" height="2" viewBox="0 0 16 2">
-                      <line x1="0" y1="1" x2="16" y2="1" stroke="rgba(var(--fg-rgb),0.55)" strokeWidth="1.5" strokeDasharray="3 2" />
-                    </svg>
-                    <span className="text-[8px] text-black/40 dark:text-white/35 font-semibold uppercase tracking-widest">You</span>
-                  </div>
+        {/* Radar views — the same chart as the ACE page */}
+        <div className="ace p-4">
+          <style>{ACE_THEME_CSS}</style>
+          {overlapped && userAce && userValues && match ? (
+            /* ── Overlap view (default): you drawn over the adventure, gaps marked ── */
+            <div className="grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 items-center">
+              <div className="min-w-0">
+                <AceRadar values={trekValues} you={userValues} color="var(--ace-ink)" className="w-full max-w-[380px] mx-auto block"
+                  title={`You against ${name}`} />
+                <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[12px] mt-1" style={{ color: "var(--ace-soft)" }}>
+                  <span className="flex items-center gap-1.5"><span className="w-4 h-1 rounded-full" style={{ background: "var(--ace-ink)" }} />{shortName}</span>
+                  <span className="flex items-center gap-1.5"><span className="w-4 border-t-2 border-dashed" style={{ borderColor: "var(--ace-you)" }} />You</span>
+                  <span className="flex items-center gap-1.5"><span className="w-4 h-1 rounded-full" style={{ background: "var(--warn)" }} />Short by 1</span>
+                  <span className="flex items-center gap-1.5"><span className="w-4 h-1 rounded-full" style={{ background: "var(--bad)" }} />Short by 2+</span>
                 </div>
               </div>
 
-              {/* 4-domain × 2-axis matrix — self-stretch to match radar height */}
-              <div className="flex-1 min-w-0 flex flex-col gap-2 self-stretch">
-                <p className="text-[8px] font-black uppercase tracking-[0.2em] text-black/40 dark:text-white/35">Capability vs Requirement</p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 flex-1">
-                  {ACE_DOMAINS.map(domain => (
-                    <div key={domain.name} className="flex flex-col gap-1.5 h-full">
-                      {/* Domain header */}
-                      <div
-                        className="flex items-center justify-center py-1 rounded-lg shrink-0"
-                        style={{ background: `${domain.color}10`, border: `1px solid ${domain.color}20` }}
-                      >
-                        <span className="text-[8px] font-black uppercase tracking-[0.1em]" style={{ color: domain.color }}>
-                          {domain.name}
-                        </span>
-                      </div>
-                      {/* 2 axis cells — grow to fill */}
-                      {domain.axes.map(axis => (
-                        <AxisCell
-                          key={axis}
-                          axis={axis}
-                          trekVal={ace[axis]}
-                          userVal={(userAce as unknown as Record<string, number>)[axis] ?? 0}
-                        />
-                      ))}
+              <div className="min-w-0">
+                {/* Verdict */}
+                <div className="rounded-2xl p-4" style={{ background: tint(match.color, 9), border: `1px solid ${tint(match.color, 35)}` }}>
+                  <div className="flex items-end justify-between gap-3">
+                    <div>
+                      <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--ace-faint)" }}>Verdict</p>
+                      <p className="text-2xl font-black" style={{ color: match.color }}>{match.bucket.label}</p>
                     </div>
-                  ))}
+                    <p className="text-right">
+                      <span className="text-2xl font-black tabular-nums" style={{ color: "var(--ace-ink)" }}>{match.score}%</span>
+                      <span className="block text-[11px]" style={{ color: "var(--ace-faint)" }}>match</span>
+                    </p>
+                  </div>
+                  <div className="mt-2.5 h-2 rounded-full overflow-hidden relative" style={{ background: "var(--ace-line)" }}>
+                    <div className="h-full rounded-full" style={{ width: `${match.score}%`, background: match.color }} />
+                    <span className="absolute top-0 bottom-0 w-px" style={{ left: "55%", background: "var(--ace-grid-strong)" }} />
+                    <span className="absolute top-0 bottom-0 w-px" style={{ left: "80%", background: "var(--ace-grid-strong)" }} />
+                  </div>
                 </div>
+
+                {/* Where you fall short */}
+                <p className="text-[11px] font-bold uppercase tracking-wider mt-4 mb-1.5" style={{ color: "var(--ace-faint)" }}>Where you fall short</p>
+                {match.gaps.length === 0 ? (
+                  <p className="flex items-center gap-2 text-[14px]" style={{ color: "var(--ok)" }}>
+                    <Check className="w-4 h-4" /> Nowhere. You meet every score.
+                  </p>
+                ) : match.gaps.map(g => {
+                  const short = g.need - g.have;
+                  return (
+                    <div key={g.k} className="grid grid-cols-[76px_minmax(0,1fr)_auto] items-center gap-3 py-1 text-[13.5px]">
+                      <span className="font-semibold" style={{ color: axisColor(g.k) }}>{AXIS_NAMES[g.k]}</span>
+                      <span style={{ color: "var(--ace-soft)" }}>you {g.have}, needs {g.need}</span>
+                      <span className="text-[12px] font-bold px-2 py-0.5 rounded-md tabular-nums" style={{ color: short >= 2 ? "var(--bad)" : "var(--warn)", background: tint(short >= 2 ? "var(--bad)" : "var(--warn)", 12) }}>−{short}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-          ) : userAce ? (
-            /* ── Split two radars ── */
+          ) : userAce && userValues ? (
+            /* ── Side by side ── */
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div
-                className="flex flex-col items-center gap-3 rounded-2xl py-4 px-3"
-                style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}
-              >
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>Trek Requirements</span>
+              {[
+                { label: shortName, values: trekValues, color: "var(--ace-ink)" },
+                { label: "You", values: userValues, color: "var(--ace-you)" },
+              ].map(r => (
+                <div key={r.label} className="flex flex-col items-center gap-1 rounded-2xl py-3 px-2" style={{ background: "var(--ace-panel-2)" }}>
+                  <span className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{r.label}</span>
+                  <AceRadar values={r.values} color={r.color} className="w-full max-w-[300px] block" title={`${r.label}: capability scores`} />
                 </div>
-                <ACERadar ace={ace} size={168} showLabels />
-              </div>
-              <div
-                className="flex flex-col items-center gap-3 rounded-2xl py-4 px-3"
-                style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}
-              >
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>Your Capability</span>
-                </div>
-                <ACERadar ace={userAce} size={168} showLabels />
-              </div>
+              ))}
             </div>
           ) : (
             /* ── No profile ── */
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-center sm:items-stretch">
               {/* Trek radar — larger, dominant */}
-              <div className="flex flex-col items-center gap-1.5 shrink-0 sm:pr-4">
-                <span className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>Trek Requirements</span>
-                <ACERadar ace={ace} size={200} showLabels />
+              <div className="flex flex-col items-center gap-1.5 shrink-0 sm:pr-4 w-full sm:w-auto">
+                <span className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>What it asks of you</span>
+                <AceRadar values={trekValues} color="var(--ace-ink)" className="w-full max-w-[300px] block" title={`${name}: capability scores`} />
               </div>
 
               {/* Divider — vertical on desktop, horizontal on mobile */}

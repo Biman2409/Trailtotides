@@ -567,6 +567,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     bare
                     ace={ace}
                     slug={adventure.slug}
+                    name={adventure.name}
                     showAltitudeWarning={showAltitudeWarning}
                     showFatalFallWarning={showFatalFallWarning}
                     showExtremeIsolationWarning={showExtremeIsolationWarning}
