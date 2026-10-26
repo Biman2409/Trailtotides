@@ -21,11 +21,14 @@ import { BADGE_GOLD, PinnacleMedal } from "@/components/ui/custom/BadgeIcon";
 // the stamp collection (every adventure on the site, by region, stamped or waiting —
 // last, so its many empty slots don't push your own trips back).
 // Paper and ink in light mode, dark paper in dark mode; stamps are re-inked to match.
-// Pages are laid out at 420×600 and the whole book scales down to fit a short screen.
+// Pages are laid out at 420×600. On a phone they narrow to the screen (down to 340, then
+// the book scales); on a wider screen the whole book scales down to fit a short window.
 
 const ORANGE = "#ff5100";
 const PAGE_W = 420;
 const PAGE_H = 600;
+/** Narrowest the pages are laid out at; below this the book scales instead */
+const MIN_PAGE_W = 340;
 /** Room the page controls and site chrome need below/above the book */
 const CHROME_H = 200;
 
@@ -432,7 +435,8 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
   const [dir, setDir] = useState(1);
   const [sharing, setSharing] = useState(false);
   const [attempt, setAttempt] = useState(0);
-  const [scale, setScale] = useState(1);
+  const [fit, setFit] = useState({ width: PAGE_W, scale: 1 });
+  const rootRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const onScreen = useRef(false);
   const dragged = useRef(false);
@@ -447,13 +451,29 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
     return () => { cancelled = true; };
   }, [publicUsername, attempt]);
 
-  // Shrink the whole book (never below 72%) when the screen is too short for it and its controls
+  // Size the book to its column. Narrower than a page: lay the pages out narrower (scaling
+  // only below MIN_PAGE_W) and let the page scroll, so phone text stays readable. Room for a
+  // full page: shrink the whole book (never below 72%) when the window is too short for it
+  // and its controls.
   useEffect(() => {
-    const fit = () => setScale(Math.min(1, Math.max(0.72, (window.innerHeight - CHROME_H) / PAGE_H)));
-    fit();
-    window.addEventListener("resize", fit);
-    return () => window.removeEventListener("resize", fit);
+    const el = rootRef.current;
+    if (!el) return;
+    const measure = () => {
+      const avail = el.clientWidth;
+      if (avail < PAGE_W) {
+        const width = Math.max(MIN_PAGE_W, avail);
+        setFit({ width, scale: Math.min(1, avail / width) });
+      } else {
+        setFit({ width: PAGE_W, scale: Math.min(1, Math.max(0.72, (window.innerHeight - CHROME_H) / PAGE_H)) });
+      }
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    window.addEventListener("resize", measure);
+    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
   }, []);
+  const { width: pageW, scale } = fit;
 
   // Arrow keys only turn pages while the book is actually on screen
   useEffect(() => {
@@ -547,15 +567,15 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
   const pill = "inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-semibold transition-colors";
 
   return (
-    <div className="pp flex flex-col items-center gap-4">
+    <div ref={rootRef} className="pp flex flex-col items-center gap-4">
       <style>{`
         .pp { --pp-paper:#f5ecd6; --pp-ink:#241a12; --pp-muted:rgba(36,26,18,0.6); --pp-line:rgba(36,26,18,0.18); --pp-wash:rgba(36,26,18,0.05); }
         .dark .pp { --pp-paper:#221c16; --pp-ink:#efe5cf; --pp-muted:rgba(239,229,207,0.6); --pp-line:rgba(239,229,207,0.16); --pp-wash:rgba(239,229,207,0.06); }
         .dark .pp-stamp { filter: invert(1) hue-rotate(180deg); }
       `}</style>
 
-      <div ref={shellRef} className="relative w-full" style={{ maxWidth: PAGE_W * scale, height: PAGE_H * scale }}>
-       <div className="absolute top-0 left-0" style={{ width: `${100 / scale}%`, height: PAGE_H, transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: "top left" }}>
+      <div ref={shellRef} className="relative w-full" style={{ maxWidth: pageW * scale, height: PAGE_H * scale }}>
+       <div className="absolute top-0 left-0" style={{ width: pageW, height: PAGE_H, transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: "top left" }}>
         {status === "loading" && (
           <div className="absolute inset-0 rounded-2xl flex items-center justify-center" style={{ background: "var(--bg-surface)" }}>
             <Loader2 className="w-6 h-6 animate-spin" style={{ color: "var(--text-muted)" }} />
