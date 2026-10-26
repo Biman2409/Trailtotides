@@ -70,12 +70,13 @@ const kmBetween = (a: { lat: number; lng: number }, b: { lat: number; lng: numbe
 type Camera = { x: number; y: number; scale: number };
 const HOME: Camera = { x: W / 2, y: H / 2, scale: 1 };
 const HIMALAYAS: Camera = { ...toXY(78.2, 31.6), scale: 2.6 };
-// "Near you" uses a stand-in location so the preview never asks for permission
-const ME = { name: "Pune", lat: 18.52, lng: 73.86 };
+// "Near you" uses a stand-in location so the preview never asks for permission: Delhi, whose
+// ring takes in real listings (Rishikesh rafting at ~200 km, then the Uttarakhand treks)
+const ME = { name: "Delhi", lat: 28.61, lng: 77.21 };
 const ME_XY = toXY(ME.lng, ME.lat);
-const NEAR_KM = 150;
+const NEAR_KM = 300;
 const NEAR_R = (NEAR_KM / 111) * PROJ.scale; // radius in map units
-const NEAR: Camera = { ...ME_XY, scale: 5.5 };
+const NEAR: Camera = { ...ME_XY, scale: 3 };
 
 type Mode = { kind: "all" } | { kind: "region"; label: string } | { kind: "near" };
 
@@ -228,7 +229,9 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
       // Near you: range ring with a radar sweep
       const near = L.mode.kind === "near";
       if (near) {
-        const p = easeOut(Math.min(1, (now - L.ringAt) / 900));
+        // ringAt is stamped after this frame's timestamp, so clamp at 0: a negative radius makes
+        // arc() throw, which used to stop the whole animation
+        const p = easeOut(Math.min(1, Math.max(0, (now - L.ringAt) / 900)));
         const mx = sx(ME_XY.x), my = sy(ME_XY.y), R = NEAR_R * c.scale * u * p;
         const g = ctx.createRadialGradient(mx, my, 0, mx, my, Math.max(1, R));
         g.addColorStop(0, "rgba(96,165,250,0.22)"); g.addColorStop(0.85, "rgba(96,165,250,0.08)"); g.addColorStop(1, "rgba(96,165,250,0)");
@@ -310,8 +313,8 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
     return relToRoot(b.left + (s.left / 100) * b.width, b.top + (s.top / 100) * b.height);
   };
 
-  // The tour taps the closest spot to the stand-in location
-  const tourPin = useMemo(() => [...pins].sort((a, b) => a.km - b.km).find((p) => p.km > 20) ?? pins[0], [pins]);
+  // The tour taps the nearest real listing (not a sample spot), so it opens a page that exists
+  const tourPin = useMemo(() => [...pins].sort((a, b) => a.km - b.km).find((p) => p.km > 20 && p.href.startsWith("/experiences/")) ?? pins[0], [pins]);
 
   useEffect(() => {
     if (!touring || !onScreen) return;
