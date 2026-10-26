@@ -34,6 +34,7 @@ import CompareTray from "./CompareTray";
 import { fitFor, haversineKm, difficultyColor, type Fit } from "./mapShared";
 import PeekCarousel from "./PeekCarousel";
 import MapEmptyState from "./MapEmptyState";
+import { trailUrl, type Trail } from "@/lib/trails/shared";
 
 const DIFFICULTY_SCALE = ["Easy", "Moderate", "Hard", "Advanced", "Extreme"];
 
@@ -49,7 +50,7 @@ const GAP = 12;
 const SHEET = { peek: 206, half: 0.55, full: 0.88 } as const;
 type SheetState = "peek" | "half" | "full";
 
-export default function MapClient() {
+export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }) {
   const [mounted, setMounted] = useState(false);
   const [desktop, setDesktop] = useState(false);
   const [areaH, setAreaH] = useState(700);
@@ -68,6 +69,21 @@ export default function MapClient() {
   const [radius, setRadius] = useState<number | null>(250);
   const [picks, setPicks] = useState<CompassPick[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
+  // The selected adventure's trail, fetched only when one is opened (most adventures have none yet)
+  const [trail, setTrail] = useState<Trail | null>(null);
+  const trailCache = useRef(new Map<string, Trail>());
+  useEffect(() => {
+    if (!selected || !trailSlugs.includes(selected)) { setTrail(null); return; }
+    const hit = trailCache.current.get(selected);
+    if (hit) { setTrail(hit); return; }
+    let cancelled = false;
+    setTrail(null);
+    fetch(trailUrl(selected))
+      .then((r) => (r.ok ? r.json() : null))
+      .then((t: Trail | null) => { if (t && !cancelled) { trailCache.current.set(t.slug, t); setTrail(t); } })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [selected, trailSlugs]);
   const [hovered, setHovered] = useState<string | null>(null);
   const [panelOpen, setPanelOpen] = useState(true);
   const [inView, setInView] = useState<Set<string>>(new Set());
@@ -424,6 +440,7 @@ export default function MapClient() {
         hasProfile={!!ace}
         month={month}
         pickReason={pickReasons.get(selectedAdv.slug)}
+        trail={trail?.slug === selectedAdv.slug ? trail : null}
         onClose={() => setSelected(null)}
       />
     </div>
@@ -464,6 +481,7 @@ export default function MapClient() {
             month={month}
             picks={pickSet}
             selected={selected}
+            trail={trail?.slug === selected ? trail : null}
             hovered={hovered}
             wishlist={saved}
             insets={insets}

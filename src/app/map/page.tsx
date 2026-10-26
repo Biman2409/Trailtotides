@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import MapClient from "./MapClient";
+import { TRAIL_SLUGS } from "@/lib/trails";
 
 export const metadata: Metadata = {
   title: "Adventure Map",
@@ -20,7 +21,7 @@ export default function MapPage() {
     <>
       {/* The map is the page; this names it for screen readers and search */}
       <h1 className="sr-only">Adventure map of India and Nepal</h1>
-      <MapClient />
+      <MapClient trailSlugs={TRAIL_SLUGS} />
     </>
   );
 }

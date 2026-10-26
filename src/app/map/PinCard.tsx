@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { X, Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, GitCompareArrows, Check, Clock, Users } from "lucide-react";
+import { X, Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, GitCompareArrows, Check, Clock, Users, Route, Download } from "lucide-react";
 import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import type { Adventure, Month } from "@/lib/data";
 import { useCompare } from "@/contexts/CompareContext";
@@ -12,6 +12,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { AXIS_LABEL } from "@/lib/fitness";
 import { MONTHS } from "@/lib/homeCuration";
 import { track } from "@/lib/analytics";
+import { trailProfile, type Trail } from "@/lib/trails/shared";
 import {
   genreOf, difficultyOf, difficultyColor, verifiedOperators, priceFrom, formatINR, daysAgo, inSeason, type Fit,
 } from "./mapShared";
@@ -26,6 +27,7 @@ export default function PinCard({
   hasProfile,
   month,
   pickReason,
+  trail,
   onClose,
 }: {
   adventure: Adventure;
@@ -34,6 +36,8 @@ export default function PinCard({
   hasProfile: boolean;
   month: Month | null;
   pickReason?: string;
+  /** Drawn on the map when the adventure has one */
+  trail?: Trail | null;
   onClose: () => void;
 }) {
   const { isSelected, add, remove, isFull, openDrawer, selected } = useCompare();
@@ -91,6 +95,9 @@ export default function PinCard({
 
       <div className="px-4 pb-4 pt-3 space-y-3 overflow-y-auto">
         <p className="text-[12.5px] leading-relaxed text-white/60">{a.tagline}</p>
+
+        {/* The trail, now drawn on the map */}
+        {trail && <TrailPanel trail={trail} slug={a.slug} />}
 
         {/* Picked for you by Compass.AI */}
         {pickReason && (
@@ -213,5 +220,35 @@ export default function PinCard({
         </Link>
       </div>
     </article>
+  );
+}
+
+/** Length, climb and a small elevation line for the trail on the map, with the way to the full trail and GPX */
+function TrailPanel({ trail, slug }: { trail: Trail; slug: string }) {
+  const prof = trailProfile(trail);
+  const maxKm = prof[prof.length - 1].km;
+  const eles = prof.map((p) => p.ele);
+  const lo = Math.min(...eles), hi = Math.max(...eles);
+  const W = 240, H = 40;
+  const d = prof.map((p, i) => `${i ? "L" : "M"}${((p.km / maxKm) * W).toFixed(1)},${(H - 2 - ((p.ele - lo) / Math.max(1, hi - lo)) * (H - 6)).toFixed(1)}`).join("");
+  return (
+    <div className="tm-panel" style={{ borderColor: "rgba(255,81,0,0.35)", background: "rgba(255,81,0,0.06)" }}>
+      <div className="flex items-center gap-2">
+        <Route className="w-4 h-4 text-[#ff7d47] shrink-0" />
+        <p className="text-[12.5px] font-bold text-white">Trail on the map</p>
+        <p className="ml-auto text-[11px] text-white/50 tabular-nums">{trail.lengthKm} km · +{trail.ascentM.toLocaleString("en-IN")} m · {trail.stops.length} stops</p>
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-10 mt-2" aria-label={`Elevation ${lo.toLocaleString("en-IN")} to ${hi.toLocaleString("en-IN")} m`} role="img">
+        <path d={`${d}L${W},${H}L0,${H}Z`} fill="rgba(255,81,0,0.18)" />
+        <path d={d} fill="none" stroke="#ff7d47" strokeWidth="1.6" />
+      </svg>
+      <div className="flex items-center justify-between text-[10.5px] text-white/40 -mt-0.5">
+        <span>{trail.stops[0].name}</span><span>{trail.stops[trail.stops.length - 1].name}</span>
+      </div>
+      <div className="flex gap-2 mt-2.5">
+        <Link href={`/experiences/${slug}#trail`} className="flex-1 inline-flex items-center justify-center gap-1 h-8 rounded-lg text-[12px] font-semibold text-white bg-white/10 hover:bg-white/15">Stops &amp; elevation <ArrowRight className="w-3.5 h-3.5" /></Link>
+        <a href={`/experiences/${slug}/trail.gpx`} download className="inline-flex items-center justify-center gap-1 h-8 px-3 rounded-lg text-[12px] font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a1f]"><Download className="w-3.5 h-3.5" />GPX</a>
+      </div>
+    </div>
   );
 }

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { Download, Smartphone, MapPinned, Mountain, TrendingUp, Route, Flag } from "lucide-react";
 import { BASE_LAYERS, LIGHT_BASE, createBaseLayer, loadLeaflet } from "@/app/map/mapShared";
-import { trailProfile, trailHighPoint, type Trail } from "@/lib/trails";
+import { trailProfile, trailHighPoint, type Trail } from "@/lib/trails/shared";
 import OfflineGuide from "./OfflineGuide";
 
 const ORANGE = "#ff5100";

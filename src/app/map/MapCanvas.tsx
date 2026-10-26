@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type L from "leaflet";
 import type { GeoJsonObject } from "geojson";
 import type { Adventure, Month } from "@/lib/data";
+import type { Trail } from "@/lib/trails/shared";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import {
   BASE_LAYERS, createBaseLayer, INDIA_CENTER, INDIA_ZOOM, INDIA_BOUNDS, loadLeaflet, inSeason, esc,
@@ -46,6 +47,8 @@ interface Props {
   month: Month | null;
   picks: Set<string>;
   selected: string | null;
+  /** The selected adventure's trail, when it has one: drawn on the map and framed */
+  trail: Trail | null;
   /** A list row under the pointer: its pin lights up */
   hovered: string | null;
   wishlist: Set<string>;
@@ -95,7 +98,7 @@ function peekHtml(a: Adventure) {
 
 export default function MapCanvas(props: Props) {
   // onSelect and onViewChange are read through `live` by Leaflet handlers bound once
-  const { adventures: advs, fits, month, picks, selected, hovered, wishlist, insets, nearMe, radiusKm, userPhotos, completed, apiRef } = props;
+  const { adventures: advs, fits, month, picks, selected, trail, hovered, wishlist, insets, nearMe, radiusKm, userPhotos, completed, apiRef } = props;
   const router = useRouter();
   const elRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -108,6 +111,7 @@ export default function MapCanvas(props: Props) {
   const placeRef = useRef<L.LayerGroup | null>(null);
   const meRef = useRef<L.LayerGroup | null>(null);
   const trophyRef = useRef<L.LayerGroup | null>(null);
+  const trailRef = useRef<L.LayerGroup | null>(null);
   /** Slug of the pin currently taken out of its cluster */
   const loose = useRef<string | null>(null);
 
@@ -261,6 +265,7 @@ export default function MapCanvas(props: Props) {
       clusterRef.current = cluster;
       photoRef.current = leaflet.layerGroup().addTo(map);
       trophyRef.current = leaflet.layerGroup().addTo(map);
+      trailRef.current = leaflet.layerGroup().addTo(map);
       placeRef.current = leaflet.layerGroup().addTo(map);
       meRef.current = leaflet.layerGroup().addTo(map);
 
@@ -395,6 +400,52 @@ export default function MapCanvas(props: Props) {
       .addTo(layer);
   }, [nearMe, radiusKm]);
 
+  // ── The selected adventure's trail ──────────────────────────────────────────
+  // Drawn under the pins, drawn on from the start, with numbered stops; the view frames it
+  // in the part of the map the panels leave uncovered.
+
+  useEffect(() => {
+    const map = mapRef.current, leaflet = leafletRef.current, layer = trailRef.current;
+    if (!map || !leaflet || !layer) return;
+    layer.clearLayers();
+    if (!trail) return;
+    const pts = trail.line.map(([la, lo]) => [la, lo] as [number, number]);
+    leaflet.polyline(pts, { color: "#000", weight: 7, opacity: 0.5, interactive: false }).addTo(layer);
+    const line = leaflet.polyline(pts, { color: "#ff5100", weight: 4, opacity: 1, interactive: false, className: "tm-trail" }).addTo(layer);
+
+    const stopIcon = (label: string, cls = "") => leaflet.divIcon({ className: "", html: `<div class="tm-stop ${cls}">${label}</div>`, iconSize: [18, 18], iconAnchor: [9, 9] });
+    trail.stops.forEach((st, i) => {
+      leaflet.marker([st.lat, st.lng], { icon: stopIcon(String(i + 1), i === 0 ? "start" : ""), zIndexOffset: -100 })
+        .bindTooltip(`<b>${esc(st.name)}</b><span>km ${st.km}${st.ele != null ? ` · ${st.ele.toLocaleString("en-IN")} m` : ""}</span>`, { direction: "top", offset: [0, -10], className: "tm-tip" })
+        .addTo(layer);
+    });
+    trail.side.forEach((st) => {
+      leaflet.marker([st.lat, st.lng], { icon: stopIcon("▲", "side"), zIndexOffset: -100 })
+        .bindTooltip(`<b>${esc(st.name)}</b><span>Side trip${st.ele != null ? ` · ${st.ele.toLocaleString("en-IN")} m` : ""}</span>`, { direction: "top", offset: [0, -10], className: "tm-tip" })
+        .addTo(layer);
+    });
+
+    const { left, bottom, top = 0 } = live.current.insets;
+    map.flyToBounds(line.getBounds(), { paddingTopLeft: [left + 40, top + 40], paddingBottomRight: [40, bottom + 40], maxZoom: 13, duration: 1.1 });
+
+    // Draw the line on after the camera arrives, unless the visitor prefers less motion
+    const path = line.getElement() as SVGPathElement | undefined;
+    if (path && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const draw = () => {
+        const len = path.getTotalLength();
+        path.style.transition = "none";
+        path.style.strokeDasharray = `${len}`;
+        path.style.strokeDashoffset = `${len}`;
+        path.getBoundingClientRect();
+        path.style.transition = "stroke-dashoffset 1.6s ease-in-out";
+        path.style.strokeDashoffset = "0";
+        // Zooming redraws the path at a new length; drop the dash so it stays whole
+        path.addEventListener("transitionend", () => { path.style.strokeDasharray = ""; path.style.transition = ""; }, { once: true });
+      };
+      map.once("moveend", draw);
+    }
+  }, [trail]);
+
   // ── Trip photos ─────────────────────────────────────────────────────────────
 
   useEffect(() => {
@@ -495,6 +546,9 @@ const MAP_CSS = `
   .tm-me::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: rgba(56,189,248,0.35); animation: tmPulse 2s ease-out infinite; }
   .tm-me i { position: absolute; inset: 5px; border-radius: 50%; background: #38bdf8; border: 2px solid #fff; }
   @keyframes tmPulse { from { transform: scale(0.6); opacity: 0.8; } to { transform: scale(2.3); opacity: 0; } }
+  .tm-stop { width: 18px; height: 18px; border-radius: 50%; background: #ff5100; border: 2px solid #fff; color: #fff; font: 700 9.5px/14px system-ui, sans-serif; text-align: center; box-shadow: 0 1px 5px rgba(0,0,0,0.5); }
+  .tm-stop.start { background: #16a34a; }
+  .tm-stop.side { background: #0e7c86; font-size: 8px; }
   .tm-place { width: 18px; height: 18px; border-radius: 50%; background: #38bdf8; border: 3px solid #fff; box-shadow: 0 0 0 6px rgba(56,189,248,0.25), 0 3px 10px rgba(0,0,0,0.5); }
   .tm-trophy { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg,#f7cd3a,#eab308);
                box-shadow: 0 0 0 2px #fff, 0 0 18px rgba(234,179,8,0.6); }
