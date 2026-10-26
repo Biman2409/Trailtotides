@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, type ReactNode } from "react";
+import { useState, useMemo, useEffect, useSyncExternalStore, type ComponentProps, type ReactNode } from "react";
 import Link from "next/link";
 import NextImage from "next/image";
 import {
@@ -263,7 +263,17 @@ function Stars({ n }: { n: number }) {
 
 // ── Main ───────────────────────────────────────────────────────────────────────
 
-export default function AdminDashboardClient({
+// Every date and "ago" here must use the reader's clock and time zone. Rendered on the server
+// (UTC) they came out a day off for India in the evening, and the mismatch broke hydration
+// (React error #418). This page is private and dynamic, so it simply renders in the browser.
+const noSubscribe = () => () => {};
+export default function AdminDashboardClient(props: ComponentProps<typeof Dashboard>) {
+  const inBrowser = useSyncExternalStore(noSubscribe, () => true, () => false);
+  if (!inBrowser) return <div className="min-h-screen" style={{ background: "var(--bg-page)" }} aria-busy="true" />;
+  return <Dashboard {...props} />;
+}
+
+function Dashboard({
   profiles, currentUserId, messages = [], storySubmissions = [], operatorProfiles = [], operatorSubmissions = [],
   reviews = [], photos = [], counts, adventureNames,
 }: {

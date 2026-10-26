@@ -43,6 +43,7 @@ import PickedForYou from "@/components/ui/custom/PickedForYou";
 import MapDemo, { type MapDemoPin } from "@/components/ui/custom/MapDemo";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
 import { adventures, stories } from "@/lib/data";
+import { computeDifficulty, getACE } from "@/lib/ace";
 import { pickEditorsMix, inSeasonNow, currentMonthIndexIST, MONTHS, MONTH_NAMES } from "@/lib/homeCuration";
 
 // Re-render every 6 hours so "In season now" follows the calendar.
@@ -51,7 +52,8 @@ export const revalidate = 21600;
 const featuredAdventures = pickEditorsMix(adventures, 6);
 const featuredStories = stories.slice(0, 3);
 // Only what the map preview draws, so the full adventure records stay off the client
-const mapPins: MapDemoPin[] = adventures.map(({ slug, name, type, lat, lng, difficulty, durationDays, state, heroImage }) => ({ slug, name, type, lat, lng, difficulty, durationDays, state, image: heroImage }));
+// Difficulty is the rating the site shows everywhere, not the raw data field (they differ for many)
+const mapPins: MapDemoPin[] = adventures.map((a) => ({ slug: a.slug, name: a.name, type: a.type, lat: a.lat, lng: a.lng, difficulty: computeDifficulty(getACE(a)), durationDays: a.durationDays, state: a.state, image: a.heroImage }));
 
 function SeasonNote({ monthsLeft, endsIn }: { monthsLeft: number; endsIn: string }) {
   const last = monthsLeft === 1;

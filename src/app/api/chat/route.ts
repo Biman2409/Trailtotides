@@ -98,6 +98,8 @@ ${CATALOG_STR}
 
 ## Hard rules:
 - ONLY use slugs from the catalog above. Never invent slugs.
+- Difficulty is the catalog's "difficulty" field (Easy, Moderate, Hard, Advanced, Extreme) and nothing else. Never call an adventure easier or harder than that field says.
+- When the user asks for a difficulty ("moderate", "easy", "challenging"…), recommend ONLY adventures whose "difficulty" field is that level. If none fit the rest of the request, say so and offer the nearest level, naming it.
 - Never recommend a coming-soon type — say it's coming soon instead.
 - Keep text responses concise (1–3 sentences max before any recommendations).
 - Don't say "I" awkwardly. Speak as Compass.AI, not a generic bot.
@@ -238,7 +240,7 @@ function keywordSearch(query: string, limit = 3) {
     const primary = [a.type].join(" ").toLowerCase();
     const secondary = [a.state, a.region ?? ""].join(" ").toLowerCase();
     const rest = [
-      a.name, a.difficulty ?? "", ...(a.tags ?? []), a.tagline ?? "", stripEmphasis(a.description ?? ""), a.bestSeason ?? "",
+      a.name, computeDifficulty(getACE(a)), ...(a.tags ?? []), a.tagline ?? "", stripEmphasis(a.description ?? ""), a.bestSeason ?? "",
     ].join(" ").toLowerCase();
 
     let score = 0;
@@ -278,6 +280,93 @@ function parseAce(raw: unknown): ACE | null {
 const LEVEL: Record<string, number> = { Easy: 1, Moderate: 2, Hard: 3, Advanced: 4, Extreme: 5 };
 const BEGINNER_WORDS = /\b(beginner|beginners|easy|first[- ]?time|first trek|gentle|newbie|novice|not too hard|family)\b/i;
 
+const ratingOf = (slug: string) => {
+  const a = adventures.find((x) => x.slug === slug);
+  return a ? computeDifficulty(getACE(a)) : null;
+};
+
+/**
+ * The difficulty levels the visitor asked for, in the site's own ratings, or null if they didn't
+ * ask. The model is told to respect the catalog's rating but doesn't always; this is enforced.
+ */
+function requestedDifficulty(query: string): string[] | null {
+  const q = query.toLowerCase().replace(/\bnot (too |that |very )?(hard|difficult|tough)\b/g, " gentle ");
+  const want = new Set<string>();
+  if (/\bextreme\b/.test(q)) want.add("Extreme");
+  if (/\b(advanced|expert)\b/.test(q)) want.add("Advanced");
+  if (/\b(hard|difficult|challenging|tough|strenuous)\b/.test(q)) want.add("Hard");
+  if (/\b(moderate|medium|intermediate)\b/.test(q)) want.add("Moderate");
+  if (/\beasy\b/.test(q)) want.add("Easy");
+  if (/\b(beginners?|first[- ]?time|first trek|gentle|newbie|novice|family)\b/.test(q)) { want.add("Easy"); want.add("Moderate"); }
+  return want.size ? [...want] : null;
+}
+
+// The activity and place a visitor names are hard limits when topping up picks: a "moderate trek
+// in Uttarakhand" must never become a rafting trip just because rafting there is Moderate
+const TYPE_WORDS: [RegExp, string][] = [
+  [/\b(trek|treks|trekking|hike|hikes|hiking)\b/, "Trekking"],
+  [/\b(motorbike|motorcycle|motorcycling|bike trip|bike ride|biking|ride|riding)\b/, "Motorcycling"],
+  [/\b(cycle|cycling|bicycle)\b/, "Cycling"],
+  [/\b(raft|rafting)\b/, "River Rafting"],
+  [/\b(mountaineering|summit|expedition|peak)\b/, "Mountaineering"],
+];
+const PLACE_WORDS: [RegExp, string][] = [
+  [/\b(kashmir|jammu|srinagar|sonamarg)\b/, "Jammu & Kashmir"],
+  [/\b(himachal|manali|spiti|kullu|kinnaur|parvati)\b/, "Himachal"],
+  [/\b(uttarakhand|garhwal|kumaon|rishikesh|dehradun)\b/, "Uttarakhand"],
+  [/\b(ladakh|leh|zanskar)\b/, "Ladakh"],
+  [/\b(sikkim|gangtok)\b/, "Sikkim"],
+  [/\b(darjeeling|west bengal|bengal)\b/, "West Bengal"],
+  [/\b(nepal|everest|annapurna)\b/, "Nepal"],
+];
+
+function requestLimits(query: string) {
+  const q = query.toLowerCase();
+  return {
+    types: TYPE_WORDS.filter(([re]) => re.test(q)).map(([, t]) => t),
+    places: PLACE_WORDS.filter(([re]) => re.test(q)).map(([, p]) => p),
+  };
+}
+
+/**
+ * Adventures at the wanted levels within the activity and place asked for, best keyword match
+ * first. When nothing at those levels fits, the nearest level that does (and which one it was).
+ */
+function pickByDifficulty(query: string, wanted: string[], exclude: Set<string>, limit: number) {
+  const { types, places } = requestLimits(query);
+  const fits = (a: typeof adventures[0]) =>
+    !exclude.has(a.slug) &&
+    (types.length === 0 || types.includes(a.type)) &&
+    (places.length === 0 || places.some((p) => a.state.includes(p)));
+  const ranked = keywordSearch(query, adventures.length);
+  const pool = [...ranked, ...adventures.filter((a) => !ranked.includes(a))].filter(fits);
+  const exact = pool.filter((a) => wanted.includes(computeDifficulty(getACE(a))));
+  if (exact.length > 0) return { picks: exact.slice(0, limit), nearest: null as string | null };
+  if (pool.length === 0) return { picks: [], nearest: null as string | null };
+  const gap = (a: typeof adventures[0]) => Math.min(...wanted.map((w) => Math.abs(LEVEL[computeDifficulty(getACE(a))] - LEVEL[w])));
+  const best = Math.min(...pool.map(gap));
+  const nearest = pool.filter((a) => gap(a) === best);
+  return { picks: nearest.slice(0, limit), nearest: computeDifficulty(getACE(nearest[0])) };
+}
+
+/** A factual one-liner from the site's own data, for picks the model got wrong or didn't explain. */
+function factualReason(a: typeof adventures[0]): string {
+  return `${computeDifficulty(getACE(a))} ${a.type.toLowerCase()} in ${a.state}, ${a.durationDays}${a.bestSeason ? `. Best ${a.bestSeason}` : ""}.`;
+}
+
+const DIFFICULTY_WORD = /\b(easy|moderate|hard|advanced|extreme|gentle|beginner[- ]friendly|challenging|tough|strenuous)\b/gi;
+const WORD_LEVEL: Record<string, string> = {
+  easy: "Easy", gentle: "Easy", "beginner-friendly": "Easy", "beginner friendly": "Easy", moderate: "Moderate",
+  hard: "Hard", challenging: "Hard", tough: "Hard", strenuous: "Hard", advanced: "Advanced", extreme: "Extreme",
+};
+
+/** True when a reason describes the adventure at a different level than the site rates it. */
+function misstatesDifficulty(reason: string, slug: string): boolean {
+  const rating = ratingOf(slug);
+  const said = [...reason.matchAll(DIFFICULTY_WORD)].map((m) => WORD_LEVEL[m[0].toLowerCase()]).filter(Boolean);
+  return !!rating && said.length > 0 && !said.includes(rating);
+}
+
 /** Tells the model which adventures this person is ready for, so it stops suggesting ones they aren't. */
 function fitnessHint(ace: ACE | null): string {
   if (!ace) return "";
@@ -296,7 +385,8 @@ Rules: recommend READY adventures first. Only suggest a STRETCH one if it fits t
 
 /** Keyword fallback, made safe: respects "beginner" wording and the user's fitness when known. */
 function pickFallback(query: string, ace: ACE | null, limit = 3) {
-  let list = keywordSearch(query, 15);
+  const wanted = requestedDifficulty(query);
+  let list = wanted ? pickByDifficulty(query, wanted, new Set(), 15).picks : keywordSearch(query, 15);
   if (BEGINNER_WORDS.test(query)) {
     const gentle = list.filter((a) => LEVEL[computeDifficulty(getACE(a))] <= 2);
     list = gentle.length > 0 ? gentle : list.filter((a) => LEVEL[computeDifficulty(getACE(a))] <= 3);
@@ -465,12 +555,40 @@ export async function POST(req: NextRequest) {
     }
 
     const suggestAce = /<suggest_ace\s*\/>/.test(rawContent) || shouldSuggestAce;
-    const recommendations = parseRecommendations(rawContent);
+    let recommendations = parseRecommendations(rawContent);
+
+    // Hold the model to the site's difficulty ratings: drop picks at a level the visitor didn't
+    // ask for (topping up from the catalog), and replace reasons that misstate a rating
+    const askedQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
+    const askedFor = requestedDifficulty(askedQuery);
+    let replacedPicks = false;
+    let nearestNote = "";
+    if (askedFor && recommendations.length > 0) {
+      const kept = recommendations.filter((r) => askedFor.includes(ratingOf(r.slug) ?? ""));
+      if (kept.length < recommendations.length) {
+        replacedPicks = true;
+        const { picks, nearest } = pickByDifficulty(askedQuery, askedFor, new Set(kept.map((r) => r.slug)), recommendations.length - kept.length);
+        // Nothing at the asked level: show the nearest level only if nothing else was kept, and say so
+        const extra = nearest && kept.length > 0 ? [] : picks;
+        if (nearest && kept.length === 0 && extra.length > 0) {
+          const { types, places } = requestLimits(askedQuery);
+          const what = types.length === 1 ? { Trekking: "treks", Motorcycling: "bike trips", Cycling: "cycling trips", "River Rafting": "rafting trips", Mountaineering: "climbs" }[types[0]] ?? "adventures" : "adventures";
+          const where = places.length === 1 ? ` in ${places[0]}` : "";
+          nearestNote = `There are no ${askedFor.join(" or ").toLowerCase()} ${what}${where} on Trail to Tides yet. The closest are rated ${nearest}:`;
+        }
+        recommendations = [...kept, ...extra.map((a) => ({ slug: a.slug, name: a.name, reason: factualReason(a) }))];
+      }
+    }
+    recommendations = recommendations.map((r) => {
+      const a = adventures.find((x) => x.slug === r.slug)!;
+      return !r.reason || misstatesDifficulty(r.reason, r.slug) ? { ...r, name: a.name, reason: factualReason(a) } : r;
+    });
     const cards = recommendations
       .map((r) => adventures.find((a) => a.slug === r.slug))
       .filter(Boolean);
 
-    let text = cleanText(rawContent);
+    // The model's sentence may name or describe a pick that was swapped out
+    let text = replacedPicks ? nearestNote : cleanText(rawContent);
 
     if (!text && recommendations.length > 0) {
       const names = recommendations.map((r) => r.name);

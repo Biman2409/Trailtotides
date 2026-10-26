@@ -17,6 +17,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { keyStat } from "@/lib/keyStat";
+import { useClientMonth } from "@/lib/useClientMonth";
 
 interface AdventureCardProps {
   adventure: Adventure;
@@ -83,11 +84,11 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
       if (loggedIn) awardXP("compare");
     }
   }
-  const monthIndex = new Date().getMonth();
-  const currentMonth = MONTHS[monthIndex];
-  const nextMonth = MONTHS[(monthIndex + 1) % 12];
-  const isSeasonActive = adventure.bestMonths.includes(currentMonth);
-  const isSeasonUpcoming = !isSeasonActive && adventure.bestMonths.includes(nextMonth);
+  // "In season" needs today's month, which a cached page can't know: the season range shows
+  // until the page is running, then the live label takes over
+  const monthIndex = useClientMonth();
+  const isSeasonActive = monthIndex !== null && adventure.bestMonths.includes(MONTHS[monthIndex]);
+  const isSeasonUpcoming = monthIndex !== null && !isSeasonActive && adventure.bestMonths.includes(MONTHS[(monthIndex + 1) % 12]);
   const seasonLabel = formatSeasonShort(adventure.bestMonths);
   const operatorCount = adventure.operators?.length ?? 0;
 

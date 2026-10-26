@@ -12,6 +12,7 @@ import { toggleSelection as toggle, GENRE_GROUPS } from "@/lib/filterOptions";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import { REGION_STATES, REGION_ORDER } from "@/lib/regionGroups";
 import { MONTHS, SORT_LABELS, type SortKey } from "@/lib/exploreHelpers";
+import { currentMonthIndexIST } from "@/lib/homeCuration";
 
 export type { FitFilter, AdventureFilterState } from "@/lib/adventureFilterState";
 export { NO_FILTERS, filtersFromParams, writeFilterParams, panelCount, anyFilter, filterAdventures } from "@/lib/adventureFilterState";
@@ -350,7 +351,8 @@ function Section({ title, children, className = "" }: { title: string; children:
   );
 }
 
-const THIS_MONTH = MONTHS[new Date().getMonth()];
+// India time, like the rest of the site's "this month" (the filter panel only renders in the browser)
+const THIS_MONTH = MONTHS[currentMonthIndexIST()];
 
 // The slider runs from the cheapest starting price to the dearest, in ₹1,000 steps; the far
 // right end means any price

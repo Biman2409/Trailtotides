@@ -21,7 +21,7 @@ import {
   type StoredProfile,
 } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
-import { getACE, computeMatchScore, type ACE, type AceAxis } from "@/lib/ace";
+import { getACE, computeMatchScore, computeDifficulty, type ACE, type AceAxis } from "@/lib/ace";
 import { awardXP } from "@/lib/awardXP";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
 import {
@@ -1176,7 +1176,7 @@ function buildResult(userAxes: Record<string, number>, extra?: { rawAxes?: Recor
     return {
       id: adv.slug, slug: adv.slug, name: adv.name, heroImage: adv.heroImage,
       state: adv.state, region: (adv.region ?? "") as string,
-      type: adv.type as string, difficulty: adv.difficulty as string,
+      type: adv.type as string, difficulty: computeDifficulty(req), // the rating the site shows, not the raw field
       tagline: adv.tagline,
       altitude: adv.altitude, status, weakAxes, missingKeys: weakAxes,
       analysis: "",
