@@ -103,7 +103,7 @@ export default function TrailSection({ trail, slug, name }: { trail: Trail; slug
         </ol>
         <p className="text-[11px] mt-3 flex items-start gap-1.5" style={{ color: "var(--text-tertiary)" }}>
           <MapPinned className="w-3 h-3 mt-0.5 shrink-0" />
-          Trail from OpenStreetMap (© OpenStreetMap contributors), routed by BRouter. Paths change after landslides and snow: follow your guide and the {name} route your operator gives you.
+          Paths change after landslides and snow: follow your guide and the {name} route your operator gives you.
         </p>
       </div>
     </div>
@@ -130,7 +130,21 @@ function TrailMap({ trail, hoverPoint }: { trail: Trail; hoverPoint: [number, nu
 
       const map = L.map(el, { zoomControl: false, scrollWheelZoom: false, attributionControl: false, maxZoom: 16 });
       mapRef.current = map;
-      L.control.attribution({ position: "bottomright", prefix: false }).addTo(map);
+      // Credits (OpenStreetMap's licence requires them) stay behind a small ⓘ, as on the site's
+      // other maps: tap to show, tap again to hide. The trail's source is also in the GPX file.
+      const CreditToggle = L.Control.extend({
+        onAdd() {
+          const btn = L.DomUtil.create("button", "ttt-trail-credit");
+          btn.type = "button";
+          btn.textContent = "i";
+          btn.setAttribute("aria-label", "Map and trail credits");
+          L.DomEvent.disableClickPropagation(btn);
+          L.DomEvent.on(btn, "click", () => el.classList.toggle("ttt-credits-open"));
+          return btn;
+        },
+      });
+      new CreditToggle({ position: "bottomright" }).addTo(map);
+      L.control.attribution({ position: "bottomright", prefix: false }).addAttribution("Trail: © OpenStreetMap contributors, via BRouter").addTo(map);
       L.control.zoom({ position: "topright" }).addTo(map);
       createBaseLayer(L, isDark ? BASE_LAYERS.map : LIGHT_BASE).then((base) => {
         if (!cancelled && mapRef.current === map) base.addTo(map);
@@ -177,7 +191,21 @@ function TrailMap({ trail, hoverPoint }: { trail: Trail; hoverPoint: [number, nu
     else dot.setStyle({ opacity: 0, fillOpacity: 0 });
   }, [hoverPoint]);
 
-  return <div ref={ref} className="w-full h-[340px] sm:h-[420px] rounded-xl overflow-hidden z-0" style={{ border: "1px solid var(--border-subtle)", background: "var(--bg-surface-2)" }} aria-label="Trail map" />;
+  return (
+    <>
+      <style>{`
+        .ttt-trail-map .leaflet-control-attribution { display: none; font-size: 9.5px; line-height: 1.4; padding: 3px 8px; margin: 0 6px 4px 0; border-radius: 8px; max-width: 92%;
+          background: var(--bg-surface) !important; color: var(--text-tertiary) !important; }
+        .ttt-trail-map .leaflet-control-attribution a { color: var(--text-secondary) !important; }
+        .ttt-trail-map.ttt-credits-open .leaflet-control-attribution { display: block; }
+        .ttt-trail-credit { width: 18px; height: 18px; margin: 0 6px 6px 0 !important; border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+          font: italic 600 10px/1 Georgia, serif; cursor: pointer; opacity: 0.6;
+          background: var(--bg-surface); color: var(--text-tertiary); border: 1px solid var(--border-subtle); }
+        .ttt-trail-credit:hover, .ttt-trail-map.ttt-credits-open .ttt-trail-credit { opacity: 1; color: #ff5100; }
+      `}</style>
+      <div ref={ref} className="ttt-trail-map w-full h-[340px] sm:h-[420px] rounded-xl overflow-hidden z-0" style={{ border: "1px solid var(--border-subtle)", background: "var(--bg-surface-2)" }} aria-label="Trail map" />
+    </>
+  );
 }
 
 function ElevationProfile({ trail, profile, hover, onHover }: {
