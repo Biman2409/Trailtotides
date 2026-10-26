@@ -62,14 +62,16 @@ const LEVELS = [
   { label: "Extreme",        sub: "For very fit, experienced people." },
 ];
 
-// Sample people for the rank and matching demos (stamina … nerve, each 1–5)
+// A typical person at each ACE rank, for the rank and matching demos (stamina … nerve,
+// each 1–5). Each total lands inside its rank's band: 13, 20, 27, 34, 40.
 const PEOPLE = [
-  { name: "New to the hills",   values: [2, 1, 2, 2, 1, 1, 2, 2] },
-  { name: "Weekend trekker",    values: [3, 2, 3, 3, 1, 2, 3, 3] },
-  { name: "Seasoned trekker",   values: [4, 3, 3, 4, 2, 4, 4, 3] },
-  { name: "Expedition regular", values: [5, 4, 4, 5, 3, 5, 4, 4] },
-  { name: "Strong at everything", values: [5, 5, 5, 5, 5, 5, 5, 5] },
+  { name: "Pathfinder",  values: [2, 1, 2, 2, 1, 1, 2, 2] },
+  { name: "Navigator",   values: [3, 2, 3, 3, 1, 2, 3, 3] },
+  { name: "Trailblazer", values: [4, 3, 3, 4, 2, 4, 4, 3] },
+  { name: "Vanguard",    values: [5, 4, 4, 5, 3, 5, 4, 4] },
+  { name: "Apex",        values: [5, 5, 5, 5, 5, 5, 5, 5] },
 ];
+const aTypical = (rank: string) => `${/^[AEIOU]/.test(rank) ? "an" : "a"} ${rank}`;
 
 const RANK_COPY: Record<string, string> = {
   Pathfinder:  "Day hikes and easy multi-day trails.",
@@ -143,7 +145,6 @@ export default function AceContent({ treks }: { treks: AceTrek[] }) {
         <Scale profiles={profiles} />
         <Rank />
         <Matching profiles={profiles} />
-        <Cta />
       </div>
     </MotionConfig>
   );
@@ -470,7 +471,7 @@ function Rank() {
             Your own scores also run from 1 to 5, so your total lands between 8 and 40. Your rank is a quick read on the kind of trips you&apos;re ready for.
           </SectionHead>
           <div className="mt-7">
-            <p className="text-[12px] font-bold uppercase tracking-wider mb-2" style={{ color: "var(--ace-faint)" }}>Try a sample person</p>
+            <p className="text-[12px] font-bold uppercase tracking-wider mb-2" style={{ color: "var(--ace-faint)" }}>See a typical score for each rank</p>
             <div className="flex flex-wrap gap-2">
               {PEOPLE.map((p, n) => (
                 <button key={p.name} type="button" onClick={() => pick(n)} aria-pressed={n === i}
@@ -576,7 +577,7 @@ function Matching({ profiles }: { profiles: Profile[] }) {
     <section id="match" ref={ref} className="py-16 lg:py-24" style={{ borderTop: "1px solid var(--ace-line)" }}>
       <div className="mx-auto max-w-6xl px-5 lg:px-8">
         <SectionHead eyebrow="How matching works" title="We compare you to the adventure, one score at a time">
-          Where you meet a score, you&apos;re covered. Where you fall short, the gap counts against you, and bigger gaps count for more. Try it below with a sample person.
+          Where you meet a score, you&apos;re covered. Where you fall short, the gap counts against you, and bigger gaps count for more. Try it below with a typical person at each rank.
         </SectionHead>
 
         {/* The three steps, in order */}
@@ -596,7 +597,7 @@ function Matching({ profiles }: { profiles: Profile[] }) {
         <div className="mt-6 rounded-3xl p-4 sm:p-7" style={panel}>
           <div className="grid md:grid-cols-2 gap-5 mb-5">
             <div className="min-w-0">
-              <p className="text-[12px] font-bold uppercase tracking-wider mb-2" style={{ color: "var(--ace-faint)" }}>You (sample)</p>
+              <p className="text-[12px] font-bold uppercase tracking-wider mb-2" style={{ color: "var(--ace-faint)" }}>You, as a typical</p>
               <div className="flex flex-wrap gap-1.5">
                 {PEOPLE.slice(0, 4).map((p, n) => (
                   <button key={p.name} type="button" onClick={() => { setPersonIdx(n); setTouched(true); }} aria-pressed={n === personIdx}
@@ -631,7 +632,7 @@ function Matching({ profiles }: { profiles: Profile[] }) {
           <div className="grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-6 items-center">
             <div className="min-w-0">
               <AceRadar values={adv.values} you={person.values} color="var(--ace-ink)" className="w-full max-w-[400px] mx-auto"
-                title={`${person.name} against ${adv.name}`} />
+                title={`${aTypical(person.name)} against ${adv.name}`} />
               <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[12px] mt-1" style={{ color: "var(--ace-soft)" }}>
                 <span className="flex items-center gap-1.5"><span className="w-4 h-1 rounded-full" style={{ background: "var(--ace-ink)" }} />{adv.name.replace(/ Trek$/, "")}</span>
                 <span className="flex items-center gap-1.5"><span className="w-4 border-t-2 border-dashed" style={{ borderColor: "var(--ace-you)" }} />You</span>
@@ -701,37 +702,6 @@ function Matching({ profiles }: { profiles: Profile[] }) {
                 </Link>
               )}
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── Call to action ───────────────────────────────────────────── */
-
-function Cta() {
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { amount: 0.4 });
-  const { i } = useCycle(PEOPLE.length - 1, 2600, inView);
-  return (
-    <section ref={ref} className="py-16 lg:py-20" style={{ borderTop: "1px solid var(--ace-line)", background: "var(--bg-surface)" }}>
-      <div className="mx-auto max-w-6xl px-5 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl grid md:grid-cols-[minmax(0,1fr)_240px] gap-6 items-center p-7 sm:p-10" style={{ background: tint("var(--ace-accent)", 8), border: `1px solid ${tint("var(--ace-accent)", 28)}` }}>
-          <div className="min-w-0">
-            <h2 className="text-[1.9rem] sm:text-[2.3rem] leading-tight mb-3" style={{ color: "var(--ace-ink)", textWrap: "balance" }}>Find out what you&apos;re ready for</h2>
-            <p className="text-[15px] sm:text-base leading-relaxed max-w-lg mb-6" style={{ color: "var(--ace-soft)" }}>
-              Answer a few questions and every adventure gets a verdict for you, along with what to work on next.
-            </p>
-            <div className="flex flex-wrap items-center gap-4">
-              <Link href="/matchmaker" className="ace-shimmer ace-pulse group relative overflow-hidden inline-flex items-center gap-2 px-7 py-4 rounded-xl font-bold text-[15px] text-white transition-transform hover:-translate-y-0.5" style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)" }}>
-                Find my matches <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-              <span className="text-[13px]" style={{ color: "var(--ace-faint)" }}>1 to 3 minutes · results straight away</span>
-            </div>
-          </div>
-          <div className="hidden md:block" aria-hidden>
-            <AceRadar values={PEOPLE[i].values} color="var(--ace-accent)" labels={false} sweep title="" className="w-full" />
           </div>
         </div>
       </div>
