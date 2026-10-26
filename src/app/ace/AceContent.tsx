@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, MotionConfig, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
-import { ArrowRight, ArrowDown, Check, Waves as WavesIcon } from "lucide-react";
+import { ArrowRight, Check, Waves as WavesIcon } from "lucide-react";
 import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost } from "@/lib/localIcons";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
 import { computeMatchScore, type ACE } from "@/lib/ace";
@@ -182,18 +182,11 @@ function Hero({ profiles }: { profiles: Profile[] }) {
               <span key={k} className="ace-in ace-in-blur inline-block mr-[0.24em]" style={{ animationDelay: `${80 + k * 60}ms`, color: w === "asks" ? "var(--ace-accent)" : undefined }}>{w}</span>
             ))}
           </h1>
-          <p className="ace-in text-base sm:text-[17px] leading-relaxed max-w-xl mb-7" style={{ color: "var(--ace-soft)", animationDelay: "520ms" }}>
+          {/* A page that explains ACE: no buttons up here, the page itself is the explanation
+              and the closing panel leads into the Matchmaker */}
+          <p className="ace-in text-base sm:text-[17px] leading-relaxed max-w-xl" style={{ color: "var(--ace-soft)", animationDelay: "520ms" }}>
             &ldquo;Easy&rdquo; and &ldquo;hard&rdquo; hide too much. ACE scores every adventure on <strong style={{ color: "var(--ace-ink)" }}>eight things it asks of your body and mind</strong>. Answer a few questions and we score you the same way, so you can see what you&apos;re ready for before you book.
           </p>
-          <div className="ace-in flex flex-wrap items-center gap-3" style={{ animationDelay: "650ms" }}>
-            <Link href="/matchmaker" className="ace-shimmer group relative overflow-hidden inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-[15px] text-white transition-transform hover:-translate-y-0.5" style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)", boxShadow: "0 10px 28px -10px rgba(255,81,0,0.6)" }}>
-              Find my matches <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-            <a href="#scores" className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl font-semibold text-[15px] transition-colors" style={{ color: "var(--ace-ink)", border: "1px solid var(--ace-line)", background: "var(--ace-panel)" }}>
-              How scoring works <ArrowDown className="w-4 h-4" />
-            </a>
-          </div>
-          <p className="ace-in mt-4 text-[13px]" style={{ color: "var(--ace-faint)", animationDelay: "750ms" }}>Takes 1 to 3 minutes.</p>
         </div>
 
         {/* Instrument */}
