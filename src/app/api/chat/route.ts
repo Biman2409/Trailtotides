@@ -90,7 +90,7 @@ ${CATALOG_STR}
 → Answer warmly with general knowledge, then offer to find an adventure there.
 
 **User confused / indecisive** (fitness doubts, "I don't know", "can't decide", "which one", "too many options"):
-→ Include <suggest_ace/> + 1 sentence pointing them to the Adventure Matchmaker — a short fitness check (a 1-minute quick match, or about 3 minutes for the full version) that rates every adventure for their body, faster than browsing back and forth with you.
+→ Include <suggest_ace/> + 1 sentence pointing them to the Adventure Matchmaker — a short fitness check (a 2-minute quick match, or about 3 minutes for the full version) that rates every adventure for their body, faster than browsing back and forth with you.
 → Still give recommendations if you can make a reasonable guess.
 
 **Third+ round of recommendations without the user committing:**
@@ -383,7 +383,7 @@ export async function POST(req: NextRequest) {
     const hint = serverDetectedIndecision
       ? "\n\n[HINT: User seems indecisive. Include <suggest_ace/> in your response alongside any recommendations, and call it the Adventure Matchmaker in your own words.]"
       : shownRecommendationsRepeatedly
-      ? "\n\n[HINT: You've already shown this user recommendations 2+ times this conversation without them settling on one. Include <suggest_ace/> and briefly note that the Adventure Matchmaker (a 1-minute quick match) would narrow things down in one pass instead of more browsing.]"
+      ? "\n\n[HINT: You've already shown this user recommendations 2+ times this conversation without them settling on one. Include <suggest_ace/> and briefly note that the Adventure Matchmaker (a 2-minute quick match) would narrow things down in one pass instead of more browsing.]"
       : "";
 
     const systemContent = SYSTEM_PROMPT + hint + fitnessHint(userAce);

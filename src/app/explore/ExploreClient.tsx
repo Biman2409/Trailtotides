@@ -289,7 +289,7 @@ export default function ExploreClient() {
         {!profileReady || fitAce ? null : (
           <p className="text-center text-sm mt-10" style={{ color: "var(--text-tertiary)" }}>
             Want these sorted by what your body&apos;s ready for?{" "}
-            <Link href="/matchmaker?mode=quick" className="font-semibold text-[#ff5100] hover:underline">Take the 1-minute quick match</Link>
+            <Link href="/matchmaker?mode=quick" className="font-semibold text-[#ff5100] hover:underline">Take the 2-minute quick match</Link>
           </p>
         )}
       </main>

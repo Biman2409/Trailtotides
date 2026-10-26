@@ -278,16 +278,6 @@ export const MEDICAL_QUESTIONS: MedicalQuestion[] = [
     options: [{ v: "no", l: "No" }, { v: "yes", l: "Yes" }],
   },
   {
-    key: "med-pregnancy",
-    title: "Pregnancy",
-    question: "Are you currently pregnant?",
-    options: [
-      { v: "no", l: "No" },
-      { v: "yes", l: "Yes" },
-      { v: "prefer_not_to_say", l: "Prefer not to say" },
-    ],
-  },
-  {
     key: "med-smoking",
     title: "Smoking",
     question: "Do you currently smoke (cigarettes, vapes, or similar)?",
@@ -323,7 +313,6 @@ export interface MedicalFlags {
   jointInjuryNote?: string;
   ongoingMedicalNeeds?: boolean;
   medicationEffects?: boolean;
-  pregnancy?: "no" | "yes" | "prefer_not_to_say";
   /** 1 = never smoked, 5 = heaviest — question-option position only, never an ACE input. */
   smokingTier?: 1 | 2 | 3 | 4 | 5;
   /** 1 = never drinks, 5 = most frequent — same caveat as smokingTier. */
@@ -350,7 +339,6 @@ export function buildMedicalFlags(answers: Partial<Record<string, string>>, join
     jointInjuryNote: jointNote?.trim() || undefined,
     ongoingMedicalNeeds: yesNo("med-ongoing"),
     medicationEffects: yesNo("med-medication"),
-    pregnancy: (answers["med-pregnancy"] as MedicalFlags["pregnancy"]) ?? undefined,
     smokingTier: tier("med-smoking"),
     alcoholTier: tier("med-alcohol"),
     skippedAll: !anyAnswered,

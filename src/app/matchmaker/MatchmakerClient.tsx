@@ -330,7 +330,7 @@ function IntroScreen({
                 </button>
               )}
 
-              {/* Two ways in: a 1-minute estimate or the full assessment */}
+              {/* Two ways in: a 2-minute estimate or the full assessment */}
               <div className="grid grid-cols-2 gap-2">
                 <button onClick={onQuickStart}
                   className="flex flex-col items-start gap-0.5 px-4 py-3 rounded-xl text-left transition-all hover:brightness-110"
@@ -338,7 +338,7 @@ function IntroScreen({
                     ? { background: "#ff5100", color: "#fff", boxShadow: "0 4px 20px rgba(255,81,0,0.3)" }
                     : { background: "var(--bg-surface-2)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
                   <span className="text-sm font-bold">Quick match</span>
-                  <span className="text-[11px] opacity-75">6 questions · 1 min</span>
+                  <span className="text-[11px] opacity-75">14 questions · 2 min</span>
                 </button>
                 <button onClick={onStart}
                   className="flex flex-col items-start gap-0.5 px-4 py-3 rounded-xl text-left transition-all hover:brightness-110"
@@ -1225,8 +1225,10 @@ function saveProgress(p: Progress) { try { localStorage.setItem(PROGRESS_KEY, JS
 function clearProgress() { try { localStorage.removeItem(PROGRESS_KEY); } catch {} }
 
 function stepsFor(mode: Mode, skipKeys: string[]): Step[] {
-  if (mode === "quick") return ALL_STEPS.filter((s) => s.type === "capability" && QUICK_KEYS.includes(s.q.key));
-  if (mode === "refine") return ALL_STEPS.filter((s) => !(s.type === "capability" && skipKeys.includes(s.q.key)));
+  // Quick: its 6 capability questions, then the 2 calibration and the health questions like the full one
+  if (mode === "quick") return ALL_STEPS.filter((s) => s.type !== "capability" || QUICK_KEYS.includes(s.q.key));
+  // Refine: only what the quick match didn't already ask
+  if (mode === "refine") return ALL_STEPS.filter((s) => !((s.type === "capability" || s.type === "decay") && skipKeys.includes(s.q.key)));
   return ALL_STEPS;
 }
 
@@ -1339,7 +1341,7 @@ export default function MatchmakerClient() {
   // Refine a quick result: keep the 5 real answers, ask everything else.
   function refine() {
     const real = (savedProfile?.answers ?? {}) as Answers;
-    const answered = Object.keys(real).filter((k) => QUICK_KEYS.includes(k) || CAPABILITY_QUESTIONS.some((q) => q.key === k));
+    const answered = Object.keys(real).filter((k) => QUICK_KEYS.includes(k) || CAPABILITY_QUESTIONS.some((q) => q.key === k) || DECAY_QUESTIONS.some((q) => q.key === k));
     begin("refine", real, answered);
   }
 

@@ -25,17 +25,11 @@ export function deriveMedicalCautions(flags: MedicalFlags | null | undefined, ad
   if (flags.medicationEffects && (req.focus >= 4 || req.agility >= 4)) {
     notes.push("You mentioned medication that can affect balance or reaction time — this adventure demands sustained focus or technical footing.");
   }
-  if (flags.pregnancy === "yes" && (req.altitude >= 4 || req.water >= 3 || isExtreme)) {
-    notes.push("You mentioned you're currently pregnant — this adventure's altitude, water conditions, or overall intensity make a doctor's clearance especially important.");
-  }
   if (flags.smokingTier !== undefined && flags.smokingTier >= 3 && req.altitude >= 4) {
     notes.push("High-altitude adventures are significantly harder for smokers due to reduced lung capacity and slower acclimatization — worth factoring in.");
   }
   if (flags.alcoholTier !== undefined && flags.alcoholTier >= 4 && req.altitude >= 4) {
     notes.push("Regular alcohol use can affect hydration, sleep quality, and judgement at altitude — worth pacing yourself differently on this trip.");
-  }
-  if (isExtreme && flags.pregnancy === "prefer_not_to_say") {
-    notes.push("You chose not to share whether you're currently pregnant — for an Extreme-rated trip, we'd recommend a check-in with your doctor before booking.");
   }
   if (isExtreme && flags.skippedAll) {
     notes.push("You skipped the health questions — for an Extreme-rated trip like this, we'd still recommend a check-in with your doctor before booking.");

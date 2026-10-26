@@ -55,7 +55,7 @@ export default function ResultsNextSteps({
       {top && isQuick && onRefine && (
         <Card tone="orange" icon={<Sparkles className="w-4 h-4" />}
           title="This is a quick estimate"
-          body="It's based on 5 answers, with the rest estimated. Answer 9 more for a profile you can rely on — your 5 answers are kept."
+          body="It's based on 6 answers, with the rest estimated. Answer 6 more for a profile you can rely on — everything you've answered is kept."
           action={<button onClick={onRefine} className={primaryBtn}>Refine my profile <ArrowRight className="w-3.5 h-3.5" /></button>} />
       )}
 

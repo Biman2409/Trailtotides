@@ -299,7 +299,7 @@ function InviteView({ ctx, code, preview }: { ctx: Ctx; code: string; preview: G
 
   const steps = [
     { label: `Signed in as ${ctx.viewer.name || "you"}`, done: true },
-    { label: ctx.ace ? "Your fitness profile is ready" : "Take the 1-minute fitness check", done: !!ctx.ace },
+    { label: ctx.ace ? "Your fitness profile is ready" : "Take the 2-minute fitness check", done: !!ctx.ace },
     { label: "Join and see what you can all do", done: false },
   ];
   return (
@@ -410,7 +410,7 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
   };
 
   async function share() {
-    const text = `Join "${group.name}" on Trail to Tides: sign in, take the 1-minute fitness check, and we'll see which adventures we can all do together.`;
+    const text = `Join "${group.name}" on Trail to Tides: sign in, take the 2-minute fitness check, and we'll see which adventures we can all do together.`;
     if (navigator.share) {
       try { await navigator.share({ title: "Group Match", text, url: inviteUrl }); return; } catch { /* dismissed — fall through to copy */ }
     }
@@ -480,7 +480,7 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
           <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
             {group.members.length >= MAX_GROUP
               ? `The group is full (${MAX_GROUP} people).`
-              : "Send this link. Each friend signs in, takes the 1-minute fitness check, and joins. They appear here as soon as they do."}
+              : "Send this link. Each friend signs in, takes the 2-minute fitness check, and joins. They appear here as soon as they do."}
           </p>
           <button
             onClick={share}
@@ -598,7 +598,7 @@ function ProfileGate({ ctx, children }: { ctx: Ctx; children: ReactNode }) {
     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
       <span className="flex items-start gap-2.5 flex-1 text-sm" style={{ color: "var(--text-secondary)" }}>
         <MatchmakerMark className="w-4 h-4 mt-0.5 shrink-0 text-[#ff5100]" />
-        You need a fitness profile first. The quick match takes about a minute, and you&apos;ll come straight back here.
+        You need a fitness profile first. The quick match takes about two minutes, and you&apos;ll come straight back here.
       </span>
       <PrimaryButton onClick={ctx.quizThenReturn}>Take the quick match <ArrowRight className="w-4 h-4" /></PrimaryButton>
     </div>

@@ -14,7 +14,6 @@ const medicalFlagsSchema = z.object({
   jointInjuryNote: z.string().max(1000).optional(),
   ongoingMedicalNeeds: z.boolean().optional(),
   medicationEffects: z.boolean().optional(),
-  pregnancy: z.enum(["no", "yes", "prefer_not_to_say"]).optional(),
   smokingTier: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).optional(),
   alcoholTier: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).optional(),
   skippedAll: z.boolean().optional(),
