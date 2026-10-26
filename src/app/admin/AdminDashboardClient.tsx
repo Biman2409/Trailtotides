@@ -78,6 +78,13 @@ const TOOLS = [
 
 // ── Small helpers ──────────────────────────────────────────────────────────────
 
+// Messages sent from our own addresses (setup tests, checks) aren't visitors contacting us
+const TEAM_EMAILS = ["1.biman.az@gmail.com"];
+const isInternal = (email: string) => {
+  const e = email.trim().toLowerCase();
+  return e.endsWith("@trailtotides.com") || TEAM_EMAILS.includes(e);
+};
+
 const aceTotal = (ace: Record<string, number>) => ACE_AXES.reduce((s, k) => s + (ace[k] ?? 0), 0);
 const ago = (iso: string) => formatDistanceToNowStrict(parseISO(iso), { addSuffix: true });
 const day = (iso: string) => format(parseISO(iso), "d MMM yyyy");
@@ -312,7 +319,8 @@ export default function AdminDashboardClient({
   });
 
   // ── Counts ──────────────────────────────────────────────────────────────────
-  const unread = inbox.filter((m) => !marks.isRead(m.id)).length;
+  const visitorInbox = inbox.filter((m) => !isInternal(m.email));
+  const unread = visitorInbox.filter((m) => !marks.isRead(m.id)).length;
   const pendingStories = stories.filter((s) => s.status === "pending").length;
   const pendingSubs = subs.filter((s) => s.status === "pending").length;
   const lowReviews = reviewList.filter((r) => r.rating <= 2);
@@ -358,13 +366,13 @@ export default function AdminDashboardClient({
       ...people.filter((p) => p.ace_updated_at).map((p) => ({ at: p.ace_updated_at!, icon: Sparkles, tone: "info" as const, text: `${p.full_name ?? p.email} saved an ACE profile`, sub: getTierLabel(aceTotal(p.ace!)), to: "people" as const })),
       ...reviewList.map((r) => ({ at: r.created_at, icon: Star, tone: r.rating <= 2 ? "bad" as const : "warn" as const, text: `${r.username} rated ${advName(r.adventure_slug)} ${r.rating}★`, sub: r.body.slice(0, 80), to: "community" as const })),
       ...photoList.map((p) => ({ at: p.created_at, icon: ImageIcon, tone: "info" as const, text: `${p.username} added a photo to ${advName(p.slug)}`, sub: p.caption || undefined, to: "community" as const })),
-      ...inbox.map((m) => ({ at: m.created_at, icon: MessageSquare, tone: "ok" as const, text: `Message from ${m.name ?? m.email}`, sub: m.message.slice(0, 80), to: "inbox" as const })),
+      ...visitorInbox.map((m) => ({ at: m.created_at, icon: MessageSquare, tone: "ok" as const, text: `Message from ${m.name ?? m.email}`, sub: m.message.slice(0, 80), to: "inbox" as const })),
       ...stories.map((s) => ({ at: s.created_at, icon: BookOpen, tone: "brand" as const, text: `Story: ${s.title}`, sub: `${s.author_name} · ${s.status}`, to: "stories" as const })),
       ...subs.map((s) => ({ at: s.created_at, icon: Building2, tone: "info" as const, text: `${s.company_name || s.operator_name} listed ${advName(s.adventure_slug)}`, sub: `₹${s.price_from} · ${s.status}`, to: "operators" as const })),
     ];
     return ev.filter((e) => e.at).sort((a, b) => b.at.localeCompare(a.at));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [people, reviewList, photoList, inbox, stories, subs]);
+  }, [people, reviewList, photoList, visitorInbox, stories, subs]);
 
   // Signups per day for the last 30 days
   const signups30 = useMemo(() => {
@@ -485,7 +493,7 @@ export default function AdminDashboardClient({
               lowReviews={lowReviews.length}
               reviews={reviewList.length}
               photos={photoList.length}
-              messages={inbox.length}
+              messages={visitorInbox.length}
               counts={counts}
               stories={stories}
               activity={activity}
@@ -860,7 +868,11 @@ function PersonRows({ p, self, isOpen, rank, total, loading, onToggle, actions }
 function InboxSection({ inbox, marks, loadingId, onDelete }: { inbox: Message[]; marks: ReturnType<typeof useInboxMarks>; loadingId: string | null; onDelete: (m: Message) => void }) {
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<"all" | "unread" | "replied">("all");
-  const list = inbox.filter((m) =>
+  // Only visitors by default; our own test messages stay one click away
+  const [showInternal, setShowInternal] = useState(false);
+  const internal = inbox.filter((m) => isInternal(m.email)).length;
+  const base = showInternal ? inbox : inbox.filter((m) => !isInternal(m.email));
+  const list = base.filter((m) =>
     (filter === "all" || (filter === "unread" ? !marks.isRead(m.id) : marks.isReplied(m.id))) &&
     (!q || `${m.name ?? ""} ${m.email} ${m.message}`.toLowerCase().includes(q.toLowerCase())));
 
@@ -868,9 +880,14 @@ function InboxSection({ inbox, marks, loadingId, onDelete }: { inbox: Message[];
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
         <SearchBox value={q} onChange={setQ} placeholder="Search messages" />
-        <Chip active={filter === "all"} onClick={() => setFilter("all")} count={inbox.length}>All</Chip>
-        <Chip active={filter === "unread"} onClick={() => setFilter("unread")} count={inbox.filter((m) => !marks.isRead(m.id)).length}>Unread</Chip>
-        <Chip active={filter === "replied"} onClick={() => setFilter("replied")} count={inbox.filter((m) => marks.isReplied(m.id)).length}>Replied</Chip>
+        <Chip active={filter === "all"} onClick={() => setFilter("all")} count={base.length}>All</Chip>
+        <Chip active={filter === "unread"} onClick={() => setFilter("unread")} count={base.filter((m) => !marks.isRead(m.id)).length}>Unread</Chip>
+        <Chip active={filter === "replied"} onClick={() => setFilter("replied")} count={base.filter((m) => marks.isReplied(m.id)).length}>Replied</Chip>
+        {internal > 0 && (
+          <button onClick={() => setShowInternal(!showInternal)} className="ml-auto text-[12px] t-text-3 hover:text-[var(--text-primary)] underline underline-offset-2">
+            {showInternal ? "Hide" : "Show"} {internal} from our own addresses
+          </button>
+        )}
       </div>
       {list.length ? list.map((m) => {
         const read = marks.isRead(m.id);
