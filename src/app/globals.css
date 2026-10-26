@@ -300,9 +300,23 @@ body::after {
 .glow-hover { transition: box-shadow .3s ease, border-color .3s ease; }
 .glow-hover:hover { box-shadow: 0 10px 40px -10px rgba(255,81,0,0.35); border-color: rgba(255,81,0,0.4); }
 
-/* Smooth scrolling */
+/* Smooth scrolling. The padding keeps anchor jumps and focused fields clear of the fixed navbar. */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+@media (min-width: 1024px) {
+  html { scroll-padding-top: 6rem; }
+}
+
+/* Hazard detail panel on adventure pages */
+@keyframes hazard-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.hazard-panel { animation: hazard-in 0.2s ease-out; }
+@media (prefers-reduced-motion: reduce) { .hazard-panel { animation: none; } }
+
+/* iOS zooms the page in on any focused field under 16px and leaves it zoomed */
+@media (pointer: coarse) {
+  input, textarea, select { font-size: max(16px, 1em) !important; }
 }
 
 /* Custom scrollbar */

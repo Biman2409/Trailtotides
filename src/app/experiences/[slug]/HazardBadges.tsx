@@ -1,73 +1,114 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { useId, useState } from "react";
+import { BatteryLow, ChevronDown, MountainSnow, Pickaxe, SatelliteDish, TriangleAlert, Waves, type LucideIcon } from "lucide-react";
 
-interface Badge {
+// "danger": one mistake can kill quickly. "caution": builds up over time and is managed by preparation.
+type Tone = "danger" | "caution";
+
+interface Hazard {
   key: string;
   label: string;
-  description: string;
-  textColor: string;
-  bg: string;
-  border: string;
+  icon: LucideIcon;
+  tone: Tone;
+  risk: string;
+  manage: string[];
 }
 
-const BADGES: Badge[] = [
-  {
-    key: "altitude",
-    label: "Altitude Sickness",
-    description:
-      "Reduced oxygen above 2,500m can cause headaches, nausea, dizziness and, in severe cases, life-threatening pulmonary or cerebral oedema. Acclimatise gradually — gain no more than 300–500m per day above 3,000m. Carry Diamox as a precaution and descend immediately if symptoms worsen.",
-    textColor: "#facc15",
-    bg: "rgba(234,179,8,0.08)",
-    border: "rgba(234,179,8,0.18)",
-  },
-  {
-    key: "exhaustion",
-    label: "Physical Exhaustion",
-    description:
-      "Back-to-back long days at altitude with heavy loads push stamina to its limit. Dehydration, muscle failure, and hypoglycaemia compound quickly. Maintain a steady pace, eat every 2–3 hours, hydrate before you feel thirsty, and rest at the first sign of significant fatigue.",
-    textColor: "#fb923c",
-    bg: "rgba(251,146,60,0.08)",
-    border: "rgba(251,146,60,0.18)",
-  },
+const HAZARDS: Hazard[] = [
   {
     key: "fatalfall",
-    label: "Fatal Fall Risk",
-    description:
-      "Exposed ridgelines, sheer drop-offs, or technical pitches where a single slip can be fatal. Use a rope and harness on sections requiring it, check footing before each step, avoid wet or icy rock, and never rush past exposure. Guide presence is strongly recommended.",
-    textColor: "#f87171",
-    bg: "rgba(239,68,68,0.08)",
-    border: "rgba(239,68,68,0.18)",
-  },
-  {
-    key: "isolation",
-    label: "Extreme Isolation",
-    description:
-      "You may be days from the nearest road, hospital, or rescue team. Satellite communicators (SPOT / Garmin inReach) are essential. Carry a comprehensive first-aid kit and ensure at least one team member has wilderness first-aid training. File a detailed trip plan before departure.",
-    textColor: "#38bdf8",
-    bg: "rgba(56,189,248,0.08)",
-    border: "rgba(56,189,248,0.18)",
-  },
-  {
-    key: "technical",
-    label: "Technical Terrain",
-    description:
-      "Steep scree, glacier travel, mixed climbing, or sustained vertical sections require specialised movement skills and equipment — crampons, ice axe, rope, and belay experience. Attempting without proper training significantly raises injury risk.",
-    textColor: "#c084fc",
-    bg: "rgba(139,92,246,0.08)",
-    border: "rgba(139,92,246,0.18)",
+    label: "Fall risk",
+    icon: TriangleAlert,
+    tone: "danger",
+    risk: "Exposed ridges, drop-offs or steep pitches where a single slip can be fatal.",
+    manage: [
+      "Use a rope and harness wherever the route calls for it",
+      "Test each foothold, and take extra care on wet, icy or loose rock",
+      "Never rush an exposed section; let faster people pass",
+      "Go with a qualified guide",
+    ],
   },
   {
     key: "water",
-    label: "Open Water",
-    description:
-      "Strong currents, cold water, or rough surf create drowning risk even for confident swimmers. Always wear a certified PFD, never enter water alone, and check river levels before any crossing. Hypothermia can set in within minutes in glacial streams.",
-    textColor: "#60a5fa",
-    bg: "rgba(59,130,246,0.08)",
-    border: "rgba(59,130,246,0.18)",
+    label: "Open water",
+    icon: Waves,
+    tone: "danger",
+    risk: "Strong currents, cold water and rough surf can drown confident swimmers. In glacial water, cold shock and hypothermia set in within minutes.",
+    manage: [
+      "Always wear a properly fitted life jacket (PFD)",
+      "Never go into the water alone",
+      "Check water levels and conditions before crossing or launching",
+      "Listen to the safety briefing and practise the swimmer position",
+    ],
+  },
+  {
+    key: "altitude",
+    label: "Altitude sickness",
+    icon: MountainSnow,
+    tone: "caution",
+    risk: "Above 2,500m there's less oxygen. Headache, nausea and poor sleep are common; left untreated, it can lead to fluid on the lungs or brain (HAPE/HACE), which can kill.",
+    manage: [
+      "Above 3,000m, sleep no more than 300–500m higher each night, with a rest day every 3–4 days",
+      "Stay hydrated and skip alcohol for the first few days",
+      "Ask a doctor about acetazolamide (Diamox) before you go",
+      "If symptoms get worse, go down; descent is the treatment",
+    ],
+  },
+  {
+    key: "isolation",
+    label: "Remote area",
+    icon: SatelliteDish,
+    tone: "caution",
+    risk: "You may be a day or more from the nearest road, hospital or rescue team, often with no phone signal.",
+    manage: [
+      "Carry a satellite messenger (e.g. Garmin inReach)",
+      "Carry a full first-aid kit; ideally someone in the group has wilderness first-aid training",
+      "Leave your route and return date with someone at home",
+      "Check your insurance covers evacuation",
+    ],
+  },
+  {
+    key: "technical",
+    label: "Technical terrain",
+    icon: Pickaxe,
+    tone: "caution",
+    risk: "Steep scree, glacier, ice or sustained climbing needs specialist skills and kit: crampons, ice axe, rope and belaying.",
+    manage: [
+      "Do a basic mountaineering or climbing course first",
+      "Practise with the kit before the trip, not on it",
+      "Follow your guide's line and instructions exactly",
+    ],
+  },
+  {
+    key: "exhaustion",
+    label: "Exhaustion",
+    icon: BatteryLow,
+    tone: "caution",
+    risk: "Long days back to back, often with a load, drain stamina faster than people expect. Dehydration and low blood sugar make it worse quickly.",
+    manage: [
+      "Train with long walks carrying a loaded pack in the weeks before",
+      "Keep a pace you can still talk at",
+      "Eat every 2–3 hours and drink before you're thirsty",
+      "Tell your guide early if you're struggling; turning back is normal",
+    ],
   },
 ];
+
+const TONE: Record<Tone, { text: string; chip: string; chipOpen: string; panel: string }> = {
+  danger: {
+    text: "text-red-700 dark:text-red-300",
+    chip: "bg-red-500/[0.07] border-red-600/25 dark:border-red-400/25 hover:bg-red-500/[0.12]",
+    chipOpen: "bg-red-500/[0.14] border-red-600/50 dark:border-red-400/50",
+    panel: "bg-red-500/[0.05] border-red-600/20 dark:border-red-400/20",
+  },
+  caution: {
+    text: "text-amber-700 dark:text-amber-300",
+    chip: "bg-amber-500/[0.07] border-amber-600/25 dark:border-amber-400/25 hover:bg-amber-500/[0.12]",
+    chipOpen: "bg-amber-500/[0.14] border-amber-600/50 dark:border-amber-400/50",
+    panel: "bg-amber-500/[0.05] border-amber-600/20 dark:border-amber-400/20",
+  },
+};
 
 export default function HazardBadges({
   showAltitude,
@@ -85,64 +126,73 @@ export default function HazardBadges({
   showWater: boolean;
 }) {
   const [active, setActive] = useState<string | null>(null);
+  const panelId = useId();
 
-  const visible = BADGES.filter((b) => {
-    if (b.key === "altitude")   return showAltitude;
-    if (b.key === "exhaustion") return showExhaustion;
-    if (b.key === "fatalfall")  return showFatalFall;
-    if (b.key === "isolation")  return showIsolation;
-    if (b.key === "technical")  return showTechnical;
-    if (b.key === "water")      return showWater;
-    return false;
-  });
-
-  const activeBadge = visible.find((b) => b.key === active) ?? null;
+  const shown: Record<string, boolean> = {
+    altitude: showAltitude,
+    exhaustion: showExhaustion,
+    fatalfall: showFatalFall,
+    isolation: showIsolation,
+    technical: showTechnical,
+    water: showWater,
+  };
+  // Most dangerous first
+  const visible = HAZARDS.filter((h) => shown[h.key]);
+  const open = visible.find((h) => h.key === active) ?? null;
 
   return (
-    <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(245,158,11,0.08)" }}>
+    <div className="mt-4 pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+      <p className="text-[13px] tracking-[0.1em] mb-2.5" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>
+        key risks · tap one for how to manage it
+      </p>
+
       <div className="flex flex-wrap gap-2">
-        {visible.map((b) => {
-          const isOpen = active === b.key;
+        {visible.map((h) => {
+          const isOpen = active === h.key;
+          const tone = TONE[h.tone];
+          const Icon = h.icon;
           return (
             <button
-              key={b.key}
-              onClick={() => setActive(isOpen ? null : b.key)}
-              className="inline-flex items-center gap-1.5 text-[10px] font-semibold px-2.5 py-1 rounded-lg transition-all"
-              style={{
-                color: b.textColor,
-                background: isOpen ? b.bg.replace("0.08", "0.14") : b.bg,
-                border: `1px solid ${isOpen ? b.border.replace("0.18", "0.35") : b.border}`,
-                boxShadow: isOpen ? `0 0 0 1px ${b.border}` : "none",
-              }}
+              key={h.key}
+              type="button"
+              onClick={() => setActive(isOpen ? null : h.key)}
+              aria-expanded={isOpen}
+              aria-controls={panelId}
+              className={`inline-flex items-center gap-2 min-h-9 pl-3 pr-2.5 rounded-full border text-[13px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${tone.text} ${isOpen ? tone.chipOpen : tone.chip}`}
             >
-              ⚠ {b.label}
-              <ChevronDown
-                className="w-3 h-3 transition-transform"
-                style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
-              />
+              <Icon className="w-4 h-4 shrink-0" strokeWidth={2} aria-hidden />
+              {h.label}
+              <ChevronDown className={`w-3.5 h-3.5 shrink-0 opacity-70 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} aria-hidden />
             </button>
           );
         })}
       </div>
 
-      {/* Expanded description */}
-      {activeBadge && (
-        <div
-          className="mt-3 rounded-xl px-4 py-3 flex items-start gap-3"
-          style={{
-            background: activeBadge.bg.replace("0.08", "0.06"),
-            border: `1px solid ${activeBadge.border}`,
-          }}
-        >
-          <span className="text-base shrink-0 mt-0.5">⚠</span>
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: activeBadge.textColor }}>
-              {activeBadge.label}
+      <div id={panelId} role="region" aria-live="polite" aria-label={open ? `${open.label}: how to manage it` : undefined}>
+        {open && (
+          <div key={open.key} className={`hazard-panel mt-3 rounded-2xl border px-4 py-3.5 ${TONE[open.tone].panel}`}>
+            <div className={`flex items-center gap-2 mb-1.5 ${TONE[open.tone].text}`}>
+              <open.icon className="w-4 h-4 shrink-0" strokeWidth={2} aria-hidden />
+              <p className="text-[13px] font-semibold">{open.label}</p>
+              {open.tone === "danger" && (
+                <span className="ml-auto text-[11px] font-semibold uppercase tracking-wider opacity-80">Can be fatal</span>
+              )}
+            </div>
+            <p className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{open.risk}</p>
+            <p className="text-[13px] tracking-[0.1em] mt-3 mb-1.5" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>
+              how to manage it
             </p>
-            <p className="text-black/65 dark:text-white/55 text-xs leading-relaxed">{activeBadge.description}</p>
+            <ul className="space-y-1.5">
+              {open.manage.map((m) => (
+                <li key={m} className="flex gap-2.5 text-[14px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
+                  <span className={`mt-[0.55em] w-1.5 h-1.5 rounded-full shrink-0 bg-current ${TONE[open.tone].text}`} aria-hidden />
+                  {m}
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

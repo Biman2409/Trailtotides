@@ -212,7 +212,7 @@ export default function ACEProfileSection({ ace, slug, name, bare }: Props) {
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-center sm:items-stretch">
               {/* Trek radar — larger, dominant */}
               <div className="flex flex-col items-center gap-1.5 shrink-0 sm:pr-4 w-full sm:w-auto">
-                <span className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>What it asks of you</span>
+                <span className="text-[12px] tracking-[0.1em] text-center" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{name} requirements</span>
                 <AceRadar values={trekValues} color="var(--ace-ink)" className="w-full max-w-[300px] block" title={`${name}: capability scores`} />
               </div>
 
