@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { Download, Smartphone, MapPinned, Mountain, TrendingUp, Route, Flag } from "lucide-react";
 import { BASE_LAYERS, LIGHT_BASE, createBaseLayer, loadLeaflet } from "@/app/map/mapShared";
 import { trailProfile, trailHighPoint, type Trail } from "@/lib/trails";
+import OfflineGuide from "./OfflineGuide";
 
 const ORANGE = "#ff5100";
 const TEAL = "#0e7c86";
@@ -15,7 +16,7 @@ const fmt = (n: number) => n.toLocaleString("en-IN");
  * The walking line from OpenStreetMap: the route on a map, an elevation profile that moves a marker
  * along it, the stops with distances, and how to take it offline in a phone map app.
  */
-export default function TrailSection({ trail, slug, name }: { trail: Trail; slug: string; name: string }) {
+export default function TrailSection({ trail, slug, name, region }: { trail: Trail; slug: string; name: string; region: string }) {
   const profile = useMemo(() => trailProfile(trail), [trail]);
   const high = trailHighPoint(trail);
   const [hover, setHover] = useState<number | null>(null);
@@ -90,17 +91,7 @@ export default function TrailSection({ trail, slug, name }: { trail: Trail; slug
             <Download className="w-4 h-4" />Download trail (GPX)
           </a>
         </div>
-        <ol className="mt-4 grid sm:grid-cols-3 gap-2 text-[12px]" style={{ color: "var(--text-secondary)" }}>
-          {[
-            <>Install <a href="https://organicmaps.app" target="_blank" rel="noopener" className="font-semibold underline underline-offset-2" style={{ color: "var(--text-primary)" }}>Organic Maps</a> (free) or <a href="https://osmand.net" target="_blank" rel="noopener" className="font-semibold underline underline-offset-2" style={{ color: "var(--text-primary)" }}>OsmAnd</a>.</>,
-            <>On Wi-Fi, open the app and download the map for {trail.stops[0].name}&apos;s region (Nepal for this trek).</>,
-            <>Open the GPX file with the app. The trail and every stop appear, and your position shows on it with no signal.</>,
-          ].map((step, i) => (
-            <li key={i} className="flex gap-2 rounded-lg p-2.5" style={{ background: "var(--bg-surface)" }}>
-              <span className="font-bold tabular-nums" style={{ color: ORANGE }}>{i + 1}</span><span>{step}</span>
-            </li>
-          ))}
-        </ol>
+        <OfflineGuide region={region} start={trail.stops[0].name} file={`${slug}-trail-to-tides.gpx`} />
         <p className="text-[11px] mt-3 flex items-start gap-1.5" style={{ color: "var(--text-tertiary)" }}>
           <MapPinned className="w-3 h-3 mt-0.5 shrink-0" />
           Paths change after landslides and snow: follow your guide and the {name} route your operator gives you.

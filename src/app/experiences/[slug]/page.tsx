@@ -492,7 +492,7 @@ export default async function ExperiencePage({ params }: Props) {
               {/* The trail, for treks that have one mapped: route, elevation, stops, offline GPX */}
               {trail && (
                 <AccordionSection id="trail" label="the route" title="The trail" defaultOpen>
-                  <TrailSection trail={trail} slug={adventure.slug} name={adventure.name} />
+                  <TrailSection trail={trail} slug={adventure.slug} name={adventure.name} region={adventure.state} />
                 </AccordionSection>
               )}
 
