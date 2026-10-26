@@ -81,13 +81,13 @@ type Mode = { kind: "all" } | { kind: "region"; label: string } | { kind: "near"
 
 const SWEEP_MS = 1500;
 const BEATS = [
-  { caption: "Everything, all across India", ms: 3400 },
-  { caption: "Narrow it to what you love", ms: 3000 },
-  { caption: "Zoom into a region", ms: 3200 },
-  { caption: "Or see what's near you", ms: 3600 },
-  { caption: "Tap a pin for the details", ms: 4400 },
+  { caption: "All of India", ms: 3400 },
+  { caption: "Pick a type", ms: 3000 },
+  { caption: "Zoom to a region", ms: 3200 },
+  { caption: "Near you", ms: 3600 },
+  { caption: "Tap a pin", ms: 4400 },
   // The tour ends on the way in: the pointer taps the demo's own "Open map" button
-  { caption: "Then open the full map", ms: 2800 },
+  { caption: "Open the map", ms: 2800 },
 ];
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -566,7 +566,7 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
               </>
             ) : (
               <>
-                <p className="text-[12px] text-white/55 truncate">Your turn: filter, zoom, locate.</p>
+                <p className="text-[12px] text-white/55 truncate">Your turn.</p>
                 <button type="button" onClick={replay} className="text-[11px] font-semibold text-[#7edc96] hover:underline">Replay tour</button>
               </>
             )}

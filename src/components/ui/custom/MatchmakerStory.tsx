@@ -74,7 +74,7 @@ const poly = (vals: number[]) => vals.map((v, i) => pt(i, v).map((n) => n.toFixe
 
 const BEATS = [
   { label: "Your radar", ms: 5200 },
-  { label: "Every trek rated", ms: 7800 },
+  { label: "Treks rated", ms: 7800 },
   { label: "Group match", ms: 7600 },
 ];
 const CYCLE_MS = BEATS[1].ms / 3;

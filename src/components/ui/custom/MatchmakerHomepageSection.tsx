@@ -51,7 +51,7 @@ function timeAgo(iso?: string): string | null {
 /** Warm band that fades into the page at top and bottom — no textures or glows. */
 function Band({ children }: { children: React.ReactNode }) {
   return (
-    <section id="matchmaker" className="relative py-6 lg:py-10 px-5 lg:px-8 overflow-hidden bg-[#faf3e8] dark:bg-[#1a1410]">
+    <section id="matchmaker" className="relative py-5 lg:py-7 px-5 lg:px-8 overflow-hidden bg-[#faf3e8] dark:bg-[#1a1410]">
       <SectionTexture kind="trail" color="#ff5100" at="78% 50%" opacity={0.22} />
       <div className="absolute inset-x-0 top-0 h-24 pointer-events-none" style={{ background: "linear-gradient(to bottom, var(--bg-page), transparent)" }} />
       <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none" style={{ background: "linear-gradient(to top, var(--bg-page), transparent)" }} />
@@ -109,29 +109,39 @@ function DefaultCTA() {
 
   return (
     <Band>
-      <div className="grid lg:grid-cols-[1fr_380px] gap-4 lg:gap-10 items-center">
+      <div className="grid lg:grid-cols-[1fr_310px] xl:grid-cols-[1fr_320px] gap-4 lg:gap-12 items-center">
         {/* Left: promise and action */}
         <div className="min-w-0">
           <Eyebrow />
           <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-2">
             Adventures built for <span className="text-[#ff5100]">your body</span>
           </h2>
-          {/* The full explanation lives on /ace — a quiet link at the end of the line */}
           <p className="text-sm leading-relaxed max-w-xl" style={{ color: "var(--text-secondary)" }}>
-            Tell us about your fitness and experience. We&apos;ll rate every adventure for you, so you know what you&apos;re ready for before you book.{" "}
-            <Link href="/ace" className="font-medium underline underline-offset-2 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+            Answer a few questions and every adventure gets rated for you: ready, a stretch, or not yet.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <Link
+              href="/matchmaker"
+              className="group inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors"
+              style={{ boxShadow: "0 6px 20px rgba(255,81,0,0.25)" }}
+            >
+              Take the assessment
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+            {/* The full explanation lives on /ace */}
+            <Link href="/ace" className="text-[13px] font-medium underline underline-offset-2 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
               How it works
             </Link>
-          </p>
+          </div>
         </div>
 
-        {/* Right: what the result looks like, with the way in built into it */}
+        {/* Right: what the result looks like; the demo keeps its own button too */}
         <div className="min-w-0">
           <MatchmakerStory
             you={SAMPLE_ACE}
             samples={samples.map(({ a, score }) => ({ id: a.id, name: a.name, image: a.heroImage, ace: getACE(a), score }))}
             group={sampleGroup(samples)}
-            cta={{ href: "/matchmaker", label: "Take assessment", note: "That's a sample. Yours takes 2 minutes." }}
+            cta={{ href: "/matchmaker", label: "Start", note: "Sample. Yours takes 2 min." }}
           />
         </div>
       </div>

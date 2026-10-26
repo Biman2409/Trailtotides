@@ -217,7 +217,7 @@ export default function HomePage() {
         <FindByRegion />
 
         {/* ── MAP CTA — warm surface, green only as the accent; edges fade into the page ── */}
-        <section id="map-cta" className="relative py-6 lg:py-10 px-5 lg:px-8 overflow-hidden t-bg-surface">
+        <section id="map-cta" className="relative py-5 lg:py-7 px-5 lg:px-8 overflow-hidden t-bg-surface">
           <div className="absolute inset-0 pointer-events-none">
             <Image
               src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=80"
@@ -240,23 +240,29 @@ export default function HomePage() {
             <div className="absolute inset-x-0 bottom-0 h-24" style={{ background: "linear-gradient(to top, var(--bg-page), transparent)" }} />
           </div>
 
-          <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_380px] gap-4 lg:gap-10 items-center">
+          {/* A narrower demo keeps the section short; the text column carries its own button */}
+          <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_310px] xl:grid-cols-[1fr_320px] gap-4 lg:gap-12 items-center">
             <FadeUp>
               <div className="max-w-2xl">
-                <div className="mb-2">
-                  <p className="text-[#5fb873] text-xs font-semibold tracking-[0.22em] uppercase">
-                    Adventure Map
-                  </p>
-                </div>
+                <p className="text-[#5fb873] text-xs font-semibold tracking-[0.22em] uppercase mb-2">
+                  Adventure Map
+                </p>
                 <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-2">
                   India&apos;s Adventures, <span className="text-[#5fb873]">Mapped</span>
                 </h2>
                 <p className="text-sm leading-relaxed w-full max-w-lg" style={{ color: "var(--text-secondary)" }}>
-                  Every trail, summit and coast — one map. Filter by type, cluster by region, tap to explore.
+                  Every trail, summit and coast on one map. Filter, zoom in, tap a pin.
                 </p>
+                <Link
+                  href="/map"
+                  className="group mt-4 inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-[#07160b] bg-[#5fb873] hover:bg-[#7fd692] transition-colors"
+                >
+                  Open the map
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
               </div>
             </FadeUp>
-            {/* The way in lives inside the demo; its tour ends by tapping it */}
+            {/* The demo keeps its own button too: its tour ends by tapping it */}
             <div className="min-w-0">
               <MapDemo pins={mapPins} cta={{ href: "/map", label: "Open map" }} />
             </div>
