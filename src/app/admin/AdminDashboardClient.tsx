@@ -216,9 +216,33 @@ function CopyBtn({ text }: { text: string }) {
   );
 }
 
-function ActionBtn({ onClick, icon: Icon, children, tone = "default", disabled, href }: {
-  onClick?: () => void; icon: typeof Send; children: ReactNode; tone?: "default" | "danger" | "primary" | "ok"; disabled?: boolean; href?: string;
+/**
+ * With `confirm`, the first click only arms the button (its label becomes the question) and the
+ * second click runs it; it disarms itself after a few seconds. The browser's confirm() box isn't
+ * used: some browsers (embedded panes, apps) never show it and answer "no", so nothing happened.
+ */
+function ActionBtn({ onClick, icon: Icon, children, tone = "default", disabled, href, confirm }: {
+  onClick?: () => void; icon: typeof Send; children: ReactNode; tone?: "default" | "danger" | "primary" | "ok"; disabled?: boolean; href?: string; confirm?: string;
 }) {
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    if (!armed) return;
+    const t = setTimeout(() => setArmed(false), 4000);
+    return () => clearTimeout(t);
+  }, [armed]);
+  if (confirm && armed) {
+    return (
+      <button
+        onClick={() => { setArmed(false); onClick?.(); }}
+        disabled={disabled}
+        className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-[12px] font-bold bg-red-600 text-white hover:bg-red-700 transition-colors disabled:opacity-40"
+        autoFocus
+      >
+        <Icon className="w-3.5 h-3.5" />{confirm}
+      </button>
+    );
+  }
+  const handle = confirm ? () => setArmed(true) : onClick;
   const toneCls = {
     default: "t-text-2 hover:text-[var(--text-primary)]",
     danger: "text-red-700 dark:text-red-400 hover:bg-red-500/10",
@@ -228,7 +252,7 @@ function ActionBtn({ onClick, icon: Icon, children, tone = "default", disabled, 
   const cls = `inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-[12px] font-semibold border transition-colors disabled:opacity-40 ${toneCls}`;
   const style = tone === "primary" ? undefined : { borderColor: "var(--border-subtle)" };
   if (href) return <a href={href} onClick={onClick} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className={cls} style={style}><Icon className="w-3.5 h-3.5" />{children}</a>;
-  return <button onClick={onClick} disabled={disabled} className={cls} style={style}><Icon className="w-3.5 h-3.5" />{children}</button>;
+  return <button onClick={handle} disabled={disabled} className={cls} style={style}><Icon className="w-3.5 h-3.5" />{children}</button>;
 }
 
 function Stars({ n }: { n: number }) {
@@ -333,10 +357,10 @@ export default function AdminDashboardClient({
 
   const userActions = {
     role: (p: Profile, role: string) => run(p.id, () => updateUserRole(p.id, role), `${p.full_name ?? p.email} is now ${role}`, () => setPeople((l) => l.map((x) => (x.id === p.id ? { ...x, role } : x)))),
-    ban: (p: Profile) => confirm(`Ban ${p.email}? They won't be able to sign in.`) && run(p.id, () => banUser(p.id), "Account banned", () => setPeople((l) => l.map((x) => (x.id === p.id ? { ...x, banned: true } : x)))),
+    ban: (p: Profile) => run(p.id, () => banUser(p.id), "Account banned", () => setPeople((l) => l.map((x) => (x.id === p.id ? { ...x, banned: true } : x)))),
     unban: (p: Profile) => run(p.id, () => unbanUser(p.id), "Ban lifted", () => setPeople((l) => l.map((x) => (x.id === p.id ? { ...x, banned: false } : x)))),
     reset: (p: Profile) => p.email && run(p.id, () => sendPasswordReset(p.email!), `Reset link sent to ${p.email}`),
-    remove: (p: Profile) => confirm(`Delete ${p.email} permanently? This can't be undone.`) && run(p.id, () => deleteUser(p.id), "Account deleted", () => setPeople((l) => l.filter((x) => x.id !== p.id))),
+    remove: (p: Profile) => run(p.id, () => deleteUser(p.id), "Account deleted", () => setPeople((l) => l.filter((x) => x.id !== p.id))),
   };
 
   // ── Activity feed: everything that happened, newest first ─────────────────────
@@ -492,7 +516,7 @@ export default function AdminDashboardClient({
               inbox={inbox}
               marks={marks}
               loadingId={loadingId}
-              onDelete={(m) => confirm("Delete this message?") && run(m.id, () => deleteMessage(m.id), "Message deleted", () => setInbox((l) => l.filter((x) => x.id !== m.id)))}
+              onDelete={(m) => run(m.id, () => deleteMessage(m.id), "Message deleted", () => setInbox((l) => l.filter((x) => x.id !== m.id)))}
             />
           )}
           {section === "stories" && (
@@ -500,7 +524,7 @@ export default function AdminDashboardClient({
               stories={stories}
               loadingId={loadingId}
               onStatus={(s, action) => run(s.id, () => updateStoryStatus(s.id, action === "publish" ? "approved" : "rejected"), action === "publish" ? "Story published" : "Story moved to drafts", () => setStories((l) => l.map((x) => (x.id === s.id ? { ...x, status: action === "publish" ? "published" : "draft" } : x))))}
-              onDelete={(s) => confirm(`Delete “${s.title}”? This can't be undone.`) && run(s.id, () => deleteStory(s.id), "Story deleted", () => setStories((l) => l.filter((x) => x.id !== s.id)))}
+              onDelete={(s) => run(s.id, () => deleteStory(s.id), "Story deleted", () => setStories((l) => l.filter((x) => x.id !== s.id)))}
             />
           )}
           {section === "community" && (
@@ -509,8 +533,8 @@ export default function AdminDashboardClient({
               photos={photoList}
               advName={advName}
               loadingId={loadingId}
-              onDeleteReview={(r) => confirm("Delete this review? This can't be undone.") && run(r.id, () => adminDeleteReview(r.id), "Review deleted", () => setReviewList((l) => l.filter((x) => x.id !== r.id)))}
-              onDeletePhoto={(p) => confirm("Delete this photo? This can't be undone.") && run(p.id, () => adminDeletePhoto(p.id, p.slug, p.path), "Photo deleted", () => setPhotoList((l) => l.filter((x) => x.id !== p.id)))}
+              onDeleteReview={(r) => run(r.id, () => adminDeleteReview(r.id), "Review deleted", () => setReviewList((l) => l.filter((x) => x.id !== r.id)))}
+              onDeletePhoto={(p) => run(p.id, () => adminDeletePhoto(p.id, p.slug, p.path), "Photo deleted", () => setPhotoList((l) => l.filter((x) => x.id !== p.id)))}
             />
           )}
           {section === "operators" && (
@@ -822,8 +846,8 @@ function PersonRows({ p, self, isOpen, rank, total, loading, onToggle, actions }
                     <ActionBtn icon={RotateCcw} onClick={() => actions.reset(p)} disabled={loading || !p.email}>Send reset link</ActionBtn>
                     {p.email && <ActionBtn icon={Send} href={`mailto:${p.email}`}>Email</ActionBtn>}
                     {p.banned ? <ActionBtn icon={UserCheck} tone="ok" onClick={() => actions.unban(p)} disabled={loading}>Lift ban</ActionBtn>
-                      : <ActionBtn icon={Ban} tone="danger" onClick={() => actions.ban(p)} disabled={loading}>Ban</ActionBtn>}
-                    <ActionBtn icon={Trash2} tone="danger" onClick={() => actions.remove(p)} disabled={loading}>Delete</ActionBtn>
+                      : <ActionBtn icon={Ban} tone="danger" onClick={() => actions.ban(p)} disabled={loading} confirm="Ban this account?">Ban</ActionBtn>}
+                    <ActionBtn icon={Trash2} tone="danger" onClick={() => actions.remove(p)} disabled={loading} confirm="Delete for good?">Delete</ActionBtn>
                   </div>
                 )}
               </div>
@@ -889,7 +913,7 @@ function InboxSection({ inbox, marks, loadingId, onDelete }: { inbox: Message[];
                   {read ? <ActionBtn icon={Mail} onClick={() => marks.markUnread(m.id)}>Mark unread</ActionBtn>
                     : <ActionBtn icon={MailOpen} onClick={() => marks.markRead(m.id)}>Mark read</ActionBtn>}
                   {!marks.isReplied(m.id) && <ActionBtn icon={CheckCircle2} onClick={() => marks.markReplied(m.id)}>Mark replied</ActionBtn>}
-                  <ActionBtn icon={Trash2} tone="danger" onClick={() => onDelete(m)} disabled={loadingId === m.id}>Delete</ActionBtn>
+                  <ActionBtn icon={Trash2} tone="danger" onClick={() => onDelete(m)} disabled={loadingId === m.id} confirm="Delete message?">Delete</ActionBtn>
                 </div>
               </div>
             </div>
@@ -947,7 +971,7 @@ function StoriesSection({ stories, loadingId, onStatus, onDelete }: {
                   {s.status === "published" && <ActionBtn icon={ExternalLink} href={`/stories/${s.slug}`}>View</ActionBtn>}
                   {s.status !== "published" && <ActionBtn icon={CheckCircle2} tone="primary" onClick={() => onStatus(s, "publish")} disabled={loadingId === s.id}>Publish</ActionBtn>}
                   {s.status !== "draft" && <ActionBtn icon={XCircle} onClick={() => onStatus(s, "unpublish")} disabled={loadingId === s.id}>{s.status === "pending" ? "Reject" : "Unpublish"}</ActionBtn>}
-                  <ActionBtn icon={Trash2} tone="danger" onClick={() => onDelete(s)} disabled={loadingId === s.id}>Delete</ActionBtn>
+                  <ActionBtn icon={Trash2} tone="danger" onClick={() => onDelete(s)} disabled={loadingId === s.id} confirm="Delete for good?">Delete</ActionBtn>
                 </div>
               </div>
             </div>
@@ -990,7 +1014,7 @@ function CommunitySection({ reviews, photos, advName, loadingId, onDeleteReview,
               <span className="text-[12px] t-text-3">by {r.username} · {ago(r.created_at)}</span>
             </div>
             <p className="text-[13px] t-text-2 leading-relaxed">{r.body}</p>
-            <div className="mt-3"><ActionBtn icon={Trash2} tone="danger" onClick={() => onDeleteReview(r)} disabled={loadingId === r.id}>Delete</ActionBtn></div>
+            <div className="mt-3"><ActionBtn icon={Trash2} tone="danger" onClick={() => onDeleteReview(r)} disabled={loadingId === r.id} confirm="Delete review?">Delete</ActionBtn></div>
           </Card>
         )) : <Card><Empty icon={Star} title="No reviews" hint="Traveller reviews posted on adventure pages appear here. Seed reviews that ship with the site aren't listed." /></Card>
       ) : (
@@ -1003,7 +1027,7 @@ function CommunitySection({ reviews, photos, advName, loadingId, onDeleteReview,
                   <p className="text-[12px] font-semibold t-text truncate">{advName(p.slug)}</p>
                   <p className="text-[11px] t-text-3 truncate">{p.username} · {ago(p.created_at)}</p>
                   {p.caption && <p className="text-[12px] t-text-2 mt-1 line-clamp-2">{p.caption}</p>}
-                  <div className="mt-2"><ActionBtn icon={Trash2} tone="danger" onClick={() => onDeletePhoto(p)} disabled={loadingId === p.id}>Delete</ActionBtn></div>
+                  <div className="mt-2"><ActionBtn icon={Trash2} tone="danger" onClick={() => onDeletePhoto(p)} disabled={loadingId === p.id} confirm="Delete photo?">Delete</ActionBtn></div>
                 </div>
               </Card>
             ))}
