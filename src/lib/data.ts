@@ -830,8 +830,8 @@ export const adventures: Adventure[] = [
     lat: 28.0025, lng: 86.8528,
     routePoints: [[27.68,86.71],[27.8,86.73],[27.9,86.76],[27.97,86.8],[28.0025,86.8528]],
     description: "The Everest Base Camp trek is one of the most iconic journeys on Earth — 14 days through the Khumbu valley, past **Sherpa villages and the monasteries of Namche and Tengboche**, beneath a parade of 8,000m peaks to **the base of Everest at 5,364m**. Standing at EBC with **the Khumbu Icefall crashing above you and Nuptse, Lhotse and Everest filling the sky** is a genuinely overwhelming experience, and the journey there is as memorable as the destination.",
-    whoFor: "Strong cardiovascular fitness for 10–15km/day over 13+ days · Prior experience above 3,500m · Ability to tolerate thin air at 5,364m · Mentally prepared for high-altitude fatigue",
-    whoNot: "No previous multi-day trekking experience · AMS history above 4,000m · Unrealistic timelines that skip acclimatisation days",
+    whoFor: "You can hike 6 hours with 1,000m of climbing and feel fine the next morning · You've slept above 3,500m (Leh, Spiti) without getting properly sick · You can take 15–16 days off: 12 on the trail, plus Kathmandu and spare days for Lukla flights · Basic lodges are fine: shared toilets, unheated rooms, nights of −10°C up high · You're Indian: no visa needed, just a passport or voter ID",
+    whoNot: "You have a heart or lung condition, or high blood pressure, without a doctor's OK for 5,000m · You've had HAPE or HACE (fluid on the lungs or brain) at altitude before · Your dates can't move: weather cancels Lukla flights often, sometimes for days · Small planes scare you: the only quick way in is a flight to Lukla's mountain airstrip · You want quiet trails in Oct–Nov or Apr–May: Gokyo Lakes is calmer",
     safetyNotes: "Acclimatise at Namche (2 nights) and Dingboche (2 nights). Descend immediately at any AMS symptoms. Khumbu Icefall debris occasionally affects BC area — stay aware.",
     ace: { stamina:5, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, nerve:3 },
     operators: [
