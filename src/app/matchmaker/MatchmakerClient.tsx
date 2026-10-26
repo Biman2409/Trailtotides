@@ -405,7 +405,7 @@ function ConsentScreen({ onAccept, onBack }: { onAccept: () => void; onBack: () 
         {[
           { icon: <Stethoscope className="w-4 h-4" />, title: "It's a guide, not a medical check", body: "Your score matches you to trips. It doesn't clear you to go — some still need a doctor's note." },
           { icon: <Target className="w-4 h-4" />, title: "Be honest", body: "Overrate yourself and you'll be matched to trips you're not ready for. You can retake it anytime." },
-          { icon: <Lock className="w-4 h-4" />, title: "Health questions are optional and private", body: "They only flag risks for you. Never sold, and you can delete them in settings." },
+          { icon: <Lock className="w-4 h-4" />, title: "Health questions are optional and private", body: "If you answer them, they lower the scores they affect and flag risks on adventures. Never shown to others or sold, and you can delete them in settings." },
         ].map((item, i) => (
           <li key={item.title} className="flex gap-4">
             <span className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.1)", color: "#ff5100" }}>{item.icon}</span>
@@ -653,8 +653,8 @@ function CapabilityPanel({ axisLabels, axisDesc, axisColors, axisIcons, userAxes
             </div>
             {hasCalibration && (
               <div className="w-full rounded-xl px-3 py-2.5 mt-2 space-y-1" style={{ background: "var(--accent-green-soft)", border: "1px solid var(--accent-green-border)" }}>
-                <p className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent-green)" }}>Calibrated</p>
-                <p className="text-[11px] leading-snug" style={{ color: "var(--text-tertiary)" }}>Solid = calibrated, dashed = what you reported.</p>
+                <p className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent-green)" }}>Adjusted</p>
+                <p className="text-[11px] leading-snug" style={{ color: "var(--text-tertiary)" }}>Solid = after calibration and health answers, dashed = what you reported.</p>
                 {decayNotes!.map((note, i) => <p key={i} className="text-[11px] leading-snug" style={{ color: "var(--text-tertiary)" }}>{note}</p>)}
               </div>
             )}
@@ -685,6 +685,10 @@ function CapabilityPanel({ axisLabels, axisDesc, axisColors, axisIcons, userAxes
                   <div className="flex items-center gap-2.5 mb-2.5">
                     <span className="w-7 h-7 rounded-lg grid place-items-center shrink-0" style={{ background: `${color}1c`, color }}>{axisIcons[axis]}</span>
                     <span className="flex-1 min-w-0 text-[13px] font-bold t-text">{axisLabels[axis]}</span>
+                    {/* Adjusted by calibration or health: what you reported → what counts */}
+                    {hasCalibration && rawAxes && rawAxes[axis] !== undefined && rawAxes[axis] !== val && (
+                      <span className="text-[11px] font-semibold tabular-nums line-through" style={{ color: "var(--text-muted)" }} title="What you reported">{rawAxes[axis]}</span>
+                    )}
                     <span className="text-[13px] font-black tabular-nums" style={{ color }}>{val}<span className="text-[10px] font-bold" style={{ color: "var(--text-muted)" }}>/5</span></span>
                   </div>
                   <LevelMeter value={val} color={color} size="sm" />
@@ -1352,13 +1356,21 @@ export default function MatchmakerClient() {
     // Quick mode estimates the questions it skipped; full and refine use only real answers.
     const scoringAnswers = mode === "quick" ? estimateQuickAnswers(finalAnswers) : finalAnswers;
 
-    // Capability + decay answers are the only inputs to scoring — medical answers
-    // are handled entirely separately below and never reach this function.
-    const { ace: userAxes, rawAxes, decayMultiplier } = computeAceFromAnswers(scoringAnswers, scoringAnswers);
+    // Health answers become flags first; the scoring reads the flags (never the raw answers)
+    const medicalFlags = buildMedicalFlags(finalAnswers, jointNote);
+    const { ace: userAxes, rawAxes, decayMultiplier, health } = computeAceFromAnswers(scoringAnswers, scoringAnswers, medicalFlags);
 
+    // Say exactly what lowered which scores, so the result can be read
     const decayNotes: string[] = [];
     if (decayMultiplier < 1) {
-      decayNotes.push(`Recency of activity and current activity level applied a ${Math.round((1 - decayMultiplier) * 100)}% adjustment to Stamina, Power, Strength, and Agility.`);
+      decayNotes.push(`Calibration (how recently and how often you're active): Stamina, Power, Strength and Agility ×${decayMultiplier.toFixed(2)}.`);
+    }
+    const axisName = (k: string) => k.charAt(0).toUpperCase() + k.slice(1);
+    health.forEach((h) => {
+      decayNotes.push(`${h.label}: ${Object.entries(h.axes).map(([k, m]) => `${axisName(k)} ×${(m as number).toFixed(2)}`).join(", ")}.`);
+    });
+    if (decayMultiplier < 1 || health.length) {
+      decayNotes.push("Adjustments multiply together, but no score drops by more than half.");
     }
     const unsure = CAPABILITY_QUESTIONS.filter((q) => finalAnswers[q.key] === NOT_SURE).map((q) => q.axis);
     if (unsure.length > 0) {
@@ -1382,15 +1394,10 @@ export default function MatchmakerClient() {
     // After the save: badges are checked against the result stored on the account
     savedToServer.then(() => awardXP("ace_complete"));
 
-    if (mode !== "quick") {
-      // Medical answers → flags only, saved to a completely separate store.
-      const medicalFlags = buildMedicalFlags(finalAnswers, jointNote);
-      // Sequential, not concurrent: user_metadata is a single JSON blob with
-      // no per-field atomicity, so two overlapping POSTs can each read a
-      // stale snapshot and the later write silently clobbers the earlier
-      // one's change. Chaining avoids that race.
-      savedToServer.then(() => saveMedicalFlagsToServer(medicalFlags));
-    }
+    // Every mode asks the health questions now. The flags go to their own store (they also drive
+    // the safety notes on adventure pages). Sequential, not concurrent: user_metadata is a single
+    // JSON blob with no per-field atomicity, so overlapping POSTs could clobber each other.
+    savedToServer.then(() => saveMedicalFlagsToServer(medicalFlags));
 
     setResult(buildResult(userAxes as unknown as Record<string, number>, decayNotes.length > 0 ? { rawAxes: rawAxes as Record<string, number>, decayNotes } : undefined));
     setLoading(false);
@@ -1513,7 +1520,7 @@ export default function MatchmakerClient() {
           <p className="text-xs" style={{ color: "var(--text-muted)" }}>Two quick questions on recency and current fitness — these fine-tune your profile.</p>
         )}
         {isMedical && (
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Every question here is optional. We use these only to flag relevant notes on specific adventures — never to change your score.</p>
+          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Every question here is optional. A &ldquo;yes&rdquo; lowers the scores it affects (never by more than half in total) and adds safety notes on the adventures where it matters. Skipping leaves your scores as they are.</p>
         )}
       </div>
 

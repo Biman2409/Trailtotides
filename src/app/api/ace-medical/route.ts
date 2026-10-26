@@ -5,7 +5,8 @@ import { z } from "zod";
 
 // Mirrors api/ace-profile/route.ts exactly, but writes to a separate
 // user_metadata key (ace_medical) — architecturally isolated from the
-// scored ACE profile, never read by anything that computes a score.
+// scored ACE profile. The client scores from the answers before saving;
+// this route only stores the flags for cautions and later refinement.
 const medicalFlagsSchema = z.object({
   version: z.literal(1),
   answeredAt: z.string(),

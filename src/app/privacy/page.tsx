@@ -19,33 +19,37 @@ const SECTIONS = [
     content: `We use your information to operate and improve TRAIL TO TIDES, personalise your adventure recommendations, communicate with you about your account and new features, and — with your permission — send you a newsletter about new adventures and stories. We never sell your data to third parties.`,
   },
   {
-    title: "3. Data Storage & Security",
+    title: "3. Fitness and Health Answers (ACE Matchmaker)",
+    content: `The ACE Matchmaker asks about your fitness and, optionally, a few health questions: heart or breathing conditions, joint or bone conditions and recent injuries, ongoing medical needs, medication side effects, smoking and alcohol. Your fitness answers set your eight capability scores. If you answer the health questions, they lower specific scores by fixed amounts (for example, a heart or breathing condition lowers Stamina and Power), never by more than half in total, and they add safety notes on the adventure pages where they matter. The health questions are optional: skipping them leaves your scores as your fitness answers set them. Your health answers are stored separately from your profile, are never shown to anyone else and are never sold. Your capability scores are visible to the members of any Group Match you join, so a lowered score could hint that a health answer affected it, but the answers themselves are never shared. You can delete your health answers at any time in Settings.`,
+  },
+  {
+    title: "4. Data Storage & Security",
     content: `Your data is stored securely using Supabase (PostgreSQL), with row-level access controls. Passwords are hashed and never stored in plain text. We use HTTPS on all connections. While we take reasonable precautions, no internet service can guarantee absolute security.`,
   },
   {
-    title: "4. Cookies",
+    title: "5. Cookies",
     content: `We use cookies to maintain your login session and remember your preferences. We do not use advertising cookies or cross-site tracking cookies. You can delete cookies in your browser settings at any time, which will log you out of the platform.`,
   },
     {
-      title: "5. Third-Party Services",
+      title: "6. Third-Party Services",
       content: `We use Google's Gemini API to power the Compass.AI adventure discovery engine. Messages you send to Compass.AI are processed by Google and subject to its privacy policy. The ACE Matchmaker works out your results on our own site and sends your answers to no AI service. We use Supabase for authentication and database services. We use Unsplash for imagery, which is served directly from their CDN.`,
     },
 
 
   {
-    title: "6. Your Rights",
+    title: "7. Your Rights",
     content: `You may request access to, correction of, or deletion of your personal data at any time by contacting us at hello@trailtotides.com. We will respond within 30 days. If you delete your account, your personal data is removed from our systems within 30 days, except where retention is required by law.`,
   },
   {
-    title: "7. Children",
+    title: "8. Children",
     content: `TRAIL TO TIDES is not intended for use by persons under 13 years of age. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has provided us personal information, please contact us and we will delete it.`,
   },
   {
-    title: "8. Changes to This Policy",
+    title: "9. Changes to This Policy",
     content: `We may update this Privacy Policy from time to time. We will notify registered users of material changes by email. Continued use of the platform after changes constitutes acceptance of the updated policy. The date at the bottom of this page reflects when the policy was last revised.`,
   },
   {
-    title: "9. Contact",
+    title: "10. Contact",
     content: `For privacy-related enquiries, contact us at hello@trailtotides.com or write to: TRAIL TO TIDES, Mumbai, India.`,
   },
 ];
@@ -59,7 +63,7 @@ export default function PrivacyPage() {
         <div className="max-w-3xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Legal</p>
           <h1 className="text-white text-5xl font-bold tracking-tight mb-4">Privacy Policy</h1>
-          <p className="text-white/45 text-base">Last updated: February 2026</p>
+          <p className="text-white/45 text-base">Last updated: October 2026</p>
         </div>
       </section>
 

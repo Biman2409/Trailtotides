@@ -16,7 +16,8 @@ const aceAxesSchema = z.object({
 
 // Client sends/expects a StoredProfile shape: { ace: {...}, mode?, rawAxes?, answers? }.
 // mode and answers let a quick result be refined on another device; answers are capability
-// and calibration answers only — health answers never reach this route (see /api/ace-medical).
+// and calibration answers only — health answers are stored by /api/ace-medical; their effect
+// on the scores is already in `ace`.
 const aceProfileSchema = z.object({
   ace: aceAxesSchema,
   mode: z.enum(["quick", "full"]).optional().catch(undefined),

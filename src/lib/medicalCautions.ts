@@ -1,7 +1,7 @@
 // Derives advisory-only caution strings for a specific adventure from a
 // user's medical flags. Never filters, reorders, or hides matched
-// adventures, and never modifies any ACE axis — a flag only ever becomes a
-// note. "A person, not the algorithm, should make the final call."
+// adventures. The score effect of a flag lives in matchmakerScoring.ts; here
+// a flag only becomes a note. "A person, not the algorithm, should make the final call."
 
 import type { Adventure } from "./data";
 import { getACE } from "./ace";
