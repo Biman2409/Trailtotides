@@ -31,7 +31,7 @@ import CompassBar, { type CompassPick } from "./CompassBar";
 import ResultsList from "./ResultsList";
 import PinCard from "./PinCard";
 import CompareTray from "./CompareTray";
-import { fitFor, haversineKm, difficultyColor, type LayerKey, type Fit } from "./mapShared";
+import { fitFor, haversineKm, difficultyColor, type Fit } from "./mapShared";
 import PeekCarousel from "./PeekCarousel";
 import MapEmptyState from "./MapEmptyState";
 
@@ -71,7 +71,6 @@ export default function MapClient() {
   const [hovered, setHovered] = useState<string | null>(null);
   const [panelOpen, setPanelOpen] = useState(true);
   const [inView, setInView] = useState<Set<string>>(new Set());
-  const [layer, setLayer] = useState<LayerKey>("map");
   const [sheet, setSheet] = useState<SheetState>("peek");
 
   // ── You ─────────────────────────────────────────────────────────────────────
@@ -443,7 +442,7 @@ export default function MapClient() {
 
   const layersMenu = (
     <LayersMenu
-      layer={layer} onLayer={setLayer} loggedIn={loggedIn}
+      loggedIn={loggedIn}
       shotsOn={shotsOn} shotsLoading={shotsLoading} onShots={toggleShots}
       trailOn={trailOn} onTrail={toggleTrail}
     />
@@ -467,7 +466,6 @@ export default function MapClient() {
             selected={selected}
             hovered={hovered}
             wishlist={saved}
-            layer={layer}
             insets={insets}
             nearMe={nearMe}
             radiusKm={radius}

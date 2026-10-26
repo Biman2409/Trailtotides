@@ -9,7 +9,7 @@ import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import {
   BASE_LAYERS, createBaseLayer, INDIA_CENTER, INDIA_ZOOM, INDIA_BOUNDS, loadLeaflet, inSeason, esc,
   difficultyOf, difficultyColor, priceFrom, formatINR, verifiedOperators,
-  type LayerKey, type Fit,
+  type Fit,
 } from "./mapShared";
 
 // The Leaflet side of the map. Leaflet owns the DOM inside this div; React state comes in
@@ -49,7 +49,6 @@ interface Props {
   /** A list row under the pointer: its pin lights up */
   hovered: string | null;
   wishlist: Set<string>;
-  layer: LayerKey;
   insets: Insets;
   nearMe: { lat: number; lng: number } | null;
   /** Near me radius in km, drawn as a ring around you */
@@ -96,7 +95,7 @@ function peekHtml(a: Adventure) {
 
 export default function MapCanvas(props: Props) {
   // onSelect and onViewChange are read through `live` by Leaflet handlers bound once
-  const { adventures: advs, fits, month, picks, selected, hovered, wishlist, layer, insets, nearMe, radiusKm, userPhotos, completed, apiRef } = props;
+  const { adventures: advs, fits, month, picks, selected, hovered, wishlist, insets, nearMe, radiusKm, userPhotos, completed, apiRef } = props;
   const router = useRouter();
   const elRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -273,7 +272,7 @@ export default function MapCanvas(props: Props) {
       map.on("moveend", reportView);
       map.on("resize", reportView);
 
-      setTiles(live.current.layer);
+      setTiles();
       buildMarkers();
       fitIndia(false);
       reportView();
@@ -290,11 +289,12 @@ export default function MapCanvas(props: Props) {
 
   // ── Tiles ───────────────────────────────────────────────────────────────────
 
-  function setTiles(key: LayerKey) {
+  // One base map (the dark Default style)
+  function setTiles() {
     const map = mapRef.current, leaflet = leafletRef.current;
     if (!map || !leaflet) return;
-    const cfg = BASE_LAYERS[key];
-    // The vector style loads MapLibre first, so a quick switch can land out of order: only the latest wins
+    const cfg = BASE_LAYERS.map;
+    // The vector style loads MapLibre first, so only the latest request wins
     const token = ++tileToken.current;
     createBaseLayer(leaflet, cfg).then((base) => {
       if (token !== tileToken.current || mapRef.current !== map) return;
@@ -305,7 +305,6 @@ export default function MapCanvas(props: Props) {
     });
   }
 
-  useEffect(() => { setTiles(layer); }, [layer]);
 
   // ── Adventure pins ──────────────────────────────────────────────────────────
 

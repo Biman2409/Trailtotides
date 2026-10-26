@@ -11,10 +11,10 @@ import { DIFFICULTY_CONFIG } from "@/components/ui/custom/DifficultyMeter";
 declare global { interface Window { L: typeof L } }
 
 // ── Tiles ─────────────────────────────────────────────────────────────────────
-// Both styles are OpenStreetMap data and keyless. "Default" is OpenFreeMap's dark vector style,
+// OpenStreetMap data, keyless. The map is OpenFreeMap's dark vector style,
 // drawn by MapLibre inside Leaflet, with hillshade from the public Terrarium elevation tiles so the
-// Himalaya and the Ghats read as relief — mountain to ocean, in the hero's palette. "Terrain" is
-// OpenTopoMap (OSM plus SRTM contours). Every style's credit is shown, as the licences require.
+// Himalaya and the Ghats read as relief — mountain to ocean, in the hero's palette. Its credit is
+// shown, as the licences require.
 
 const OSM_CREDIT = '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
 const OPENFREEMAP_CREDIT = `<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> · © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> · ${OSM_CREDIT}`;
@@ -29,28 +29,16 @@ export interface BaseStyle {
   /** … or a raster tile URL (drawn by Leaflet) */
   url?: string;
   dark?: boolean;
-  /** Hillshade strength for vector styles (defaults: 0.55 dark, 0.35 light) */
-  relief?: number;
 }
 
-export type LayerKey = "map" | "terrain";
+/** One base map now; the key stays so callers read BASE_LAYERS.map */
+export type LayerKey = "map";
 
 export const BASE_LAYERS: Record<LayerKey, BaseStyle> = {
   map: {
     label: "Default",
     style: "https://tiles.openfreemap.org/styles/dark",
     dark: true,
-    maxZoom: 16,
-    attribution: `${OPENFREEMAP_CREDIT} · Elevation: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a>`,
-  },
-  // OpenFreeMap's colourful "liberty" style (forest, water, roads and trails) with strong
-  // hillshade: reads like a topo map and comes off the same fast CDN as Default. (OpenTopoMap,
-  // used before, is a volunteer server: ~1s a tile and throttled, so it often never finished.)
-  terrain: {
-    label: "Terrain",
-    style: "https://tiles.openfreemap.org/styles/liberty",
-    dark: false,
-    relief: 0.7,
     maxZoom: 16,
     attribution: `${OPENFREEMAP_CREDIT} · Elevation: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a>`,
   },
@@ -75,14 +63,14 @@ export async function createBaseLayer(leaflet: typeof L, cfg: BaseStyle, classNa
   const layer = (leaflet as any).maplibreGL({ style: cfg.style, interactive: false, attributionControl: false });
   // MapLibre's own attribution box is off; Leaflet's control shows the credit instead
   layer.getAttribution = () => cfg.attribution;
-  layer.on("add", () => tuneStyle(layer.getMaplibreMap(), !!cfg.dark, cfg.relief));
+  layer.on("add", () => tuneStyle(layer.getMaplibreMap(), !!cfg.dark));
   return layer;
 }
 
 // English labels (the styles show local scripts beside them) and shaded relief under the labels,
 // from the Terrarium elevation tiles (public, keyless)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function tuneStyle(gl: any, dark: boolean, relief?: number) {
+function tuneStyle(gl: any, dark: boolean) {
   const add = () => {
     if (gl.getSource("ttt-dem")) return;
     for (const l of gl.getStyle().layers) {
@@ -97,8 +85,8 @@ function tuneStyle(gl: any, dark: boolean, relief?: number) {
     gl.addLayer({
       id: "ttt-hillshade", type: "hillshade", source: "ttt-dem",
       paint: dark
-        ? { "hillshade-exaggeration": relief ?? 0.55, "hillshade-shadow-color": "#000000", "hillshade-highlight-color": "rgba(255,255,255,0.16)", "hillshade-accent-color": "#000000" }
-        : { "hillshade-exaggeration": relief ?? 0.35, "hillshade-shadow-color": "#4a4a3f", "hillshade-highlight-color": "#ffffff", "hillshade-accent-color": "#6b6b5c" },
+        ? { "hillshade-exaggeration": 0.55, "hillshade-shadow-color": "#000000", "hillshade-highlight-color": "rgba(255,255,255,0.16)", "hillshade-accent-color": "#000000" }
+        : { "hillshade-exaggeration": 0.35, "hillshade-shadow-color": "#6b6b6b", "hillshade-highlight-color": "#ffffff", "hillshade-accent-color": "#8a8a8a" },
     }, firstLabel);
   };
   // "style.load" fires once the style is parsed; "load" waits for a full first render, which can
