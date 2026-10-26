@@ -282,6 +282,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
     }] : []),
   ];
 
+  // Structured data needs full URLs; some heroes live in /public
+  const absoluteImage = adventure.heroImage.startsWith("/") ? `https://www.trailtotides.com${adventure.heroImage}` : adventure.heroImage;
   const structuredData = [
     {
       "@context": "https://schema.org",
@@ -289,7 +291,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       name: adventure.name,
       description: stripEmphasis(adventure.description ?? adventure.tagline ?? `${adventure.type} in ${adventure.state}.`),
       url: `https://www.trailtotides.com/experiences/${slug}`,
-      image: adventure.heroImage,
+      image: absoluteImage,
       touristType: adventure.type,
       geo: {
         "@type": "GeoCoordinates",
@@ -320,7 +322,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       "@type": "Product",
       name: adventure.name,
       description: adventure.tagline ?? stripEmphasis(adventure.description),
-      image: adventure.heroImage,
+      image: absoluteImage,
       url: `https://www.trailtotides.com/experiences/${slug}`,
       brand: {
         "@type": "Brand",

@@ -4,6 +4,8 @@ import { getPublishedStories } from "@/lib/stories";
 import { DESTINATIONS } from "@/lib/destinations";
 
 const BASE = "https://www.trailtotides.com";
+// Images served from /public need the full address in a sitemap
+const abs = (url: string) => (url.startsWith("/") ? `${BASE}${url}` : url);
 
 // Rebuilt hourly so newly published stories show up
 export const revalidate = 3600;
@@ -30,13 +32,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const destinationPages: MetadataRoute.Sitemap = DESTINATIONS.map((d) => ({
     url: `${BASE}/destinations/${d.slug}`,
     priority: 0.9,
-    images: d.adventures.slice(0, 1).map((a) => a.heroImage),
+    images: d.adventures.slice(0, 1).map((a) => abs(a.heroImage)),
   }));
 
   const adventurePages: MetadataRoute.Sitemap = adventures.map((a) => ({
     url: `${BASE}/experiences/${a.slug}`,
     priority: 0.8,
-    images: [a.heroImage],
+    images: [abs(a.heroImage)],
   }));
 
   const stories = await getPublishedStories().catch(() => []);
