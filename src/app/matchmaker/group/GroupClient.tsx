@@ -121,24 +121,69 @@ function HomeView({ ctx, groups }: { ctx: Ctx; groups: GroupSummary[] }) {
 
   return (
     <Shell step={1} subtitle="Start a private group, invite friends with a link, and see which adventures you're all ready for. Only members can see anyone's levels.">
-      <div className="grid lg:grid-cols-[1fr_340px] gap-5 mt-5">
-        <Panel>
-          <h2 className="t-text text-lg font-bold">Start a group</h2>
-          <p className="text-sm mt-1 mb-4" style={{ color: "var(--text-secondary)" }}>You&apos;ll be its first member and can remove people later.</p>
-          <ProfileGate ctx={ctx}>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-              <TextInput value={groupName} onChange={setGroupName} placeholder="Group name (optional)" label="Group name" max={40} />
-              <TextInput value={ctx.name} onChange={ctx.setName} placeholder="Your first name" label="Your name in this group" max={24} />
-              <PrimaryButton onClick={create} disabled={ctx.busy}><UserPlus className="w-4 h-4" /> Start group</PrimaryButton>
+      <div className="grid lg:grid-cols-[minmax(0,1fr)_360px] gap-5 mt-5">
+        <div className="flex flex-col gap-5 min-w-0">
+          <Panel>
+            <h2 className="t-text text-lg font-bold flex items-center gap-2"><UserPlus className="w-4 h-4 text-[#ff7d47]" /> Start a group</h2>
+            <p className="text-sm mt-1 mb-4" style={{ color: "var(--text-secondary)" }}>You&apos;re its first member. Invite friends with a link next, and remove people any time.</p>
+            <ProfileGate ctx={ctx}>
+              {/* Labelled, stacked fields: easier to read than three boxes in a row */}
+              <div className="grid sm:grid-cols-2 gap-3">
+                <Field label="Group name" hint="Optional, e.g. Kedarkantha crew">
+                  <TextInput value={groupName} onChange={setGroupName} placeholder="Weekend trekkers" label="Group name" max={40} full />
+                </Field>
+                <Field label="Your name in the group" hint="What your friends will see">
+                  <TextInput value={ctx.name} onChange={ctx.setName} placeholder="Your first name" label="Your name in this group" max={24} full />
+                </Field>
+              </div>
+              <div className="mt-4">
+                <PrimaryButton onClick={create} disabled={ctx.busy} full><UserPlus className="w-4 h-4" /> Start group and get the invite link</PrimaryButton>
+              </div>
+            </ProfileGate>
+            <ErrorLine error={ctx.error} />
+          </Panel>
+
+          {/* What a group gets: a sample result, so the payoff is clear before starting */}
+          <Panel>
+            <h2 className="t-text text-lg font-bold">What you&apos;ll see</h2>
+            <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>Every adventure is rated for each person, and the group goes with its least-ready member.</p>
+            <div className="mt-4 grid sm:grid-cols-3 gap-2.5">
+              {[
+                { trek: "Dayara Bugyal Trek", people: ["Ready", "Ready", "Ready"], verdict: "Everyone's ready", tone: "#10b981" },
+                { trek: "Kedarkantha Summit Trek", people: ["Ready", "Ready", "Stretch"], verdict: "A stretch for Meera", tone: "#f59e0b" },
+                { trek: "Rupin Pass Trek", people: ["Stretch", "Not yet", "Not yet"], verdict: "Not yet for 2", tone: "#f43f5e" },
+              ].map((r) => (
+                <div key={r.trek} className="rounded-2xl p-3" style={{ background: "var(--bg-card)", border: `1px solid ${r.tone}35` }}>
+                  <p className="text-[13px] font-semibold t-text leading-snug">{r.trek}</p>
+                  <ul className="mt-2 space-y-1">
+                    {["You", "Aarav", "Meera"].map((n, i) => {
+                      const s = r.people[i];
+                      return (
+                        <li key={n} className="flex items-center justify-between text-[12px]">
+                          <span style={{ color: "var(--text-tertiary)" }}>{n}</span>
+                          <span className="font-semibold" style={{ color: s === "Ready" ? "#10b981" : s === "Stretch" ? "#f59e0b" : "#f43f5e" }}>{s}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <p className="text-[12px] font-bold mt-2 pt-2" style={{ color: r.tone, borderTop: "1px dashed var(--border-default)" }}>{r.verdict}</p>
+                </div>
+              ))}
             </div>
-          </ProfileGate>
-          <ErrorLine error={ctx.error} />
-        </Panel>
+            <p className="text-[12px] mt-3 flex items-center gap-1.5" style={{ color: "var(--text-tertiary)" }}>
+              <Lock className="w-3.5 h-3.5" /> Members see each other&apos;s eight capability levels only, never health answers.
+            </p>
+          </Panel>
+        </div>
 
         <Panel>
           <h2 className="t-text text-lg font-bold">Your groups</h2>
           {groups.length === 0 ? (
-            <p className="text-sm mt-1" style={{ color: "var(--text-tertiary)" }}>None yet. Groups you start or join show up here.</p>
+            <div className="mt-3 rounded-2xl px-4 py-6 text-center" style={{ background: "var(--bg-card)", border: "1px dashed var(--border-default)" }}>
+              <Users className="w-6 h-6 mx-auto text-[#ff7d47]" />
+              <p className="text-sm font-semibold t-text mt-2">No groups yet</p>
+              <p className="text-[12.5px] mt-1" style={{ color: "var(--text-tertiary)" }}>Groups you start, or join from a friend&apos;s link, show up here.</p>
+            </div>
           ) : (
             <ul className="mt-3 flex flex-col gap-2">
               {groups.map((g) => (
@@ -560,7 +605,17 @@ function ProfileGate({ ctx, children }: { ctx: Ctx; children: ReactNode }) {
   );
 }
 
-function TextInput({ value, onChange, placeholder, label, max }: { value: string; onChange: (v: string) => void; placeholder: string; label: string; max: number }) {
+function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
+  return (
+    <label className="block">
+      <span className="block text-[12px] font-semibold mb-1.5" style={{ color: "var(--text-secondary)" }}>{label}</span>
+      {children}
+      {hint && <span className="block text-[11.5px] mt-1" style={{ color: "var(--text-tertiary)" }}>{hint}</span>}
+    </label>
+  );
+}
+
+function TextInput({ value, onChange, placeholder, label, max, full }: { value: string; onChange: (v: string) => void; placeholder: string; label: string; max: number; full?: boolean }) {
   return (
     <input
       value={value}
@@ -568,7 +623,7 @@ function TextInput({ value, onChange, placeholder, label, max }: { value: string
       placeholder={placeholder}
       maxLength={max}
       aria-label={label}
-      className="px-3.5 py-2.5 rounded-xl text-sm sm:w-48"
+      className={`px-3.5 py-2.5 rounded-xl text-sm ${full ? "w-full" : "sm:w-48"}`}
       style={{ background: "var(--bg-card-hover)", border: "1px solid var(--border-default)", color: "var(--text-primary)", outline: "none" }}
     />
   );

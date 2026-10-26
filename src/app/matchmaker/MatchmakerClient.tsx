@@ -30,7 +30,7 @@ import {
 } from "@/lib/matchmakerQuestions";
 import { computeAceFromAnswers, estimateQuickAnswers, NOT_SURE, QUICK_KEYS } from "@/lib/matchmakerScoring";
 import { profileAgeDays, bucketFor } from "@/lib/fitness";
-import ResultsNextSteps from "./ResultsNextSteps";
+import ResultsNextSteps, { GroupMatchPromo } from "./ResultsNextSteps";
 
 // ─── Sample radar animation ───────────────────────────────────────────────────
 
@@ -1002,7 +1002,8 @@ function ResultsScreen({
                         left: `${(i / (RANKS.length - 1)) * 100}%`,
                         transform: "translate(-50%, -50%)",
                         width: current ? 40 : 26, height: current ? 40 : 26,
-                        background: reached ? `${r.color}22` : "var(--bg-card)",
+                        // Solid underneath, so the ladder line stops at each circle instead of showing through it
+                        background: reached ? `linear-gradient(${r.color}22, ${r.color}22), var(--bg-page)` : "var(--bg-page)",
                         border: `1.5px solid ${reached ? r.color : "var(--border-default)"}`,
                         color: reached ? r.color : "var(--text-muted)",
                         boxShadow: current ? `0 0 0 4px ${r.color}20, 0 0 20px ${r.color}60` : "none",
@@ -1019,8 +1020,8 @@ function ResultsScreen({
                     key={r.label}
                     className="absolute text-[9px] font-bold uppercase tracking-[0.12em] whitespace-nowrap"
                     style={{
-                      left: `${(i / (RANKS.length - 1)) * 100}%`,
-                      transform: "translateX(-50%)",
+                      // The end labels line up with the ends of the ladder instead of hanging past them
+                      ...(i === 0 ? { left: 0 } : i === RANKS.length - 1 ? { right: 0 } : { left: `${(i / (RANKS.length - 1)) * 100}%`, transform: "translateX(-50%)" }),
                       color: i === rankIndex ? r.color : i < rankIndex ? "var(--text-tertiary)" : "var(--text-muted)",
                     }}
                   >
@@ -1053,6 +1054,11 @@ function ResultsScreen({
             </div>
           </div>
         </div>
+      </FadeInSection>
+
+      {/* ── GROUP MATCH: right after your own result, not at the bottom ───────── */}
+      <FadeInSection>
+        <GroupMatchPromo />
       </FadeInSection>
 
       {/* ── CAPABILITIES ────────────────────────────────────────────────────── */}

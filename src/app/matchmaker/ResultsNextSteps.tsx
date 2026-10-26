@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Sparkles, Users, Cloud, TrendingUp, RefreshCw } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
-import { AXIS_LABEL, STALE_AFTER_DAYS, PENDING_GROUP_KEY } from "@/lib/fitness";
+import { AXIS_LABEL, STALE_AFTER_DAYS, PENDING_GROUP_KEY, MAX_GROUP } from "@/lib/fitness";
 
 /**
  * The "what next" cards at the top of Matchmaker results: refine a quick result, refresh an old
@@ -85,21 +85,77 @@ export default function ResultsNextSteps({
             .map((c) => `${AXIS_LABEL[c.axis]} ${c.from}→${c.to} (${c.adventure})`).join(", ")}.`} />
       )}
 
-      {/* Group Match is signed-in only — signed-out visitors are sent through login first */}
-      {!top && loggedIn !== null && <Card tone="neutral" icon={<Users className="w-4 h-4" />}
-        title="Planning with friends?"
-        body={loggedIn
-          ? "Share a link — each friend adds their profile, and you'll see the adventures you're all ready for."
-          : "Group Match needs a free account for everyone in the group. Sign in to start one and share the link."}
-        action={loggedIn
-          ? <Link href="/matchmaker/group" className={secondaryBtn}>Start a group <ArrowRight className="w-3.5 h-3.5" /></Link>
-          : <Link href={`/auth/login?next=${encodeURIComponent("/matchmaker/group")}&message=${encodeURIComponent("Sign in to start a Group Match")}`} className={secondaryBtn}>Sign in to start <ArrowRight className="w-3.5 h-3.5" /></Link>} />}
+      {/* Group Match has its own panel near the top of the results (GroupMatchPromo) */}
     </div>
   );
 }
 
+/* ── Group Match, up front: the results' second step after your rank ─────────── */
+
+const SAMPLE_GROUP = [
+  { name: "You", color: "#ff7d47", status: "Ready", tone: "#10b981" },
+  { name: "Aarav", color: "#60a5fa", status: "Ready", tone: "#10b981" },
+  { name: "Meera", color: "#c084fc", status: "Stretch", tone: "#f59e0b" },
+];
+
+export function GroupMatchPromo() {
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+  useEffect(() => {
+    createClient().auth.getSession().then(({ data: { session } }) => setLoggedIn(!!session?.user));
+  }, []);
+  // Group Match is signed-in only: signed-out visitors go through login first
+  const href = loggedIn
+    ? "/matchmaker/group"
+    : `/auth/login?next=${encodeURIComponent("/matchmaker/group")}&message=${encodeURIComponent("Sign in to start a Group Match")}`;
+
+  return (
+    <section className="relative overflow-hidden rounded-3xl p-5 sm:p-7 grid md:grid-cols-[minmax(0,1fr)_300px] gap-5 md:gap-8 items-center"
+      style={{ background: "linear-gradient(135deg, rgba(255,81,0,0.10), rgba(96,165,250,0.08))", border: "1px solid rgba(255,81,0,0.28)" }}>
+      <div className="min-w-0">
+        <p className="text-[#ff7d47] text-[11px] font-semibold tracking-[0.22em] uppercase flex items-center gap-1.5">
+          <Users className="w-3.5 h-3.5" /> Group Match
+        </p>
+        <h2 className="t-text text-2xl sm:text-3xl font-bold tracking-tight mt-1.5">Going with friends?</h2>
+        <p className="text-sm sm:text-[15px] leading-relaxed mt-2 max-w-lg" style={{ color: "var(--text-secondary)" }}>
+          Share one link. Each friend adds their profile, and every adventure is rated for the whole group, held to its least-ready member, so nobody is left behind.
+        </p>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4">
+          <Link href={href} className="inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors" style={{ boxShadow: "0 8px 24px rgba(255,81,0,0.28)" }}>
+            <Users className="w-4 h-4" /> {loggedIn === false ? "Sign in to start a group" : "Start a group"} <ArrowRight className="w-4 h-4" />
+          </Link>
+          <span className="text-[12px]" style={{ color: "var(--text-tertiary)" }}>Private · up to {MAX_GROUP} people · free</span>
+        </div>
+      </div>
+
+      {/* A sample of what the group sees */}
+      <div className="rounded-2xl p-4" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }} aria-label="Example group result">
+        <div className="flex items-center justify-between">
+          <div className="flex -space-x-2">
+            {SAMPLE_GROUP.map((m) => (
+              <span key={m.name} className="w-8 h-8 rounded-full grid place-items-center text-[12px] font-bold text-[#15110e] ring-2 ring-[var(--bg-surface)]" style={{ background: m.color }}>{m.name[0]}</span>
+            ))}
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "var(--text-tertiary)" }}>Example</span>
+        </div>
+        <p className="text-sm font-semibold t-text mt-3">Kedarkantha Summit Trek</p>
+        <ul className="mt-2 space-y-1.5">
+          {SAMPLE_GROUP.map((m) => (
+            <li key={m.name} className="flex items-center justify-between text-[12.5px]">
+              <span style={{ color: "var(--text-secondary)" }}>{m.name}</span>
+              <span className="font-semibold" style={{ color: m.tone }}>{m.status}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="text-[12px] font-semibold mt-3 pt-2.5 flex items-center justify-between" style={{ borderTop: "1px dashed var(--border-default)" }}>
+          <span style={{ color: "var(--text-tertiary)" }}>Group verdict</span>
+          <span style={{ color: "#f59e0b" }}>A stretch for Meera</span>
+        </p>
+      </div>
+    </section>
+  );
+}
+
 const primaryBtn = "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors";
-const secondaryBtn = "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:bg-[var(--bg-card-hover)] border border-[var(--border-default)] text-[var(--text-primary)]";
 
 const TONES = {
   orange: { color: "#ff7d47", bg: "rgba(255,81,0,0.07)", border: "rgba(255,81,0,0.25)" },
