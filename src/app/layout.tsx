@@ -51,17 +51,19 @@ const OG_IMAGE = `${BASE_URL}/opengraph-image`;
 
 export const metadata: Metadata = {
   title: {
-    default: "Trail to Tides — India's Adventure Discovery Platform",
+    default: "Trail to Tides — Find, Compare & Book Adventures in India",
     template: "%s | Trail to Tides",
   },
   description:
-    "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by Compass.AI, and led by India's most trusted operators.",
+    "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI and run by verified operators.",
   metadataBase: new URL(BASE_URL),
   keywords: [
     "adventure travel India",
     "trekking India",
     "Himalayan treks",
-    "adventure discovery platform",
+    "find adventures India",
+    "compare adventures India",
+    "adventures matched to your fitness",
     "hiking India",
     "mountaineering India",
     "rock climbing India",
@@ -105,9 +107,9 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   openGraph: {
-    title: "Trail to Tides — India's Adventure Discovery Platform",
+    title: "Trail to Tides — Find, Compare & Book Adventures in India",
     description:
-      "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by Compass.AI, and led by India's most trusted operators.",
+      "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI and run by verified operators.",
     type: "website",
     url: BASE_URL,
     siteName: "Trail to Tides",
@@ -117,7 +119,7 @@ export const metadata: Metadata = {
         url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Trail to Tides — India's Adventure Discovery Platform",
+        alt: "Trail to Tides — Find, Compare & Book Adventures in India",
       },
     ],
   },
@@ -125,9 +127,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@trailtotides",
     creator: "@trailtotides",
-    title: "Trail to Tides — India's Adventure Discovery Platform",
+    title: "Trail to Tides — Find, Compare & Book Adventures in India",
     description:
-      "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by Compass.AI, and led by India's most trusted operators.",
+      "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI and run by verified operators.",
     images: [OG_IMAGE],
   },
   robots: {
@@ -184,7 +186,7 @@ export default function RootLayout({
                 },
                 image: OG_IMAGE,
                 description:
-                  "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by Compass.AI, and led by India's most trusted operators.",
+                  "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI and run by verified operators.",
                 email: "hello@trailtotides.com",
                 foundingDate: "2024",
                 areaServed: {

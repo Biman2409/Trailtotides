@@ -10,17 +10,17 @@ import FadeInSection from "@/components/ui/custom/FadeInSection";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Trail to Tides is India's adventure discovery platform — built by explorers for explorers. Learn about our mission, values, and the team behind it.",
+    "Built by explorers for explorers: find, compare and book adventures across India, matched to your fitness and run by verified operators.",
   openGraph: {
     title: "About Trail to Tides",
-    description: "Built by explorers for explorers. Learn about our mission, values, and the team behind India's adventure discovery platform.",
+    description: "Built by explorers for explorers. Find, compare and book adventures across India — matched to your fitness and run by verified operators.",
     url: "https://trailtotides.com/about",
     images: [{ url: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=1200&q=90", width: 1200, height: 630, alt: "About Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "About Trail to Tides",
-    description: "Built by explorers for explorers — India's adventure discovery platform.",
+    description: "Built by explorers for explorers. Find, compare and book adventures across India.",
     images: ["https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=1200&q=90"],
   },
   alternates: { canonical: "https://trailtotides.com/about" },

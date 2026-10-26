@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Trail to Tides — India's Adventure Discovery Platform";
+export const alt = "Trail to Tides — Find, Compare & Book Adventures in India";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -53,6 +53,9 @@ export default function OgImage() {
         {/* Title */}
         <div
           style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: 14,
             fontSize: 56,
             fontWeight: 900,
             color: "white",
@@ -74,7 +77,7 @@ export default function OgImage() {
             lineHeight: 1.5,
           }}
         >
-          India&apos;s Adventure Discovery Platform
+          Find · compare · book adventures across India
         </div>
 
         {/* Bottom accent line */}
