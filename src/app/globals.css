@@ -80,7 +80,7 @@
   --text-primary:   #1c1814;
   --text-secondary: #5b5249;
   --text-tertiary:  #857b70;
-  --text-muted:     #c2bcb4;
+  --text-muted:     #958b80; /* was #c2bcb4: 1.5:1 on the page, unreadable small print */
 
   /* Borders — warm stone, visibly distinct */
   --border-subtle:  #d8cfc0;
@@ -150,6 +150,10 @@
   --grain-opacity: 0.035;
   --topo-stroke: rgba(91,82,73,0.10);
 }
+
+/* Brand orange as small text is only 2.6:1 on the light page; a deeper shade keeps it legible.
+   Buttons and fills keep the true #ff5100. */
+:root:not(.dark) .text-\[\#ff5100\] { color: #d94800; }
 
 /* ── DARK THEME ─────────────────────────────────────────── */
 .dark {

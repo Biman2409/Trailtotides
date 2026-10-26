@@ -43,12 +43,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const f = destinationFacts(d);
   // Title case for the search result: "25 Best Treks and Adventures in Uttarakhand"
   const title = `${f.count} Best ${f.noun.replace(/\b(treks|adventures)\b/g, cap)} in ${d.name}`;
-  const description = [
+  // Google shows about 160 characters: shorten the closing line until it fits
+  const describe = (close: string) => [
     `Compare ${f.count} ${f.noun} in ${d.name} by difficulty, days and price`,
     f.bestMonths.length ? `; best from ${monthRange(f.bestMonths)}` : "",
     f.minPrice ? `, from ${inr(f.minPrice)}` : "",
-    ". Matched to your fitness, run by verified operators.",
+    close,
   ].join("");
+  const description = [
+    ". Matched to your fitness, run by verified operators.",
+    ". Matched to your fitness.",
+    ".",
+  ].map(describe).find((t) => t.length <= 160) ?? describe(".");
   const url = `${SITE}/destinations/${slug}`;
   const image = d.adventures[0]?.heroImage;
   return {

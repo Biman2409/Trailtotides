@@ -234,7 +234,7 @@ function OptionBtn({
   return (
     <button
       onClick={onClick}
-      className="w-full text-left px-5 py-4 rounded-2xl border transition-all duration-150 active:scale-[0.99]"
+      className="w-full lg:h-full text-left px-5 py-4 lg:px-4 lg:py-3 rounded-2xl border transition-all duration-150 active:scale-[0.99]"
       style={{
         background: selected ? "rgba(255,81,0,0.12)" : "var(--bg-surface)",
         borderColor: selected ? "#ff5100" : "var(--border-subtle)",
@@ -1481,12 +1481,13 @@ export default function MatchmakerClient() {
   }
 
   return (
-    // Questions on the left; on wide screens the profile builds up beside them as you answer
-    <div className="max-w-5xl mx-auto px-5 sm:px-6 pt-20 sm:pt-24 pb-10 min-h-[100svh] lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-14 lg:items-start">
-    <div className="max-w-xl w-full mx-auto lg:mx-0 min-h-[calc(100svh-7rem)] flex flex-col">
+    // Questions on the left; on wide screens the profile builds up beside them as you answer.
+    // Desktop: the whole question, progress and fact fit one screen, so nothing needs scrolling.
+    <div className="max-w-5xl mx-auto px-5 sm:px-6 pt-20 sm:pt-24 lg:pt-[92px] pb-10 lg:pb-4 min-h-[100svh] lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-14 lg:items-start">
+    <div className="max-w-xl w-full mx-auto lg:mx-0 min-h-[calc(100svh-7rem)] lg:min-h-[calc(100svh-108px)] flex flex-col">
       {/* Header */}
-      <div className="mb-7">
-        <div className="flex items-center justify-between mb-5">
+      <div className="mb-7 lg:mb-4">
+        <div className="flex items-center justify-between mb-5 lg:mb-3">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: accentColor }}>
             {isMedical ? "Health Background (Optional)" : isDecay ? "Calibration" : mode === "quick" ? "Quick match" : mode === "refine" ? "Refining your profile" : "Adventure Matchmaker"}
           </p>
@@ -1525,7 +1526,7 @@ export default function MatchmakerClient() {
       </div>
 
       {/* Progress */}
-      <div className="flex items-center gap-1.5 mb-9">
+      <div className="flex items-center gap-1.5 mb-9 lg:mb-5">
         {steps.map((step, i) => {
           const color = step.type === "medical" ? "#38bdf8" : step.type === "decay" ? "#4ade80" : "#ff5100";
           return (
@@ -1540,8 +1541,10 @@ export default function MatchmakerClient() {
 
       {/* Question */}
       <div className="space-y-2.5">
-        <h2 className="text-xl sm:text-2xl font-semibold leading-snug mb-1.5" style={{ color: "var(--text-primary)" }}>{currentStep.q.question}</h2>
-        {capQ?.hint && <p className="text-sm mb-5 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>{capQ.hint}</p>}
+        <h2 className="text-xl sm:text-2xl lg:text-xl font-semibold leading-snug mb-1.5" style={{ color: "var(--text-primary)" }}>{currentStep.q.question}</h2>
+        {capQ?.hint && <p className="text-sm mb-5 lg:mb-3 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>{capQ.hint}</p>}
+        {/* Two columns on desktop, with "Not sure" as the last cell */}
+        <div className="space-y-2.5 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-2">
         {currentStep.q.options.map((o) => (
           <OptionBtn
             key={o.v}
@@ -1563,7 +1566,7 @@ export default function MatchmakerClient() {
         {capQ && (
           <button
             onClick={() => goNext({ ...answers, [capQ.key]: NOT_SURE })}
-            className="w-full text-left px-4 py-3 rounded-xl text-sm transition-colors"
+            className="w-full lg:h-full text-left px-4 py-3 rounded-xl lg:rounded-2xl text-sm transition-colors"
             style={{
               border: `1px dashed ${answers[capQ.key] === NOT_SURE ? "#ff5100" : "var(--border-default)"}`,
               color: answers[capQ.key] === NOT_SURE ? "#ff7d47" : "var(--text-tertiary)",
@@ -1573,6 +1576,7 @@ export default function MatchmakerClient() {
             Not sure / haven&apos;t tried this
           </button>
         )}
+        </div>
 
 
         {/* Optional free text — joint/injury medical question, shown once answered "yes" */}
@@ -1620,7 +1624,7 @@ export default function MatchmakerClient() {
       )}
 
       {/* Nav */}
-      <div className="flex items-center justify-between mt-8">
+      <div className="flex items-center justify-between mt-8 lg:mt-4">
         <button
           onClick={() => {
             if (stepIndex === 0) setStarted(false);
@@ -1688,9 +1692,9 @@ function AdventureFact({ step }: { step: number }) {
   }, [step]);
   if (index === null) return null;
   return (
-    <div key={index} className="mt-auto pt-12 text-center animate-in fade-in duration-500">
-      <p className="text-[10px] font-bold uppercase tracking-[0.24em] mb-1.5" style={{ color: "var(--text-muted)" }}>Did you know?</p>
-      <p className="text-[19px] leading-snug max-w-md mx-auto" style={{ fontFamily: "var(--font-script), cursive", fontWeight: 600, color: "var(--text-secondary)" }}>
+    <div key={index} className="mt-auto pt-12 lg:pt-5 text-center animate-in fade-in duration-500">
+      <p className="text-[10px] font-bold uppercase tracking-[0.24em] mb-1.5 lg:mb-1" style={{ color: "var(--text-muted)" }}>Did you know?</p>
+      <p className="text-[19px] lg:text-[17px] leading-snug max-w-md mx-auto" style={{ fontFamily: "var(--font-script), cursive", fontWeight: 600, color: "var(--text-secondary)" }}>
         {ADVENTURE_FACTS[index]}
       </p>
     </div>

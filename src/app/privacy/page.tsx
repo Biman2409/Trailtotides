@@ -62,21 +62,21 @@ export default function PrivacyPage() {
       <section className="pt-32 pb-14 px-6 lg:px-8 t-bg-surface2">
         <div className="max-w-3xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Legal</p>
-          <h1 className="text-white text-5xl font-bold tracking-tight mb-4">Privacy Policy</h1>
-          <p className="text-white/45 text-base">Last updated: October 2026</p>
+          <h1 className="t-text text-5xl font-bold tracking-tight mb-4">Privacy Policy</h1>
+          <p className="t-text-3 text-base">Last updated: October 2026</p>
         </div>
       </section>
 
       <section className="py-16 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
-          <p className="text-white/60 text-base leading-relaxed mb-12">
+          <p className="t-text-2 text-base leading-relaxed mb-12">
             TRAIL TO TIDES (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) is committed to protecting your privacy. This policy explains what information we collect, how we use it, and what rights you have. Please read it carefully.
           </p>
           <div className="space-y-10">
             {SECTIONS.map((section) => (
               <div key={section.title}>
-                <h2 className="text-white text-xl font-semibold mb-4">{section.title}</h2>
-                <p className="text-white/55 text-base leading-relaxed">{section.content}</p>
+                <h2 className="t-text text-xl font-semibold mb-4">{section.title}</h2>
+                <p className="t-text-2 text-base leading-relaxed">{section.content}</p>
               </div>
             ))}
           </div>

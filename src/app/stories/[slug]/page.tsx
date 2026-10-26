@@ -92,12 +92,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const story = await getStoryBySlug(slug);
   if (!story) return {};
   const s = mapStory(story);
+  // Search results show about 160 characters; cut at a word, not mid-word
+  const description = s.excerpt.length <= 160 ? s.excerpt : `${s.excerpt.slice(0, 157).replace(/s+S*$/, "")}…`;
   return {
     title: s.title,
-    description: s.excerpt,
+    description,
     openGraph: {
       title: `${s.title} — Trail to Tides`,
-      description: s.excerpt,
+      description,
       url: `https://www.trailtotides.com/stories/${slug}`,
       images: [{ url: s.heroImage, width: 1200, height: 630, alt: s.title }],
       type: "article",
@@ -108,7 +110,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: `${s.title} — Trail to Tides`,
-      description: s.excerpt,
+      description,
       images: [s.heroImage],
     },
     alternates: { canonical: `https://www.trailtotides.com/stories/${slug}` },
