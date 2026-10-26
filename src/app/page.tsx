@@ -216,24 +216,26 @@ export default function HomePage() {
         {/* ── REGIONS ──────────────────────────────────────── */}
         <FindByRegion />
 
-        {/* ── MAP CTA — warm surface, green only as the accent; edges fade into the page ── */}
-        <section id="map-cta" className="relative py-5 lg:py-7 px-5 lg:px-8 overflow-hidden t-bg-surface">
+        {/* ── MAP CTA — a green band (as the Matchmaker's is warm), dot grid and a glow behind
+               the demo; edges fade into the page ── */}
+        <section id="map-cta" className="relative py-5 lg:py-7 px-5 lg:px-8 overflow-hidden bg-[#eaf4ec] dark:bg-[#0f1a13]">
           <div className="absolute inset-0 pointer-events-none">
             <Image
               src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=80"
               alt=""
               fill
-              className="object-cover opacity-[0.035] grayscale"
+              className="object-cover opacity-[0.07] grayscale mix-blend-luminosity"
               style={{ objectFit: "cover" }}
             />
+            <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 55% 75% at 78% 50%, rgba(95,184,115,0.22), transparent 70%)" }} />
             <div
               className="absolute inset-0"
               style={{
-                backgroundImage: "radial-gradient(circle, rgba(126,200,138,0.5) 1px, transparent 1px)",
-                backgroundSize: "28px 28px",
-                opacity: 0.12,
-                maskImage: "linear-gradient(90deg, transparent 0%, black 55%, black 100%)",
-                WebkitMaskImage: "linear-gradient(90deg, transparent 0%, black 55%, black 100%)",
+                backgroundImage: "radial-gradient(circle, rgba(95,184,115,0.9) 1px, transparent 1.2px)",
+                backgroundSize: "26px 26px",
+                opacity: 0.32,
+                maskImage: "linear-gradient(90deg, transparent 0%, black 45%, black 100%)",
+                WebkitMaskImage: "linear-gradient(90deg, transparent 0%, black 45%, black 100%)",
               }}
             />
             <div className="absolute inset-x-0 top-0 h-24" style={{ background: "linear-gradient(to bottom, var(--bg-page), transparent)" }} />
