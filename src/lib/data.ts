@@ -4,6 +4,7 @@ export type AdventureType =
   | "Cycling"
   | "Diving"
   | "Kayaking"
+  | "River Rafting"
   | "Skiing"
   | "Mountaineering"
   | "Rock Climbing"
@@ -1775,6 +1776,42 @@ export const adventures: Adventure[] = [
       { id: "sr-surya-1", username: "Tanvi C.", avatar_id: 8, rating: 5, body: "Sunrise from Surya Top with Nanda Devi, Trishul, Kamet and Kedarnath all clear. Can't believe this trek isn't more famous.", created_at: "2025-05-22T17:12:00Z", user_id: "" },
       { id: "sr-surya-2", username: "rajiv_n", rating: 4, body: "Quiet and rewarding. Summit plateau has one of the best views in Uttarakhand. Seven days is a commitment but October clarity makes it worth it.", created_at: "2025-11-02T19:36:00Z", user_id: "" },
       { id: "sr-surya-3", username: "Rashmi K", rating: 5, body: "October skies were spotless. Small group of six, nobody else on the summit, and our guide named every peak from Nanda Devi round to Chaukhamba.", created_at: "2025-10-18T21:03:00Z", user_id: "" },
+    ],
+  },
+  // ── WATER ────────────────────────────────────────────────────────────────
+  {
+    id: "water-1", slug: "rishikesh-river-rafting",
+    ert: { e: 2, r: 3, t: 2 },
+    name: "Rishikesh River Rafting", tagline: "White water on the Ganga, from a first splash at Shivpuri to the big rapids of Kaudiyala",
+    region: "Himalayas", state: "Uttarakhand", type: "River Rafting", difficulty: "Moderate",
+    duration: "Weekend", durationDays: "1 day", durationRange: "3–6 Hours",
+    distance: "16km", distanceRange: "16–36 km", altitude: "380m",
+    baseCamp: "Rishikesh", startingPoint: "Shivpuri (16 km) or Kaudiyala (36 km), with pickup from Rishikesh",
+    bestSeason: "Mar–May, Oct–Nov", bestMonths: ["Mar","Apr","May","Oct","Nov"],
+    heroImage: "https://images.unsplash.com/photo-1718431108073-7f61fb5dfefb?w=1600&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1718431108073-7f61fb5dfefb?w=1600&q=80",
+      "https://images.unsplash.com/photo-1711992437606-bd676fb6fdf2?w=1600&q=80",
+    ],
+    lat: 30.134, lng: 78.39,
+    // Kaudiyala → Marine Drive → Shivpuri → Brahmpuri → NIM Beach, Rishikesh (schematic)
+    routePoints: [[30.081,78.497],[30.098,78.452],[30.12,78.42],[30.134,78.39],[30.13,78.355],[30.125,78.333]],
+    description: "The Ganga leaves the mountains at Rishikesh through **a string of named rapids**, and rafting them is the town's great day out. **Two runs, one river**: the classic **Shivpuri run (16 km, about 3 hours)** takes you through **Grade II–III rapids like Roller Coaster and Golf Course**, with calm stretches for a swim and cliff jumping in between, and is the perfect first rafting trip. For more, start upstream at **Kaudiyala (36 km, a full day)**: the river is wilder, the rapids **reach Grade IV at The Wall**, and you share the gorge with forest and sandy beaches before paddling into Rishikesh past the temples and Ram Jhula. Shorter Brahmpuri (9 km) and Marine Drive (26 km) runs fill in between.",
+    whoFor: "First-timers on the Shivpuri run: no rafting experience or swimming needed, the guide teaches you on the bank · Groups, friends and families with teenagers (14+) · Fit, confident swimmers wanting bigger water on the Kaudiyala run · A one-day trip from Delhi or a break between Uttarakhand treks",
+    whoNot: "Children under 14 · Pregnancy, heart conditions, recent surgery or seizures · Anyone who panics in water and can't follow the guide's commands · Non-swimmers on the full Kaudiyala run · Travel in July–August, when rafting is closed for the monsoon",
+    safetyNotes: "Raft only with a government-licensed operator: helmets, life jackets and a trained guide on every raft, ideally with a safety kayaker. Keep your life jacket fastened at all times, including the calm swims. If you fall in, float on your back, feet first and downstream, and wait for the rope or the kayak. Rafting closes from July to mid-September when the river floods; spring water is cold and autumn flows are higher, so ask for a wetsuit top early in the season. The Kaudiyala run's Grade IV rapids flip rafts more often; most operators set 18 as the minimum age there.",
+    // Matches the Rishikesh rafting profile on the ACE page
+    ace: { stamina:2, power:3, strength:2, agility:2, water:4, altitude:0, focus:3, nerve:2 },
+    operators: [
+      { name: "Red Chilli Adventure", verified: false, priceFrom: "₹1,500", googleRating: 0, website: "https://www.redchilliadventure.com/collections/rafting-on-ganga-rishikesh", priceCheckedAt: "2026-10-26" },
+      { name: "Camp Ganga Vatika", verified: false, priceFrom: "₹1,000", googleRating: 0, website: "https://campgangavatika.com/shivpuri-rafting.php", priceCheckedAt: "2026-10-26" },
+      { name: "Himalayan Moments", verified: false, priceFrom: "₹1,000", googleRating: 0, website: "https://www.riverraftinginrishikesh.com/products/rishikesh-river-rafting-ct1", priceCheckedAt: "2026-10-26" },
+    ],
+    tags: ["Ganga", "white water", "Rishikesh", "beginner-friendly", "Kaudiyala"], featured: false,
+    seedReviews: [
+      { id: "sr-raft-1", username: "Ankita S.", avatar_id: 3, rating: 5, body: "Did the Shivpuri run with college friends, none of us had rafted before. Roller Coaster soaked everyone in the first ten seconds. The guide let us jump in on a calm stretch, best part of the day.", created_at: "2025-04-12T10:20:00Z", user_id: "" },
+      { id: "sr-raft-2", username: "vikram_paddles", rating: 5, body: "Went from Kaudiyala in October, a proper full day on the river. The Wall is a real Grade IV, our raft nearly flipped. Bring a wetsuit top, the water was freezing in the morning.", created_at: "2025-10-18T16:45:00Z", user_id: "" },
+      { id: "sr-raft-3", username: "Meera", rating: 4, body: "Great first experience for my 15 year old and me. Three hours felt short. Book with a licensed operator and check there's a safety kayak, ours had one and it was reassuring.", created_at: "2025-05-03T13:10:00Z", user_id: "" },
     ],
   },
 ];

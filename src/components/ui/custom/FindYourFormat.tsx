@@ -46,13 +46,11 @@ const categories = [
     accentBorder: "rgba(255,81,0,0.35)",
     tagBg: "rgba(255,81,0,0.18)",
     tagText: "#ff5100",
-    comingSoon: true,
-    items: [],
-    previewItems: [
-      { type: "Diving" },
-      { type: "Kayaking" },
-      { type: "Surfing" },
+    items: [
       { type: "River Rafting" },
+      { type: "Kayaking" },
+      { type: "Diving" },
+      { type: "Surfing" },
       { type: "Snorkelling" },
     ],
   },

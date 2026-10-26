@@ -348,11 +348,13 @@ function detectIndecision(messages: { role: string; content: string }[]): boolea
 // so generic water/coastal phrasing needs to route here too, not just the exact type name.
 function isComingSoonQuery(query: string): boolean {
   const q = query.toLowerCase();
+  // Rafting is live, even when asked as "white water rafting"
+  if (q.includes("raft")) return false;
   return COMING_SOON_TYPES.some((t) => q.includes(t.toLowerCase())) ||
     ["scuba", "dive", "diving", "paraglide", "paragliding", "balloon", "hot air",
       "ice skate", "ice skating", "scramble", "scrambling",
       "water", "coastal", "ocean", "beach", "surf", "surfing", "snorkel",
-      "kayak", "kayaking", "raft", "rafting"].some((w) => q.includes(w));
+      "kayak", "kayaking"].some((w) => q.includes(w));
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────

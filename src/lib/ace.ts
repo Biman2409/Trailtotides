@@ -88,7 +88,7 @@ export function estimateACE(a: Adventure): ACE {
       return { stamina: c(d - 1), power: 1, strength: c(d - 2), agility: c(d - 2), water: 0, altitude: alt, focus: c(d - 1), nerve: c(d - 1) };
     case "Cycling":
       return { stamina: c(d), power: c(d - 1), strength: c(d - 2), agility: c(d - 2), water: 0, altitude: alt, focus: c(d - 2), nerve: c(d - 1) };
-    case "Diving": case "Kayaking":
+    case "Diving": case "Kayaking": case "River Rafting":
       return { stamina: c(d - 1), power: c(d - 2), strength: c(d - 2), agility: c(d - 2), water: c(d + 1), altitude: 0, focus: c(d - 1), nerve: c(d - 1) };
     default: // Trekking and everything on foot
       return { stamina: c(d), power: c(d - 1), strength: c(d - 1), agility: c(d - 1), water: 0, altitude: alt, focus: c(d - 2), nerve: c(d - 1) };

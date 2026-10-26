@@ -205,6 +205,32 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
       ],
     },
   ],
+  // The operator brings the raft, paddles, life jackets and helmets
+  "River Rafting": [
+    {
+      name: "On the River",
+      Icon: Waves,
+      items: [
+        { label: "Quick-dry shorts / swimwear (no cotton or jeans)", essential: true },
+        { label: "Synthetic T-shirt or rash guard", essential: true },
+        { label: "Strap-on sandals or old sneakers (no flip-flops)", essential: true },
+        { label: "Sunscreen SPF 50+ (water-resistant)", essential: true },
+        { label: "Spectacle strap if you wear glasses", essential: false },
+        { label: "Waterproof pouch for phone", essential: false },
+        { label: "Wetsuit top (cold water, Mar or early Oct)", essential: false },
+      ],
+    },
+    {
+      name: "After",
+      Icon: Shirt,
+      items: [
+        { label: "Full change of dry clothes", essential: true },
+        { label: "Towel", essential: true },
+        { label: "Plastic bag for wet clothes", essential: true },
+        { label: "Water bottle & snacks", essential: false },
+      ],
+    },
+  ],
   Skiing: [
     {
       name: "Ski Gear",

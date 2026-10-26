@@ -41,7 +41,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const d = destinationBySlug(slug);
   if (!d) return {};
   const f = destinationFacts(d);
-  const title = `${f.count} Best ${cap(f.noun)} in ${d.name}`;
+  // Title case for the search result: "25 Best Treks and Adventures in Uttarakhand"
+  const title = `${f.count} Best ${f.noun.replace(/\b(treks|adventures)\b/g, cap)} in ${d.name}`;
   const description = [
     `Compare ${f.count} ${f.noun} in ${d.name} by difficulty, days and price`,
     f.bestMonths.length ? `; best from ${monthRange(f.bestMonths)}` : "",

@@ -48,6 +48,7 @@ function ctaText(type?: string, name?: string): string {
     case "Cycling":        return "Cycled this route? Share the experience.";
     case "Diving":         return "Dived here? Tell others what's down there.";
     case "Kayaking":       return "Paddled this stretch? Share your story.";
+    case "River Rafting":  return "Rafted this stretch? Tell others how the rapids were.";
     case "Skiing":         return "Skied these slopes? Tell others about it.";
     case "Rock Climbing":  return "Climbed here? Share the beta.";
     case "Scrambling":     return "Scrambled this route? Share the conditions.";
