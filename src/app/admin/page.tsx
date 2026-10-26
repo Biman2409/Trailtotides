@@ -1,14 +1,19 @@
+import type { Metadata } from "next";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import AdminDashboardClient from "./AdminDashboardClient";
+import AdminDashboardClient, { type GroupRow, type QuoteRow } from "./AdminDashboardClient";
 import { getAllOperatorProfiles, getAllOperatorSubmissions } from "@/app/auth/operator-actions";
 import { adminGetAllReviews, adminGetAllPhotos } from "./actions";
+import { adventures } from "@/lib/data";
+import { DESTINATIONS } from "@/lib/destinations";
+
+export const metadata: Metadata = { title: "Admin", robots: { index: false, follow: false } };
 
 export default async function AdminPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) redirect("/auth/login");
+  if (!user) redirect("/auth/login?next=/admin");
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -19,29 +24,51 @@ export default async function AdminPage() {
   if (!profile || profile.role !== "admin") redirect("/");
 
   const adminClient = await createAdminClient();
+  // Counts only: these tables can be big and the dashboard needs totals, not rows
+  const count = async (table: string) => {
+    const { count: n } = await adminClient.from(table).select("*", { count: "exact", head: true });
+    return n ?? 0;
+  };
 
   const [
     { data: profiles },
     { data: messages },
     { data: { users: authUsers } },
+    { data: groups },
+    { data: quotes },
+    wishlistCount,
+    savedSearchCount,
   ] = await Promise.all([
     adminClient.from("profiles").select("*").order("created_at", { ascending: false }),
     adminClient.from("contact_messages").select("*").order("created_at", { ascending: false }),
     adminClient.auth.admin.listUsers({ perPage: 1000 }),
+    adminClient.from("match_groups").select("id, name, invite_code, created_at, match_group_members(count)").order("created_at", { ascending: false }).limit(200),
+    adminClient.from("quote_requests").select("id, user_id, slug, operators, start_date, flexible, group_size, message, created_at").order("created_at", { ascending: false }).limit(200),
+    count("wishlists"),
+    count("saved_searches"),
   ]);
 
-  // Merge auth metadata into profiles (last_sign_in, banned, ace_profile, avatar_id)
+  // A profile row outlives its account when the account is deleted in Supabase; only accounts
+  // that still exist are people. Auth metadata adds sign-in, ban and ACE state.
   const authMap = new Map((authUsers ?? []).map((u) => [u.id, u]));
-  const enrichedProfiles = (profiles ?? []).map((p) => {
-    const au = authMap.get(p.id);
-    return {
-      ...p,
-      last_sign_in_at: au?.last_sign_in_at ?? null,
-      banned: !!(au?.banned_until && new Date(au.banned_until) > new Date()),
-      ace_profile: au?.user_metadata?.ace_profile ?? null,
-      avatar_id: au?.user_metadata?.avatar_id ?? null,
-    };
-  });
+  const enrichedProfiles = (profiles ?? [])
+    .filter((p) => authMap.has(p.id))
+    .map((p) => {
+      const au = authMap.get(p.id)!;
+      const ace = au.user_metadata?.ace_profile;
+      return {
+        ...p,
+        email: p.email ?? au.email ?? null,
+        last_sign_in_at: au.last_sign_in_at ?? null,
+        email_confirmed: !!au.email_confirmed_at,
+        banned: !!(au.banned_until && new Date(au.banned_until) > new Date()),
+        // Saved flat ({ stamina: 3, ... }) by /api/ace-profile
+        ace: ace && typeof ace === "object" ? (ace as Record<string, number>) : null,
+        ace_updated_at: (au.user_metadata?.ace_profile_updated_at as string | undefined) ?? null,
+        has_health_answers: !!au.user_metadata?.ace_medical,
+        avatar_id: au.user_metadata?.avatar_id ?? null,
+      };
+    });
 
   // Operator data from storage buckets
   const [operatorProfiles, operatorSubmissions, { reviews }, { photos }] = await Promise.all([
@@ -104,6 +131,14 @@ export default async function AdminPage() {
     }
   }
 
+  const groupRows: GroupRow[] = (groups ?? []).map((g) => ({
+    id: g.id as string,
+    name: (g.name as string | null) ?? "Untitled group",
+    invite_code: g.invite_code as string,
+    created_at: g.created_at as string,
+    members: (g.match_group_members as { count: number }[] | null)?.[0]?.count ?? 0,
+  }));
+
   return (
     <AdminDashboardClient
       profiles={enrichedProfiles}
@@ -112,9 +147,12 @@ export default async function AdminPage() {
       storySubmissions={storySubmissions as never}
       operatorProfiles={operatorProfiles}
       operatorSubmissions={operatorSubmissions}
-      operatorTablesExist={true}
       reviews={reviews}
       photos={photos}
+      groups={groupRows}
+      quotes={(quotes ?? []) as QuoteRow[]}
+      counts={{ wishlists: wishlistCount, savedSearches: savedSearchCount, adventures: adventures.length, destinations: DESTINATIONS.length }}
+      adventureNames={Object.fromEntries(adventures.map((a) => [a.slug, a.name]))}
     />
   );
 }
