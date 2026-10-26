@@ -2,10 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "next-themes";
-import { Download, Smartphone, MapPinned, Mountain, TrendingUp, Route, Flag } from "lucide-react";
+import { Download, Smartphone, MapPinned, Mountain, TrendingUp, Route, Flag, ArrowRight } from "lucide-react";
 import { BASE_LAYERS, LIGHT_BASE, createBaseLayer, loadLeaflet } from "@/app/map/mapShared";
 import { trailProfile, trailHighPoint, type Trail } from "@/lib/trails/shared";
-import OfflineGuide from "./OfflineGuide";
+import Link from "next/link";
 
 const ORANGE = "#ff5100";
 const TEAL = "#0e7c86";
@@ -16,7 +16,7 @@ const fmt = (n: number) => n.toLocaleString("en-IN");
  * The walking line from OpenStreetMap: the route on a map, an elevation profile that moves a marker
  * along it, the stops with distances, and how to take it offline in a phone map app.
  */
-export default function TrailSection({ trail, slug, name, region }: { trail: Trail; slug: string; name: string; region: string }) {
+export default function TrailSection({ trail, slug, name }: { trail: Trail; slug: string; name: string }) {
   const profile = useMemo(() => trailProfile(trail), [trail]);
   const high = trailHighPoint(trail);
   const [hover, setHover] = useState<number | null>(null);
@@ -81,6 +81,9 @@ export default function TrailSection({ trail, slug, name, region }: { trail: Tra
             <p className="text-[13px] mt-1 max-w-[60ch]" style={{ color: "var(--text-secondary)" }}>
               There&apos;s no signal for most of this trail. Your phone&apos;s GPS still works without it, so load the trail into a map app before you go.
             </p>
+            <Link href={`/guides/offline-maps?trek=${slug}`} className="inline-flex items-center gap-1 mt-2 text-[13px] font-semibold hover:underline underline-offset-2" style={{ color: ORANGE }}>
+              How to use it offline: Android, iPhone, computer, GPS watch <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
           <a
             href={`/experiences/${slug}/trail.gpx`}
@@ -91,7 +94,6 @@ export default function TrailSection({ trail, slug, name, region }: { trail: Tra
             <Download className="w-4 h-4" />Download trail (GPX)
           </a>
         </div>
-        <OfflineGuide region={region} start={trail.stops[0].name} file={`${slug}-trail-to-tides.gpx`} />
         <p className="text-[11px] mt-3 flex items-start gap-1.5" style={{ color: "var(--text-tertiary)" }}>
           <MapPinned className="w-3 h-3 mt-0.5 shrink-0" />
           Paths change after landslides and snow: follow your guide and the {name} route your operator gives you.
