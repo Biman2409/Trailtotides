@@ -187,8 +187,16 @@ export default function HomePage() {
             <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
               {featuredAdventures.map((adventure, i) => (
                 <div key={adventure.id} className={`snap-start shrink-0 w-[78vw] sm:w-auto ${i === 0 ? "sm:col-span-2 lg:row-span-2" : ""}`}>
-                  {/* The section is already titled Editor's Choice — no per-card badge */}
-                  <AdventureCard adventure={adventure} badge={false} fill={i === 0} size={i === 0 ? "large" : "default"} />
+                  {/* The section is already titled Editor's Choice — no per-card badge.
+                      The feature card is large only in the grid; in the phone swipe row it matches the rest. */}
+                  {i === 0 ? (
+                    <>
+                      <div className="sm:hidden"><AdventureCard adventure={adventure} badge={false} /></div>
+                      <div className="hidden sm:block h-full"><AdventureCard adventure={adventure} badge={false} fill size="large" /></div>
+                    </>
+                  ) : (
+                    <AdventureCard adventure={adventure} badge={false} />
+                  )}
                 </div>
               ))}
             </div>
