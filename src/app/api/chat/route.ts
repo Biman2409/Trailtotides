@@ -16,6 +16,10 @@ const client = hasGeminiKey
     })
   : null;
 
+// Tried in order. GEMINI_MODEL (set in Vercel) swaps the first one without a code change,
+// for when Google retires a model.
+const GEMINI_MODELS = [...new Set([process.env.GEMINI_MODEL || "gemini-2.5-flash", "gemini-2.5-flash-lite"])];
+
 // ─── Dynamically derive available vs coming-soon types ────────────────────────
 
 const ALL_TYPES: AdventureType[] = [
@@ -418,52 +422,39 @@ export async function POST(req: NextRequest) {
 
     let rawContent = "";
 
-    try {
-      const response = await client.chat.completions.create({
-        model: "gemini-2.5-flash",
-        messages: chatMessages,
-        temperature: 0.5,
-        max_tokens: 500,
-      });
-      rawContent = response.choices[0].message.content ?? "";
-    } catch (apiErr: unknown) {
-      // Rate limit or API error — try a lighter model as fallback
-      const isRateLimit = apiErr instanceof OpenAI.APIError && apiErr.status === 429;
-      console.error("Compass.AI primary model error:", apiErr instanceof Error ? apiErr.message : apiErr, "isRateLimit:", isRateLimit);
-
-      if (isRateLimit) {
-        try {
-          const fallbackResponse = await client.chat.completions.create({
-            model: "gemini-2.5-flash-lite",
-            messages: chatMessages,
-            temperature: 0.5,
-            max_tokens: 500,
-          });
-          rawContent = fallbackResponse.choices[0].message.content ?? "";
-        } catch (liteErr: unknown) {
-          console.error("Compass.AI lite model also failed:", liteErr instanceof Error ? liteErr.message : liteErr);
-          // Both models failed — use keyword search only
-          const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
-          const fallback = pickFallback(lastQuery, userAce);
-          if (fallback.length > 0) {
-            return NextResponse.json({
-              text: "Here are some adventures that match what you're looking for.",
-              recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery, userAce) })),
-              cards: fallback,
-              suggestAce: shouldSuggestAce,
-            });
-          }
-          return NextResponse.json({
-            rateLimited: true,
-            text: "",
-            recommendations: [],
-            cards: [],
-            suggestAce: false,
-          });
-        }
-      } else {
-        throw apiErr;
+    // Each model in turn; any failure (free-tier limit, bad key, retired model) moves on to the
+    // next, and if every one fails the keyword search answers, so the chat never errors out
+    let rateLimited = false;
+    for (const model of GEMINI_MODELS) {
+      try {
+        const response = await client.chat.completions.create({
+          model,
+          messages: chatMessages,
+          temperature: 0.5,
+          max_tokens: 500,
+        });
+        rawContent = response.choices[0]?.message.content ?? "";
+        break;
+      } catch (apiErr: unknown) {
+        rateLimited ||= apiErr instanceof OpenAI.APIError && apiErr.status === 429;
+        console.error(`Compass.AI: ${model} failed —`, apiErr instanceof OpenAI.APIError ? `${apiErr.status} ${apiErr.message}` : apiErr);
       }
+    }
+
+    if (!rawContent) {
+      const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
+      const fallback = pickFallback(lastQuery, userAce);
+      if (fallback.length > 0) {
+        return NextResponse.json({
+          text: "Here are some adventures that match what you're looking for.",
+          recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery, userAce) })),
+          cards: fallback,
+          suggestAce: shouldSuggestAce,
+        });
+      }
+      return NextResponse.json(rateLimited
+        ? { rateLimited: true, text: "", recommendations: [], cards: [], suggestAce: false }
+        : { text: "Tell me a region, activity, or trip length and I'll pull up matching adventures.", recommendations: [], cards: [], suggestAce: shouldSuggestAce });
     }
 
     const suggestAce = /<suggest_ace\s*\/>/.test(rawContent) || shouldSuggestAce;

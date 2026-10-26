@@ -28,7 +28,7 @@ const SECTIONS = [
   },
     {
       title: "5. Third-Party Services",
-      content: `We use Google's Gemini API to power the Compass.AI adventure discovery engine and Anthropic's API to power the ACE Matchmaker. Queries you send to these features are processed by Google and Anthropic respectively and subject to their privacy policies. We use Supabase for authentication and database services. We use Unsplash for imagery, which is served directly from their CDN.`,
+      content: `We use Google's Gemini API to power the Compass.AI adventure discovery engine. Messages you send to Compass.AI are processed by Google and subject to its privacy policy. The ACE Matchmaker works out your results on our own site and sends your answers to no AI service. We use Supabase for authentication and database services. We use Unsplash for imagery, which is served directly from their CDN.`,
     },
 
 
