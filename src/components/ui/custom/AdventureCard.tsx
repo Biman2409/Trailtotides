@@ -16,6 +16,7 @@ import { useCompare } from "@/contexts/CompareContext";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { keyStat } from "@/lib/keyStat";
 
 interface AdventureCardProps {
   adventure: Adventure;
@@ -50,6 +51,7 @@ const CATEGORY_CLASS: Partial<Record<Adventure["type"], string>> = {
 export default function AdventureCard({ adventure, size = "default", fromPage, badge, fill = false }: AdventureCardProps) {
   const isLarge = size === "large";
   const difficulty = computeDifficulty(getACE(adventure));
+  const stat = keyStat(adventure);
   const { isSelected, add, remove, isFull } = useCompare();
   const inCompare = isSelected(adventure.id);
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
@@ -195,15 +197,22 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
 
         {/* Below the photo, the same on every card (difficulty, duration and season sit on the
             photo; save and compare at its top-right):
-              1. type and location in small spaced capitals, the category icon carrying the colour
+              1. place, type and the type's key number (altitude, distance, rapid grade) in small
+                 spaced capitals, the category icon carrying the colour
               2. a hairline, then the starting price large in the display serif, with how many
                  operators offer it as a quiet outlined tag */}
         <div className="px-4 pt-3 pb-4">
           <p className="flex items-center gap-1.5 min-w-0 text-[10px] font-semibold uppercase tracking-[0.14em] leading-none" style={{ color: "var(--text-tertiary)" }}>
             <span className="shrink-0" style={{ color: "var(--cat)" }}>{ADVENTURE_TYPE_ICONS[adventure.type]?.(12)}</span>
-            <span className="shrink-0">{adventure.type}</span>
-            <span style={{ color: "var(--text-muted)" }}>·</span>
             <span className="truncate">{adventure.state}</span>
+            <span style={{ color: "var(--text-muted)" }}>·</span>
+            <span className="shrink-0">{adventure.type}</span>
+            {stat && (
+              <>
+                <span style={{ color: "var(--text-muted)" }}>·</span>
+                <span className="shrink-0 tabular-nums" style={{ color: "var(--text-secondary)" }}>{stat}</span>
+              </>
+            )}
           </p>
           <div className="mt-3 pt-3 flex items-end justify-between gap-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
             <div className="min-w-0">

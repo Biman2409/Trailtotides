@@ -71,6 +71,8 @@ export interface Adventure {
   distanceRange?: string;
   altitude?: string;
   depth?: string;
+  /** River trips: the rapids' grade range, e.g. "Grade II–IV" */
+  rapidGrade?: string;
   bestSeason: string;
   bestMonths: Month[];
   baseCamp?: string;
@@ -1785,7 +1787,7 @@ export const adventures: Adventure[] = [
     name: "Rishikesh River Rafting", tagline: "White water on the Ganga, from a first splash at Shivpuri to the big rapids of Kaudiyala",
     region: "Himalayas", state: "Uttarakhand", type: "River Rafting", difficulty: "Moderate",
     duration: "Weekend", durationDays: "1 day", durationRange: "3–6 Hours",
-    distance: "16km", distanceRange: "16–36 km", altitude: "380m",
+    distance: "16km", distanceRange: "16–36 km", altitude: "380m", rapidGrade: "Grade II–IV",
     baseCamp: "Rishikesh", startingPoint: "Shivpuri (16 km) or Kaudiyala (36 km), with pickup from Rishikesh",
     bestSeason: "Mar–May, Oct–Nov", bestMonths: ["Mar","Apr","May","Oct","Nov"],
     // Hero: Chandan Chaurasia on Unsplash (Trishuli River, Nepal), graded to match the other heroes.
