@@ -1,20 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import Anthropic from "@anthropic-ai/sdk";
+import { anthropic, hasAnthropicKey } from "@/lib/anthropic";
 import { adventures } from "@/lib/data";
 import type { AdventureType } from "@/lib/data";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { getACE, computeDifficulty, computeMatchScore, type ACE } from "@/lib/ace";
 import { stripEmphasis } from "@/lib/emphasis";
 
-// Gemini's free tier via its OpenAI-compatible endpoint — no billing required.
-// https://ai.google.dev/gemini-api/docs/openai
-const hasGeminiKey = !!process.env.GEMINI_API_KEY;
-const client = hasGeminiKey
-  ? new OpenAI({
-      apiKey: process.env.GEMINI_API_KEY,
-      baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
-    })
-  : null;
+// Compass.AI runs on Claude. Effort "low" suits a chat reply: quick, short, still thinks a
+// little before picking adventures. Thinking counts toward max_tokens, so leave headroom.
+const COMPASS_MODEL = "claude-sonnet-5-5";
 
 // ─── Dynamically derive available vs coming-soon types ────────────────────────
 
@@ -375,19 +370,22 @@ export async function POST(req: NextRequest) {
       ? "\n\n[HINT: You've already shown this user recommendations 2+ times this conversation without them settling on one. Include <suggest_ace/> and briefly note that the Adventure Matchmaker (a 1-minute quick match) would narrow things down in one pass instead of more browsing.]"
       : "";
 
-    const systemContent = SYSTEM_PROMPT + hint + fitnessHint(userAce);
-
-    const chatMessages: { role: "user" | "assistant" | "system"; content: string }[] = [
-      { role: "system", content: systemContent },
-      ...messages.map((m: { role: string; content: string }) => ({
-        role: m.role as "user" | "assistant",
-        content: m.content,
-      })),
+    // The prompt and catalog never change, so they're cached; the per-person hints go after them
+    const perPerson = (hint + fitnessHint(userAce)).trim();
+    const system: Anthropic.TextBlockParam[] = [
+      { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
+      ...(perPerson ? [{ type: "text" as const, text: perPerson }] : []),
     ];
 
-    // No AI configured (missing/empty GEMINI_API_KEY) — degrade to keyword search instead of crashing.
-    if (!client) {
-      console.error("Compass.AI: GEMINI_API_KEY is not configured — using keyword search only.");
+    const chatMessages: Anthropic.MessageParam[] = messages
+      .filter((m: { role: string; content: string }) => (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content.trim())
+      .map((m: { role: string; content: string }) => ({ role: m.role as "user" | "assistant", content: m.content }));
+    // The API wants the conversation to open with the user
+    while (chatMessages.length > 0 && chatMessages[0].role !== "user") chatMessages.shift();
+
+    // No AI configured (missing ANTHROPIC_API_KEY) — degrade to keyword search instead of crashing.
+    if (!hasAnthropicKey || chatMessages.length === 0) {
+      if (!hasAnthropicKey) console.error("Compass.AI: ANTHROPIC_API_KEY is not configured — using keyword search only.");
       const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
 
       if (isComingSoonQuery(lastQuery)) {
@@ -418,52 +416,46 @@ export async function POST(req: NextRequest) {
 
     let rawContent = "";
 
-    try {
-      const response = await client.chat.completions.create({
-        model: "gemini-2.5-flash",
-        messages: chatMessages,
-        temperature: 0.5,
-        max_tokens: 500,
-      });
-      rawContent = response.choices[0].message.content ?? "";
-    } catch (apiErr: unknown) {
-      // Rate limit or API error — try a lighter model as fallback
-      const isRateLimit = apiErr instanceof OpenAI.APIError && apiErr.status === 429;
-      console.error("Compass.AI primary model error:", apiErr instanceof Error ? apiErr.message : apiErr, "isRateLimit:", isRateLimit);
-
-      if (isRateLimit) {
-        try {
-          const fallbackResponse = await client.chat.completions.create({
-            model: "gemini-2.5-flash-lite",
-            messages: chatMessages,
-            temperature: 0.5,
-            max_tokens: 500,
-          });
-          rawContent = fallbackResponse.choices[0].message.content ?? "";
-        } catch (liteErr: unknown) {
-          console.error("Compass.AI lite model also failed:", liteErr instanceof Error ? liteErr.message : liteErr);
-          // Both models failed — use keyword search only
-          const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
-          const fallback = pickFallback(lastQuery, userAce);
-          if (fallback.length > 0) {
-            return NextResponse.json({
-              text: "Here are some adventures that match what you're looking for.",
-              recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery, userAce) })),
-              cards: fallback,
-              suggestAce: shouldSuggestAce,
-            });
-          }
-          return NextResponse.json({
-            rateLimited: true,
-            text: "",
-            recommendations: [],
-            cards: [],
-            suggestAce: false,
-          });
-        }
-      } else {
-        throw apiErr;
+    // Busy, overloaded or declined: keyword search keeps the chat useful
+    const keywordAnswer = (busy: boolean) => {
+      const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
+      const fallback = pickFallback(lastQuery, userAce);
+      if (fallback.length > 0) {
+        return NextResponse.json({
+          text: "Here are some adventures that match what you're looking for.",
+          recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery, userAce) })),
+          cards: fallback,
+          suggestAce: shouldSuggestAce,
+        });
       }
+      return NextResponse.json(busy
+        ? { rateLimited: true, text: "", recommendations: [], cards: [], suggestAce: false }
+        : { text: "Tell me a region, activity, or trip length and I'll pull up matching adventures.", recommendations: [], cards: [], suggestAce: shouldSuggestAce });
+    };
+
+    try {
+      const response = await anthropic.messages.create({
+        model: COMPASS_MODEL,
+        max_tokens: 4000,
+        output_config: { effort: "low" },
+        system,
+        messages: chatMessages,
+      });
+      if (response.stop_reason === "refusal") {
+        console.error("Compass.AI: Claude declined the request");
+        return keywordAnswer(false);
+      }
+      rawContent = response.content.flatMap((b) => (b.type === "text" ? [b.text] : [])).join("\n");
+    } catch (apiErr: unknown) {
+      if (apiErr instanceof Anthropic.RateLimitError || apiErr instanceof Anthropic.InternalServerError || apiErr instanceof Anthropic.APIConnectionError) {
+        console.error("Compass.AI: Claude busy or unreachable —", apiErr.message);
+        return keywordAnswer(true);
+      }
+      if (apiErr instanceof Anthropic.APIError) {
+        console.error(`Compass.AI: Claude API error ${apiErr.status} —`, apiErr.message);
+        return keywordAnswer(false);
+      }
+      throw apiErr;
     }
 
     const suggestAce = /<suggest_ace\s*\/>/.test(rawContent) || shouldSuggestAce;
