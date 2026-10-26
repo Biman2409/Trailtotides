@@ -439,8 +439,11 @@ export default function MapCanvas(props: Props) {
         path.getBoundingClientRect();
         path.style.transition = "stroke-dashoffset 1.6s ease-in-out";
         path.style.strokeDashoffset = "0";
-        // Zooming redraws the path at a new length; drop the dash so it stays whole
-        path.addEventListener("transitionend", () => { path.style.strokeDasharray = ""; path.style.transition = ""; }, { once: true });
+        // The dash is sized to the line at this zoom; a zoom redraws it at another length and would
+        // leave part of it hidden. So the line ends whole when the animation does, or at any zoom.
+        const whole = () => { path.style.transition = ""; path.style.strokeDasharray = ""; path.style.strokeDashoffset = ""; };
+        path.addEventListener("transitionend", whole, { once: true });
+        map.once("zoomstart", whole);
       };
       map.once("moveend", draw);
     }

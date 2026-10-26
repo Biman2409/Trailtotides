@@ -92,6 +92,12 @@ for (let i = 0; i < stops.length - 1; i++) {
   full = full.concat(i === 0 ? l.coords : l.coords.slice(1));
 }
 
+// The router starts and ends on the nearest mapped path, which can be a little off the village
+// point; join the ends to the first and last stop so the line meets its pins
+const first = stops[0], last = stops[stops.length - 1];
+if (dist(full[0], [first.lat, first.lng]) > 20) full.unshift([first.lat, first.lng, first.ele ?? full[0][2]]);
+if (dist(full[full.length - 1], [last.lat, last.lng]) > 20) full.push([last.lat, last.lng, last.ele ?? full[full.length - 1][2]]);
+
 // Distance along the full-resolution path, then each stop's km mark (nearest path point)
 const cum = [0];
 for (let i = 1; i < full.length; i++) cum.push(cum[i - 1] + dist(full[i - 1], full[i]));
