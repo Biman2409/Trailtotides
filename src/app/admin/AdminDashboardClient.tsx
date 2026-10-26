@@ -38,6 +38,8 @@ type Profile = {
   ace?: Record<string, number> | null;
   ace_updated_at?: string | null;
   has_health_answers?: boolean;
+  /** False when the account has no row in the profiles table (role can't be changed) */
+  has_profile_row?: boolean;
   avatar_id?: number | null;
 };
 
@@ -161,7 +163,7 @@ function Chip({ active, onClick, children, count }: { active: boolean; onClick: 
   return (
     <button
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-[12px] font-semibold border transition-colors ${active ? "bg-[#ff5100] border-[#ff5100] text-white" : "t-text-2 hover:text-[var(--text-primary)]"}`}
+      className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-[12px] font-semibold border whitespace-nowrap shrink-0 transition-colors ${active ? "bg-[#ff5100] border-[#ff5100] text-white" : "t-text-2 hover:text-[var(--text-primary)]"}`}
       style={active ? undefined : { borderColor: "var(--border-subtle)", background: "var(--bg-surface)" }}
     >
       {children}
@@ -777,6 +779,7 @@ function PersonRows({ p, self, isOpen, rank, total, loading, onToggle, actions }
                 {self && <Pill tone="info">You</Pill>}
                 {p.banned && <Pill tone="bad">Banned</Pill>}
                 {!p.email_confirmed && <Pill tone="warn">Unverified</Pill>}
+                {p.has_profile_row === false && <Pill tone="muted">No profile row</Pill>}
               </p>
               <p className="text-[12px] t-text-3 truncate">{p.email}</p>
             </div>

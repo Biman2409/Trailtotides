@@ -48,17 +48,22 @@ export default async function AdminPage() {
     count("saved_searches"),
   ]);
 
-  // A profile row outlives its account when the account is deleted in Supabase; only accounts
-  // that still exist are people. Auth metadata adds sign-in, ban and ACE state.
-  const authMap = new Map((authUsers ?? []).map((u) => [u.id, u]));
-  const enrichedProfiles = (profiles ?? [])
-    .filter((p) => authMap.has(p.id))
-    .map((p) => {
-      const au = authMap.get(p.id)!;
+  // Accounts are the source of truth: a profile row outlives a deleted account, and an account
+  // can exist without a profile row. Start from the accounts and add profile details where there
+  // are some. Auth metadata adds sign-in, ban and ACE state.
+  const profileMap = new Map((profiles ?? []).map((p) => [p.id as string, p]));
+  const enrichedProfiles = (authUsers ?? [])
+    .map((au) => {
+      const p = profileMap.get(au.id);
       const ace = au.user_metadata?.ace_profile;
       return {
-        ...p,
-        email: p.email ?? au.email ?? null,
+        id: au.id,
+        full_name: (p?.full_name as string | null) ?? (au.user_metadata?.full_name as string | undefined) ?? (au.user_metadata?.name as string | undefined) ?? null,
+        phone: (p?.phone as string | null) ?? au.phone ?? null,
+        role: (p?.role as string | undefined) ?? "user",
+        created_at: (p?.created_at as string | undefined) ?? au.created_at,
+        has_profile_row: !!p,
+        email: (p?.email as string | null) ?? au.email ?? null,
         last_sign_in_at: au.last_sign_in_at ?? null,
         email_confirmed: !!au.email_confirmed_at,
         banned: !!(au.banned_until && new Date(au.banned_until) > new Date()),
@@ -68,7 +73,8 @@ export default async function AdminPage() {
         has_health_answers: !!au.user_metadata?.ace_medical,
         avatar_id: au.user_metadata?.avatar_id ?? null,
       };
-    });
+    })
+    .sort((a, b) => b.created_at.localeCompare(a.created_at));
 
   // Operator data from storage buckets
   const [operatorProfiles, operatorSubmissions, { reviews }, { photos }] = await Promise.all([

@@ -16,8 +16,10 @@ export async function updateUserRole(userId: string, role: string) {
   const authError = await requireAdmin();
   if (authError) return authError;
   const supabase = await createAdminClient();
-  const { error } = await supabase.from("profiles").update({ role }).eq("id", userId);
+  const { data, error } = await supabase.from("profiles").update({ role }).eq("id", userId).select("id");
   if (error) return { error: error.message };
+  // Roles live on the profile row; an account without one has nothing to update
+  if (!data?.length) return { error: "This account has no profile row, so its role can't be changed here." };
   revalidatePath("/admin");
   return { success: true };
 }
