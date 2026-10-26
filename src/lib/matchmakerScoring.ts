@@ -49,6 +49,27 @@ export function combineDualAxis(a: number, b: number): number {
   return Math.round(weak * 0.75 + strong * 0.25);
 }
 
+/**
+ * The profile so far, for the radar that builds up while someone answers: each axis from the
+ * questions answered on it (combined the same way as the final score), 0 where nothing is
+ * answered yet or only "Not sure". Before the activity questions, so no decay is applied.
+ */
+export function liveAxisScores(answers: Partial<Record<string, string>>): Record<AceAxis, number> {
+  const byAxis: Partial<Record<AceAxis, number[]>> = {};
+  CAPABILITY_QUESTIONS.forEach((q) => {
+    const axis = q.axis.toLowerCase() as AceAxis;
+    byAxis[axis] ??= [];
+    const letter = answers[q.key];
+    if (letter && letter !== NOT_SURE && LETTER_SCORE[letter as CapabilityOption["v"]]) byAxis[axis]!.push(LETTER_SCORE[letter as CapabilityOption["v"]]);
+  });
+  const out = {} as Record<AceAxis, number>;
+  (Object.keys(byAxis) as AceAxis[]).forEach((axis) => {
+    const v = byAxis[axis]!;
+    out[axis] = v.length === 2 ? combineDualAxis(v[0], v[1]) : v.length === 1 ? v[0] : 0;
+  });
+  return out;
+}
+
 const PHYSICAL_AXES: AceAxis[] = ["stamina", "power", "strength", "agility"];
 
 const DECAY_TIER_MULTIPLIER: Record<1 | 2 | 3 | 4 | 5, number> = {

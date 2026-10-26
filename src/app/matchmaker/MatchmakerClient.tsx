@@ -28,7 +28,9 @@ import {
   CAPABILITY_QUESTIONS, DECAY_QUESTIONS, MEDICAL_QUESTIONS, buildMedicalFlags,
   type CapabilityQuestion, type DecayQuestion, type MedicalQuestion,
 } from "@/lib/matchmakerQuestions";
-import { computeAceFromAnswers, estimateQuickAnswers, NOT_SURE, QUICK_KEYS } from "@/lib/matchmakerScoring";
+import { computeAceFromAnswers, estimateQuickAnswers, liveAxisScores, NOT_SURE, QUICK_KEYS } from "@/lib/matchmakerScoring";
+import AceRadar, { AXIS_KEYS as ACE_AXIS_KEYS } from "@/app/ace/AceRadar";
+import { ACE_THEME_CSS } from "@/app/ace/aceTheme";
 import { profileAgeDays, bucketFor } from "@/lib/fitness";
 import ResultsNextSteps, { GroupMatchPromo } from "./ResultsNextSteps";
 
@@ -1470,7 +1472,9 @@ export default function MatchmakerClient() {
   }
 
   return (
-    <div className="max-w-xl mx-auto px-5 sm:px-6 pt-20 sm:pt-24 pb-10 min-h-[100svh] flex flex-col">
+    // Questions on the left; on wide screens the profile builds up beside them as you answer
+    <div className="max-w-5xl mx-auto px-5 sm:px-6 pt-20 sm:pt-24 pb-10 min-h-[100svh] lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-14 lg:items-start">
+    <div className="max-w-xl w-full mx-auto lg:mx-0 min-h-[calc(100svh-7rem)] flex flex-col">
       {/* Header */}
       <div className="mb-7">
         <div className="flex items-center justify-between mb-5">
@@ -1498,6 +1502,10 @@ export default function MatchmakerClient() {
               <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>{headerTitle}</h1>
             </>
           )}
+          {/* Phones: a small version of the profile so far, beside the title */}
+          <div className="lg:hidden ml-auto">
+            <LiveProfile answers={answers} highlight={capQ ? capQ.axis.toLowerCase() : null} compact />
+          </div>
         </div>
         {isDecay && (
           <p className="text-xs" style={{ color: "var(--text-muted)" }}>Two quick questions on recency and current fitness — these fine-tune your profile.</p>
@@ -1619,6 +1627,42 @@ export default function MatchmakerClient() {
 
       {/* A different adventure fact under every question, in the same hand-lettered script as the logo tagline */}
       <AdventureFact step={stepIndex} />
+    </div>
+
+      {/* Wide screens: the profile so far, sticky beside the questions */}
+      <aside className="hidden lg:block sticky top-28">
+        <LiveProfile answers={answers} highlight={capQ ? capQ.axis.toLowerCase() : null} />
+      </aside>
+    </div>
+  );
+}
+
+/** The radar filling in as someone answers: the same chart as the ACE page, unanswered axes at 0 */
+function LiveProfile({ answers, highlight, compact }: { answers: Answers; highlight: string | null; compact?: boolean }) {
+  const scores = liveAxisScores(answers);
+  const values = ACE_AXIS_KEYS.map((k) => scores[k] ?? 0);
+  const done = values.filter((v) => v > 0).length;
+  const hi = highlight ? ACE_AXIS_KEYS.indexOf(highlight as (typeof ACE_AXIS_KEYS)[number]) : -1;
+
+  if (compact) {
+    return (
+      <div className="ace w-16 h-16 shrink-0" aria-label={`Your profile so far: ${done} of 8 scored`}>
+        <style>{ACE_THEME_CSS}</style>
+        <AceRadar values={values} color="#ff5100" labels={false} highlight={hi >= 0 ? hi : null} title="Your profile so far" className="w-full h-full" />
+      </div>
+    );
+  }
+  return (
+    <div className="ace rounded-3xl p-5" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
+      <style>{ACE_THEME_CSS}</style>
+      <div className="flex items-baseline justify-between">
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: "var(--text-tertiary)" }}>Your profile so far</p>
+        <p className="text-[12px] font-semibold tabular-nums" style={{ color: done === 8 ? "var(--ok)" : "var(--text-secondary)" }}>{done} / 8</p>
+      </div>
+      <AceRadar values={values} color="#ff5100" highlight={hi >= 0 ? hi : null} title="Your profile so far" className="w-full mt-1" />
+      <p className="text-[12px] leading-snug mt-1" style={{ color: "var(--text-tertiary)" }}>
+        {done === 0 ? "Each answer fills in part of your shape." : done < 8 ? "Fills in as you answer. Not sure counts as unscored." : "All eight scored. The last questions fine-tune it."}
+      </p>
     </div>
   );
 }
