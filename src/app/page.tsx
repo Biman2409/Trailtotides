@@ -19,12 +19,12 @@ export const metadata: Metadata = {
   title: "Trail to Tides — Find, Compare & Book Adventures in India",
   description:
     "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI and run by verified operators.",
-  alternates: { canonical: "https://trailtotides.com" },
+  alternates: { canonical: "https://www.trailtotides.com" },
   openGraph: {
     title: "Trail to Tides — Find, Compare & Book Adventures in India",
     description:
       "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI and run by verified operators.",
-    url: "https://trailtotides.com",
+    url: "https://www.trailtotides.com",
     type: "website",
   },
 };

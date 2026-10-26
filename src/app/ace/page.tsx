@@ -9,10 +9,10 @@ export const metadata = {
   openGraph: {
     title: "How ACE rates adventures — Trail to Tides",
     description: "Every adventure scored on 8 things it asks of you, so you can see what fits.",
-    url: "https://trailtotides.com/ace",
+    url: "https://www.trailtotides.com/ace",
     images: [{ url: "https://images.unsplash.com/photo-1526139334526-f591a54b477c?w=1200&q=90", width: 1200, height: 630, alt: "How ACE rates adventures" }],
   },
-  alternates: { canonical: "https://trailtotides.com/ace" },
+  alternates: { canonical: "https://www.trailtotides.com/ace" },
 };
 
 // Scores run stamina, power, strength, agility, water, altitude, focus, nerve.

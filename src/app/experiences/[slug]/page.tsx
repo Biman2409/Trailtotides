@@ -38,6 +38,8 @@ import type { MedicalFlags } from "@/lib/matchmakerQuestions";
 import NearbyAdventuresMap from "./NearbyAdventuresMap";
 import BookingSidebarCard from "./BookingSidebarCard";
 import { haversineKm } from "@/lib/geo";
+import { destinationFor, lowestPrice, altitudeOf, inr } from "@/lib/destinations";
+import { breadcrumbStructuredData } from "@/components/ui/custom/Breadcrumbs";
 import TrainForThis from "./TrainForThis";
 import { getSeasonUrgency } from "@/lib/seasonUrgency";
 import { parsePrice } from "@/lib/price";
@@ -115,9 +117,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const adventure = adventures.find((a) => a.slug === slug);
   if (!adventure) return {};
   const difficulty = computeDifficulty(getACE(adventure));
-  const description = `${adventure.type} in ${adventure.state} · ${difficulty} · ${adventure.duration} days. ${adventure.tagline ?? "Discover this handpicked adventure on Trail to Tides."}`;
+  // What people search for an adventure: how hard, how long, how high, when, how much
+  const price = lowestPrice(adventure);
+  const altitude = altitudeOf(adventure);
+  const description = [
+    `${adventure.name}, ${adventure.state}: ${difficulty.toLowerCase()}, ${adventure.durationDays}`,
+    altitude ? `, up to ${altitude}` : "",
+    adventure.bestSeason ? `. Best ${adventure.bestSeason}` : "",
+    price ? `. From ${inr(price)} with verified operators` : "",
+    ". Compare and book, matched to your fitness.",
+  ].join("");
   return {
-    title: adventure.name,
+    title: `${adventure.name}: Difficulty, Cost & Best Time`,
     description,
     keywords: [
       adventure.name,
@@ -130,18 +141,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ],
     openGraph: {
       title: `${adventure.name} — Trail to Tides`,
-      description: `${adventure.type} in ${adventure.state} · ${difficulty} · ${adventure.duration} days.`,
-      url: `https://trailtotides.com/experiences/${slug}`,
+      description,
+      url: `https://www.trailtotides.com/experiences/${slug}`,
       images: [{ url: adventure.heroImage, width: 1200, height: 630, alt: adventure.name }],
       type: "article",
     },
     twitter: {
       card: "summary_large_image",
       title: `${adventure.name} — Trail to Tides`,
-      description: `${adventure.type} in ${adventure.state} · ${difficulty} · ${adventure.duration} days.`,
+      description,
       images: [adventure.heroImage],
     },
-    alternates: { canonical: `https://trailtotides.com/experiences/${slug}` },
+    alternates: { canonical: `https://www.trailtotides.com/experiences/${slug}` },
   };
 }
 
@@ -197,6 +208,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
     : null;
 
 
+  const destination = destinationFor(adventure);
   const relatedByState = adventures
     .filter((a) => a.id !== adventure.id && a.state === adventure.state)
     .slice(0, 6);
@@ -255,7 +267,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const similarTabs = [
     ...(relatedByState.length > 0 ? [{
       key: "state", label: `In ${adventure.state}`,
-      content: <RelatedRow items={relatedByState} pillMode="type" exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} exploreLabel={`All of ${adventure.state}`} />,
+      content: <RelatedRow items={relatedByState} pillMode="type" exploreHref={destination ? `/destinations/${destination.slug}` : `/explore?subRegion=${encodeURIComponent(adventure.state)}`} exploreLabel={`All of ${destination?.name ?? adventure.state}`} />,
     }] : []),
     ...(relatedByType.length > 0 ? [{
       key: "type", label: `More ${adventure.type}`,
@@ -273,13 +285,18 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       "@type": "TouristAttraction",
       name: adventure.name,
       description: stripEmphasis(adventure.description ?? adventure.tagline ?? `${adventure.type} in ${adventure.state}.`),
-      url: `https://trailtotides.com/experiences/${slug}`,
+      url: `https://www.trailtotides.com/experiences/${slug}`,
       image: adventure.heroImage,
       touristType: adventure.type,
       geo: {
         "@type": "GeoCoordinates",
-        addressCountry: "IN",
+        latitude: adventure.lat,
+        longitude: adventure.lng,
+      },
+      address: {
+        "@type": "PostalAddress",
         addressRegion: adventure.state,
+        addressCountry: adventure.state === "Nepal" ? "NP" : "IN",
       },
       additionalProperty: [
         { "@type": "PropertyValue", name: "Duration", value: adventure.durationDays },
@@ -292,7 +309,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       provider: {
         "@type": "Organization",
         name: "Trail to Tides",
-        url: "https://trailtotides.com",
+        url: "https://www.trailtotides.com",
       },
     },
     {
@@ -301,7 +318,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       name: adventure.name,
       description: adventure.tagline ?? stripEmphasis(adventure.description),
       image: adventure.heroImage,
-      url: `https://trailtotides.com/experiences/${slug}`,
+      url: `https://www.trailtotides.com/experiences/${slug}`,
       brand: {
         "@type": "Brand",
         name: "Trail to Tides",
@@ -313,7 +330,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           priceCurrency: "INR",
           price: priceFrom.replace(/[^0-9]/g, ""),
           availability: "https://schema.org/InStock",
-          url: `https://trailtotides.com/experiences/${slug}`,
+          url: `https://www.trailtotides.com/experiences/${slug}`,
           seller: {
             "@type": "Organization",
             name: "Trail to Tides",
@@ -325,6 +342,9 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       // review-snippet rules allow neither. Add it back from real traveller
       // reviews once there are enough of them.
     },
+    breadcrumbStructuredData(destination
+      ? [{ label: "Destinations", href: "/destinations" }, { label: destination.name, href: `/destinations/${destination.slug}` }, { label: adventure.name, href: `/experiences/${slug}` }]
+      : [{ label: "Explore", href: "/explore" }, { label: adventure.name, href: `/experiences/${slug}` }]),
   ];
 
   return (

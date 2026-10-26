@@ -98,7 +98,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${s.title} — Trail to Tides`,
       description: s.excerpt,
-      url: `https://trailtotides.com/stories/${slug}`,
+      url: `https://www.trailtotides.com/stories/${slug}`,
       images: [{ url: s.heroImage, width: 1200, height: 630, alt: s.title }],
       type: "article",
       publishedTime: s.date,
@@ -111,7 +111,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: s.excerpt,
       images: [s.heroImage],
     },
-    alternates: { canonical: `https://trailtotides.com/stories/${slug}` },
+    alternates: { canonical: `https://www.trailtotides.com/stories/${slug}` },
   };
 }
 
@@ -223,15 +223,15 @@ export default async function StoryPage({ params }: Props) {
       name: "Trail to Tides",
       logo: {
         "@type": "ImageObject",
-        url: "https://trailtotides.com/logo.svg",
+        url: "https://www.trailtotides.com/icon",
       },
     },
     datePublished: story.date,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://trailtotides.com/stories/${slug}`,
+      "@id": `https://www.trailtotides.com/stories/${slug}`,
     },
-    url: `https://trailtotides.com/stories/${slug}`,
+    url: `https://www.trailtotides.com/stories/${slug}`,
     keywords: (story.tags ?? []).join(", "),
   };
 

@@ -14,7 +14,7 @@ import { EMAIL_ALERTS } from "@/lib/features";
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
-const SITE = "https://trailtotides.com";
+const SITE = "https://www.trailtotides.com";
 const bySlug = new Map(adventures.map((a) => [a.slug, a]));
 // Wishlists are stored as <user id>.json in the "wishlists" bucket (trip logs share it as triplog-<id>.json)
 const WISHLIST_FILE = /^([0-9a-f-]{36})\.json$/;

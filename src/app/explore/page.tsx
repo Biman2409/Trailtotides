@@ -10,16 +10,16 @@ export const metadata: Metadata = {
     title: "Explore Adventures — Trail to Tides",
     description:
       "Browse and filter handpicked adventures across India — trekking, biking, climbing, kayaking, and more.",
-    url: "https://trailtotides.com/explore",
-    images: [{ url: "https://trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "Explore Adventures — Trail to Tides" }],
+    url: "https://www.trailtotides.com/explore",
+    images: [{ url: "https://www.trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "Explore Adventures — Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Explore Adventures — Trail to Tides",
     description: "Browse and filter handpicked adventures across India — trekking, biking, climbing, kayaking, and more.",
-    images: ["https://trailtotides.com/opengraph-image"],
+    images: ["https://www.trailtotides.com/opengraph-image"],
   },
-  alternates: { canonical: "https://trailtotides.com/explore" },
+  alternates: { canonical: "https://www.trailtotides.com/explore" },
 };
 
 export default function ExplorePage() {

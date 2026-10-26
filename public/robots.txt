@@ -1,9 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /admin
-Disallow: /profile
-Disallow: /settings
-Disallow: /auth/
 Disallow: /api/
 
-Sitemap: https://trailtotides.com/sitemap.xml
+Sitemap: https://www.trailtotides.com/sitemap.xml

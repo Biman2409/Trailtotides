@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "About Trail to Tides",
     description: "Built by explorers for explorers. Find, compare and book adventures across India — matched to your fitness and run by verified operators.",
-    url: "https://trailtotides.com/about",
+    url: "https://www.trailtotides.com/about",
     images: [{ url: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=1200&q=90", width: 1200, height: 630, alt: "About Trail to Tides" }],
   },
   twitter: {
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     description: "Built by explorers for explorers. Find, compare and book adventures across India.",
     images: ["https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=1200&q=90"],
   },
-  alternates: { canonical: "https://trailtotides.com/about" },
+  alternates: { canonical: "https://www.trailtotides.com/about" },
 };
 
 const VALUES = [

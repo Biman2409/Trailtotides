@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Submit Your Adventure Story — Trail to Tides",
     description: "Share your adventure with the Trail to Tides community.",
-    url: "https://trailtotides.com/stories/submit",
+    url: "https://www.trailtotides.com/stories/submit",
   },
-  alternates: { canonical: "https://trailtotides.com/stories/submit" },
+  alternates: { canonical: "https://www.trailtotides.com/stories/submit" },
   robots: { index: false },
 };
 

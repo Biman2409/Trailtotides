@@ -46,7 +46,7 @@ const dmSans = DM_Sans({
   weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
-const BASE_URL = "https://trailtotides.com";
+const BASE_URL = "https://www.trailtotides.com";
 const OG_IMAGE = `${BASE_URL}/opengraph-image`;
 
 export const metadata: Metadata = {
@@ -148,9 +148,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: BASE_URL,
   },
-  verification: {
-    google: "trail-to-tides-google-verification",
-  },
+  // The real Search Console token, set in Vercel; no tag at all until then
+  ...(process.env.GOOGLE_SITE_VERIFICATION ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } } : {}),
 };
 
 export default function RootLayout({
@@ -167,7 +166,8 @@ export default function RootLayout({
       </head>
         <body className={`${dmSans.variable} ${fraunces.variable} ${greatVibes.variable} ${caveat.variable} ${permanentMarker.variable} antialiased`} style={{ background: "var(--bg-page)", color: "var(--text-primary)" }}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
-        <Script
+        {/* A plain tag, not next/script, so it's in the server HTML crawlers read first */}
+        <script
           id="org-structured-data"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -195,10 +195,10 @@ export default function RootLayout({
                 },
                 knowsAbout: [
                   "Trekking",
-                  "Hiking",
-                  "Mountain Biking",
-                  "Rock Climbing",
-                  "Kayaking",
+                  "Himalayan treks",
+                  "Mountaineering",
+                  "Motorcycle touring",
+                  "Cycling",
                   "Adventure Travel",
                   "India Travel",
                 ],
@@ -223,16 +223,6 @@ export default function RootLayout({
                     "@type": "EntryPoint",
                     urlTemplate: `${BASE_URL}/explore?q={search_term_string}`,
                   },
-                  "query-input": "required name=search_term_string",
-                },
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "SiteLinksSearchBox",
-                url: BASE_URL,
-                potentialAction: {
-                  "@type": "SearchAction",
-                  target: `${BASE_URL}/explore?q={search_term_string}`,
                   "query-input": "required name=search_term_string",
                 },
               },

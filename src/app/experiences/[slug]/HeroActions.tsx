@@ -62,7 +62,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
   }
 
   async function handleShare() {
-    const url = `https://trailtotides.com/experiences/${adventure.slug}`;
+    const url = `https://www.trailtotides.com/experiences/${adventure.slug}`;
     if (navigator.share) {
       try {
         await navigator.share({ title: adventure.name, text: adventure.tagline, url });

@@ -5,7 +5,7 @@ import Footer from "@/components/layout/Footer";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Read Trail to Tides' privacy policy — how we collect, use, and protect your data when you find, compare and book adventures on Trail to Tides.",
-  alternates: { canonical: "https://trailtotides.com/privacy" },
+  alternates: { canonical: "https://www.trailtotides.com/privacy" },
   robots: { index: true, follow: false },
 };
 

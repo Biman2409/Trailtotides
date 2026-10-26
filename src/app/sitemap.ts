@@ -1,36 +1,50 @@
 import type { MetadataRoute } from "next";
-import { adventures, stories } from "@/lib/data";
+import { adventures } from "@/lib/data";
+import { getPublishedStories } from "@/lib/stories";
+import { DESTINATIONS } from "@/lib/destinations";
 
-const BASE = "https://trailtotides.com";
+const BASE = "https://www.trailtotides.com";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+// Rebuilt hourly so newly published stories show up
+export const revalidate = 3600;
+
+// No lastModified on pages whose content isn't dated: stamping every URL with "now" on every
+// build teaches Google to ignore the field. Stories carry their real dates. Google ignores
+// changeFrequency and priority, but Bing still reads priority.
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
-    { url: BASE,                          lastModified: new Date(), changeFrequency: "weekly",  priority: 1.0 },
-    { url: `${BASE}/explore`,             lastModified: new Date(), changeFrequency: "daily",   priority: 0.9 },
-    { url: `${BASE}/map`,                 lastModified: new Date(), changeFrequency: "weekly",  priority: 0.8 },
-    { url: `${BASE}/matchmaker`,          lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
-        { url: `${BASE}/ace`,                 lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE}/stories`,             lastModified: new Date(), changeFrequency: "weekly",  priority: 0.8 },
-    { url: `${BASE}/operators`,           lastModified: new Date(), changeFrequency: "weekly",  priority: 0.7 },
-    { url: `${BASE}/about`,               lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
-    { url: `${BASE}/contact`,             lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
-    { url: `${BASE}/privacy`,             lastModified: new Date(), changeFrequency: "yearly",  priority: 0.2 },
-    { url: `${BASE}/terms`,               lastModified: new Date(), changeFrequency: "yearly",  priority: 0.2 },
+    { url: BASE, priority: 1.0 },
+    { url: `${BASE}/explore`, priority: 0.9 },
+    { url: `${BASE}/destinations`, priority: 0.9 },
+    { url: `${BASE}/map`, priority: 0.8 },
+    { url: `${BASE}/matchmaker`, priority: 0.8 },
+    { url: `${BASE}/ace`, priority: 0.7 },
+    { url: `${BASE}/stories`, priority: 0.8 },
+    { url: `${BASE}/operators`, priority: 0.7 },
+    { url: `${BASE}/about`, priority: 0.6 },
+    { url: `${BASE}/contact`, priority: 0.5 },
+    { url: `${BASE}/privacy`, priority: 0.2 },
+    { url: `${BASE}/terms`, priority: 0.2 },
   ];
+
+  const destinationPages: MetadataRoute.Sitemap = DESTINATIONS.map((d) => ({
+    url: `${BASE}/destinations/${d.slug}`,
+    priority: 0.9,
+    images: d.adventures.slice(0, 1).map((a) => a.heroImage),
+  }));
 
   const adventurePages: MetadataRoute.Sitemap = adventures.map((a) => ({
     url: `${BASE}/experiences/${a.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
     priority: 0.8,
+    images: [a.heroImage],
   }));
 
+  const stories = await getPublishedStories().catch(() => []);
   const storyPages: MetadataRoute.Sitemap = stories.map((s) => ({
     url: `${BASE}/stories/${s.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
+    lastModified: s.updated_at || s.created_at || s.date,
     priority: 0.7,
   }));
 
-  return [...staticPages, ...adventurePages, ...storyPages];
+  return [...staticPages, ...destinationPages, ...adventurePages, ...storyPages];
 }

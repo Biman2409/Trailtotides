@@ -23,7 +23,7 @@ import AccountTabs from "@/components/ui/custom/AccountTabs";
 export const metadata: Metadata = {
   title: "My Profile",
   description: "Manage your Trail to Tides profile — view your ACE™ score, trip log, achievements, and adventure history.",
-  alternates: { canonical: "https://trailtotides.com/profile" },
+  alternates: { canonical: "https://www.trailtotides.com/profile" },
   robots: { index: false, follow: false },
 };
 

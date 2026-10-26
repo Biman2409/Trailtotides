@@ -15,15 +15,15 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Verified Adventure Operators — Trail to Tides",
     description: "Discover trusted adventure operators across India — each verified by our team for safety, quality, and expertise.",
-    url: "https://trailtotides.com/operators",
-    images: [{ url: "https://trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "Verified Adventure Operators — Trail to Tides" }],
+    url: "https://www.trailtotides.com/operators",
+    images: [{ url: "https://www.trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "Verified Adventure Operators — Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Verified Adventure Operators — Trail to Tides",
     description: "Trusted operators for trekking, diving, biking, climbing, and more across India.",
   },
-  alternates: { canonical: "https://trailtotides.com/operators" },
+  alternates: { canonical: "https://www.trailtotides.com/operators" },
 };
 
 export const dynamic = "force-dynamic";

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Adventure Matchmaker — Trail to Tides",
     description: "Answer a few questions and discover the toughest adventure you're genuinely ready for.",
-    url: "https://trailtotides.com/matchmaker",
+    url: "https://www.trailtotides.com/matchmaker",
     images: [{ url: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=90", width: 1200, height: 630, alt: "Adventure Matchmaker — Trail to Tides" }],
   },
   twitter: {
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Discover the toughest adventure you're genuinely ready for.",
     images: ["https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=90"],
   },
-  alternates: { canonical: "https://trailtotides.com/matchmaker" },
+  alternates: { canonical: "https://www.trailtotides.com/matchmaker" },
 };
 
 export default function MatchmakerPage() {

@@ -8,16 +8,16 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Contact — Trail to Tides",
     description: "Get in touch with Trail to Tides — for general enquiries, partnerships, press, or feedback.",
-    url: "https://trailtotides.com/contact",
-    images: [{ url: "https://trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "Contact Trail to Tides" }],
+    url: "https://www.trailtotides.com/contact",
+    images: [{ url: "https://www.trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "Contact Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Contact — Trail to Tides",
     description: "Get in touch — for enquiries, partnerships, press, or feedback.",
-    images: ["https://trailtotides.com/opengraph-image"],
+    images: ["https://www.trailtotides.com/opengraph-image"],
   },
-  alternates: { canonical: "https://trailtotides.com/contact" },
+  alternates: { canonical: "https://www.trailtotides.com/contact" },
 };
 
 export default function ContactPage() {

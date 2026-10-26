@@ -54,7 +54,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Field Stories — Trail to Tides",
     description: "First-hand accounts from real adventurers across India — high-altitude treks, ocean dives, desert rides, and everything in between.",
-    url: "https://trailtotides.com/stories",
+    url: "https://www.trailtotides.com/stories",
     images: [{ url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=90", width: 1200, height: 630, alt: "Field Stories — Trail to Tides" }],
   },
   twitter: {
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     description: "First-hand accounts from real adventurers across India.",
     images: ["https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=90"],
   },
-  alternates: { canonical: "https://trailtotides.com/stories" },
+  alternates: { canonical: "https://www.trailtotides.com/stories" },
 };
 
 const BADGE_TAGS = ["Featured", "TTT Original"];

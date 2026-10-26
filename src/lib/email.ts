@@ -104,7 +104,7 @@ export async function sendPasswordResetEmail(email: string, link: string) {
 
 // ── Account emails: alerts and quote requests ────────────────────────────────
 
-const SITE = 'https://trailtotides.com';
+const SITE = 'https://www.trailtotides.com';
 // Built by scripts/build-email-assets.mjs and served from the live site
 const ASSETS = 'https://www.trailtotides.com/email';
 // The site's own fonts where the mail app loads them (Apple Mail, iOS), close fallbacks elsewhere
