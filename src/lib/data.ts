@@ -171,8 +171,8 @@ export const adventures: Adventure[] = [
     lng: 77.1887,
     description:
         "The Manali–Leh highway is the crown jewel of Indian motorcycling. At over 490km, it crosses **five high-altitude passes including Rohtang, Baralacha La and Tanglang La** — each one demanding respect — on a road that alternates between pristine tarmac and lunar-like gravel. **No other road on Earth gives you altitude, isolation and scenery like this**: every 50km the terrain changes completely, from **pine forests to barren moonscapes to river valleys to glacier edges**.",
-    whoFor: "500cc+ motorcycle · 3,000km+ highway riding experience · Basic roadside mechanics (chain, puncture, carb) · AMS-acclimatised before departure from Manali",
-    whoNot: "Under 500cc engine on steep passes · No prior mountain riding · Zero mechanical knowledge · Tight fixed itinerary with no buffer days",
+    whoFor: "You've done multi-day rides and are steady on broken roads and water crossings · A 350–450cc bike suits you: the Himalayan or Classic 350 does this route fine · You can ride 6–8 hours a day over passes above 5,000m · You can take 10–12 days off, with spare days for landslides",
+    whoNot: "You'd sleep at Sarchu (4,300m) without acclimatising first: spend 2 nights in Manali · You've never ridden on gravel or through streams · You need phone signal: prepaid SIMs from outside Ladakh and J&K don't work there (postpaid does) · Your dates can't move: landslides close the road for hours or days",
     safetyNotes:
       "Carry a basic repair kit, spare clutch cable, and fuel for 150km stretches. Altitude sickness is real — acclimatise in Manali for 2 days minimum. Ride before noon to avoid afternoon weather.",
         operators: [
@@ -211,8 +211,8 @@ export const adventures: Adventure[] = [
     lng: 78.0350,
     description:
       "Spiti Valley is one of the most remote inhabited regions on Earth. Cycling through it — past **mud-brick monasteries perched on cliffs, turquoise rivers and barren high-altitude desert** — recalibrates your sense of scale. The oxygen is thin and **the isolation is absolute**: many stretches have **zero mobile signal, zero other cyclists and zero settlements for 40–50km**, and the silence is profound.",
-    whoFor: "3,000km+ loaded touring experience · VO2 threshold training for 4,000m+ altitude · Capable of 60–80km/day with 15kg panniers · Self-sufficient with basic bike mechanics",
-    whoNot: "No multi-day cycle touring background · Reliant on support vehicle for carry weight · No altitude exposure above 3,500m · Expecting daily resupply or medical access",
+    whoFor: "You've done multi-day touring with loaded panniers before · You can ride 60–80 km a day with long climbs above 3,500m · You can fix a puncture, adjust brakes and replace a cable yourself · You've slept above 3,500m without getting properly sick",
+    whoNot: "You've never toured loaded: this is not the place to learn · You'd rely on shops along the way: food and spares are far apart · You'd count on Google Maps: download offline maps, it fails here",
     safetyNotes:
       "Carry CO2 cartridges, a multi-tool, and spare brake cables. First aid kit essential. Download offline maps — Google Maps fails here.",
         operators: [
@@ -252,8 +252,8 @@ export const adventures: Adventure[] = [
     lng: 78.6753,
         description:
           "The Ladakh Circuit is the ultimate Indian biking odyssey. Covering over 1,800km, it takes you through Leh, over Khardung La to **Nubra's sand dunes, which feel like another planet at 3,000m**, down to **Pangong Lake — 134km of water shifting between sapphire, jade and electric blue** — then on to the remote plains of Hanle, where the skies are so dark the Milky Way stretches horizon to horizon. It finishes up at **Umling La (5,883m), the world's highest motorable road** — standing on it on two wheels is a moment very few humans will ever experience. The circuit pushes rider and machine to their absolute limits; the landscapes are raw, alien and unforgettable.",
-    whoFor: "500cc+ motorcycle (RE Himalayan, KTM 390 Adventure or equivalent) · 10,000km+ riding including mountain roads · Roadside repair-capable · Acclimatised before day 1 (3 nights in Leh minimum)",
-    whoNot: "Under 350cc engine · No off-road or gravel riding experience · Fixed departure dates with no buffer · Solo riders without satellite communication device",
+    whoFor: "You can ride long days on high, broken roads, up to Umling La · You'll spend 3 nights in Leh acclimatising before day 1 · You can take 14–16 days off, with spare days · You'll carry extra fuel: pumps can be 200 km or more apart",
+    whoNot: "You'd skip acclimatisation: riding to 5,000m+ passes straight from the plane is dangerous · You won't get an Inner Line Permit: Nubra, Pangong and Hanle need one (operators arrange it online) · You need phone signal: prepaid SIMs from outside Ladakh and J&K don't work there (postpaid does) · You have a heart, lung or blood-pressure condition without a doctor's OK for very high altitude",
     safetyNotes:
       "Spend minimum 3 days acclimatising in Leh before starting. Carry oxygen, full repair kit, and satellite communicator. Fuel up whenever possible — stations are 200km+ apart. File a route plan with local police.",
         operators: [
@@ -294,8 +294,8 @@ export const adventures: Adventure[] = [
     lng: 76.8516,
     description:
       "Zanskar is one of the most isolated inhabited valleys on Earth, **cut off by snow for 8 months a year** — one of the only places in India the outside world genuinely cannot reach. The road in, over Pensi La and down into the gorge, is barely a road at all: **river crossings, crumbling cliff-side tracks and zero mobile signal** make the riding raw, technical and a true expedition. The reward is **a valley frozen in time**, with Buddhist monasteries, turquoise rivers and total silence.",
-    whoFor: "500cc+ enduro or adventure motorcycle · Off-road riding proficiency (gravel, river crossings, loose scree) · Full expedition kit including recovery gear · Support vehicle strongly recommended",
-    whoNot: "Road-biased tyres or low-clearance bikes · No river-crossing experience · Unwilling to walk sections during difficult passes · No prior Himalayan riding",
+    whoFor: "You're confident off-road: gravel, loose scree and river crossings · You'll ride in a pair or group, ideally with a support vehicle · Days without any phone signal are fine (carry a satellite messenger) · You can take 10–12 days off, with spare days",
+    whoNot: "Your bike has road tyres or low clearance · You've never crossed a river on a bike: cross in the morning, before glacier melt raises them · You'd ride alone",
     safetyNotes:
       "Carry a satellite phone — there is no mobile signal in Zanskar. River crossings should only be attempted in the morning before glacial melt raises water levels. Always ride in pairs minimum.",
         operators: [
@@ -381,8 +381,8 @@ export const adventures: Adventure[] = [
   routePoints: [[26.8700,88.0700],[26.9300,88.0600],[26.9900,88.0400],[27.0500,88.0300],[27.1069,88.0142],[27.1500,88.0050],[27.2000,87.9900]],
   description:
     "Sandakphu is the highest point in West Bengal at 3,636m — and on a clear day its summit shows **Everest, Kangchenjunga, Lhotse and Makalu at once**: the only place on Earth where four of the world's five highest peaks are visible together. At sunrise the Kangchenjunga massif forms **the Sleeping Buddha**, one of the most iconic mountain views in Asia. The route along **the Singalila ridge, lined with rhododendrons in bloom from March to May**, is one of India's most scenic long-distance trails.",
-  whoFor: "Comfortable with 12–15km/day on ridge trails · Prior 5-day+ trek experience · Happy with teahouse accommodation (no camping required) · Ridge exposure at moderate altitude (3,600m)",
-  whoNot: "Expecting technical challenge (this is a ridge walk) · Visiting during heavy monsoon June–August · Those who dislike altitude nights without acclimatisation days · Non-walkers expecting a drive to the summit',",
+  whoFor: "You want a lodge trek: beds and meals every night, no camping · You can walk 12–15 km a day along a ridge, for 6–7 days · You want Everest, Kangchenjunga, Lhotse and Makalu in view from one ridge · You'll carry ID: the trail weaves in and out of Nepal",
+  whoNot: "You want a roadless trail: old Land Rovers drive up to Sandakphu · You're going in Jun–Aug: monsoon cloud hides the mountains · Ice worries you: the ridge path can be icy in Dec–Jan (microspikes help)",
   safetyNotes:
     "The Indian side requires a permit from the Darjeeling DFO. Nepal side checkposts require passport copies. The ridge path can be icy December–January — carry microspikes.",
   ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
@@ -465,8 +465,8 @@ export const adventures: Adventure[] = [
     lng: 78.0350,
     description:
       "The Spiti loop — in from Manali over Rohtang and Kunzum La, out via Shimla through Kinnaur — is one of the most beautiful roads in Asia: **mud monasteries at 4,000m**, apple orchards in ancient river valleys, and stretches so remote the tarmac simply stops. It's **completable without extreme technical skill, yet the scenery rivals anything in Ladakh**, and **Key Monastery, Dhankar and Tabo** make it as culturally rich as it is visually stunning.",
-    whoFor: "350cc+ motorcycle with good torque · 5,000km+ riding experience on varied terrain · Comfortable navigating without painted roads · Altitude-conscious and carrying diamox if needed",
-    whoNot: "150–200cc commuter bikes (insufficient power on Kunzum La) · No prior Himalayan or high-altitude riding · Tight schedule with no contingency days · Riders without cold-weather riding gear",
+    whoFor: "You've done multi-day rides, including rough stretches · You can ride the Gramphu–Batal stretch: boulders, loose gravel and stream crossings · A 350cc or bigger bike suits you; small commuter bikes struggle on Kunzum La · Village homestays in Spiti suit you: simple rooms and home food",
+    whoNot: "You're going before late June: Kunzum La can still be snowbound · You don't have proper cold-weather riding gear: passes are near freezing even in summer · Your dates can't move: landslides and snow close roads without warning",
     safetyNotes:
       "Kunzum La can be snowbound until late June — check pass status before departure. Carry chain lube, tyre plugs, and a basic toolkit. Fuel up at Kaza — it's the last pump for 130km.",
         operators: [
@@ -892,8 +892,8 @@ export const adventures: Adventure[] = [
     lat: 27.5600, lng: 88.1900,
     routePoints: [[27.35,88.26],[27.42,88.24],[27.49,88.22],[27.53,88.2],[27.56,88.19]],
     description: "Goechala is Sikkim's premier trek — 11 days through the Kanchendzonga National Park to **a 4,940m viewpoint facing the south wall of Kangchenjunga**, the world's third highest mountain, which **fills the entire horizon at arm's reach**. On the way, **the rhododendron forest between Yuksom and Dzongri** is among the most biodiverse — and globally rare — on Earth.",
-    whoFor: "11-day consecutive trekking stamina at altitude · Prior experience above 4,000m · Comfortable with basic teahouse to camping transition · Valid inner-line permits for Kanchendzonga NP",
-    whoNot: "No prior high-altitude or multi-week trekking · Travellers without Sikkim permits · Monsoon travel (June–August closes the route)",
+    whoFor: "You've slept above 4,000m without getting properly sick · You can take 11 days on the trail, plus a 7–8 hour drive each way from Bagdogra to Yuksom · You'll start at 2–3am for Kangchenjunga at sunrise from View Point 1 · Trekkers' huts and tents are fine: cold nights near 4,000m",
+    whoNot: "You'd go without a licensed Sikkim guide: it's mandatory, and permits depend on it · You're going in Jun–Aug: the monsoon closes the route · You have a heart, lung or blood-pressure condition without a doctor's OK for 5,000m",
     safetyNotes: "All trekkers must have inner-line permits for Kanchendzonga NP (arrange in Gangtok or Yuksom). Go with a licensed Sikkim guide — mandatory. No solo trekking permitted.",
     ace: { stamina:5, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, nerve:3 },
     operators: [
@@ -1192,8 +1192,8 @@ export const adventures: Adventure[] = [
     lat: 27.25, lng: 88.25,
     routePoints: [[27.15,88.3],[27.18,88.28],[27.22,88.27],[27.25,88.25]],
     description: "Bajre Dara is one of Sikkim's lesser-known winter treks, through dense rhododendron and oak forest, ancient monasteries and traditional Sikkimese villages to a high meadow ridgeline. Its **winter views of the Kangchenjunga massif, framed by frost-silvered rhododendrons**, are among the finest in Sikkim, and **the near-total absence of other trekkers** makes it feel entirely your own.",
-    whoFor: "Trekkers seeking a quiet alternative to crowded Sikkim trails · Comfortable with cold winter camping · Interest in Sikkimese village culture and monasteries · Moderate fitness for 5-day itinerary",
-    whoNot: "Expecting high-drama technical terrain · Not comfortable in sub-zero night temperatures · Preferring spring flower season",
+    whoFor: "You want a quiet Sikkim trek in winter, away from the Goechala crowds · You can walk 5–6 hours a day with a daypack · Winter camping is fine: nights below freezing, icy trail in Jan–Feb · You'd like Yuksom's monasteries and villages along with Kangchenjunga views",
+    whoNot: "You hate being cold: it's a winter trek · You want rhododendrons in bloom: that's spring, outside this trek's season · Long drives make you sick: Bagdogra to Yuksom is 7–8 hours",
     safetyNotes: "Winter temperatures can drop sharply at night — quality sleeping bag essential. Trail can be icy in January and February. Carry a local guide from Yuksom.",
     ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
     operators: [
