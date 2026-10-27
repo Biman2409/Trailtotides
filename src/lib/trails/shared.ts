@@ -38,6 +38,8 @@ export interface Trail {
   lengthKm: number;
   ascentM: number;
   maxEleM: number;
+  /** Kilometres drawn straight because no path is mapped there; their figures are estimates */
+  approxKm?: number;
   stops: TrailStop[];
   /** Side trips off the main line (summit viewpoints), as points */
   side: Omit<TrailStop, "km">[];

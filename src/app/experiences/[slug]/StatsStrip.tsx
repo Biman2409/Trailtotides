@@ -17,7 +17,7 @@ type Place = { lat: number; lng: number; locationName: string; altitude?: string
 const TRAIL_TABS: { key: Panel; label: string; short?: string; icon: typeof CalendarDays }[] = [
   { key: "itinerary", label: "Itinerary", icon: CalendarDays },
   { key: "elevation", label: "Elevation", icon: Mountain },
-  { key: "weather", label: "Weather on the trail", short: "Weather", icon: CloudSun },
+  { key: "weather", label: "Weather", short: "Weather", icon: CloudSun },
 ];
 const BASE_TABS: typeof TRAIL_TABS = [{ key: "weather", label: "Weather", icon: CloudSun }];
 

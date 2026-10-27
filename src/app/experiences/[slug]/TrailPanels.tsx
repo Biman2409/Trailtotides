@@ -5,7 +5,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { ArrowDown, ArrowUp, BedDouble, Footprints, Moon, Plane, Route, RotateCw } from "lucide-react";
-import { trailProfile, type Trail, type TrailDay } from "@/lib/trails/shared";
+import { trailHighPoint, trailProfile, type Trail, type TrailDay } from "@/lib/trails/shared";
 import { WeatherIcon, iconColor, desc } from "./WeatherWidget";
 
 const ORANGE = "#ff5100";
@@ -28,6 +28,7 @@ export function ItineraryPanel({ trail }: { trail: Trail }) {
     <div className="p-4 sm:p-5">
       <p className="text-[13px] mb-4" style={{ color: "var(--text-secondary)" }}>
         <b style={{ color: "var(--text-primary)" }}>{trail.days.length} days</b> from {trail.days[0].from}: {walking.length} walking, {rest} rest {rest === 1 ? "day" : "days"} to acclimatise, about {Math.round(totalKm)} km on foot. A typical plan; operators vary it a little.
+        {(trail.approxKm ?? 0) > 0 && <> About {Math.round(trail.approxKm ?? 0)} km of the path isn&apos;t on the map yet, so those days&apos; figures are estimates.</>}
       </p>
       <ol className="relative">
         {trail.days.map((d, i) => {
@@ -101,7 +102,11 @@ export function ElevationPanel({ trail }: { trail: Trail }) {
   return (
     <div className="p-4 sm:p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2 mb-2 text-[13px]" style={{ color: "var(--text-secondary)" }}>
-        <span>From <b style={{ color: "var(--text-primary)" }}>{fmt(trail.stops[0].ele ?? eles[0])} m</b> at {trail.stops[0].name} to <b style={{ color: "var(--text-primary)" }}>{fmt(trail.stops[trail.stops.length - 1].ele ?? eles[eles.length - 1])} m</b> at {trail.stops[trail.stops.length - 1].name}, about {fmt(trail.ascentM)} m of climbing on the way up</span>
+        {trail.stops[0].name === trail.stops[trail.stops.length - 1].name ? (
+          <span>A loop from <b style={{ color: "var(--text-primary)" }}>{fmt(trail.stops[0].ele ?? eles[0])} m</b> at {trail.stops[0].name}, highest at {trailHighPoint(trail).name} (<b style={{ color: "var(--text-primary)" }}>{fmt(trailHighPoint(trail).ele ?? 0)} m</b>), about {fmt(trail.ascentM)} m of climbing in all</span>
+        ) : (
+          <span>From <b style={{ color: "var(--text-primary)" }}>{fmt(trail.stops[0].ele ?? eles[0])} m</b> at {trail.stops[0].name} to <b style={{ color: "var(--text-primary)" }}>{fmt(trail.stops[trail.stops.length - 1].ele ?? eles[eles.length - 1])} m</b> at {trail.stops[trail.stops.length - 1].name}, about {fmt(trail.ascentM)} m of climbing on the way</span>
+        )}
         <span className="tabular-nums text-[12px]" style={{ color: "var(--text-tertiary)" }}>{h ? `km ${h.km.toFixed(1)} · ${fmt(h.ele)} m` : "Move along the chart"}</span>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto touch-none select-none" onPointerMove={move} onPointerLeave={() => setHover(null)} role="img"
@@ -140,7 +145,11 @@ export function ElevationPanel({ trail }: { trail: Trail }) {
           </g>
         )}
       </svg>
-      <p className="text-[11.5px] mt-2" style={{ color: "var(--text-tertiary)" }}>One way, along the mapped trail. The way back follows the same path.</p>
+      <p className="text-[11.5px] mt-2" style={{ color: "var(--text-tertiary)" }}>{trail.stops[0].name === trail.stops[trail.stops.length - 1].name
+        ? "The whole loop, along the mapped trail."
+        : trail.days[trail.days.length - 1]?.to === trail.stops[0].name
+          ? "One way, along the mapped trail. The way back follows the same path."
+          : "Start to finish, along the mapped trail."}</p>
     </div>
   );
 }
