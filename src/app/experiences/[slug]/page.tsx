@@ -14,6 +14,7 @@ import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
 import ACEProfileSection from "./ACEProfileSection";
+import RadarPeek from "./RadarPeek";
 import HeroActions from "./HeroActions";
 import { createAdminClient } from "@/lib/supabase/server";
 import { getACE, computeDifficulty } from "@/lib/ace";
@@ -530,7 +531,7 @@ export default async function ExperiencePage({ params }: Props) {
 
               {/* Is This For You? — fit/skip lists plus the Capability Profile radar,
                   both answering the same question from two angles */}
-              <AccordionSection id="suitability" label="suitability" title="Is this for you?" defaultOpen mobileDefaultOpen={false} headerExtra={<GradingPill />}>
+              <AccordionSection id="suitability" label="suitability" title="Is this for you?" defaultOpen mobileDefaultOpen={false} headerExtra={<GradingPill />} peek={<RadarPeek ace={ace} name={adventure.name} />}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
                   {([
                     { heading: "for you if", items: adventure.whoFor, mark: "✓", markColor: "#3fa877" },

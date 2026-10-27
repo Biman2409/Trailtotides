@@ -14,6 +14,8 @@ interface Props {
   id?: string;
   /** A small control beside the title (e.g. an info link) */
   headerExtra?: React.ReactNode;
+  /** A glimpse of the content shown only while collapsed; tapping it opens the section */
+  peek?: React.ReactNode;
 }
 
 /**
@@ -22,7 +24,7 @@ interface Props {
  * left of the main column (drawn by the page). The dot is filled while the
  * section is open and hollow when it's collapsed.
  */
-export default function AccordionSection({ title, label, defaultOpen = false, mobileDefaultOpen, children, id, headerExtra }: Props) {
+export default function AccordionSection({ title, label, defaultOpen = false, mobileDefaultOpen, children, id, headerExtra, peek }: Props) {
   const [open, setOpen] = useState(mobileDefaultOpen ?? defaultOpen);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -78,6 +80,10 @@ export default function AccordionSection({ title, label, defaultOpen = false, mo
           </button>
         </div>
       </div>
+
+      {peek && !open && (
+        <button type="button" onClick={toggle} aria-label={`Expand ${title}`} className="block w-full text-left">{peek}</button>
+      )}
 
       <div className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
         <div className="overflow-hidden">
