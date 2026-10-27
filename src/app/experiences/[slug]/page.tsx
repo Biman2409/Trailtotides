@@ -494,7 +494,7 @@ export default async function ExperiencePage({ params }: Props) {
                   (the sidebar, where it lives on desktop, is hidden at these sizes) */}
               {(nearbyAdventures.length > 0 || trail) && (
                 <ScreenOnly below>
-                  <div className="pt-2"><NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} trail={trail} /></div>
+                  <div className="pt-2"><NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} trail={trail} compact /></div>
                 </ScreenOnly>
               )}
 

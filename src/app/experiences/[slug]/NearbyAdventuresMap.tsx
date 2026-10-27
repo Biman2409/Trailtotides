@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight, ChevronDown, Download } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import { haversineKm } from "@/lib/geo";
@@ -17,6 +17,8 @@ interface Props {
   nearby: Adventure[];
   /** The adventure's mapped trail: drawn on the map, with its GPX download under it */
   trail?: Trail | null;
+  /** Phones: a shorter map, one-line header and download row, and the nearby list folded away */
+  compact?: boolean;
 }
 
 const DIFF_COLORS: Record<string, string> = {
@@ -27,11 +29,12 @@ const DIFF_COLORS: Record<string, string> = {
   Extreme: "#ef4444",
 };
 
-export default function NearbyAdventuresMap({ current, nearby, trail }: Props) {
+export default function NearbyAdventuresMap({ current, nearby, trail, compact = false }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<import("leaflet").Map | null>(null);
   // With a trail the map opens on it; "Region" pulls back to show the nearby adventures too
   const [view, setView] = useState<"trail" | "region">("trail");
+  const [listOpen, setListOpen] = useState(!compact);
   const boundsRef = useRef<{ trail?: import("leaflet").LatLngBounds; region?: import("leaflet").LatLngBounds }>({});
   const { resolvedTheme } = useTheme();
   // resolvedTheme is unknown to the server — stay in a fixed default until
@@ -288,16 +291,25 @@ export default function NearbyAdventuresMap({ current, nearby, trail }: Props) {
       style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}
     >
       {/* Header — same small-caps label + plain line as the booking card */}
-      <div className="px-4 pt-3 pb-2.5">
-        <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{trail ? "the trail and nearby" : "nearby"}</p>
-        <p className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>
-          {trail ? <>{trail.lengthKm} km from {trail.stops[0].name} · {nearby.length} adventures nearby</> : <>{nearby.length} adventures in the region</>}
-        </p>
-      </div>
+      {compact ? (
+        <div className="px-4 py-2.5 flex items-baseline justify-between gap-2">
+          <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{trail ? "trail map" : "nearby"}</p>
+          <p className="text-[12.5px] tabular-nums" style={{ color: "var(--text-secondary)" }}>
+            {trail ? <>{trail.lengthKm} km · {trail.stops.length} stops</> : <>{nearby.length} adventures</>}
+          </p>
+        </div>
+      ) : (
+        <div className="px-4 pt-3 pb-2.5">
+          <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{trail ? "the trail and nearby" : "nearby"}</p>
+          <p className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>
+            {trail ? <>{trail.lengthKm} km from {trail.stops[0].name} · {nearby.length} adventures nearby</> : <>{nearby.length} adventures in the region</>}
+          </p>
+        </div>
+      )}
 
       {/* Map */}
       <div className="relative">
-        <div ref={mapRef} className={`ttt-nearby-map w-full ${trail ? "h-72" : "h-44"}`} style={{ background: isDark ? "#0e0c0b" : "#e5e3dc" }} />
+        <div ref={mapRef} className={`ttt-nearby-map w-full ${compact ? "h-52" : trail ? "h-72" : "h-44"}`} style={{ background: isDark ? "#0e0c0b" : "#e5e3dc" }} />
         {trail && (
           <div className="absolute top-2 left-2 z-[500] flex rounded-lg overflow-hidden text-[11px] font-semibold shadow" role="group" aria-label="Map view">
             {(["trail", "region"] as const).map((v) => (
@@ -316,7 +328,18 @@ export default function NearbyAdventuresMap({ current, nearby, trail }: Props) {
       </div>
 
       {/* Take the trail offline */}
-      {trail && (
+      {trail && compact && (
+        <div className="px-4 py-2.5 flex items-center gap-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+          <a href={`/experiences/${current.slug}/trail.gpx`} download={`${current.slug}-trail-to-tides.gpx`}
+            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg text-[12.5px] font-bold text-white shrink-0" style={{ background: "#ff5100" }}>
+            <Download className="w-3.5 h-3.5" />GPX
+          </a>
+          <p className="text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>
+            For offline use: <Link href={`/trailpedia/offline-maps?trek=${current.slug}`} className="font-semibold text-[#ff5100]">offline guide</Link>
+          </p>
+        </div>
+      )}
+      {trail && !compact && (
         <div className="px-4 py-3 space-y-2" style={{ borderTop: "1px solid var(--border-subtle)" }}>
           <a href={`/experiences/${current.slug}/trail.gpx`} download={`${current.slug}-trail-to-tides.gpx`}
             className="flex items-center justify-center gap-2 h-10 rounded-xl text-[13px] font-bold text-white transition-colors hover:brightness-110" style={{ background: "#ff5100" }}>
@@ -328,8 +351,15 @@ export default function NearbyAdventuresMap({ current, nearby, trail }: Props) {
         </div>
       )}
 
-      {/* List */}
-      <div className="divide-y" style={{ borderTop: "1px solid var(--border-subtle)", borderColor: "var(--border-subtle)" }}>
+      {/* List (folded away on phones until asked for) */}
+      {compact && nearby.length > 0 && (
+        <button type="button" onClick={() => setListOpen((o) => !o)} aria-expanded={listOpen}
+          className="w-full flex items-center justify-between px-4 h-10 text-[12.5px] font-semibold" style={{ borderTop: "1px solid var(--border-subtle)", color: "var(--text-secondary)" }}>
+          {nearby.length} adventures nearby
+          <ChevronDown className={`w-4 h-4 transition-transform ${listOpen ? "rotate-180" : ""}`} />
+        </button>
+      )}
+      {listOpen && <div className="divide-y" style={{ borderTop: "1px solid var(--border-subtle)", borderColor: "var(--border-subtle)" }}>
         {nearby.slice(0, 4).map((a) => {
           const diff = computeDifficulty(getACE(a));
           const color = DIFF_COLORS[diff] ?? "#38bdf8";
@@ -352,7 +382,7 @@ export default function NearbyAdventuresMap({ current, nearby, trail }: Props) {
             </Link>
           );
         })}
-      </div>
+      </div>}
     </div>
   );
 }
