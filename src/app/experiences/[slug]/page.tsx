@@ -33,6 +33,7 @@ import { Emphasis, stripEmphasis } from "@/lib/emphasis";
 import RecalibrationNudge from "./RecalibrationNudge";
 import MedicalCautionNote from "./MedicalCautionNote";
 import ExploreBackLink from "./ExploreBackLink";
+import ScreenOnly from "@/components/ui/custom/ScreenOnly";
 import { getTrail } from "@/lib/trails";
 import NearbyAdventuresMap from "./NearbyAdventuresMap";
 import BookingSidebarCard from "./BookingSidebarCard";
@@ -489,6 +490,14 @@ export default async function ExperiencePage({ params }: Props) {
                 </p>
               </AccordionSection>
 
+              {/* Phones and tablets: the trail and nearby card right after the Overview
+                  (the sidebar, where it lives on desktop, is hidden at these sizes) */}
+              {(nearbyAdventures.length > 0 || trail) && (
+                <ScreenOnly below>
+                  <div className="pt-2"><NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} trail={trail} /></div>
+                </ScreenOnly>
+              )}
+
               {/* Safety & Prep — before suitability and booking, and open, so people
                   see the risks before choosing who to go with */}
               <AccordionSection id="safety" label="safety and prep" title="What to know before you go" defaultOpen>
@@ -609,9 +618,12 @@ export default async function ExperiencePage({ params }: Props) {
                 quote={QUOTE_REQUESTS ? { slug: adventure.slug, name: adventure.name, operators: adventure.operators.filter((o) => o.verified).map((o) => o.name) } : undefined}
               />
 
-              {/* Nearby adventures map, with the trail and its GPX download when the trek has one */}
+              {/* Nearby adventures map, with the trail and its GPX download when the trek has one
+                  (desktop; phones get it after the Overview) */}
               {(nearbyAdventures.length > 0 || trail) && (
-                <NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} trail={trail} />
+                <ScreenOnly below={false}>
+                  <NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} trail={trail} />
+                </ScreenOnly>
               )}
 
             </div>
