@@ -1,14 +1,13 @@
 "use client";
 
-// Live weather for an adventure's base, in two parts: a compact cell that sits in
-// the stats strip, and the full details (current conditions, 7-day forecast,
-// check-a-date) that open below the strip when the cell is clicked.
+// Live weather for an adventure's base: the full details (current conditions, 7-day forecast,
+// check-a-date) that open under the At a glance strip from its Weather tab.
 
 import React, { useCallback, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import {
   Cloud, CloudRain, CloudSnow, Sun, Wind, Droplets,
-  CloudLightning, CloudDrizzle, CloudFog, Thermometer, ChevronDown, CalendarDays, RotateCw, MapPin,
+  CloudLightning, CloudDrizzle, CloudFog, Thermometer, CalendarDays, MapPin,
 } from "lucide-react";
 
 interface WeatherDay {
@@ -133,63 +132,6 @@ export function useWeather(lat: number, lng: number) {
 
   return { weather, loading, error, retry: load };
 }
-
-// ── The stats-strip cell ──────────────────────────────────────────────────────
-
-export function WeatherCell({ weather, loading, error, open, onToggle, onRetry }: {
-  weather: WeatherData | null;
-  loading: boolean;
-  error: boolean;
-  open: boolean;
-  onToggle: () => void;
-  onRetry: () => void;
-}) {
-  // Same shape as the other stats: a small-caps label over the value
-  const label = <dt className="text-[11.5px] tracking-[0.1em] lowercase leading-none mb-1.5" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>weather now</dt>;
-
-  if (loading) {
-    return (
-      <div>{label}<dd className="w-24 h-3.5 rounded bg-black/8 dark:bg-white/8 animate-pulse" /></div>
-    );
-  }
-
-  if (error || !weather) {
-    return (
-      <div>
-        {label}
-        <dd>
-          <button onClick={onRetry} className="inline-flex items-center gap-1.5 text-[14px] font-medium hover:underline" style={{ color: "#ff5100" }}>
-            <RotateCw className="w-3.5 h-3.5" /> Retry
-          </button>
-        </dd>
-      </div>
-    );
-  }
-
-  const w = weather.current;
-  return (
-    <div>
-      {label}
-      <dd>
-        <button
-          onClick={onToggle}
-          aria-expanded={open}
-          aria-controls="weather-details"
-          className="group inline-flex items-center gap-1.5 text-[14px] font-medium leading-snug text-left"
-          style={{ color: "var(--text-primary)" }}
-        >
-          <span className={iconColor(w.weatherCode)}><WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-4 h-4" /></span>
-          <span className="underline decoration-dotted decoration-[rgba(255,81,0,0.6)] underline-offset-4 group-hover:text-[#ff5100] transition-colors">
-            {w.temp}°C, {desc(w.weatherCode).toLowerCase()}
-          </span>
-          <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180 text-[#ff5100]" : ""}`} style={open ? undefined : { color: "var(--text-tertiary)" }} />
-        </button>
-      </dd>
-    </div>
-  );
-}
-
-// ── The details that open below the strip ─────────────────────────────────────
 
 type DateResult = WeatherDay & { historical?: boolean; year?: number };
 
