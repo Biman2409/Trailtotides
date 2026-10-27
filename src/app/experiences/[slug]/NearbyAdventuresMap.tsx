@@ -4,16 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Download } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import { haversineKm } from "@/lib/geo";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import { BASE_LAYERS, LIGHT_BASE, createBaseLayer, loadLeaflet } from "@/app/map/mapShared";
+import type { Trail } from "@/lib/trails/shared";
 
 interface Props {
   current: Adventure;
   nearby: Adventure[];
+  /** The adventure's mapped trail: drawn on the map, with its GPX download under it */
+  trail?: Trail | null;
 }
 
 const DIFF_COLORS: Record<string, string> = {
@@ -24,9 +27,12 @@ const DIFF_COLORS: Record<string, string> = {
   Extreme: "#ef4444",
 };
 
-export default function NearbyAdventuresMap({ current, nearby }: Props) {
+export default function NearbyAdventuresMap({ current, nearby, trail }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<import("leaflet").Map | null>(null);
+  // With a trail the map opens on it; "Region" pulls back to show the nearby adventures too
+  const [view, setView] = useState<"trail" | "region">("trail");
+  const boundsRef = useRef<{ trail?: import("leaflet").LatLngBounds; region?: import("leaflet").LatLngBounds }>({});
   const { resolvedTheme } = useTheme();
   // resolvedTheme is unknown to the server — stay in a fixed default until
   // mounted so the first client render matches the server's HTML, then
@@ -164,7 +170,8 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         },
       });
       new CreditToggle({ position: "bottomright" }).addTo(map);
-      L.control.attribution({ position: "bottomright", prefix: false }).addTo(map);
+      const credits = L.control.attribution({ position: "bottomright", prefix: false }).addTo(map);
+      if (trail) credits.addAttribution("Trail: © OpenStreetMap contributors, via BRouter");
 
       // OpenStreetMap via OpenFreeMap, as on the Adventure Map: its dark style with
       // hillshade in dark mode, the light "positron" style in light mode
@@ -190,17 +197,41 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         });
       }
 
-      const currentMarker = L.marker([current.lat, current.lng], {
-        icon: makeIcon("#ff5100", 36, current.type, true),
-        zIndexOffset: 1000,
-      }).addTo(map);
+      // The trail, when there is one, stands in for this adventure's own pin
+      if (trail) {
+        const pts = trail.line.map(([la, lo]) => [la, lo] as [number, number]);
+        L.polyline(pts, { color: isDark ? "#000" : "#fff", weight: 6, opacity: 0.55, interactive: false }).addTo(map);
+        const line = L.polyline(pts, { color: "#ff5100", weight: 3.5, opacity: 1, interactive: false }).addTo(map);
+        const stop = (label: string, bg: string) => L.divIcon({
+          className: "",
+          html: `<div style="width:18px;height:18px;border-radius:50%;background:${bg};border:2px solid #fff;color:#fff;font:700 9.5px/14px system-ui,sans-serif;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.45)">${label}</div>`,
+          iconSize: [18, 18],
+          iconAnchor: [9, 9],
+        });
+        trail.stops.forEach((st, i) => {
+          L.marker([st.lat, st.lng], { icon: stop(String(i + 1), i === 0 ? "#16a34a" : "#ff5100"), zIndexOffset: 900 })
+            .bindTooltip(`${st.name} · km ${st.km}${st.ele != null ? ` · ${st.ele.toLocaleString("en-IN")} m` : ""}`, { direction: "top", offset: [0, -10], opacity: 0.95, className: "ttt-nearby-tooltip" })
+            .addTo(map);
+        });
+        trail.side.forEach((st) => {
+          L.marker([st.lat, st.lng], { icon: stop("▲", "#0e7c86"), zIndexOffset: 900 })
+            .bindTooltip(`${st.name} (side trip)${st.ele != null ? ` · ${st.ele.toLocaleString("en-IN")} m` : ""}`, { direction: "top", offset: [0, -10], opacity: 0.95, className: "ttt-nearby-tooltip" })
+            .addTo(map);
+        });
+        boundsRef.current.trail = line.getBounds();
+      } else {
+        const currentMarker = L.marker([current.lat, current.lng], {
+          icon: makeIcon("#ff5100", 36, current.type, true),
+          zIndexOffset: 1000,
+        }).addTo(map);
 
-      currentMarker.bindTooltip(`${current.name} · You are here`, {
-        direction: "top",
-        offset: [0, -22],
-        opacity: 0.95,
-        className: "ttt-nearby-tooltip",
-      });
+        currentMarker.bindTooltip(`${current.name} · You are here`, {
+          direction: "top",
+          offset: [0, -22],
+          opacity: 0.95,
+          className: "ttt-nearby-tooltip",
+        });
+      }
 
       const allPoints: [number, number][] = [[current.lat, current.lng]];
 
@@ -224,11 +255,11 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         allPoints.push([a.lat, a.lng]);
       });
 
-      if (allPoints.length > 1) {
-        map.fitBounds(L.latLngBounds(allPoints), { padding: [28, 28], maxZoom: 10 });
-      } else {
-        map.setView([current.lat, current.lng], 9);
-      }
+      if (trail) boundsRef.current.region = L.latLngBounds(allPoints).extend(boundsRef.current.trail!);
+      else if (allPoints.length > 1) boundsRef.current.region = L.latLngBounds(allPoints);
+      const start = trail ? boundsRef.current.trail : boundsRef.current.region;
+      if (start) map.fitBounds(start, { padding: [28, 28], maxZoom: trail ? 13 : 10 });
+      else map.setView([current.lat, current.lng], 9);
 
       L.control.zoom({ position: "bottomright" }).addTo(map);
     });
@@ -243,7 +274,13 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         (el as HTMLElement & { _leaflet_id?: number })._leaflet_id = undefined;
       }
     };
-  }, [current, nearby, isDark, router]);
+  }, [current, nearby, trail, isDark, router]);
+
+  function show(v: "trail" | "region") {
+    setView(v);
+    const b = boundsRef.current[v];
+    if (b) mapInstanceRef.current?.flyToBounds(b, { padding: [28, 28], maxZoom: v === "trail" ? 13 : 10, duration: 0.8 });
+  }
 
   return (
     <div
@@ -252,18 +289,44 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
     >
       {/* Header — same small-caps label + plain line as the booking card */}
       <div className="px-4 pt-3 pb-2.5">
-        <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>nearby</p>
-        <p className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>{nearby.length} adventures in the region</p>
+        <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{trail ? "the trail and nearby" : "nearby"}</p>
+        <p className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>
+          {trail ? <>{trail.lengthKm} km from {trail.stops[0].name} · {nearby.length} adventures nearby</> : <>{nearby.length} adventures in the region</>}
+        </p>
       </div>
 
       {/* Map */}
       <div className="relative">
-        <div ref={mapRef} className="ttt-nearby-map w-full h-44" style={{ background: isDark ? "#0e0c0b" : "#e5e3dc" }} />
+        <div ref={mapRef} className={`ttt-nearby-map w-full ${trail ? "h-72" : "h-44"}`} style={{ background: isDark ? "#0e0c0b" : "#e5e3dc" }} />
+        {trail && (
+          <div className="absolute top-2 left-2 z-[500] flex rounded-lg overflow-hidden text-[11px] font-semibold shadow" role="group" aria-label="Map view">
+            {(["trail", "region"] as const).map((v) => (
+              <button key={v} type="button" onClick={() => show(v)} aria-pressed={view === v}
+                className="px-2.5 h-7 capitalize transition-colors"
+                style={view === v ? { background: "#ff5100", color: "#fff" } : { background: isDark ? "rgba(9,16,31,0.85)" : "rgba(255,255,255,0.92)", color: isDark ? "rgba(255,255,255,0.75)" : "rgba(15,23,31,0.7)" }}>
+                {v}
+              </button>
+            ))}
+          </div>
+        )}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{ boxShadow: `inset 0 0 20px 0px rgba(0,0,0,${isDark ? 0.35 : 0.1})` }}
         />
       </div>
+
+      {/* Take the trail offline */}
+      {trail && (
+        <div className="px-4 py-3 space-y-2" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+          <a href={`/experiences/${current.slug}/trail.gpx`} download={`${current.slug}-trail-to-tides.gpx`}
+            className="flex items-center justify-center gap-2 h-10 rounded-xl text-[13px] font-bold text-white transition-colors hover:brightness-110" style={{ background: "#ff5100" }}>
+            <Download className="w-4 h-4" />Download trail (GPX)
+          </a>
+          <p className="text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>
+            No signal on the trail? GPS still works. <Link href={`/trailpedia/offline-maps?trek=${current.slug}`} className="font-semibold text-[#ff5100] hover:underline underline-offset-2">How to use it offline</Link> on Android, iPhone or a GPS watch.
+          </p>
+        </div>
+      )}
 
       {/* List */}
       <div className="divide-y" style={{ borderTop: "1px solid var(--border-subtle)", borderColor: "var(--border-subtle)" }}>

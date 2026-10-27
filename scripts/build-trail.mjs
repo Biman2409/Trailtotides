@@ -33,8 +33,7 @@ const TREKS = {
       { to: "Gorak Shep", via: ["Everest Base Camp"], note: "On to Gorak Shep, then out to Base Camp and back" },
       { to: "Pheriche", side: { name: "Kala Patthar", km: 4.2, up: 480 }, note: "Kala Patthar before sunrise for the Everest view, then down" },
       { to: "Namche Bazaar", note: "A long descent back through Pangboche and Tengboche" },
-      { to: "Lukla", note: "The last day's walk, back to the airstrip" },
-      { travel: "Fly Lukla to Kathmandu (keep a spare day: weather cancels flights)" },
+      { to: "Lukla", note: "Back to the airstrip. Flights out are early the next morning: keep a spare day, as weather cancels them" },
     ],
   },
 };

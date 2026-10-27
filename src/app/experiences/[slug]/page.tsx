@@ -33,7 +33,6 @@ import { Emphasis, stripEmphasis } from "@/lib/emphasis";
 import RecalibrationNudge from "./RecalibrationNudge";
 import MedicalCautionNote from "./MedicalCautionNote";
 import ExploreBackLink from "./ExploreBackLink";
-import TrailSection from "./TrailSection";
 import { getTrail } from "@/lib/trails";
 import NearbyAdventuresMap from "./NearbyAdventuresMap";
 import BookingSidebarCard from "./BookingSidebarCard";
@@ -433,7 +432,7 @@ export default async function ExperiencePage({ params }: Props) {
         <HeroActions adventure={adventure} />
       </section>
 
-      <SectionNav hasTrail={!!trail} />
+      <SectionNav />
 
       {/* Everything below the hero sits on the same topographic texture as the home page */}
       <div className="topo">
@@ -489,13 +488,6 @@ export default async function ExperiencePage({ params }: Props) {
                   />
                 </p>
               </AccordionSection>
-
-              {/* The trail, for treks that have one mapped: route, elevation, stops, offline GPX */}
-              {trail && (
-                <AccordionSection id="trail" label="the route" title="The trail" defaultOpen>
-                  <TrailSection trail={trail} slug={adventure.slug} name={adventure.name} />
-                </AccordionSection>
-              )}
 
               {/* Safety & Prep — before suitability and booking, and open, so people
                   see the risks before choosing who to go with */}
@@ -617,9 +609,9 @@ export default async function ExperiencePage({ params }: Props) {
                 quote={QUOTE_REQUESTS ? { slug: adventure.slug, name: adventure.name, operators: adventure.operators.filter((o) => o.verified).map((o) => o.name) } : undefined}
               />
 
-              {/* Nearby adventures map */}
-              {nearbyAdventures.length > 0 && (
-                <NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} />
+              {/* Nearby adventures map, with the trail and its GPX download when the trek has one */}
+              {(nearbyAdventures.length > 0 || trail) && (
+                <NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} trail={trail} />
               )}
 
             </div>

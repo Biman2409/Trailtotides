@@ -246,7 +246,7 @@ function TrailPanel({ trail, slug }: { trail: Trail; slug: string }) {
         <span>{trail.stops[0].name}</span><span>{trail.stops[trail.stops.length - 1].name}</span>
       </div>
       <div className="flex gap-2 mt-2.5">
-        <Link href={`/experiences/${slug}#trail`} className="flex-1 inline-flex items-center justify-center gap-1 h-8 rounded-lg text-[12px] font-semibold text-white bg-white/10 hover:bg-white/15">Stops &amp; elevation <ArrowRight className="w-3.5 h-3.5" /></Link>
+        <Link href={`/experiences/${slug}#at-a-glance`} className="flex-1 inline-flex items-center justify-center gap-1 h-8 rounded-lg text-[12px] font-semibold text-white bg-white/10 hover:bg-white/15">Itinerary &amp; elevation <ArrowRight className="w-3.5 h-3.5" /></Link>
         <a href={`/experiences/${slug}/trail.gpx`} download className="inline-flex items-center justify-center gap-1 h-8 px-3 rounded-lg text-[12px] font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a1f]"><Download className="w-3.5 h-3.5" />GPX</a>
       </div>
     </div>
