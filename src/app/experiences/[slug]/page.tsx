@@ -452,6 +452,7 @@ export default async function ExperiencePage({ params }: Props) {
               altitude: adventure.altitude,
               isBaseCamp: !!(adventure.baseCamp || adventure.startingPoint),
             }}
+            trail={trail}
             stats={[
                 { label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
                 ...(adventure.distance ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),

@@ -11,6 +11,25 @@ export interface TrailStop {
   km: number;
 }
 
+/** One day of the itinerary. Distances and climbs are measured along the trail line. */
+export interface TrailDay {
+  day: number;
+  /** walk: a trekking day; rest: acclimatisation, sleep in the same place; travel: not on foot */
+  kind: "walk" | "rest" | "travel";
+  from: string;
+  /** Where you sleep that night (null on a travel day out) */
+  to: string | null;
+  /** Places visited on the way (Base Camp, a summit viewpoint) */
+  via?: string[];
+  km?: number;
+  up?: number;
+  down?: number;
+  /** The day starts or ends off the mapped line, so its figures are estimates */
+  approx?: boolean;
+  sleepEle: number | null;
+  note: string;
+}
+
 export interface Trail {
   slug: string;
   source: string;
@@ -22,6 +41,10 @@ export interface Trail {
   stops: TrailStop[];
   /** Side trips off the main line (summit viewpoints), as points */
   side: Omit<TrailStop, "km">[];
+  /** Day-by-day plan, start to finish */
+  days: TrailDay[];
+  /** Every place the itinerary sleeps, once each, in order (for weather) */
+  sleepPlaces: { name: string; lat: number; lng: number; ele: number | null }[];
   /** [lat, lng, elevation in m], thinned to ~10 m accuracy */
   line: [number, number, number][];
 }

@@ -44,9 +44,9 @@ const WMO: Record<number, string> = {
   95: "Thunderstorm", 96: "Thunderstorm + hail", 99: "Thunderstorm + heavy hail",
 };
 
-function desc(code: number) { return WMO[code] ?? "Unknown"; }
+export function desc(code: number) { return WMO[code] ?? "Unknown"; }
 
-function WeatherIcon({ code, isDay = 1, className = "w-4 h-4" }: { code: number; isDay?: number; className?: string }) {
+export function WeatherIcon({ code, isDay = 1, className = "w-4 h-4" }: { code: number; isDay?: number; className?: string }) {
   if (code === 0 || code === 1) return isDay
     ? <Sun className={className} />
     : <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" /></svg>;
@@ -60,7 +60,7 @@ function WeatherIcon({ code, isDay = 1, className = "w-4 h-4" }: { code: number;
   return <Cloud className={className} />;
 }
 
-function iconColor(code: number) {
+export function iconColor(code: number) {
   if (code === 0 || code === 1) return "text-amber-400";
   if (code === 2) return "text-sky-300";
   if (code === 3) return "text-sky-400";
