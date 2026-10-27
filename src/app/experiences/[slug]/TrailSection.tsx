@@ -81,7 +81,7 @@ export default function TrailSection({ trail, slug, name }: { trail: Trail; slug
             <p className="text-[13px] mt-1 max-w-[60ch]" style={{ color: "var(--text-secondary)" }}>
               There&apos;s no signal for most of this trail. Your phone&apos;s GPS still works without it, so load the trail into a map app before you go.
             </p>
-            <Link href={`/guides/offline-maps?trek=${slug}`} className="inline-flex items-center gap-1 mt-2 text-[13px] font-semibold hover:underline underline-offset-2" style={{ color: ORANGE }}>
+            <Link href={`/trailpedia/offline-maps?trek=${slug}`} className="inline-flex items-center gap-1 mt-2 text-[13px] font-semibold hover:underline underline-offset-2" style={{ color: ORANGE }}>
               How to use it offline: Android, iPhone, computer, GPS watch <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
