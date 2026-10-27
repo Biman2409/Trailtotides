@@ -335,7 +335,7 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
             <Download className="w-3.5 h-3.5" />GPX
           </a>
           <p className="text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>
-            For offline use: <Link href={`/trailpedia/offline-maps?trek=${current.slug}`} className="font-semibold text-[#ff5100]">offline guide</Link>
+            For offline use: <Link href={`/adventurepedia/offline-maps?trek=${current.slug}`} className="font-semibold text-[#ff5100]">offline guide</Link>
           </p>
         </div>
       )}
@@ -346,7 +346,7 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
             <Download className="w-4 h-4" />Download trail (GPX)
           </a>
           <p className="text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>
-            No signal on the trail? GPS still works. <Link href={`/trailpedia/offline-maps?trek=${current.slug}`} className="font-semibold text-[#ff5100] hover:underline underline-offset-2">How to use it offline</Link> on Android, iPhone or a GPS watch.
+            No signal on the trail? GPS still works. <Link href={`/adventurepedia/offline-maps?trek=${current.slug}`} className="font-semibold text-[#ff5100] hover:underline underline-offset-2">How to use it offline</Link> on Android, iPhone or a GPS watch.
           </p>
         </div>
       )}

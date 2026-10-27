@@ -258,7 +258,7 @@ export function TrailWeather({ trail }: { trail: Trail }) {
         </div>
       )}
       <p className="text-[11.5px] mt-2.5" style={{ color: "var(--text-tertiary)" }}>
-        Forecasts from Open-Meteo, adjusted for each place&apos;s height. They reach 16 days ahead{anyPast ? "; later days show the weather on the same dates last year, as a guide" : ""}. Mountain weather changes fast: check again before you set off.
+        Forecasts from Open-Meteo, adjusted for each place&apos;s height.{anyPast ? " Days marked “last yr” are too far ahead to forecast, so they show the same dates last year as a guide." : ""} Mountain weather changes fast: check again before you set off.
       </p>
     </div>
   );
