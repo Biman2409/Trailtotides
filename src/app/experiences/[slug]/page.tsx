@@ -500,7 +500,7 @@ export default async function ExperiencePage({ params }: Props) {
 
               {/* Safety & Prep — before suitability and booking, and open, so people
                   see the risks before choosing who to go with */}
-              <AccordionSection id="safety" label="safety and prep" title="What to know before you go" defaultOpen>
+              <AccordionSection id="safety" label="safety and prep" title="What to know before you go" defaultOpen mobileDefaultOpen={false}>
                 <div className="space-y-3">
                   <div className="max-w-[66ch]">
                     <p className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{adventure.safetyNotes}</p>
@@ -530,7 +530,7 @@ export default async function ExperiencePage({ params }: Props) {
 
               {/* Is This For You? — fit/skip lists plus the Capability Profile radar,
                   both answering the same question from two angles */}
-              <AccordionSection id="suitability" label="suitability" title="Is this for you?" defaultOpen headerExtra={<GradingPill />}>
+              <AccordionSection id="suitability" label="suitability" title="Is this for you?" defaultOpen mobileDefaultOpen={false} headerExtra={<GradingPill />}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
                   {([
                     { heading: "for you if", items: adventure.whoFor, mark: "✓", markColor: "#3fa877" },
