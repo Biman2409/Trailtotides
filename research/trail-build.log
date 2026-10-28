@@ -199,3 +199,18 @@ Build trails run 40681718153, 2026-10-28T11:41:08Z
 [  66s]   day  2 walk   Gulling → Khullara  3.9 km +1070 −0
 [  66s]   day  3 walk   Khullara → Khullara  8.1 km +1170 −1170
 [  66s]   day  4 walk   Khullara → Dhak  7.8 km +100 −1410
+── panwali-kantha 12:09:28
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] panwali-kantha: place list unavailable (Overpass 502 ), using place search only
+[ 216s]   leg Ghuttu → Panwali Kantha (8.7 km apart)
+[ 218s] panwali-kantha: 12.5 km, +1870 m, highest 3383 m, 0 km drawn straight, 551 → 141 points
+[ 218s]   km     0  Ghuttu (1540 m, osm, 30.5289,78.79015)
+[ 218s]   km  12.5  Panwali Kantha (3264 m, osm, 30.56968,78.86745)  8.7 km from last
+[ 218s]   camp (estimated): Gairu (2796 m, 30.53678,78.83923)
+[ 218s]   day  1 walk   Ghuttu → Gairu  6.2 km +1240 −0 (approx)
+[ 218s]   day  2 walk   Gairu → Panwali Kantha  6.2 km +620 −150
+[ 218s]   day  3 rest   Panwali Kantha → Panwali Kantha
+[ 218s]   day  4 walk   Panwali Kantha → Ghuttu  12.5 km +140 −1840
