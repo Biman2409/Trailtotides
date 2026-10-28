@@ -17,3 +17,20 @@ Build trails run 40713884646, 2026-10-28T15:14:24Z
 [  51s]   day  4 walk   Dodital → Dodital  5.5 km +650 −650
 [  51s]   day  5 walk   Dodital → Manjhi  4.1 km +80 −210
 [  51s]   day  6 walk   Manjhi → Sangam Chatti  11.6 km +260 −1590
+── deoriatal-chandrashila 15:15:16
+[  40s] deoriatal-chandrashila: 628 named places in OpenStreetMap around the trek
+[  45s]   leg Sari → Deoriatal (0.9 km apart)
+[  47s]   leg Deoriatal → Chopta (9.3 km apart)
+[  48s]   leg Chopta → Tungnath (1.3 km apart)
+[  50s]   leg Tungnath → Chandrashila (0.5 km apart)
+[  52s] deoriatal-chandrashila: 24.2 km, +2160 m, highest 3525 m, 0 km drawn straight, 689 → 266 points
+[  52s]   km     0  Sari (2016 m, osm, 30.51688,79.13526)
+[  52s]   km   1.8  Deoriatal (2384 m, osm, 30.52211,79.12754)  0.9 km from last
+[  52s]   km  17.5  Chopta (2828 m, given, 30.47786,79.21015)  9.3 km from last
+[  52s]   km  23.2  Tungnath (3481 m, osm, 30.48831,79.21673)  1.3 km from last
+[  52s]   km  24.2  Chandrashila (3651 m, osm, 30.48646,79.22123)  0.5 km from last
+[  52s]   camp (estimated): Rohini Bugyal (2673 m, 30.51661,79.20033)
+[  52s]   day  1 walk   Sari → Deoriatal  1.8 km +350 −0
+[  52s]   day  2 walk   Deoriatal → Rohini Bugyal  7.9 km +480 −180 (approx)
+[  52s]   day  3 walk   Rohini Bugyal → Chopta  7.8 km +570 −350
+[  52s]   day  4 walk   Chopta → Chopta  13.5 km +950 −950
