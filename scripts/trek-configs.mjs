@@ -413,7 +413,7 @@ export const TREKS = {
       { name: "Dhundi", at: [32.35553, 77.12653] },
       { name: "Beas Kund", at: [32.36654, 77.08556] },
     ],
-    camps: { Bakarthach: ["Dhundi", "Beas Kund", 0.5] },
+    camps: { Bakarthach: ["Dhundi", "Beas Kund", 0.5, ["Bakar Thach", "Bakkar Thach", "Bakarthatch"]] },
     days: [
       { to: "Bakarthach", note: "Up the Beas from Dhundi to a herders' meadow" },
       { to: "Bakarthach", via: ["Beas Kund"], note: "Over moraine to the glacial lake at the source of the Beas, under Hanuman Tibba, and back" },
@@ -427,7 +427,7 @@ export const TREKS = {
       { name: "Rumsu", at: [32.11439, 77.17943] },
       { name: "Malana", at: [32.0618, 77.26002] },
     ],
-    camps: { Stalling: ["Rumsu", "Malana", 0.35], "Chandrakhani Pass": ["Rumsu", "Malana", 0.6] },
+    camps: { Stalling: ["Rumsu", "Malana", 0.35, ["Staling", "Stalling Thach"]], "Chandrakhani Pass": ["Rumsu", "Malana", 0.6, ["Chanderkhani Pass", "Chandrakhani", "Chanderkhani"]] },
     days: [
       { to: "Stalling", note: "Up from Rumsu, above Naggar, through deodar forest to open grass" },
       { to: "Malana", via: ["Chandrakhani Pass"], note: "Over the grassy pass facing the Pir Panjal and Parvati ranges, then down to Malana, a village with its own rules: don't touch its walls or people" },
@@ -440,7 +440,7 @@ export const TREKS = {
       { name: "Kareri", q: "Kareri village", at: [32.27896, 76.27862] },
       { name: "Kareri Lake", at: [32.32565, 76.27389] },
     ],
-    camps: { Rioti: ["Kareri", "Kareri Lake", 0.6] },
+    camps: { Rioti: ["Kareri", "Kareri Lake", 0.6, ["Reoti", "Riyoti", "Rewati"]] },
     days: [
       { to: "Rioti", note: "Up the Nyund stream from Kareri village, crossing it on rocks and small bridges" },
       { to: "Kareri Lake", note: "A short climb to the lake below the Dhauladhar, with a small Shiva temple" },
@@ -456,7 +456,7 @@ export const TREKS = {
       { name: "Biskeri Thach", q: "Biskeri", at: [31.95217, 77.40626] },
       { name: "Barshaini", at: [31.99913, 77.44969] },
     ],
-    camps: { Grahan: ["Kasol", "Sar Pass", 0.35], "Min Thach": ["Kasol", "Sar Pass", 0.6], Nagaru: ["Kasol", "Sar Pass", 0.85] },
+    camps: { Grahan: ["Kasol", "Sar Pass", 0.35, ["Grahan Village"]], "Min Thach": ["Kasol", "Sar Pass", 0.6, ["Mingthach", "Min Thatch", "Mangthach"]], Nagaru: ["Kasol", "Sar Pass", 0.85, ["Nagaroo", "Nagru"]] },
     days: [
       { to: "Grahan", note: "Up from Kasol along the Grahan stream to a remote village" },
       { to: "Min Thach", note: "A steep climb through forest to an open shoulder" },
@@ -478,7 +478,7 @@ export const TREKS = {
       { name: "Pin Parvati Pass", at: [31.8355, 77.84444] },
       { name: "Mud", at: [31.959, 78.03241] },
     ],
-    camps: { "Pin Valley Camp": ["Pin Parvati Pass", "Mud", 0.3], Tiya: ["Pin Parvati Pass", "Mud", 0.65] },
+    camps: { "Pin Valley Camp": ["Pin Parvati Pass", "Mud", 0.3, ["Pin Valley Base Camp"]], Tiya: ["Pin Parvati Pass", "Mud", 0.65, ["Tiya Camp", "Tia"]] },
     days: [
       { to: "Kheerganga", note: "Up the Parvati valley from Barshaini to the hot springs" },
       { to: "Tunda Bhuj", note: "Along the river through the last of the forest" },
@@ -500,7 +500,7 @@ export const TREKS = {
       { name: "Buran Ghati", at: [31.38742, 78.14567] },
       { name: "Barua", at: [31.4682, 78.17846] },
     ],
-    camps: { "Dayara Thach": ["Janglik", "Litham", 0.45], Dhunda: ["Litham", "Buran Ghati", 0.6], Munirang: ["Buran Ghati", "Barua", 0.3] },
+    camps: { "Dayara Thach": ["Janglik", "Litham", 0.45, ["Dayara", "Diyara"]], Dhunda: ["Litham", "Buran Ghati", 0.6, ["Dunda", "Dhunda Camp"]], Munirang: ["Buran Ghati", "Barua", 0.3, ["Munirang Camp", "Muni Rang"]] },
     days: [
       { to: "Dayara Thach", note: "Up from Janglik through forest onto one of the finest meadows in Himachal" },
       { to: "Litham", note: "Down through birch to Litham, below the Chandranahan waterfall" },

@@ -2,3 +2,10 @@
 # (one slug per line, or "all"). A manual run can name its own.
 kashmir-great-lakes
 tarsar-marsar-trek
+buran-ghati
+beas-kund
+bhrigu-lake
+pin-parvati-pass
+chandrakhani-pass
+kareri-lake
+sar-pass
