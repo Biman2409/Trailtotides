@@ -34,3 +34,32 @@ Build trails run 40713884646, 2026-10-28T15:14:24Z
 [  52s]   day  2 walk   Deoriatal → Rohini Bugyal  7.9 km +480 −180 (approx)
 [  52s]   day  3 walk   Rohini Bugyal → Chopta  7.8 km +570 −350
 [  52s]   day  4 walk   Chopta → Chopta  13.5 km +950 −950
+── gokyo-lakes 15:16:11
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] gokyo-lakes: place list unavailable (Overpass 502 ), using place search only
+[ 224s]   leg Lukla → Phakding (6.0 km apart)
+[ 226s]   leg Phakding → Namche Bazaar (7.1 km apart)
+[ 228s]   leg Namche Bazaar → Dole (7.3 km apart)
+[ 229s]   leg Dole → Machhermo (4.2 km apart)
+[ 231s]   leg Machhermo → Gokyo (6.1 km apart)
+[ 233s] gokyo-lakes: 41.4 km, +2650 m, highest 4765 m, 0 km drawn straight, 2179 → 489 points
+[ 233s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
+[ 233s]   km   7.4  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
+[ 233s]   km  17.7  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
+[ 233s]   km  29.4  Dole (4036 m, osm, 27.86733,86.72997)  7.3 km from last
+[ 233s]   km  34.4  Machhermo (4386 m, osm, 27.90288,86.7156)  4.2 km from last
+[ 233s]   km  41.4  Gokyo (4750 m, osm, 27.95409,86.69459)  6.1 km from last
+[ 233s]   side trip: Gokyo Ri (5357 m, osm)
+[ 233s]   day  1 walk   Lukla → Phakding  7.4 km +90 −320
+[ 233s]   day  2 walk   Phakding → Namche Bazaar  10.4 km +840 −70
+[ 233s]   day  3 rest   Namche Bazaar → Namche Bazaar
+[ 233s]   day  4 walk   Namche Bazaar → Dole  11.6 km +940 −330
+[ 233s]   day  5 walk   Dole → Machhermo  5.1 km +390 −20
+[ 233s]   day  6 walk   Machhermo → Gokyo  6.9 km +360 −0
+[ 233s]   day  7 walk   Gokyo → Gokyo  4 km +600 −600
+[ 233s]   day  8 walk   Gokyo → Dole  12 km +20 −740
+[ 233s]   day  9 walk   Dole → Namche Bazaar  11.6 km +330 −940
+[ 233s]   day 10 walk   Namche Bazaar → Lukla  17.7 km +360 −930
