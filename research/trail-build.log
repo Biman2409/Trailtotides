@@ -1,64 +1,31 @@
-Build trails run 40652356454, 2026-10-28T07:48:40Z
-── everest-base-camp 07:48:40
-[  34s]   overpass: overpass-api.de Overpass 400
-[ 127s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 223s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 232s]   overpass: overpass-api.de Overpass 502
-[ 244s] everest-base-camp: place list unavailable (Overpass 502), using place search only
-[ 259s]   leg Lukla → Phakding (6.0 km apart)
-[ 262s]   leg Phakding → Namche Bazaar (7.1 km apart)
-[ 263s]   leg Namche Bazaar → Tengboche (6.4 km apart)
-[ 265s]   leg Tengboche → Dingboche (9.1 km apart)
-[ 267s]   leg Dingboche → Lobuche (6.4 km apart)
-[ 268s]   leg Lobuche → Gorak Shep (4.1 km apart)
-[ 270s]   leg Gorak Shep → Everest Base Camp (2.9 km apart)
-[ 273s] everest-base-camp: 53.6 km, +3260 m, highest 5364 m, 0 km drawn straight, 2549 → 576 points
-[ 273s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
-[ 273s]   km   7.4  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
-[ 273s]   km  17.7  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
-[ 273s]   km  27.3  Tengboche (3867 m, osm, 27.83581,86.76461)  6.4 km from last
-[ 273s]   km  37.7  Dingboche (4410 m, osm, 27.89352,86.83094)  9.1 km from last
-[ 273s]   km  45.6  Lobuche (4910 m, osm, 27.9481,86.81017)  6.4 km from last
-[ 273s]   km  50.1  Gorak Shep (5175 m, osm, 27.98068,86.82893)  4.1 km from last
-[ 273s]   km  53.6  Everest Base Camp (5364 m, osm, 27.99966,86.84879)  2.9 km from last
-[ 273s]   side trip: Kala Patthar (5645 m, osm)
-[ 273s]   day  1 walk   Lukla → Phakding  7.4 km +90 −320
-[ 273s]   day  2 walk   Phakding → Namche Bazaar  10.4 km +840 −70
-[ 273s]   day  3 rest   Namche Bazaar → Namche Bazaar
-[ 273s]   day  4 walk   Namche Bazaar → Tengboche  9.5 km +710 −280
-[ 273s]   day  5 walk   Tengboche → Dingboche  10.4 km +590 −110
-[ 273s]   day  6 rest   Dingboche → Dingboche
-[ 273s]   day  7 walk   Dingboche → Lobuche  7.9 km +580 −0
-[ 273s]   day  8 walk   Lobuche → Gorak Shep  11.5 km +390 −150
-[ 273s]   day  9 walk   Gorak Shep → Pheriche  15.6 km +500 −1220 (approx)
-[ 273s]   day 10 walk   Pheriche → Namche Bazaar  21 km +380 −1380
-[ 273s]   day 11 walk   Namche Bazaar → Lukla  17.7 km +360 −930
-── gokyo-lakes 07:53:15
-[   1s]   overpass: overpass-api.de Overpass 502
-[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 224s]   overpass: overpass-api.de Overpass 400
-[ 236s] gokyo-lakes: place list unavailable (Overpass 400), using place search only
-[ 246s]   leg Lukla → Phakding (6.0 km apart)
-[ 249s]   leg Phakding → Namche Bazaar (7.1 km apart)
-[ 250s]   leg Namche Bazaar → Dole (7.3 km apart)
-[ 252s]   leg Dole → Machhermo (4.2 km apart)
-[ 254s]   leg Machhermo → Gokyo (6.1 km apart)
-[ 255s] gokyo-lakes: 41.4 km, +2650 m, highest 4765 m, 0 km drawn straight, 2179 → 489 points
-[ 255s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
-[ 255s]   km   7.4  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
-[ 255s]   km  17.7  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
-[ 255s]   km  29.4  Dole (4036 m, osm, 27.86733,86.72997)  7.3 km from last
-[ 255s]   km  34.4  Machhermo (4386 m, osm, 27.90288,86.7156)  4.2 km from last
-[ 255s]   km  41.4  Gokyo (4750 m, osm, 27.95409,86.69459)  6.1 km from last
-[ 255s]   side trip: Gokyo Ri (5357 m, osm)
-[ 255s]   day  1 walk   Lukla → Phakding  7.4 km +90 −320
-[ 255s]   day  2 walk   Phakding → Namche Bazaar  10.4 km +840 −70
-[ 255s]   day  3 rest   Namche Bazaar → Namche Bazaar
-[ 255s]   day  4 walk   Namche Bazaar → Dole  11.6 km +940 −330
-[ 255s]   day  5 walk   Dole → Machhermo  5.1 km +390 −20
-[ 255s]   day  6 walk   Machhermo → Gokyo  6.9 km +360 −0
-[ 255s]   day  7 walk   Gokyo → Gokyo  4 km +600 −600
-[ 255s]   day  8 walk   Gokyo → Dole  12 km +20 −740
-[ 255s]   day  9 walk   Dole → Namche Bazaar  11.6 km +330 −940
-[ 255s]   day 10 walk   Namche Bazaar → Lukla  17.7 km +360 −930
+Build trails run 40653745388, 2026-10-28T08:01:30Z
+── everest-base-camp 08:01:30
+[  38s] everest-base-camp: place list unavailable (Overpass 400 Error : line 3: parse error: Unknown query clause Error : line 4: parse error: Unknown query clause Error : line 5: parse error: Unknown query clause Error : line 6: parse error: Unknown query clause Error : line 7: parse error: Unknown query clause Error : line 8: parse error: Unknown query clause ), using place search only
+[  53s]   leg Lukla → Phakding (6.0 km apart)
+[  55s]   leg Phakding → Namche Bazaar (7.1 km apart)
+[  57s]   leg Namche Bazaar → Tengboche (6.4 km apart)
+[  59s]   leg Tengboche → Dingboche (9.1 km apart)
+[  60s]   leg Dingboche → Lobuche (6.4 km apart)
+[  62s]   leg Lobuche → Gorak Shep (4.1 km apart)
+[  63s]   leg Gorak Shep → Everest Base Camp (2.9 km apart)
+[  67s] everest-base-camp: 53.6 km, +3260 m, highest 5364 m, 0 km drawn straight, 2549 → 576 points
+[  67s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
+[  67s]   km   7.4  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
+[  67s]   km  17.7  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
+[  67s]   km  27.3  Tengboche (3867 m, osm, 27.83581,86.76461)  6.4 km from last
+[  67s]   km  37.7  Dingboche (4410 m, osm, 27.89352,86.83094)  9.1 km from last
+[  67s]   km  45.6  Lobuche (4910 m, osm, 27.9481,86.81017)  6.4 km from last
+[  67s]   km  50.1  Gorak Shep (5175 m, osm, 27.98068,86.82893)  4.1 km from last
+[  67s]   km  53.6  Everest Base Camp (5364 m, osm, 27.99966,86.84879)  2.9 km from last
+[  67s]   side trip: Kala Patthar (5645 m, osm)
+[  67s]   day  1 walk   Lukla → Phakding  7.4 km +90 −320
+[  67s]   day  2 walk   Phakding → Namche Bazaar  10.4 km +840 −70
+[  67s]   day  3 rest   Namche Bazaar → Namche Bazaar
+[  67s]   day  4 walk   Namche Bazaar → Tengboche  9.5 km +710 −280
+[  67s]   day  5 walk   Tengboche → Dingboche  10.4 km +590 −110
+[  67s]   day  6 rest   Dingboche → Dingboche
+[  67s]   day  7 walk   Dingboche → Lobuche  7.9 km +580 −0
+[  67s]   day  8 walk   Lobuche → Gorak Shep  11.5 km +390 −150
+[  67s]   day  9 walk   Gorak Shep → Pheriche  15.6 km +500 −1220 (approx)
+[  67s]   day 10 walk   Pheriche → Namche Bazaar  21 km +380 −1380
+[  67s]   day 11 walk   Namche Bazaar → Lukla  17.7 km +360 −930
