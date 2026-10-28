@@ -203,11 +203,12 @@ export const TREKS = {
     near: "Uttarkashi, Uttarakhand",
     stops: [
       { name: "Sangam Chatti", at: [30.83588, 78.45063] },
+      // Not in OSM by name: placed from ultrajourneys.org's map of the village
+      { name: "Agoda", at: [30.84636, 78.48161] },
       { name: "Manjhi", at: [30.87492, 78.51945] },
       { name: "Dodital", q: "Dodi tal", at: [30.89725, 78.52606] },
       { name: "Darwa Pass", at: [30.91411, 78.51179] },
     ],
-    camps: { Agoda: ["Sangam Chatti", "Manjhi", 0.4, ["Agora", "Agoda Village"]] },
     days: [
       { to: "Agoda", note: "Up from the road through fields to Agoda village" },
       { to: "Manjhi", note: "Into thick oak and rhododendron forest" },
@@ -299,9 +300,11 @@ export const TREKS = {
       { name: "Sari", at: [30.51688, 79.13526] },
       { name: "Deoriatal", q: "Deoria Tal", at: [30.52211, 79.12754] },
       { name: "Chopta", q: "Chopta Tungnath", at: [30.47786, 79.21015] },
+      // The temple, placed from ultrajourneys.org's map; OSM's Tunganath is checked within 2 km
+      { name: "Tungnath", q: "Tunganath", at: [30.4887, 79.21702] },
       { name: "Chandrashila", at: [30.48646, 79.22123] },
     ],
-    camps: { "Rohini Bugyal": ["Deoriatal", "Chopta", 0.5, ["Rohini"]], Tungnath: ["Chopta", "Chandrashila", 0.8, ["Tunganath", "Tungnath Temple", "Tungnath Mandir"]] },
+    camps: { "Rohini Bugyal": ["Deoriatal", "Chopta", 0.5, ["Rohini"]] },
     days: [
       { to: "Deoriatal", note: "A short, steady climb from Sari to the lake that mirrors Chaukhamba" },
       { to: "Rohini Bugyal", note: "Along a forested ridge to a quiet meadow" },
