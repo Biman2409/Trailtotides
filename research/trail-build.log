@@ -1,57 +1,35 @@
-Build trails run 40672406418, 2026-10-28T10:28:40Z
-── kashmir-great-lakes 10:28:40
+Build trails run 40673988991, 2026-10-28T10:40:41Z
+── kashmir-great-lakes 10:40:41
 [   1s]   overpass: overpass-api.de Overpass 502 
 [  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
 [ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 235s] kashmir-great-lakes: 477 named places in OpenStreetMap around the trek
-[ 239s]   ? Gadsar Pass not matched; nearby: Gadsar campsite (camp, 7.9 km), Gadsar (water, 3.4 km)
-[ 239s]   ? Satsar not matched; nearby: Satsaran Bar Gali (pass, 1.8 km), Sat sar (water, 2.0 km)
-[ 239s]   leg Sonamarg → Nichnai (10.4 km apart)
-[ 280s]   ~ Sonamarg → Nichnai: a 115.0 km detour for 10.4 km; routed over mapped paths, 0.5 of 12.8 km bridged
-[ 297s]   leg Nichnai → Nichnai Pass (3.1 km apart)
-[ 299s]   leg Nichnai Pass → Vishansar Lake (5.8 km apart)
-[ 301s]   leg Vishansar Lake → Gadsar Lake (6.7 km apart)
-[ 302s]   leg Gadsar Lake → Gangbal Lake (10.7 km apart)
-[ 304s]   leg Gangbal Lake → Naranag (8.9 km apart)
-[ 306s] kashmir-great-lakes: 65.3 km, +2970 m, highest 4199 m, 0.5 km drawn straight, 2043 → 566 points
-[ 306s]   km     0  Sonamarg (2661 m, osm, 34.30239,75.29656)
-[ 306s]   km  23.4  Vishansar Lake (3667 m, osm, 34.38749,75.11822)  18.9 km from last
-[ 306s]   km  30.6  Gadsar Lake (3571 m, osm, 34.42179,75.05753)  6.7 km from last
-[ 306s]   km  52.3  Gangbal Lake (3566 m, osm, 34.42556,74.94058)  10.7 km from last
-[ 306s]   km  65.3  Naranag (2263 m, osm, 34.35023,74.97212)  8.9 km from last
-[ 306s]   camp (estimated): Gadsar Pass (4075 m, 34.40845,75.09194)
-[ 306s]   camp (estimated): Satsar (3594 m, 34.47857,75.00289)
-[ 306s]   camp (estimated): Zaj Pass (3814 m, 34.4282,74.98698)
-[ 306s]   day  1 walk   Sonamarg → Nichnai  12.8 km +1030 −60
-[ 306s]   day  2 walk   Nichnai → Vishansar Lake  10.6 km +490 −440 (approx)
-[ 306s]   day  3 rest   Vishansar Lake → Vishansar Lake
-[ 306s]   day  4 walk   Vishansar Lake → Gadsar Lake  7.3 km +490 −560 (approx)
-[ 306s]   day  5 walk   Gadsar Lake → Satsar  9.8 km +330 −350 (approx)
-[ 306s]   day  6 walk   Satsar → Gangbal Lake  11.9 km +520 −550 (approx)
-[ 306s]   day  7 walk   Gangbal Lake → Naranag  13 km +100 −1390
-── tarsar-marsar-trek 10:33:49
-[   0s]   overpass: overpass-api.de Overpass 502 
-[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 238s] tarsar-marsar-trek: 461 named places in OpenStreetMap around the trek
-[ 242s]   ? Tarsar Pass not matched; nearby: Tarsar Lake (other, 2.6 km), Tar Sar (water, 2.1 km)
-[ 242s]   leg Aru → Lidderwat (9.1 km apart)
-[ 244s]   leg Lidderwat → Tarsar Lake (11.5 km apart)
-[ 245s]   leg Tarsar Lake → Sundersar (3.7 km apart)
-[ 247s]   leg Sundersar → Marsar Lake (1.3 km apart)
-[ 249s] tarsar-marsar-trek: 33.4 km, +2040 m, highest 4016 m, 0 km drawn straight, 1210 → 270 points
-[ 249s]   km     0  Aru (2413 m, osm, 34.09029,75.26244)
-[ 249s]   km  10.9  Lidderwat (2859 m, osm, 34.17209,75.25476)  9.1 km from last
-[ 249s]   km  25.2  Tarsar Lake (3968 m, given, 34.132,75.14)  11.5 km from last
-[ 249s]   km  31.3  Sundersar (3934 m, osm, 34.15607,75.11285)  3.7 km from last
-[ 249s]   km  33.4  Marsar Lake (3808 m, osm, 34.14424,75.11091)  1.3 km from last
-[ 249s]   camp (estimated): Shekwas (3331 m, 34.16108,75.19487)
-[ 249s]   camp (estimated): Tarsar Pass (3777 m, 34.14073,75.12284)
-[ 249s]   day  1 walk   Aru → Lidderwat  10.9 km +480 −30
-[ 249s]   day  2 walk   Lidderwat → Shekwas  7.2 km +550 −100 (approx)
-[ 249s]   day  3 walk   Shekwas → Tarsar Lake  7.1 km +640 −0
-[ 249s]   day  4 walk   Tarsar Lake → Sundersar  6.1 km +320 −340 (approx)
-[ 249s]   day  5 walk   Sundersar → Sundersar  4.2 km +260 −250
-[ 249s]   day  6 walk   Sundersar → Lidderwat  20.4 km +400 −1480
-[ 249s]   day  7 walk   Lidderwat → Aru  10.9 km +20 −470
-Done 10:37:59, 0 failed
+[ 223s] kashmir-great-lakes: 477 named places in OpenStreetMap around the trek
+[ 227s]   ? Gadsar Pass not matched; nearby: Gadsar campsite (camp, 7.9 km), Gadsar (water, 3.4 km)
+[ 227s]   leg Sonamarg → Nichnai (10.4 km apart)
+[ 230s]   overpass: overpass-api.de Overpass 502 
+[ 323s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 419s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 428s]   overpass: overpass-api.de Overpass 502 
+[ 440s]   ! path search failed: Overpass 502 
+[ 440s]   ! Sonamarg → Nichnai: a 115.0 km detour for 10.4 km; drawn straight
+[ 441s]   leg Nichnai → Nichnai Pass (3.1 km apart)
+[ 443s]   leg Nichnai Pass → Vishansar Lake (5.8 km apart)
+[ 445s]   leg Vishansar Lake → Gadsar Lake (6.7 km apart)
+[ 446s]   leg Gadsar Lake → Satsar (6.0 km apart)
+[ 448s]   leg Satsar → Gangbal Lake (5.4 km apart)
+[ 449s]   leg Gangbal Lake → Naranag (8.9 km apart)
+[ 451s] kashmir-great-lakes: 62.9 km, +3160 m, highest 4199 m, 10.4 km drawn straight, 1683 → 464 points
+[ 451s]   km     0  Sonamarg (2661 m, osm, 34.30239,75.29656)
+[ 451s]   km  20.9  Vishansar Lake (3667 m, osm, 34.38749,75.11822)  18.9 km from last
+[ 451s]   km  28.2  Gadsar Lake (3571 m, osm, 34.42179,75.05753)  6.7 km from last
+[ 451s]   km  49.9  Gangbal Lake (3566 m, osm, 34.42556,74.94058)  10.7 km from last
+[ 451s]   km  62.9  Naranag (2263 m, osm, 34.35023,74.97212)  8.9 km from last
+[ 451s]   camp (estimated): Gadsar Pass (4075 m, 34.40845,75.09194)
+[ 451s]   camp (estimated): Zaj Pass (3814 m, 34.4282,74.98698)
+[ 451s]   day  1 walk   Sonamarg → Nichnai  10.4 km +1210 −250
+[ 451s]   day  2 walk   Nichnai → Vishansar Lake  10.6 km +480 −440 (approx)
+[ 451s]   day  3 rest   Vishansar Lake → Vishansar Lake
+[ 451s]   day  4 walk   Vishansar Lake → Gadsar Lake  7.3 km +490 −560 (approx)
+[ 451s]   day  5 walk   Gadsar Lake → Satsar  14.6 km +420 −350
+[ 451s]   day  6 walk   Satsar → Gangbal Lake  7 km +420 −540 (approx)
+[ 451s]   day  7 walk   Gangbal Lake → Naranag  13 km +100 −1390
