@@ -1,8 +1,9 @@
 # Rebuilds the trek trails from OpenStreetMap (scripts/build-trail.mjs) on GitHub's runners, which
 # can reach Overpass, Nominatim, BRouter and Open-Meteo, then syncs each trek's duration, distance
 # and base camp (scripts/sync-trek-facts.mjs) and commits the result to the branch it ran on.
-# Runs by hand (Actions → Build trails → Run workflow) or when the builder or configs change on a
-# claude/ branch.
+# Runs by hand (Actions → Build trails → Run workflow, naming treks or all), or on a push to a
+# claude/ branch that changes the builder, configs or scripts/trails-to-build.txt, which lists the
+# treks a push builds.
 name: Build trails
 
 on:
@@ -17,6 +18,7 @@ on:
       - scripts/build-trail.mjs
       - scripts/osm.mjs
       - scripts/trek-configs.mjs
+      - scripts/trails-to-build.txt
       - .github/workflows/build-trails.yml
 
 permissions:
@@ -38,7 +40,7 @@ jobs:
 
       - name: Build trails
         env:
-          TREKS: ${{ github.event.inputs.treks || 'all' }}
+          TREKS: ${{ github.event.inputs.treks }}
         # One trek at a time, at most 15 minutes each, committed as it finishes with the build log
         # (research/trail-build.log), so progress shows on the branch and a stall loses one trek.
         # A trek that fails keeps its previous trail.
@@ -49,6 +51,8 @@ jobs:
           mkdir -p research
           LOG=research/trail-build.log
           echo "Build trails run ${{ github.run_id }}, $(date -u +%FT%TZ)" > $LOG
+          # A push builds the treks listed in scripts/trails-to-build.txt
+          [ -z "$TREKS" ] && TREKS=$(grep -v '^#' scripts/trails-to-build.txt | xargs)
           if [ "$TREKS" = "all" ]; then
             TREKS=$(node -e 'import("./scripts/trek-configs.mjs").then((m) => console.log(Object.keys(m.TREKS).join(" ")))')
           fi

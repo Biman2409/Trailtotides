@@ -86,13 +86,16 @@ const found = new Map();
 let index = [];
 const taken = (lat, lng) => [...found.values()].some((p) => dist([p.lat, p.lng], [lat, lng]) < 300);
 
-async function place(stop, trek) {
+async function place(stop, trek, prev = null) {
   const s = typeof stop === "string" ? { name: stop } : stop;
   if (found.has(s.name)) return found.get(s.name);
   // First the trek's own place list, which knows campsites, passes and lakes by every name they
   // carry; given coordinates must be within 2 km of the match
   for (const n of [s.name, s.q].filter(Boolean)) {
-    const m = matchPlace(index, n, { as: s.name, ...(s.at ? { near: s.at, maxD: 2000 } : { near: trek.centre, maxD: 80000 }) });
+    // Without coordinates, a stop is looked for within a day's walk of the one before (two
+    // villages along one trek can share a name), or near the trek's centre for the first
+    const where = s.at ? { near: s.at, maxD: 2000 } : prev ? { near: [prev.lat, prev.lng], maxD: 25000 } : { near: trek.centre, maxD: 80000 };
+    const m = matchPlace(index, n, { as: s.name, ...where });
     if (m && !taken(m.lat, m.lng)) {
       const p = { name: s.name, lat: +m.lat.toFixed(5), lng: +m.lng.toFixed(5), ele: m.ele ?? (await heights([[m.lat, m.lng]]))[0], from: "osm" };
       found.set(s.name, p);
@@ -199,7 +202,7 @@ async function build(slug) {
   } catch (e) { index = []; console.warn(`${slug}: place list unavailable (${e.message}), using place search only`); }
 
   const stops = [];
-  for (const s of trek.stops) stops.push({ ...(await place(s, trek)) });
+  for (const s of trek.stops) stops.push({ ...(await place(s, trek, stops[stops.length - 1])) });
   // A stop far from the one before is a different place with the same name
   stops.forEach((s, i) => {
     const gap = i ? dist([stops[i - 1].lat, stops[i - 1].lng], [s.lat, s.lng]) : 0;
