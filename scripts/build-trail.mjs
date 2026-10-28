@@ -228,7 +228,13 @@ async function build(slug) {
     const A = stops[ia], B = stops[ib];
     const guess = [A.lat + frac * (B.lat - A.lat), A.lng + frac * (B.lng - A.lng)];
     const m = matchPlace(index, campName, { near: guess, maxD: Math.max(2500, 0.6 * dist([A.lat, A.lng], [B.lat, B.lng])) });
-    if (!m || taken(m.lat, m.lng)) continue;
+    if (!m || taken(m.lat, m.lng)) {
+      // Names nearby that start the same way, in case OSM spells the camp differently
+      const stem = campName.toLowerCase().replace(/[^a-z]/g, "").slice(0, 4);
+      const near = index.filter((p) => p.names.some((n) => n.toLowerCase().replace(/[^a-z]/g, "").startsWith(stem)) && dist(guess, [p.lat, p.lng]) < 15000);
+      if (near.length) console.log(`  ? ${campName} not matched; nearby: ${near.slice(0, 6).map((p) => `${p.name} (${p.kind}, ${(dist(guess, [p.lat, p.lng]) / 1000).toFixed(1)} km)`).join(", ")}`);
+      continue;
+    }
     const p = { name: campName, lat: +m.lat.toFixed(5), lng: +m.lng.toFixed(5), ele: m.ele ?? (await heights([[m.lat, m.lng]]))[0], from: "osm" };
     found.set(campName, p);
     let li = ia;

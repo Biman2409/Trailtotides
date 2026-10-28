@@ -2,3 +2,4 @@
 # (one slug per line, or "all"). A manual run can name its own.
 annapurna-base-camp
 manaslu-circuit
+khopra-danda
