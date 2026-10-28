@@ -1,21 +1,26 @@
 // Builds a trek's trail from OpenStreetMap into src/lib/trails/<slug>.json:
-//   stops   each overnight stop, placed by Nominatim (OSM's place search), with its height and
-//           how far along the trail it is
-//   line    the walking path between them, routed along OSM's paths by BRouter (hiking profile),
-//           thinned to ~10 m accuracy so pages load it quickly
+//   stops   each overnight stop, found in OSM's named places around the trek (Overpass), by any
+//           name or spelling it carries, else by Nominatim (OSM's place search), with its height
+//           and how far along the trail it is
+//   line    the walking path between them, routed along OSM's paths by BRouter (hiking profile)
+//           through every camp and pass OSM has; where BRouter can't connect two points, over the
+//           mapped paths near them with only the gaps between paths bridged. Thinned to ~10 m
+//           accuracy so pages load it quickly
 //   side    side trips that aren't on the way (summit viewpoints), as points only
 //   days    the day-by-day itinerary: where each day walks from and to, distance, metres up and
 //           down (measured along the line), and where you sleep
 // The data is OpenStreetMap's (ODbL): anything that shows it must credit OpenStreetMap.
 // Remote campsites are often missing from OpenStreetMap, so a stop can carry its own coordinates
-// (`at`), and a stretch with no mapped path is drawn straight with heights from Open-Meteo's
-// elevation model; those stretches are counted in `approxKm`.
-// Run: node scripts/build-trail.mjs <slug> [<slug> ...]   or   all
+// (`at`), camps OSM lacks are placed along the trail (`camps`), and stretches with no mapped
+// path are drawn straight with heights from Open-Meteo's elevation model; those stretches are
+// counted in `approxKm`.
+// Run: node scripts/build-trail.mjs <slug> [<slug> ...]   or   all  (or the Build trails GitHub Action)
 // The stops and days for each trek are in ./trek-configs.mjs. Rewrites src/lib/trails/index.ts.
 // Then run sync-trek-facts.mjs so the trek's duration, distance and base camp follow the itinerary.
 
 import { writeFile, readFile, readdir, mkdir } from "node:fs/promises";
 import { TREKS } from "./trek-configs.mjs";
+import { placesNear, matchPlace, pathRoute } from "./osm.mjs";
 
 const UA = { "User-Agent": "TrailToTides/1.0 (hello@trailtotides.com)" };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -49,9 +54,23 @@ async function heights(pts) {
 }
 
 const found = new Map();
+// Every named place OpenStreetMap has around the trek being built (see placesNear)
+let index = [];
+const taken = (lat, lng) => [...found.values()].some((p) => dist([p.lat, p.lng], [lat, lng]) < 300);
+
 async function place(stop, trek) {
   const s = typeof stop === "string" ? { name: stop } : stop;
   if (found.has(s.name)) return found.get(s.name);
+  // First the trek's own place list, which knows campsites, passes and lakes by every name they
+  // carry; given coordinates must be within 2 km of the match
+  for (const n of [s.name, s.q].filter(Boolean)) {
+    const m = matchPlace(index, n, { as: s.name, ...(s.at ? { near: s.at, maxD: 2000 } : { near: trek.centre, maxD: 80000 }) });
+    if (m && !taken(m.lat, m.lng)) {
+      const p = { name: s.name, lat: +m.lat.toFixed(5), lng: +m.lng.toFixed(5), ele: m.ele ?? (await heights([[m.lat, m.lng]]))[0], from: "osm" };
+      found.set(s.name, p);
+      return p;
+    }
+  }
   const [cla, clo] = trek.centre;
   const box = `&viewbox=${clo - 0.8},${cla + 0.8},${clo + 0.8},${cla - 0.8}&bounded=1`;
   let hit = null;
@@ -66,7 +85,7 @@ async function place(stop, trek) {
   // away is a different place with the same name. A hit on a place already used for another
   // stop is the search falling back to a looser match
   if (hit && s.at && dist([+hit.lat, +hit.lon], s.at) > 2000) hit = null;
-  if (hit && [...found.values()].some((p) => dist([p.lat, p.lng], [+hit.lat, +hit.lon]) < 300)) hit = null;
+  if (hit && taken(+hit.lat, +hit.lon)) hit = null;
   let p;
   if (hit) p = { name: s.name, lat: +(+hit.lat).toFixed(5), lng: +(+hit.lon).toFixed(5), ele: hit.extratags?.ele ? Math.round(+hit.extratags.ele) : null, from: "osm" };
   else if (s.at) p = { name: s.name, lat: s.at[0], lng: s.at[1], ele: s.ele ?? null, from: "given" };
@@ -94,6 +113,18 @@ async function leg(a, b) {
     if (offA > 1500 || offB > 1500) throw new Error(`nearest path is ${Math.round(Math.max(offA, offB))} m away`);
     return { coords, approxKm: 0 };
   } catch (e) {
+    // BRouter gives up when one piece of path is missing; route over the mapped paths ourselves,
+    // jumping only the short gaps between them, which are counted as drawn straight
+    try {
+      const r = await pathRoute([a.lat, a.lng], [b.lat, b.lng]);
+      let len = 0;
+      if (r) for (let i = 1; i < r.coords.length; i++) len += dist(r.coords[i - 1], r.coords[i]);
+      if (r && len <= Math.max(3 * straight, straight + 8000) && r.bridgedM < 0.6 * len) {
+        console.warn(`  ~ ${a.name} → ${b.name}: ${e.message}; routed over mapped paths, ${(r.bridgedM / 1000).toFixed(1)} of ${(len / 1000).toFixed(1)} km bridged`);
+        const ele = await heights(r.coords);
+        return { coords: r.coords.map((p, i) => [p[0], p[1], ele[i]]), approxKm: r.bridgedM / 1000 };
+      }
+    } catch (e2) { console.warn(`  ! path search failed: ${e2.message}`); }
     console.warn(`  ! ${a.name} → ${b.name}: ${e.message}; drawn straight`);
     const n = Math.max(2, Math.ceil(straight / 100));
     const pts = Array.from({ length: n + 1 }, (_, i) => [a.lat + ((b.lat - a.lat) * i) / n, a.lng + ((b.lng - a.lng) * i) / n]);
@@ -129,6 +160,13 @@ async function build(slug) {
   const trek = { ...TREKS[slug], centre: TREKS[slug].centre ?? centre(slug) };
   found.clear();
   const name = (s) => (typeof s === "string" ? s : s.name);
+  // One Overpass query for every named place around the trek: its centre and given coordinates
+  const pts = [trek.centre, ...trek.stops.filter((s) => s.at).map((s) => s.at)];
+  const lats = pts.map((p) => p[0]), lngs = pts.map((p) => p[1]);
+  try {
+    index = await placesNear([Math.min(...lats) - 0.15, Math.min(...lngs) - 0.15, Math.max(...lats) + 0.15, Math.max(...lngs) + 0.15]);
+    console.log(`${slug}: ${index.length} named places in OpenStreetMap around the trek`);
+  } catch (e) { index = []; console.warn(`${slug}: place list unavailable (${e.message}), using place search only`); }
 
   const stops = [];
   for (const s of trek.stops) stops.push({ ...(await place(s, trek)) });
@@ -141,14 +179,42 @@ async function build(slug) {
   for (const s of trek.side ?? []) side.push(await place(s, trek));
   for (const s of trek.extra ?? []) await place(s, trek);
 
+  // Camps and passes OpenStreetMap has, found near where they should be, are routed through, so
+  // the line crosses the right pass and reaches the real campsite
+  const segDist = (p, a, b) => { // metres from p to the straight line a–b, roughly
+    const k = Math.cos((a.lat * Math.PI) / 180), ax = a.lng * k, bx = b.lng * k, px = p.lng * k;
+    const dx = bx - ax, dy = b.lat - a.lat, L = dx * dx + dy * dy;
+    const t = L ? Math.max(0, Math.min(1, ((px - ax) * dx + (p.lat - a.lat) * dy) / L)) : 0;
+    return dist([p.lat, p.lng], [a.lat + t * dy, (ax + t * dx) / k]);
+  };
+  const via = stops.slice(0, -1).map(() => []);
+  for (const [campName, [a, b, frac]] of Object.entries(trek.camps ?? {})) {
+    const ia = stops.findIndex((s) => s.name === a);
+    const ib = stops.findIndex((s, i) => i > ia && s.name === b);
+    if (ia < 0 || ib < 0) throw new Error(`Camp ${campName}: ${a} and ${b} must be stops in that order`);
+    const A = stops[ia], B = stops[ib];
+    const guess = [A.lat + frac * (B.lat - A.lat), A.lng + frac * (B.lng - A.lng)];
+    const m = matchPlace(index, campName, { near: guess, maxD: Math.max(2500, 0.6 * dist([A.lat, A.lng], [B.lat, B.lng])) });
+    if (!m || taken(m.lat, m.lng)) continue;
+    const p = { name: campName, lat: +m.lat.toFixed(5), lng: +m.lng.toFixed(5), ele: m.ele ?? (await heights([[m.lat, m.lng]]))[0], from: "osm" };
+    found.set(campName, p);
+    let li = ia;
+    for (let i = ia; i < ib; i++) if (segDist(p, stops[i], stops[i + 1]) < segDist(p, stops[li], stops[li + 1])) li = i;
+    via[li].push(p);
+  }
+  via.forEach((v, i) => v.sort((p, q) => dist([stops[i].lat, stops[i].lng], [p.lat, p.lng]) - dist([stops[i].lat, stops[i].lng], [q.lat, q.lng])));
+
   // The line, leg by leg; each stop's position on it is where its leg starts or ends
   let full = [];
   let approxKm = 0;
   const at = [0];
   for (let i = 0; i < stops.length - 1; i++) {
-    const l = await leg(stops[i], stops[i + 1]);
-    approxKm += l.approxKm;
-    full = full.concat(i === 0 ? l.coords : l.coords.slice(1));
+    const chain = [stops[i], ...via[i], stops[i + 1]];
+    for (let k = 0; k < chain.length - 1; k++) {
+      const l = await leg(chain[k], chain[k + 1]);
+      approxKm += l.approxKm;
+      full = full.concat(full.length ? l.coords.slice(1) : l.coords);
+    }
     at.push(full.length - 1);
   }
 
@@ -182,9 +248,9 @@ async function build(slug) {
   // mapped stops. Their position is an estimate, so days that reach them are marked approximate
   const estimated = new Set();
   for (const [campName, [a, b, frac]] of Object.entries(trek.camps ?? {})) {
+    if (found.has(campName)) continue; // found in OpenStreetMap and routed through
     const ia = stops.findIndex((s) => s.name === a);
     const ib = stops.findIndex((s, i) => i > ia && s.name === b);
-    if (ia < 0 || ib < 0) throw new Error(`Camp ${campName}: ${a} and ${b} must be stops in that order`);
     const target = cum[at[ia]] + frac * (cum[at[ib]] - cum[at[ia]]);
     let k = at[ia];
     while (k < at[ib] && cum[k] < target) k++;

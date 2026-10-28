@@ -1,0 +1,75 @@
+# Rebuilds the trek trails from OpenStreetMap (scripts/build-trail.mjs) on GitHub's runners, which
+# can reach Overpass, Nominatim, BRouter and Open-Meteo, then syncs each trek's duration, distance
+# and base camp (scripts/sync-trek-facts.mjs) and commits the result to the branch it ran on.
+# Runs by hand (Actions → Build trails → Run workflow) or when the builder or configs change on a
+# claude/ branch.
+name: Build trails
+
+on:
+  workflow_dispatch:
+    inputs:
+      treks:
+        description: Trek slugs separated by spaces, or all
+        default: all
+  push:
+    branches: ["claude/**"]
+    paths:
+      - scripts/build-trail.mjs
+      - scripts/osm.mjs
+      - scripts/trek-configs.mjs
+      - .github/workflows/build-trails.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-trails-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build trails
+        env:
+          TREKS: ${{ github.event.inputs.treks || 'all' }}
+        # A trek that fails keeps its previous trail; the others are still committed
+        run: |
+          set +e
+          node scripts/build-trail.mjs $TREKS 2>&1 | tee build-trails.log
+          echo "status=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+        id: build
+
+      - name: Sync trek facts
+        run: node scripts/sync-trek-facts.mjs
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Trails built (exit ${{ steps.build.outputs.status }})"
+            echo '```'
+            grep -E "^[a-z0-9-]+: [0-9.]+ km|^[a-z0-9-]+: FAILED|^  [!~] |camp \(estimated\)|^Failed" build-trails.log || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-trails-log
+          path: build-trails.log
+
+      - name: Commit
+        run: |
+          git config user.name "Trail to Tides"
+          git config user.email "hello@trailtotides.com"
+          git add src/lib/trails src/lib/data.ts
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "Trails rebuilt from OpenStreetMap on GitHub Actions" -m "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          git push
