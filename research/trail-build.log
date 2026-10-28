@@ -19,3 +19,18 @@ Build trails run 40762148910, 2026-10-28T20:19:00Z
 [ 246s]   day  2 walk   Deoriatal → Rohini Bugyal  7.9 km +480 −180 (approx)
 [ 246s]   day  3 walk   Rohini Bugyal → Chopta  7.8 km +570 −350
 [ 246s]   day  4 walk   Chopta → Chopta  13.5 km +950 −950
+── valley-of-flowers 20:23:08
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 229s] valley-of-flowers: 177 named places in OpenStreetMap around the trek
+[ 232s]   leg Pulna → Ghangaria (7.6 km apart)
+[ 235s] valley-of-flowers: 9.4 km, +1100 m, highest 3096 m, 0 km drawn straight, 278 → 107 points
+[ 235s]   km     0  Pulna (2118 m, osm, 30.63576,79.57163)
+[ 235s]   km   9.4  Ghangaria (3102 m, osm, 30.70145,79.5938)  7.6 km from last
+[ 235s]   side trip: Valley of Flowers (3187 m, osm)
+[ 235s]   side trip: Hemkund Sahib (4202 m, osm)
+[ 235s]   day  1 walk   Pulna → Ghangaria  9.4 km +1100 −140
+[ 235s]   day  2 walk   Ghangaria → Ghangaria  10 km +500 −500
+[ 235s]   day  3 walk   Ghangaria → Ghangaria  12 km +1100 −1100
+[ 235s]   day  4 walk   Ghangaria → Pulna  9.4 km +140 −1090
