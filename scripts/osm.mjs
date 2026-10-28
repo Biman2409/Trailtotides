@@ -87,6 +87,7 @@ export function matchPlace(index, name, { near, maxD, as = name }) {
   // `as` is the stop's own name when `name` is a shorter search for it ("Gadsar" for Gadsar Lake)
   const wantHigh = HIGH.test(as), wantWater = WATER.test(as) && !wantHigh;
   const n0 = norm(name).replace(/\s+/g, " ").trim(), c0 = core(name), l0 = loose(name);
+  const joined = (s) => norm(s).replace(/\s+/g, ""); // "Sat sar" is Satsar, "Tar Sar" Tarsar
   let best = null;
   for (const p of index) {
     const d = near ? dist(near, [p.lat, p.lng]) : 0;
@@ -94,7 +95,7 @@ export function matchPlace(index, name, { near, maxD, as = name }) {
     let score = 0;
     for (const n of p.names) {
       const s = norm(n).replace(/\s+/g, " ").trim() === n0 ? 3
-        : c0.length >= 3 && core(n) === c0 ? 2
+        : joined(n) === joined(name) || (c0.length >= 3 && core(n) === c0) ? 2
         : l0.length >= 4 && loose(n) === l0 ? 1 : 0;
       score = Math.max(score, s);
     }

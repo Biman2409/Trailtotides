@@ -2,3 +2,4 @@
 # (one slug per line, or "all"). A manual run can name its own.
 kashmir-great-lakes
 tarsar-marsar-trek
+markha-valley

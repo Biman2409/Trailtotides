@@ -543,7 +543,7 @@ export const TREKS = {
     stops: [
       { name: "Aru", at: [34.09029, 75.26244] },
       { name: "Lidderwat", at: [34.17209, 75.25476] },
-      { name: "Tarsar Lake", q: "Tarsar", at: [34.1320, 75.14] },
+      { name: "Tarsar Lake", q: "Tar Sar", at: [34.1320, 75.14] },
       { name: "Sundersar", at: [34.15611, 75.11275] },
       { name: "Marsar Lake", q: "Mar Sar", at: [34.14426, 75.10983] },
     ],
