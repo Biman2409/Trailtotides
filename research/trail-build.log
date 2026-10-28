@@ -29,3 +29,31 @@ Build trails run 40659812910, 2026-10-28T08:52:34Z
 [  46s]   day  9 walk   Gorak Shep → Pheriche  15.6 km +500 −1220 (approx)
 [  46s]   day 10 walk   Pheriche → Namche Bazaar  21 km +380 −1380
 [  46s]   day 11 walk   Namche Bazaar → Lukla  17.7 km +360 −930
+── gokyo-lakes 08:53:22
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 232s] gokyo-lakes: 471 named places in OpenStreetMap around the trek
+[ 235s]   leg Lukla → Phakding (6.0 km apart)
+[ 237s]   leg Phakding → Namche Bazaar (7.1 km apart)
+[ 239s]   leg Namche Bazaar → Dole (7.2 km apart)
+[ 241s]   leg Dole → Machhermo (4.3 km apart)
+[ 242s]   leg Machhermo → Gokyo (6.1 km apart)
+[ 244s] gokyo-lakes: 41.3 km, +2650 m, highest 4765 m, 0 km drawn straight, 2175 → 489 points
+[ 244s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
+[ 244s]   km   7.4  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
+[ 244s]   km  17.7  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
+[ 244s]   km  29.2  Dole (4050 m, osm, 27.86662,86.73088)  7.2 km from last
+[ 244s]   km  34.4  Machhermo (4386 m, osm, 27.90288,86.7156)  4.3 km from last
+[ 244s]   km  41.3  Gokyo (4750 m, osm, 27.95409,86.69459)  6.1 km from last
+[ 244s]   side trip: Gokyo Ri (5357 m, osm)
+[ 244s]   day  1 walk   Lukla → Phakding  7.4 km +90 −320
+[ 244s]   day  2 walk   Phakding → Namche Bazaar  10.4 km +840 −70
+[ 244s]   day  3 rest   Namche Bazaar → Namche Bazaar
+[ 244s]   day  4 walk   Namche Bazaar → Dole  11.5 km +940 −330
+[ 244s]   day  5 walk   Dole → Machhermo  5.2 km +380 −20
+[ 244s]   day  6 walk   Machhermo → Gokyo  6.9 km +360 −0
+[ 244s]   day  7 walk   Gokyo → Gokyo  4 km +600 −600
+[ 244s]   day  8 walk   Gokyo → Dole  12.1 km +20 −740
+[ 244s]   day  9 walk   Dole → Namche Bazaar  11.5 km +330 −950
+[ 244s]   day 10 walk   Namche Bazaar → Lukla  17.7 km +360 −930
