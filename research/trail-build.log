@@ -328,3 +328,26 @@ Build trails run 40693741914, 2026-10-28T13:08:43Z
 [ 247s]   day  2 walk   Gulling → Khullara  3.9 km +1070 −0
 [ 247s]   day  3 walk   Khullara → Khullara  2.5 km +290 −290
 [ 247s]   day  4 walk   Khullara → Dhak  7.8 km +100 −1410
+── pangarchulla-peak 13:59:32
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] pangarchulla-peak: place list unavailable (Overpass 502 ), using place search only
+[ 233s]   leg Dhak → Khullara (4.9 km apart)
+[ 235s]   leg Khullara → Pangarchulla (4.0 km apart)
+[ 237s]   overpass: overpass-api.de Overpass 502 
+[ 330s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 426s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 436s]   overpass: overpass-api.de Overpass 502 
+[ 448s]   ! path search failed: Overpass 502 
+[ 448s]   ! Khullara → Pangarchulla: nearest path is 2022 m away; drawn straight
+[ 451s] pangarchulla-peak: 11.8 km, +2570 m, highest 4559 m, 4 km drawn straight, 193 → 80 points
+[ 451s]   km     0  Dhak (2106 m, osm, 30.49886,79.61134)
+[ 451s]   km   7.8  Khullara (3393 m, osm, 30.45968,79.58748)  4.9 km from last
+[ 451s]   km  11.8  Pangarchulla (4559 m, osm, 30.42367,79.59214)  4.0 km from last
+[ 451s]   camp (estimated): Gulling (2284 m, 30.4793,79.60696)
+[ 451s]   day  1 walk   Dhak → Gulling  3.9 km +320 −80 (approx)
+[ 451s]   day  2 walk   Gulling → Khullara  3.9 km +1070 −0
+[ 451s]   day  3 walk   Khullara → Khullara  8.1 km +1170 −1170
+[ 451s]   day  4 walk   Khullara → Dhak  7.8 km +100 −1410
