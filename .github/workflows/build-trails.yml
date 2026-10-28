@@ -105,7 +105,7 @@ jobs:
         run: |
           git config user.name "Trail to Tides"
           git config user.email "hello@trailtotides.com"
-          git add src/lib/trails src/lib/data.ts
+          git add src/lib/trails src/lib/data.ts && git add -f research/trail-build.log
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git commit -m "Trek facts synced to the rebuilt itineraries" -m "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           # The branch may have moved while the build ran

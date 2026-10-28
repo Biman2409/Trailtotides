@@ -3,6 +3,8 @@
 //         OpenStreetMap; { name, at: [lat, lng] } carries coordinates read off OpenStreetMap
 //         (a place, a campsite, or the end of a named trail segment) for when the search can't
 //         find it by name. q overrides the search text. A loop lists its start again at the end.
+//         optional: true takes the stop only if the trek's OSM place list has it (by name or q),
+//         and leaves it out otherwise, with it the days' visits to it.
 // camps   camps between two stops: { name: [stopA, stopB, share, aka?] }. Looked up in
 //         OpenStreetMap by name and by the other names in aka, near where they should be; one it
 //         doesn't have is put that share of the way along the trail from stop A to stop B, and
@@ -581,7 +583,10 @@ export const TREKS = {
       { name: "Thansing", at: [27.51688, 88.18392] },
       { name: "Lamuney", at: [27.5456, 88.18604] },
       { name: "Samiti Lake", at: [27.56166, 88.18738] },
+      // Viewpoint 1, where treks now turn round; Goecha La itself is closed to trekkers
+      { name: "Goechala Viewpoint 1", q: "View Point 1", optional: true },
     ],
+    side: [{ name: "Dzongri Top", optional: true }],
     days: [
       { to: "Sachen", note: "Out of Yuksom into dense forest" },
       { to: "Tshoka", note: "Over the Prekchu on a high bridge and up to a small Tibetan settlement" },
@@ -589,7 +594,7 @@ export const TREKS = {
       { rest: "Acclimatisation day: up Dzongri Top at dawn for Kanchenjunga and Pandim" },
       { to: "Thansing", note: "Down to the Prekchu and along its valley, Pandim above" },
       { to: "Lamuney", note: "A short walk to the last camp" },
-      { to: "Thansing", via: ["Samiti Lake"], note: "Leave around 2 am, past Samiti Lake to the viewpoint facing Kanchenjunga at sunrise, then back down" },
+      { to: "Thansing", via: ["Samiti Lake", "Goechala Viewpoint 1"], note: "Leave around 2 am, past Samiti Lake to the viewpoint facing Kanchenjunga at sunrise, then back down" },
       { to: "Tshoka", note: "A long descent the way you came, skipping Dzongri" },
       { to: "Yuksom", note: "Down through the forest to Yuksom" },
     ],
@@ -598,7 +603,7 @@ export const TREKS = {
   "sandakphu-phalut-trek": {
     near: "Darjeeling, West Bengal",
     stops: [{ name: "Manebhanjan", q: "Maneybhanjang", at: [26.98863, 88.12034] }, { name: "Tumling", at: [27.03126, 88.06896] }, { name: "Sandakphu", at: [27.10444, 88.00048] }, { name: "Phalut", at: [27.20754, 88.01583] }, { name: "Gorkhey", at: [27.18744, 88.07195] }],
-    camps: { Kalipokhri: ["Tumling", "Sandakphu", 0.6] },
+    camps: { Kalipokhri: ["Tumling", "Sandakphu", 0.6, ["Kalipokhari", "Kali Pokhari", "Kalpokhari", "Kalipokhri Lake"]] },
     days: [
       { to: "Tumling", note: "A steep climb out of Manebhanjan past Chitrey's monastery, along the India-Nepal border" },
       { to: "Kalipokhri", note: "Through Singalila National Park's forest to the 'black lake'" },

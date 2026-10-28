@@ -43,6 +43,8 @@ async function request(url, { headers = UA, timeout = 60000, text = false } = {}
       last = new Error(`${new URL(url).host} ${res.status} ${(await res.text()).slice(0, 120).replace(/\s+/g, " ")}`);
       if (res.status >= 400 && res.status < 500 && res.status !== 429) throw last; // a bad request won't improve
     } catch (e) {
+      // fetch's own "fetch failed" hides the network error in its cause
+      if (e.cause) e.message += ` (${e.cause.code ?? e.cause.message ?? e.cause})`;
       last = e;
       if (e.message?.match(/ 4\d\d /) && !e.message.includes(" 429 ")) throw e;
     }
@@ -71,14 +73,27 @@ function dist([la1, lo1], [la2, lo2]) {
 async function heights(pts) {
   const out = [];
   for (let i = 0; i < pts.length; i += 100) {
-    const part = pts.slice(i, i + 100);
+    const part = pts.slice(i, i + 100).map(([la, lo]) => [+la.toFixed(5), +lo.toFixed(5)]);
+    out.push(...(await heightsOf(part)));
+  }
+  return out;
+}
+
+// Heights from Open-Meteo (Copernicus 90 m), else from OpenTopoData (SRTM 90 m)
+async function heightsOf(part) {
+  try {
     const url = `https://api.open-meteo.com/v1/elevation?latitude=${part.map((p) => p[0]).join(",")}&longitude=${part.map((p) => p[1]).join(",")}`;
     const j = await request(url, { headers: {} });
     if (!Array.isArray(j.elevation)) throw new Error(`Open-Meteo: ${j.reason ?? "no heights"}`);
-    out.push(...j.elevation.map((e) => Math.round(e)));
     await sleep(300); // Open-Meteo's free tier limits requests a minute
+    return j.elevation.map((e) => Math.round(e));
+  } catch (e) {
+    console.warn(`  heights: Open-Meteo failed (${e.message}), trying OpenTopoData`);
+    const url = `https://api.opentopodata.org/v1/srtm90m?locations=${part.map((p) => p.join(",")).join("|")}`;
+    const j = await request(url, { headers: {} });
+    await sleep(1100); // OpenTopoData allows one request a second
+    return j.results.map((r) => Math.round(r.elevation ?? 0));
   }
-  return out;
 }
 
 const found = new Map();
@@ -94,7 +109,7 @@ async function place(stop, trek, prev = null) {
   for (const n of [s.name, s.q].filter(Boolean)) {
     // Without coordinates, a stop is looked for within a day's walk of the one before (two
     // villages along one trek can share a name), or near the trek's centre for the first
-    const where = s.at ? { near: s.at, maxD: 2000 } : prev ? { near: [prev.lat, prev.lng], maxD: 25000 } : { near: trek.centre, maxD: 80000 };
+    const where = s.at ? { near: s.at, maxD: 2000 } : prev ? { near: [prev.lat, prev.lng], maxD: s.optional ? 5000 : 25000 } : { near: trek.centre, maxD: 80000 };
     const m = matchPlace(index, n, { as: s.name, ...where });
     if (m && !taken(m.lat, m.lng)) {
       const p = { name: s.name, lat: +m.lat.toFixed(5), lng: +m.lng.toFixed(5), ele: m.ele ?? (await heights([[m.lat, m.lng]]))[0], from: "osm" };
@@ -102,6 +117,8 @@ async function place(stop, trek, prev = null) {
       return p;
     }
   }
+  // An optional stop is taken only from the trek's OSM place list: no looser search, no guess
+  if (s.optional) return null;
   const [cla, clo] = trek.centre;
   const box = `&viewbox=${clo - 0.8},${cla + 0.8},${clo + 0.8},${cla - 0.8}&bounded=1`;
   let hit = null;
@@ -202,14 +219,23 @@ async function build(slug) {
   } catch (e) { index = []; console.warn(`${slug}: place list unavailable (${e.message}), using place search only`); }
 
   const stops = [];
-  for (const s of trek.stops) stops.push({ ...(await place(s, trek, stops[stops.length - 1])) });
+  const skipped = new Set(); // optional stops and side trips OSM doesn't have
+  for (const s of trek.stops) {
+    const p = await place(s, trek, stops[stops.length - 1]);
+    if (p) stops.push({ ...p });
+    else { skipped.add(s.name); console.log(`  optional stop not in OpenStreetMap, left out: ${s.name}`); }
+  }
   // A stop far from the one before is a different place with the same name
   stops.forEach((s, i) => {
     const gap = i ? dist([stops[i - 1].lat, stops[i - 1].lng], [s.lat, s.lng]) : 0;
     if (gap > 25000) throw new Error(`${s.name} is ${Math.round(gap / 1000)} km from ${stops[i - 1].name}: give it coordinates (at)`);
   });
   const side = [];
-  for (const s of trek.side ?? []) side.push(await place(s, trek));
+  for (const s of trek.side ?? []) {
+    const p = await place(s, trek, stops.at(-1));
+    if (p) side.push(p);
+    else { skipped.add(typeof s === "string" ? s : s.name); console.log(`  optional side trip not in OpenStreetMap, left out: ${s.name}`); }
+  }
   for (const s of trek.extra ?? []) await place(s, trek);
 
   // Camps and passes OpenStreetMap has, found near where they should be, are routed through, so
@@ -337,7 +363,8 @@ async function build(slug) {
     const day = n + 1;
     if (d.rest) { days.push({ day, kind: "rest", from: here.name, to: here.name, sleepEle: here.ele, note: d.rest }); return; }
     if (d.travel) { days.push({ day, kind: "travel", from: here.name, to: null, sleepEle: null, note: d.travel }); return; }
-    const route = [...(d.via ?? []), d.to].map((v) => found.get(v));
+    const vias = (d.via ?? []).filter((v) => !skipped.has(v));
+    const route = [...vias, d.to].map((v) => found.get(v));
     if (route.some((p) => !p)) throw new Error(`Day ${day}: unknown place in ${JSON.stringify(d)}`);
     let km = 0, up = 0, down = 0, approx = false, idx = hereIdx;
     for (const p of route) {
@@ -350,7 +377,7 @@ async function build(slug) {
     if (d.side) { km += d.side.km; up += d.side.up; down += d.side.up; }
     const to = found.get(d.to);
     days.push({
-      day, kind: "walk", from: here.name, to: to.name, via: [...(d.via ?? []), ...(d.side ? [d.side.name] : [])],
+      day, kind: "walk", from: here.name, to: to.name, via: [...vias, ...(d.side ? [d.side.name] : [])],
       km: +km.toFixed(1), up: Math.round(up / 10) * 10, down: Math.round(down / 10) * 10, approx,
       sleepEle: to.ele, note: d.note ?? "",
     });
