@@ -12,7 +12,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { AXIS_LABEL } from "@/lib/fitness";
 import { MONTHS } from "@/lib/homeCuration";
 import { track } from "@/lib/analytics";
-import { trailClimbM, trailProfile, trailWalkKm, type Trail } from "@/lib/trails/shared";
+import { trailClimbM, trailEnds, trailProfile, trailWalkKm, type Trail } from "@/lib/trails/shared";
 import {
   genreOf, difficultyOf, difficultyColor, verifiedOperators, priceFrom, formatINR, daysAgo, inSeason, type Fit,
 } from "./mapShared";
@@ -236,7 +236,7 @@ function TrailPanel({ trail, slug }: { trail: Trail; slug: string }) {
       <div className="flex items-center gap-2">
         <Route className="w-4 h-4 text-[#ff7d47] shrink-0" />
         <p className="text-[12.5px] font-bold text-white">Trail on the map</p>
-        <p className="ml-auto text-[11px] text-white/50 tabular-nums">{trailWalkKm(trail)} km · +{trailClimbM(trail).toLocaleString("en-IN")} m · {trail.stops.length} stops</p>
+        <p className="ml-auto text-[11px] text-white/50 tabular-nums" title={`${trailEnds(trail).from} to ${trailEnds(trail).to}, start to end`}>{trailWalkKm(trail)} km · +{trailClimbM(trail).toLocaleString("en-IN")} m · {trail.stops.length} stops</p>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-10 mt-2" aria-label={`Elevation ${lo.toLocaleString("en-IN")} to ${hi.toLocaleString("en-IN")} m`} role="img">
         <path d={`${d}L${W},${H}L0,${H}Z`} fill="rgba(255,81,0,0.18)" />
