@@ -410,3 +410,26 @@ Build trails run 40693741914, 2026-10-28T13:08:43Z
 [  56s]   day  2 walk   Dwali → Phurkia  4.9 km +630 −80
 [  56s]   day  3 walk   Phurkia → Dwali  18.1 km +1000 −1570
 [  56s]   day  4 walk   Dwali → Khati  10.5 km +320 −690
+── roopkund 14:15:17
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 234s] roopkund: 436 named places in OpenStreetMap around the trek
+[ 241s]   leg Lohajung → Didna (4.3 km apart)
+[ 243s]   leg Didna → Ali Bugyal (3.1 km apart)
+[ 245s]   leg Ali Bugyal → Bedni Bugyal (3.2 km apart)
+[ 246s]   leg Bedni Bugyal → Patar Nachauni (3.1 km apart)
+[ 248s]   leg Patar Nachauni → Bhagwabasa (3.1 km apart)
+[ 250s]   leg Bhagwabasa → Roopkund (2.3 km apart)
+[ 251s] roopkund: 29.1 km, +3390 m, highest 4801 m, 0 km drawn straight, 1329 → 248 points
+[ 251s]   km     0  Lohajung (2335 m, given, 30.1283,79.619)
+[ 251s]   km   7.7  Didna (2459 m, osm, 30.16473,79.63419)  4.3 km from last
+[ 251s]   km  13.9  Ali Bugyal (3502 m, osm, 30.18229,79.65865)  3.1 km from last
+[ 251s]   km  17.8  Bedni Bugyal (3501 m, osm, 30.20929,79.66919)  3.2 km from last
+[ 251s]   km  29.1  Roopkund (4784 m, osm, 30.2621,79.73172)  8.4 km from last
+[ 251s]   day  1 walk   Lohajung → Didna  7.7 km +630 −470
+[ 251s]   day  2 walk   Didna → Bedni Bugyal  10.1 km +1280 −310 (approx)
+[ 251s]   day  3 walk   Bedni Bugyal → Patar Nachauni  3.9 km +560 −60
+[ 251s]   day  4 walk   Patar Nachauni → Bhagwabasa  4.2 km +410 −60
+[ 251s]   day  5 walk   Bhagwabasa → Patar Nachauni  10.6 km +560 −910
+[ 251s]   day  6 walk   Patar Nachauni → Lohajung  21.7 km +830 −2450
