@@ -168,3 +168,20 @@ Build trails run 40681718153, 2026-10-28T11:41:08Z
 [  93s]   day  2 walk   Ghangaria → Ghangaria  10 km +500 −500
 [  93s]   day  3 walk   Ghangaria → Ghangaria  12 km +1100 −1100
 [  93s]   day  4 walk   Ghangaria → Pulna  9.4 km +140 −1090
+── dodital-darwa-pass 12:07:39
+[  32s] dodital-darwa-pass: 401 named places in OpenStreetMap around the trek
+[  34s]   leg Sangam Chatti → Manjhi (7.9 km apart)
+[  36s]   leg Manjhi → Dodital (2.6 km apart)
+[  38s]   leg Dodital → Darwa Pass (2.3 km apart)
+[  39s] dodital-darwa-pass: 18.4 km, +2430 m, highest 3764 m, 0 km drawn straight, 418 → 140 points
+[  39s]   km     0  Sangam Chatti (1615 m, osm, 30.83588,78.45063)
+[  39s]   km  11.6  Manjhi (2956 m, osm, 30.87492,78.51945)  7.9 km from last
+[  39s]   km  15.7  Dodital (3071 m, osm, 30.89725,78.52606)  2.6 km from last
+[  39s]   km  18.4  Darwa Pass (3776 m, osm, 30.91411,78.51179)  2.3 km from last
+[  39s]   camp (estimated): Agoda (2261 m, 30.84597,78.48661)
+[  39s]   day  1 walk   Sangam Chatti → Agoda  4.6 km +630 −0 (approx)
+[  39s]   day  2 walk   Agoda → Manjhi  6.9 km +940 −230
+[  39s]   day  3 walk   Manjhi → Dodital  4.1 km +220 −80
+[  39s]   day  4 walk   Dodital → Dodital  5.5 km +650 −650
+[  39s]   day  5 walk   Dodital → Manjhi  4.1 km +80 −210
+[  39s]   day  6 walk   Manjhi → Sangam Chatti  11.6 km +260 −1590
