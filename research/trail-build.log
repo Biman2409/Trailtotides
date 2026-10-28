@@ -59,3 +59,19 @@ Build trails run 40690581208, 2026-10-28T12:46:29Z
 [  71s]   day  4 walk   Patar Nachauni → Bhagwabasa  4.2 km +410 −60
 [  71s]   day  5 walk   Bhagwabasa → Patar Nachauni  10.6 km +580 −930
 [  71s]   day  6 walk   Patar Nachauni → Lohajung  21.5 km +830 −2460
+── ali-bedni-bugyal 12:53:45
+[  34s] ali-bedni-bugyal: 468 named places in OpenStreetMap around the trek
+[  56s]   leg Lohajung → Didna (4.3 km apart)
+[  58s]   leg Didna → Ali Bugyal (3.3 km apart)
+[  60s]   leg Ali Bugyal → Bedni Bugyal (3.1 km apart)
+[  62s]   leg Bedni Bugyal → Wan (4.7 km apart)
+[  63s] ali-bedni-bugyal: 27.4 km, +2080 m, highest 3624 m, 0 km drawn straight, 675 → 253 points
+[  63s]   km     0  Lohajung (2335 m, given, 30.1283,79.619)
+[  63s]   km   7.7  Didna (2459 m, osm, 30.16473,79.63419)  4.3 km from last
+[  63s]   km  14.1  Ali Bugyal (3463 m, osm, 30.18216,79.66163)  3.3 km from last
+[  63s]   km  17.3  Bedni Bugyal (3445 m, osm, 30.20928,79.66648)  3.1 km from last
+[  63s]   km  27.4  Wan (2454 m, osm, 30.20504,79.61753)  4.7 km from last
+[  63s]   day  1 walk   Lohajung → Didna  7.7 km +630 −470
+[  63s]   day  2 walk   Didna → Ali Bugyal  6.3 km +1090 −140
+[  63s]   day  3 walk   Ali Bugyal → Bedni Bugyal  3.3 km +180 −80 (approx)
+[  63s]   day  4 walk   Bedni Bugyal → Wan  10.1 km +200 −1260
