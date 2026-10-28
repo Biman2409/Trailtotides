@@ -15,6 +15,7 @@ import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
 import ACEProfileSection from "./ACEProfileSection";
 import RadarPeek from "./RadarPeek";
+import GuidesForTrek from "./GuidesForTrek";
 import HeroActions from "./HeroActions";
 import { createAdminClient } from "@/lib/supabase/server";
 import { getACE, computeDifficulty } from "@/lib/ace";
@@ -526,6 +527,8 @@ export default async function ExperiencePage({ params }: Props) {
                     adventureAce={ace}
                     slug={adventure.slug}
                   />
+
+                  <GuidesForTrek type={adventure.type} altitudeM={altM} hasTrail={!!trail} />
                 </div>
               </AccordionSection>
 

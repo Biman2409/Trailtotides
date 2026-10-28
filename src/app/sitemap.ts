@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { adventures } from "@/lib/data";
 import { getPublishedStories } from "@/lib/stories";
 import { DESTINATIONS } from "@/lib/destinations";
+import { GUIDES } from "@/lib/adventurepedia";
 
 const BASE = "https://www.trailtotides.com";
 // Images served from /public need the full address in a sitemap
@@ -21,8 +22,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/map`, priority: 0.8 },
     { url: `${BASE}/matchmaker`, priority: 0.8 },
     { url: `${BASE}/ace`, priority: 0.7 },
-    { url: `${BASE}/adventurepedia`, priority: 0.5 },
+    { url: `${BASE}/adventurepedia`, priority: 0.7 },
     { url: `${BASE}/adventurepedia/offline-maps`, priority: 0.5 },
+    ...GUIDES.filter((g) => !g.custom).map((g) => ({ url: `${BASE}/adventurepedia/${g.slug}`, priority: 0.6 })),
     { url: `${BASE}/stories`, priority: 0.8 },
     { url: `${BASE}/operators`, priority: 0.7 },
     { url: `${BASE}/about`, priority: 0.6 },

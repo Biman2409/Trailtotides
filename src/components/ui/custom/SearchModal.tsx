@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Search, X, MapPin, BookOpen, ArrowRight, Loader2 } from "lucide-react";
+import { Search, X, MapPin, BookOpen, ArrowRight, Loader2, Library } from "lucide-react";
 import Image from "next/image";
 import type { SearchResult } from "@/app/api/search/route";
 
@@ -87,6 +87,7 @@ export default function SearchModal({ open, onClose }: Props) {
 
   const adventureResults = results.filter((r) => r.type === "adventure");
   const storyResults = results.filter((r) => r.type === "story");
+  const guideResults = results.filter((r) => r.type === "guide");
 
   return (
     <>
@@ -108,7 +109,7 @@ export default function SearchModal({ open, onClose }: Props) {
             <input
               ref={inputRef}
               type="text"
-              placeholder="Search adventures, stories..."
+              placeholder="Search adventures, guides, stories..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -136,7 +137,7 @@ export default function SearchModal({ open, onClose }: Props) {
               </div>
             ) : !query.trim() ? (
               <div className="py-12 text-center">
-                <p className="text-sm" style={{ color: "var(--text-muted)" }}>Type to search adventures & stories</p>
+                <p className="text-sm" style={{ color: "var(--text-muted)" }}>Type to search adventures, guides & stories</p>
                 <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
                   {allResults.length} total results indexed
                 </p>
@@ -172,6 +173,36 @@ export default function SearchModal({ open, onClose }: Props) {
                               <MapPin className="w-3 h-3 inline mr-0.5" />
                               {r.subtitle}
                             </p>
+                          </div>
+                          <ArrowRight className="w-3.5 h-3.5 shrink-0" style={{ color: "var(--text-muted)" }} />
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Adventurepedia guides */}
+                {guideResults.length > 0 && (
+                  <div className="px-2 pt-2">
+                    <p className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider"
+                      style={{ color: "var(--text-tertiary)" }}>
+                      Guides · {guideResults.length}
+                    </p>
+                    {guideResults.map((r) => {
+                      const idx = results.indexOf(r);
+                      return (
+                        <button
+                          key={r.id}
+                          onClick={() => navigate(r.url)}
+                          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left"
+                          style={{ background: idx === selectedIndex ? "rgba(255,81,0,0.10)" : "transparent" }}
+                        >
+                          <div className="w-10 h-10 rounded-lg shrink-0 flex items-center justify-center" style={{ background: "rgba(255,81,0,0.1)" }}>
+                            <Library className="w-4.5 h-4.5 text-[#ff5100]" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>{r.title}</p>
+                            <p className="text-xs truncate mt-0.5" style={{ color: "var(--text-muted)" }}>{r.subtitle}</p>
                           </div>
                           <ArrowRight className="w-3.5 h-3.5 shrink-0" style={{ color: "var(--text-muted)" }} />
                         </button>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, BadgeCheck, BookOpen, ArrowRight } from "lucide-react";
+import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, BadgeCheck, BookOpen, ArrowRight, Library, Gauge } from "lucide-react";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { MountainSnow } from "@/lib/localIcons";
 import Image from "next/image";
@@ -22,8 +22,20 @@ const navLinks = [
   // Same icons as the hero's Fitness match / Verified operators pop-outs
   { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark },
   { href: "/operators", label: "Operators", icon: BadgeCheck },
-  { href: "/stories", label: "Stories", icon: BookOpen },
 ];
+
+// "Know-how": everything to read before you go, under one menu. Adventurepedia leads.
+const knowHowLinks = [
+  { href: "/adventurepedia", label: "Adventurepedia", blurb: "Guides for planning, safety, gear and the trail", icon: Library },
+  { href: "/stories", label: "Stories", blurb: "Field reports from people who went", icon: BookOpen },
+  { href: "/ace", label: "How ACE works", blurb: "How we rate what an adventure asks of you", icon: Gauge },
+];
+const popularGuides = [
+  { href: "/adventurepedia/altitude-sickness", label: "Altitude sickness" },
+  { href: "/adventurepedia/what-to-pack", label: "What to pack" },
+  { href: "/adventurepedia/offline-maps", label: "Offline maps" },
+];
+const isKnowHow = (path: string) => knowHowLinks.some((l) => path === l.href || path.startsWith(`${l.href}/`));
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -230,6 +242,7 @@ export default function Navbar() {
               );
             })}
 
+            <KnowHowMenu pathname={pathname} isTransparent={isTransparent} />
             </div>
 
           {/* Desktop right side */}
@@ -530,6 +543,22 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          {/* Know-how: Adventurepedia first, then Stories and ACE */}
+          <p className="pt-4 pb-1 px-3 text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent-ink)" }}>Know-how</p>
+          {knowHowLinks.map((link) => {
+            const on = pathname === link.href || pathname.startsWith(`${link.href}/`);
+            return (
+              <Link key={link.href} href={link.href}
+                className="flex items-center gap-3 py-2.5 px-3 rounded-xl transition-colors"
+                style={{ background: on ? "var(--nav-active-bg)" : "transparent", borderBottom: "1px solid var(--border-subtle)" }}>
+                <link.icon className="w-4 h-4 shrink-0" style={{ color: "var(--accent-ink)" }} />
+                <span className="min-w-0">
+                  <span className="block text-base font-medium" style={{ color: on ? "var(--text-primary)" : "var(--nav-text)" }}>{link.label}</span>
+                  <span className="block text-[12px] truncate" style={{ color: "var(--text-tertiary)" }}>{link.blurb}</span>
+                </span>
+              </Link>
+            );
+          })}
           {/* Mobile search */}
           <div className="flex items-center gap-2 py-2 px-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
             <button
@@ -619,5 +648,95 @@ export default function Navbar() {
 
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </nav>
+  );
+}
+
+/** The desktop "Know-how" drop-down: opens on hover or click, closes on Escape, outside click or navigation */
+function KnowHowMenu({ pathname, isTransparent }: { pathname: string; isTransparent: boolean }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const active = isKnowHow(pathname);
+
+  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("mousedown", onDown); document.removeEventListener("keydown", onKey); };
+  }, [open]);
+
+  // Hover opens it, so a click that follows a hover keeps it open instead of toggling it shut
+  const openedByHover = useRef(false);
+  // A short grace period so the pointer can travel from the button into the panel
+  const enter = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (!open) openedByHover.current = true;
+    setOpen(true);
+  };
+  const click = () => {
+    if (openedByHover.current) { openedByHover.current = false; setOpen(true); }
+    else setOpen((o) => !o);
+  };
+  const leave = () => { openedByHover.current = false; closeTimer.current = setTimeout(() => setOpen(false), 160); };
+  const [lead, ...rest] = knowHowLinks;
+
+  return (
+    <div ref={ref} className="relative" onMouseEnter={enter} onMouseLeave={leave}>
+      <button
+        type="button"
+        onClick={click}
+        aria-expanded={open}
+        aria-haspopup="true"
+        className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200"
+        style={{
+          color: active ? "#fff" : isTransparent ? "rgba(255,255,255,0.75)" : "var(--nav-text)",
+          background: active ? "#ff5100" : open ? "var(--nav-active-bg)" : "transparent",
+          boxShadow: active ? "0 4px 14px rgba(255,81,0,0.35)" : "none",
+        }}
+      >
+        {active && <Library className="w-3.5 h-3.5" />}
+        Know-how
+        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full pt-3 z-50">
+          <div className="w-[380px] rounded-2xl shadow-2xl overflow-hidden" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}>
+            {/* Adventurepedia leads, with a few guides people open most */}
+            <Link href={lead.href} className="group block p-4 transition-colors hover:bg-[var(--bg-card-hover)]" style={{ background: "rgba(255,81,0,0.05)", borderBottom: "1px solid var(--border-subtle)" }}>
+              <span className="flex items-center gap-3">
+                <span className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "#ff5100" }}><lead.icon className="w-5 h-5 text-white" /></span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[15px] font-semibold" style={{ color: "var(--text-primary)" }}>{lead.label}</span>
+                  <span className="block text-[12.5px]" style={{ color: "var(--text-secondary)" }}>{lead.blurb}</span>
+                </span>
+                <ArrowRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5" style={{ color: "var(--accent-ink)" }} />
+              </span>
+            </Link>
+            <div className="px-4 pt-3 pb-3.5 flex flex-wrap items-center gap-1.5" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+              <span className="text-[11px] font-semibold uppercase tracking-wider mr-1" style={{ color: "var(--text-tertiary)" }}>Popular</span>
+              {popularGuides.map((g) => (
+                <Link key={g.href} href={g.href} className="text-[12.5px] font-medium px-2.5 py-1 rounded-full transition-colors hover:border-[#ff5100]/50"
+                  style={{ color: "var(--text-primary)", border: "1px solid var(--border-subtle)", background: "var(--bg-surface-2)" }}>
+                  {g.label}
+                </Link>
+              ))}
+            </div>
+            {rest.map((l) => (
+              <Link key={l.href} href={l.href} className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[var(--bg-card-hover)]">
+                <l.icon className="w-4 h-4 shrink-0" style={{ color: "var(--accent-ink)" }} />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[14px] font-semibold" style={{ color: "var(--text-primary)" }}>{l.label}</span>
+                  <span className="block text-[12.5px]" style={{ color: "var(--text-tertiary)" }}>{l.blurb}</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
