@@ -32,6 +32,25 @@ for (const k of ["log", "warn", "error"]) {
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// A map service request, tried up to three times with a time limit on each: these free services
+// drop connections and rate-limit now and then. Returns the parsed JSON, or the text with text: true
+async function request(url, { headers = UA, timeout = 60000, text = false } = {}) {
+  let last;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(url, { headers, signal: AbortSignal.timeout(timeout) });
+      if (res.ok) return text ? await res.text() : await res.json();
+      last = new Error(`${new URL(url).host} ${res.status} ${(await res.text()).slice(0, 120).replace(/\s+/g, " ")}`);
+      if (res.status >= 400 && res.status < 500 && res.status !== 429) throw last; // a bad request won't improve
+    } catch (e) {
+      last = e;
+      if (e.message?.match(/ 4\d\d /) && !e.message.includes(" 429 ")) throw e;
+    }
+    await sleep(5000 * attempt);
+  }
+  throw last;
+}
+
 // Each adventure's own map point, to keep place searches inside its region
 const DATA = await readFile("src/lib/data.ts", "utf8");
 function centre(slug) {
@@ -54,8 +73,10 @@ async function heights(pts) {
   for (let i = 0; i < pts.length; i += 100) {
     const part = pts.slice(i, i + 100);
     const url = `https://api.open-meteo.com/v1/elevation?latitude=${part.map((p) => p[0]).join(",")}&longitude=${part.map((p) => p[1]).join(",")}`;
-    const j = await fetch(url, { signal: AbortSignal.timeout(60000) }).then((r) => r.json());
+    const j = await request(url, { headers: {} });
+    if (!Array.isArray(j.elevation)) throw new Error(`Open-Meteo: ${j.reason ?? "no heights"}`);
     out.push(...j.elevation.map((e) => Math.round(e)));
+    await sleep(300); // Open-Meteo's free tier limits requests a minute
   }
   return out;
 }
@@ -84,7 +105,7 @@ async function place(stop, trek) {
   for (const q of [`${s.q ?? s.name}, ${trek.near}`, s.q ?? s.name]) {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5&extratags=1${box}`;
     // A path or stream named "A to B" sits between places, not at one
-    [hit] = (await fetch(url, { headers: UA, signal: AbortSignal.timeout(30000) }).then((r) => r.json())).filter((h) => !["highway", "waterway", "boundary"].includes(h.class));
+    [hit] = (await request(url, { timeout: 30000 })).filter((h) => !["highway", "waterway", "boundary"].includes(h.class));
     await sleep(1100); // Nominatim allows one request a second
     if (hit) break;
   }

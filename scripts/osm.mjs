@@ -57,17 +57,17 @@ const loose = (s) => core(s).replace(/ee|ii/g, "i").replace(/oo|uu/g, "u").repla
 /** Every named place OpenStreetMap has in a [south, west, north, east] box, with its height when tagged */
 export async function placesNear(box) {
   const b = bboxOf(box);
-  const j = await overpass(`[out:json][timeout:120];
-(
-  nwr["name"]["place"]${b};
-  nwr["name"]["tourism"~"^(camp_site|alpine_hut|wilderness_hut|guest_house|hostel|hotel|viewpoint|attraction)$"]${b};
-  nwr["name"]["natural"~"^(peak|saddle|water|glacier|spring|ridge|hill|plateau|grassland|meadow|cliff)$"]${b};
-  nwr["name"]["mountain_pass"="yes"]${b};
-  nwr["name"]["amenity"~"^(shelter|place_of_worship)$"]${b};
-  nwr["name"]["historic"]${b};
-  nwr["name"]["landuse"="meadow"]${b};
-);
-out center tags;`);
+  // Nodes and ways spelled out: some Overpass servers reject the nwr shorthand
+  const filters = [
+    `["name"]["place"]`,
+    `["name"]["tourism"~"^(camp_site|alpine_hut|wilderness_hut|guest_house|hostel|hotel|viewpoint|attraction)$"]`,
+    `["name"]["natural"~"^(peak|saddle|water|glacier|spring|ridge|hill|plateau|grassland|meadow|cliff)$"]`,
+    `["name"]["mountain_pass"="yes"]`,
+    `["name"]["amenity"~"^(shelter|place_of_worship)$"]`,
+    `["name"]["historic"]`,
+    `["name"]["landuse"="meadow"]`,
+  ];
+  const j = await overpass(`[out:json][timeout:120];\n(\n${filters.map((f) => `  node${f}${b};\n  way${f}${b};`).join("\n")}\n);\nout center tags;`);
   return j.elements.map((el) => {
     const t = el.tags ?? {};
     const lat = el.lat ?? el.center?.lat, lng = el.lon ?? el.center?.lon;
