@@ -1,78 +1,30 @@
-Build trails run 40673988991, 2026-10-28T10:40:41Z
-── kashmir-great-lakes 10:40:41
-[   1s]   overpass: overpass-api.de Overpass 502 
-[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 223s] kashmir-great-lakes: 477 named places in OpenStreetMap around the trek
-[ 227s]   ? Gadsar Pass not matched; nearby: Gadsar campsite (camp, 7.9 km), Gadsar (water, 3.4 km)
-[ 227s]   leg Sonamarg → Nichnai (10.4 km apart)
-[ 230s]   overpass: overpass-api.de Overpass 502 
-[ 323s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 419s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 428s]   overpass: overpass-api.de Overpass 502 
-[ 440s]   ! path search failed: Overpass 502 
-[ 440s]   ! Sonamarg → Nichnai: a 115.0 km detour for 10.4 km; drawn straight
-[ 441s]   leg Nichnai → Nichnai Pass (3.1 km apart)
-[ 443s]   leg Nichnai Pass → Vishansar Lake (5.8 km apart)
-[ 445s]   leg Vishansar Lake → Gadsar Lake (6.7 km apart)
-[ 446s]   leg Gadsar Lake → Satsar (6.0 km apart)
-[ 448s]   leg Satsar → Gangbal Lake (5.4 km apart)
-[ 449s]   leg Gangbal Lake → Naranag (8.9 km apart)
-[ 451s] kashmir-great-lakes: 62.9 km, +3160 m, highest 4199 m, 10.4 km drawn straight, 1683 → 464 points
-[ 451s]   km     0  Sonamarg (2661 m, osm, 34.30239,75.29656)
-[ 451s]   km  20.9  Vishansar Lake (3667 m, osm, 34.38749,75.11822)  18.9 km from last
-[ 451s]   km  28.2  Gadsar Lake (3571 m, osm, 34.42179,75.05753)  6.7 km from last
-[ 451s]   km  49.9  Gangbal Lake (3566 m, osm, 34.42556,74.94058)  10.7 km from last
-[ 451s]   km  62.9  Naranag (2263 m, osm, 34.35023,74.97212)  8.9 km from last
-[ 451s]   camp (estimated): Gadsar Pass (4075 m, 34.40845,75.09194)
-[ 451s]   camp (estimated): Zaj Pass (3814 m, 34.4282,74.98698)
-[ 451s]   day  1 walk   Sonamarg → Nichnai  10.4 km +1210 −250
-[ 451s]   day  2 walk   Nichnai → Vishansar Lake  10.6 km +480 −440 (approx)
-[ 451s]   day  3 rest   Vishansar Lake → Vishansar Lake
-[ 451s]   day  4 walk   Vishansar Lake → Gadsar Lake  7.3 km +490 −560 (approx)
-[ 451s]   day  5 walk   Gadsar Lake → Satsar  14.6 km +420 −350
-[ 451s]   day  6 walk   Satsar → Gangbal Lake  7 km +420 −540 (approx)
-[ 451s]   day  7 walk   Gangbal Lake → Naranag  13 km +100 −1390
-── tarsar-marsar-trek 10:48:15
-[  24s] tarsar-marsar-trek: 461 named places in OpenStreetMap around the trek
-[  41s]   ? Tarsar Pass not matched; nearby: Tarsar Lake (other, 2.2 km), Tar Sar (water, 1.9 km)
-[  41s]   leg Aru → Lidderwat (9.1 km apart)
-[  43s]   leg Lidderwat → Tarsar Lake (10.4 km apart)
-[  45s]   leg Tarsar Lake → Sundersar (3.8 km apart)
-[  46s]   leg Sundersar → Marsar Lake (1.3 km apart)
-[  49s] tarsar-marsar-trek: 32 km, +1860 m, highest 4016 m, 0 km drawn straight, 1135 → 252 points
-[  49s]   km     0  Aru (2413 m, osm, 34.09029,75.26244)
-[  49s]   km  10.9  Lidderwat (2859 m, osm, 34.17209,75.25476)  9.1 km from last
-[  49s]   km  23.7  Tarsar Lake (3781 m, osm, 34.13958,75.14886)  10.4 km from last
-[  49s]   km  29.7  Sundersar (3934 m, osm, 34.15607,75.11285)  3.8 km from last
-[  49s]   km    32  Marsar Lake (3808 m, osm, 34.14424,75.11091)  1.3 km from last
-[  49s]   camp (estimated): Shekwas (3252 m, 34.16518,75.20026)
-[  49s]   camp (estimated): Tarsar Pass (3791 m, 34.15387,75.14009)
-[  49s]   day  1 walk   Aru → Lidderwat  10.9 km +480 −30
-[  49s]   day  2 walk   Lidderwat → Shekwas  6.4 km +440 −100 (approx)
-[  49s]   day  3 walk   Shekwas → Tarsar Lake  6.3 km +560 −0 (approx)
-[  49s]   day  4 walk   Tarsar Lake → Sundersar  5.7 km +290 −150 (approx)
-[  49s]   day  5 walk   Sundersar → Sundersar  5.3 km +260 −250
-[  49s]   day  6 walk   Sundersar → Lidderwat  18.5 km +230 −1300
-[  49s]   day  7 walk   Lidderwat → Aru  10.9 km +20 −470
-── markha-valley 10:49:06
-[  27s] markha-valley: 812 named places in OpenStreetMap around the trek
-[  30s]   leg Chilling → Skiu (7.8 km apart)
-[  32s]   leg Skiu → Markha (18.8 km apart)
-[  34s]   leg Markha → Hankar (9.7 km apart)
-[  35s]   leg Hankar → Nimaling (9.6 km apart)
-[  37s]   leg Nimaling → Kongmaru La (2.2 km apart)
-[  38s]   leg Kongmaru La → Chokdo (6.5 km apart)
-[  40s] markha-valley: 65.8 km, +2130 m, highest 5259 m, 0 km drawn straight, 2335 → 560 points
-[  40s]   km     0  Chilling (3231 m, osm, 34.03852,77.20285)
-[  40s]   km  10.5  Skiu (3320 m, osm, 33.98373,77.25652)  7.8 km from last
-[  40s]   km  32.3  Markha (3790 m, osm, 33.886,77.42335)  18.8 km from last
-[  40s]   km  43.4  Hankar (4034 m, osm, 33.8316,77.50585)  9.7 km from last
-[  40s]   km  54.2  Nimaling (4839 m, osm, 33.7865,77.59409)  9.6 km from last
-[  40s]   km  65.8  Chokdo (3950 m, osm, 33.83044,77.66908)  8.5 km from last
-[  40s]   day  1 walk   Chilling → Skiu  10.5 km +180 −80
-[  40s]   day  2 walk   Skiu → Markha  21.9 km +460 −20
-[  40s]   day  3 walk   Markha → Hankar  11 km +270 −20
-[  40s]   day  4 walk   Hankar → Nimaling  10.8 km +780 −0
-[  40s]   day  5 walk   Nimaling → Chokdo  11.6 km +410 −1290
-Done 10:49:47, 0 failed
+Build trails run 40676322312, 2026-10-28T10:59:32Z
+── kashmir-great-lakes 10:59:32
+[  38s] kashmir-great-lakes: 477 named places in OpenStreetMap around the trek
+[  41s]   ? Gadsar Pass not matched; nearby: Gadsar campsite (camp, 7.9 km), Gadsar (water, 3.4 km)
+[  42s]   leg Sonamarg → Nichnai (10.4 km apart)
+[  45s]   overpass: overpass-api.de Overpass 502 
+[ 138s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 234s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 284s]   ~ Sonamarg → Nichnai: a 115.0 km detour for 10.4 km; routed over mapped paths, 0.5 of 12.8 km bridged
+[ 286s]   leg Nichnai → Nichnai Pass (3.1 km apart)
+[ 289s]   leg Nichnai Pass → Vishansar Lake (5.8 km apart)
+[ 290s]   leg Vishansar Lake → Gadsar Lake (6.7 km apart)
+[ 292s]   leg Gadsar Lake → Satsar (6.0 km apart)
+[ 294s]   leg Satsar → Gangbal Lake (5.4 km apart)
+[ 295s]   leg Gangbal Lake → Naranag (8.9 km apart)
+[ 297s] kashmir-great-lakes: 65.3 km, +2970 m, highest 4199 m, 0.5 km drawn straight, 2043 → 566 points
+[ 297s]   km     0  Sonamarg (2661 m, osm, 34.30239,75.29656)
+[ 297s]   km  23.4  Vishansar Lake (3667 m, osm, 34.38749,75.11822)  18.9 km from last
+[ 297s]   km  30.6  Gadsar Lake (3571 m, osm, 34.42179,75.05753)  6.7 km from last
+[ 297s]   km  52.3  Gangbal Lake (3566 m, osm, 34.42556,74.94058)  10.7 km from last
+[ 297s]   km  65.3  Naranag (2263 m, osm, 34.35023,74.97212)  8.9 km from last
+[ 297s]   camp (estimated): Gadsar Pass (4075 m, 34.40845,75.09194)
+[ 297s]   camp (estimated): Zaj Pass (3814 m, 34.4282,74.98698)
+[ 297s]   day  1 walk   Sonamarg → Nichnai  12.8 km +1030 −60
+[ 297s]   day  2 walk   Nichnai → Vishansar Lake  10.6 km +490 −440 (approx)
+[ 297s]   day  3 rest   Vishansar Lake → Vishansar Lake
+[ 297s]   day  4 walk   Vishansar Lake → Gadsar Lake  7.3 km +490 −560 (approx)
+[ 297s]   day  5 walk   Gadsar Lake → Satsar  14.6 km +420 −350
+[ 297s]   day  6 walk   Satsar → Gangbal Lake  7 km +420 −540
+[ 297s]   day  7 walk   Gangbal Lake → Naranag  13 km +100 −1390
