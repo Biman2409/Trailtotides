@@ -75,3 +75,15 @@ Build trails run 40690581208, 2026-10-28T12:46:29Z
 [  63s]   day  2 walk   Didna → Ali Bugyal  6.3 km +1090 −140
 [  63s]   day  3 walk   Ali Bugyal → Bedni Bugyal  3.3 km +180 −80 (approx)
 [  63s]   day  4 walk   Bedni Bugyal → Wan  10.1 km +200 −1260
+── dayara-bugyal 12:54:50
+[  39s] dayara-bugyal: 457 named places in OpenStreetMap around the trek
+[  40s]   leg Raithal → Gui (2.8 km apart)
+[  42s]   leg Gui → Dayara Bugyal (2.7 km apart)
+[  44s] dayara-bugyal: 7.7 km, +1210 m, highest 3365 m, 0 km drawn straight, 361 → 111 points
+[  44s]   km     0  Raithal (2132 m, osm, 30.81672,78.60379)
+[  44s]   km   4.4  Gui (2961 m, osm, 30.81448,78.57426)  2.8 km from last
+[  44s]   km   7.7  Dayara Bugyal (3348 m, osm, 30.8377,78.56492)  2.7 km from last
+[  44s]   day  1 walk   Raithal → Gui  4.4 km +810 −0
+[  44s]   day  2 walk   Gui → Dayara Bugyal  3.3 km +390 −0
+[  44s]   day  3 rest   Dayara Bugyal → Dayara Bugyal
+[  44s]   day  4 walk   Dayara Bugyal → Raithal  7.7 km +0 −1210
