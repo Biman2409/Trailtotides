@@ -21,7 +21,7 @@ async function overpass(query) {
   for (let attempt = 0; attempt < 6; attempt++) {
     const url = MIRRORS[attempt % MIRRORS.length];
     try {
-      const res = await fetch(url, { method: "POST", headers: { ...UA, "Content-Type": "application/x-www-form-urlencoded" }, body: "data=" + encodeURIComponent(query) });
+      const res = await fetch(url, { method: "POST", headers: { ...UA, "Content-Type": "application/x-www-form-urlencoded" }, body: "data=" + encodeURIComponent(query), signal: AbortSignal.timeout(180000) });
       if (res.ok) return await res.json();
       last = new Error(`Overpass ${res.status}`);
     } catch (e) { last = e; }

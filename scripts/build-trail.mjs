@@ -47,7 +47,7 @@ async function heights(pts) {
   for (let i = 0; i < pts.length; i += 100) {
     const part = pts.slice(i, i + 100);
     const url = `https://api.open-meteo.com/v1/elevation?latitude=${part.map((p) => p[0]).join(",")}&longitude=${part.map((p) => p[1]).join(",")}`;
-    const j = await fetch(url).then((r) => r.json());
+    const j = await fetch(url, { signal: AbortSignal.timeout(60000) }).then((r) => r.json());
     out.push(...j.elevation.map((e) => Math.round(e)));
   }
   return out;
@@ -77,7 +77,7 @@ async function place(stop, trek) {
   for (const q of [`${s.q ?? s.name}, ${trek.near}`, s.q ?? s.name]) {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5&extratags=1${box}`;
     // A path or stream named "A to B" sits between places, not at one
-    [hit] = (await fetch(url, { headers: UA }).then((r) => r.json())).filter((h) => !["highway", "waterway", "boundary"].includes(h.class));
+    [hit] = (await fetch(url, { headers: UA, signal: AbortSignal.timeout(30000) }).then((r) => r.json())).filter((h) => !["highway", "waterway", "boundary"].includes(h.class));
     await sleep(1100); // Nominatim allows one request a second
     if (hit) break;
   }
@@ -99,7 +99,7 @@ async function leg(a, b) {
   const straight = dist([a.lat, a.lng], [b.lat, b.lng]);
   try {
     const url = `https://brouter.de/brouter?lonlats=${a.lng},${a.lat}|${b.lng},${b.lat}&profile=hiking-mountain&alternativeidx=0&format=geojson`;
-    const res = await fetch(url, { headers: UA });
+    const res = await fetch(url, { headers: UA, signal: AbortSignal.timeout(90000) });
     const text = await res.text();
     await sleep(1500);
     if (!res.ok || !text.startsWith("{")) throw new Error(text.slice(0, 80).replace(/\s+/g, " "));
