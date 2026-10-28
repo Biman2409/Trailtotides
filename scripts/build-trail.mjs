@@ -369,7 +369,9 @@ async function build(slug) {
     let km = 0, up = 0, down = 0, approx = false, idx = hereIdx;
     for (const p of route) {
       const B = nearestIdx(p, idx);
-      approx ||= B.off > 300 || estimated.has(p.name);
+      // Estimated where you sleep makes the day's figures estimates; a pass placed by estimate
+      // along the line only labels it, so it doesn't
+      approx ||= B.off > 300 || (estimated.has(p.name) && p === route[route.length - 1]);
       const s = stretch(idx, B.i);
       km += s.km; up += s.up; down += s.down;
       idx = B.i;
