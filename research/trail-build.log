@@ -29,3 +29,31 @@ Build trails run 40653745388, 2026-10-28T08:01:30Z
 [  67s]   day  9 walk   Gorak Shep → Pheriche  15.6 km +500 −1220 (approx)
 [  67s]   day 10 walk   Pheriche → Namche Bazaar  21 km +380 −1380
 [  67s]   day 11 walk   Namche Bazaar → Lukla  17.7 km +360 −930
+── gokyo-lakes 08:02:39
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 250s] gokyo-lakes: place list unavailable (Overpass 400 Error : line 3: parse error: Unknown query clause Error : line 4: parse error: Unknown query clause Error : line 5: parse error: Unknown query clause Error : line 6: parse error: Unknown query clause Error : line 7: parse error: Unknown query clause Error : line 8: parse error: Unknown query clause ), using place search only
+[ 261s]   leg Lukla → Phakding (6.0 km apart)
+[ 263s]   leg Phakding → Namche Bazaar (7.1 km apart)
+[ 264s]   leg Namche Bazaar → Dole (7.3 km apart)
+[ 266s]   leg Dole → Machhermo (4.2 km apart)
+[ 268s]   leg Machhermo → Gokyo (6.1 km apart)
+[ 269s] gokyo-lakes: 41.4 km, +2650 m, highest 4765 m, 0 km drawn straight, 2179 → 489 points
+[ 269s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
+[ 269s]   km   7.4  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
+[ 269s]   km  17.7  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
+[ 269s]   km  29.4  Dole (4036 m, osm, 27.86733,86.72997)  7.3 km from last
+[ 269s]   km  34.4  Machhermo (4386 m, osm, 27.90288,86.7156)  4.2 km from last
+[ 269s]   km  41.4  Gokyo (4750 m, osm, 27.95409,86.69459)  6.1 km from last
+[ 269s]   side trip: Gokyo Ri (5357 m, osm)
+[ 269s]   day  1 walk   Lukla → Phakding  7.4 km +90 −320
+[ 269s]   day  2 walk   Phakding → Namche Bazaar  10.4 km +840 −70
+[ 269s]   day  3 rest   Namche Bazaar → Namche Bazaar
+[ 269s]   day  4 walk   Namche Bazaar → Dole  11.6 km +940 −330
+[ 269s]   day  5 walk   Dole → Machhermo  5.1 km +390 −20
+[ 269s]   day  6 walk   Machhermo → Gokyo  6.9 km +360 −0
+[ 269s]   day  7 walk   Gokyo → Gokyo  4 km +600 −600
+[ 269s]   day  8 walk   Gokyo → Dole  12 km +20 −740
+[ 269s]   day  9 walk   Dole → Namche Bazaar  11.6 km +330 −940
+[ 269s]   day 10 walk   Namche Bazaar → Lukla  17.7 km +360 −930
