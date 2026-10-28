@@ -1,0 +1,1233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Blr Outskirts</name>
+    <description/>
+    <Style id="icon-1899-0288D1-normal">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1899-0288D1-highlight">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1899-0288D1">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1899-0288D1-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1899-0288D1-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-1899-0288D1-nodesc-normal">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="icon-1899-0288D1-nodesc-highlight">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="icon-1899-0288D1-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1899-0288D1-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1899-0288D1-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-1899-FF5252-nodesc-normal">
+      <IconStyle>
+        <color>ff5252ff</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="icon-1899-FF5252-nodesc-highlight">
+      <IconStyle>
+        <color>ff5252ff</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="icon-1899-FF5252-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1899-FF5252-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1899-FF5252-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Folder>
+      <name>Done</name>
+      <Placemark>
+        <name>Siddara Betta Cave Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.1363359,13.5573911,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Madhugiri Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2002961,13.6520328,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Channarayana Durga Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2082857,13.5976844,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Devarayana Durga</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2127134,13.3741575,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Nandi Hills</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6834551,13.370154,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Skandagiri Hills</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6828825,13.4183531,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Makali Durga Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.5009412,13.4323744,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ujjani Betta (ಉಜ್ಜನಿ ಬೆಟ್ಟ)</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.4418072,13.4045636,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Gedare Hill</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.4938062,13.5166259,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Savandurga Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2942305,12.9213761,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bhairavadurga ಭೈರವದುರ್ಗ</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.1742945,13.0930904,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Huthridurga Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.1214834,12.9615944,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kempegowda Fort Huliyurudurga</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.0357747,12.8202591,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Handi Gundi Betta Trek Peak Point</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.3151255,12.7261029,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kambadaraya temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.195569,12.6960475,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kabbaladurga Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2944456,12.498363,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ramanagara</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2798963,12.7208614,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Talavadi Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2336272,12.7906893,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pandava betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.157986,13.360013,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Chinaga Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.1661901,13.3985106,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bettamugilalam View Point</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.9463321,12.35843,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Devarabetta Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6263459,12.625525,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bilikal Rangaswamy Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.5123858,12.5536734,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sri Govina Kallu Anjaneya Swamy Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.5214048,12.5233332,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Anchetty</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.7211792,12.3542475,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kodakarai</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.856738,12.2945479,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bettamugilalam</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.9099607,12.368989,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Soligere</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2901737,12.3582038,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Marale Hebbarga Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.3823819,12.4513789,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Shree Sidheshwara Swamy Temple , ಶ್ರೀ ಸಿದ್ದೇಶ್ವರ ಸ್ವಾಮಿ ದೇವಸ್ಥಾನ,ತಾವರಗಟ್ಟೆ</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.44626,12.443644,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Gangadhareshwara Hill</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.469905,12.5852518,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Mutturaya Swamy temple peak</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.3096572,12.70932,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Makali State Forest</name>
+        <description>Many trails</description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            77.142764,12.7590415,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ramadevara Betta View Point</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.302682,12.7530489,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Thimappana Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2344827,12.7797832,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sri Narayanagiri Gudi</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2069,12.8266,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Hulthar State Reserve Forest</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.3521037,12.8008208,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Shivagange Betta - Top view</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2228706,13.1697152,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bilikal Rangaswamy Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.5123858,12.5536734,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Nijagal Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2154164,13.247238,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bettadahosahalli</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2304564,13.264464,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sri Yoga Narasimhaswaami Gudi Dananayakanapura</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2116167,13.282803,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ramadevara Betta Peak</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.1612694,13.3241157,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Mandaragiri Betta (Basadi Betta)</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.187285,13.3023139,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tangana Halli Gundu Kallu Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2150264,13.42232,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Minchikall Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.1962808,13.4575115,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Negalala Hills</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.1299317,13.5926011,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Gudibande Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.700804,13.6762111,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Makali Durga Hills</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.5023038,13.4335494,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bettada Sri Lakhmi Ranganaatha Gudi</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.5470775,13.4664703,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Thokalahalli Betta View point</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6509439,13.6851053,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Avalabetta Hill Top</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6729184,13.5775507,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unnamed 1200+m peak of Dandiganahalli dam
+</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6743895,13.5389043,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>RD hills</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6810857,13.4558635,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>1300m Isha foundation peak north of Skandagiri</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6890327,13.495533,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jawalagiri - Madakal Valley - to explore</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6376338,12.4910624,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jawalagiri - Madakal Valley - to explore</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6523967,12.4681004,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jawalagiri - Madakal Valley - to explore</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6546433,12.3966308,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Horagina Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6714046,13.3562721,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Chennagiri Trekking Top Point</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6674095,13.3865421,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ambajidurga Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.01627,13.3938352,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kailasagiri Hill ಕೈಲಾಸಗಿರಿ ಬೆಟ್ಟ</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.0254856,13.3918674,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sri Malleshwara Swami Gudi</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.0487982,12.8130165,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Chola Dynasty Fort Ruins</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.0972972,13.1486646,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Antaragange Rock Cave, slot canyon</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.095728,13.139828,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Buthamma betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.0934455,12.9977575,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tyakal Hills</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.0882327,12.9757686,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tyakal Hills</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.0837812,12.9922124,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Mallappa konda</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.2381418,12.7681086,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>FLOWER ROC HILL</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.1073756,12.7150508,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bala Kondarayana Swamy Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.1143164,12.6179132,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bolumalai Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.1306316,12.4383127,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ayyanakallu Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.3873455,12.3500324,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Boothana Goode Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            76.984622,12.9523689,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kolar Gold Fields</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.2710336,12.9585136,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Hulukadi Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.4190745,13.3377544,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Shri Ramaswamy Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.2877434,12.4313186,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Thimmaraya Samy Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.0845804,12.4343369,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Rayakottai Fort Hill Top</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.0369887,12.5202789,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>12.261390,77.853506</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.853506,12.26139,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Yelagiri</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.6344666,12.5856048,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Vathalmalai</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.2219806,12.0464396,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Krishnagiri Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            78.214565,12.5383611,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kempakarai</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.8238627,12.2748076,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Anchetty hill top</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.8168963,12.2934064,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Billgundala</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.732332,12.1864487,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sendrayaswami Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.9841059,12.3550887,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Mugguru forest view point</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.4241405,12.3098903,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Muneshwara Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.4872875,12.391159,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ratnagiri Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.8856242,12.5183835,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sri Shiva Nanjundeshwara Temple (Hills), Dhanurgiri Kshetra Bevanatham</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.8572794,12.522643,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ratnagiri Fort</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.1298204,13.8149051,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Melagiri Sree Ayyappan Swamy Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.9120779,12.4310105,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>12.425538,77.945131</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.945131,12.425538,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>12.311852,77.888373</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.888373,12.311852,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Shri Basaweshwara Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.8830586,12.3146541,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>12.259309,77.932545</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.932545,12.259309,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>u.puram, lord shiva temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.9296728,12.5293183,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Vangurki Nagamuneshwara Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.8715102,12.5649149,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Siva Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.8897931,12.5900092,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Madanagiri Muneswara Swamy Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.7992424,12.5800823,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sri bettadhamma Devi temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.7658177,12.645439,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Wonderla Amusement Park, Bengaluru</name>
+        <styleUrl>#icon-1899-FF5252-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.4010172,12.8346076,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>To Explore</name>
+      <Placemark>
+        <name>Jalasidheshwara betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2786105,12.7599271,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sri Bheemanakindi Basaveshwara Gudi</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2574734,12.4767164,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Vaade Malleshwara Gudi peak</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2596819,12.5111022,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Shree Gavi Ranganaathaswaami Gudi</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2699555,12.5464937,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Siddappaji Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2344453,12.5493116,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Shri Gudde Mahadeswara temple ಶ್ರೀ ಗುಡ್ಡೆ ಮಾಹಾದೇಶ್ವರ ದೇವಾಲಯ</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2476465,12.6140566,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kunagalu Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.3178515,12.6890181,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sri Kalabhairaveshwara Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.3727568,12.701393,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Thayee Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.3230117,12.6106667,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Acchalu Durga</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.3654967,12.470892,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Muneshwara hill top Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.4031088,12.4637985,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sri Hebbetta Basaveshwara Gudi</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.2719265,12.3817217,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bettanayya temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.33852,12.210468,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sri Nalavara Betta</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.3974483,12.24479,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kote maramma temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.4949754,12.3659388,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Veereshwara Swamy Temple Ponnachi.</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6443126,12.146305,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>aane nilaya</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.5198283,12.2604646,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Point 3</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.5847078,12.3174003,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Shri Peeliyamma Temple</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            77.6923366,12.4136657,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>

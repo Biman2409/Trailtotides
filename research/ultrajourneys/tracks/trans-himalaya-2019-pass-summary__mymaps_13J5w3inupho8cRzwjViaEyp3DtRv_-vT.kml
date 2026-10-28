@@ -1,0 +1,1852 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Trans Himalaya 2019 Passes</name>
+    <description/>
+    <Style id="icon-1899-0288D1-normal">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1899-0288D1-highlight">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1899-0288D1">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1899-0288D1-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1899-0288D1-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-1899-DB4436-normal">
+      <IconStyle>
+        <color>ff3644db</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1899-DB4436-highlight">
+      <IconStyle>
+        <color>ff3644db</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1899-DB4436">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1899-DB4436-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1899-DB4436-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Folder>
+      <name>Picasa - 18 September 2019</name>
+      <Placemark>
+        <name>Darti Khal</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjR22eGmZ9_6hjAjt7bnx_OHi0cCLx-n64x3I9yTGxlUBhRiWD5GJHbEpxqtejVqOefgqo-3gXP2IPBODdrtQbvex9iSbb9rBF8Oo-D710s7ZwUGus0aw3JgUYfNuqisMplwPPD8ACLqzjkDXDJRDFW3lAuwhpKwlbpEKW3a7oVqG2XWpXk0xLMMERDFQPvHwhNdAqfeoq9pnQ?fife=s16383" height="200" width="auto" /><br><br>Date : 10-05-2019 17:12:25]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjR22eGmZ9_6hjAjt7bnx_OHi0cCLx-n64x3I9yTGxlUBhRiWD5GJHbEpxqtejVqOefgqo-3gXP2IPBODdrtQbvex9iSbb9rBF8Oo-D710s7ZwUGus0aw3JgUYfNuqisMplwPPD8ACLqzjkDXDJRDFW3lAuwhpKwlbpEKW3a7oVqG2XWpXk0xLMMERDFQPvHwhNdAqfeoq9pnQ?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            80.411655,30.056555,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tomik-Rapti</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjWoxu093m0Fo061zAsM1N_8lpa6MXhSv3mur1GxGA-orjFJaDG0ivh8bluylJG1HH3WYQEOTgx3EoasuI3RwoveSwlw7-BAdJ1DagzLncaRK-SH28WPqg7XlTa-xVT5K2WSBckHf1fORAFLhpnNOjOYyKAwcO9o4-zibyl3F29302dUca0Mx68cT76eYCBe_Tqn4ghG5YxFm4?fife=s16383" height="200" width="auto" /><br><br>Date : 11-05-2019 11:11:57]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjWoxu093m0Fo061zAsM1N_8lpa6MXhSv3mur1GxGA-orjFJaDG0ivh8bluylJG1HH3WYQEOTgx3EoasuI3RwoveSwlw7-BAdJ1DagzLncaRK-SH28WPqg7XlTa-xVT5K2WSBckHf1fORAFLhpnNOjOYyKAwcO9o4-zibyl3F29302dUca0Mx68cT76eYCBe_Tqn4ghG5YxFm4?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            80.345019,30.064764,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bothi</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj7IeJCqCp2Cp7F0Z5Q6viaTangW3gRzAD8701X5Lwj4zwu5ge9R603D2hTJJhmahqjkl3rHP0fcsuob-av6sPuw484psx2jOUH86TY8slZM3o1yU3kyDhIV9Q4zdSQXtB9xhgSpIRM6EcrPgFJMO7exX43xpJZFJSaPHsMCv6SLTBJYtvm9cMXBsHxk3v0L9tPS5AShJns8b8?fife=s16383" height="200" width="auto" /><br><br>Date : 11-05-2019 17:08:37]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj7IeJCqCp2Cp7F0Z5Q6viaTangW3gRzAD8701X5Lwj4zwu5ge9R603D2hTJJhmahqjkl3rHP0fcsuob-av6sPuw484psx2jOUH86TY8slZM3o1yU3kyDhIV9Q4zdSQXtB9xhgSpIRM6EcrPgFJMO7exX43xpJZFJSaPHsMCv6SLTBJYtvm9cMXBsHxk3v0L9tPS5AShJns8b8?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            80.297625,30.080527,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Rur Khan</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgAkYjDcG_hAqsMyFeYdkAP4Ip3SfiiNNosABry_4aXyxSefEJk8KjbmCAh-H6C29LFR2G7GBY6osAFJpUgvK5PdkpRhYFRF3kJ9eW3algNXii5SWhAZW-rqOBl5zh_fCFby2IO1us93Y3Oj-ye4ZeQHzAQNZQVf04LLFI6x8ob1WWhNZigYwlgm1GN5-MHamOGH2395Qje4Xg?fife=s16383" height="200" width="auto" /><br><br>Date : 15-05-2019 16:20:17]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgAkYjDcG_hAqsMyFeYdkAP4Ip3SfiiNNosABry_4aXyxSefEJk8KjbmCAh-H6C29LFR2G7GBY6osAFJpUgvK5PdkpRhYFRF3kJ9eW3algNXii5SWhAZW-rqOBl5zh_fCFby2IO1us93Y3Oj-ye4ZeQHzAQNZQVf04LLFI6x8ob1WWhNZigYwlgm1GN5-MHamOGH2395Qje4Xg?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            80.172157,30.081811,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sur Sungri Khal</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhiR-0QPEcUtA0LnjPjx8RWzltXr-7NCsQnfC_qX-3XJQOw9BoFQ-HC4P8Sp5Dd-aCwFtJ6VRDHNAtz8OnF0lmiBLphYWfVED8k-Kijcr9LbJ8r2iozWFcwB2jEQ_0MUXJxK8VyHOpq4zEARqTxhsZw1U8Q9O6tHbXwPyFAeSpCY8YyKfJrccQRk3Qdk_pL86Z4ntUp9E2RMMU?fife=s16383" height="200" width="auto" /><br><br>Date : 15-05-2019 16:56:29]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhiR-0QPEcUtA0LnjPjx8RWzltXr-7NCsQnfC_qX-3XJQOw9BoFQ-HC4P8Sp5Dd-aCwFtJ6VRDHNAtz8OnF0lmiBLphYWfVED8k-Kijcr9LbJ8r2iozWFcwB2jEQ_0MUXJxK8VyHOpq4zEARqTxhsZw1U8Q9O6tHbXwPyFAeSpCY8YyKfJrccQRk3Qdk_pL86Z4ntUp9E2RMMU?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            80.17219,30.08179,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Madhari</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjlXpIR2lU0EP8m2UF3C6LaCm-6GI5k63dtwrJftqM_sejYswCx8LjDiMwzhbPBzFH9STixR5sh8CewY-cUJUPArEeAK-lo73lH0qyBC4bp94K-JJmId5FqqHvtPS4WnMa6o_zHZR-aKKyKmlaCfFnBFUqagtkA_9VXfxnMeYMW5bActMsibUfLFbBirzVsHMVjfTL_ZWhqr8g?fife=s16383" height="200" width="auto" /><br><br>Date : 16-05-2019 16:43:52]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjlXpIR2lU0EP8m2UF3C6LaCm-6GI5k63dtwrJftqM_sejYswCx8LjDiMwzhbPBzFH9STixR5sh8CewY-cUJUPArEeAK-lo73lH0qyBC4bp94K-JJmId5FqqHvtPS4WnMa6o_zHZR-aKKyKmlaCfFnBFUqagtkA_9VXfxnMeYMW5bActMsibUfLFbBirzVsHMVjfTL_ZWhqr8g?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            80.027673,30.082313,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kathi Khal</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZixJVj1LYuyWkPtQrgXovs4ludx0XgDZePFheUEBFFz0mqKRvIMZ5vNKYvYGcXayo_nMFdEHE1swjyb7RMakHPpjZfDRiwNzuLM3_wBGKSR2Ca513_bTabWVYIBCNS-6sGOZs35Za-XhZHsYU76i9NBrEVtcyDQ-z44dJUXzmNTNBQhiBkdjuHKDc0avXtMZAjPbHtqoVHD5dc?fife=s16383" height="200" width="auto" /><br><br>Date : 17-05-2019 10:22:48]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZixJVj1LYuyWkPtQrgXovs4ludx0XgDZePFheUEBFFz0mqKRvIMZ5vNKYvYGcXayo_nMFdEHE1swjyb7RMakHPpjZfDRiwNzuLM3_wBGKSR2Ca513_bTabWVYIBCNS-6sGOZs35Za-XhZHsYU76i9NBrEVtcyDQ-z44dJUXzmNTNBQhiBkdjuHKDc0avXtMZAjPbHtqoVHD5dc?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            79.953688,30.097107,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pindari Glacier</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgGm9Y2DO1ILT3_qH6b0JLEzrcxOnzBfP8wZVtqjf6N_hBSA68L_jAS-KQL9w0UnmLME4390jIfk2e0BdRy_lscpEqEmdMD0KZSdJMF3Nc7FsJYLqIwN1AsarSFEXo_aeYsup_K5Mhh2coCDYLQTr6PCbAjm6Vf3Rpwf37PnhZAoenBPJocJxMHb0wOPtHeyIuIyyW7sEOjrWA?fife=s16383" height="200" width="auto" /><br><br>Date : 18-05-2019 17:01:01]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgGm9Y2DO1ILT3_qH6b0JLEzrcxOnzBfP8wZVtqjf6N_hBSA68L_jAS-KQL9w0UnmLME4390jIfk2e0BdRy_lscpEqEmdMD0KZSdJMF3Nc7FsJYLqIwN1AsarSFEXo_aeYsup_K5Mhh2coCDYLQTr6PCbAjm6Vf3Rpwf37PnhZAoenBPJocJxMHb0wOPtHeyIuIyyW7sEOjrWA?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            79.998486,30.259683,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Badiyakot-Barkandi</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgH3UvII-YMnCTuBYaVttEYdYShf_4VBVR0SHsIkc2bUmNdLDXRNGLO3a9j7mUVySvBx4K9p12dn-Pui9jpQTryywdyWcLsyCLr1MmE9Zd-gBnydfA70VohUmlgHGEho8l4Shb3db1jxFNTQ5PLTrcRiUZresGCrkIGK8QkJB1pSsANW2lOPOBB1CGdOtFkLUJKpgP0FkCTKJM?fife=s16383" height="200" width="auto" /><br><br>Date : 20-05-2019 15:27:16]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgH3UvII-YMnCTuBYaVttEYdYShf_4VBVR0SHsIkc2bUmNdLDXRNGLO3a9j7mUVySvBx4K9p12dn-Pui9jpQTryywdyWcLsyCLr1MmE9Zd-gBnydfA70VohUmlgHGEho8l4Shb3db1jxFNTQ5PLTrcRiUZresGCrkIGK8QkJB1pSsANW2lOPOBB1CGdOtFkLUJKpgP0FkCTKJM?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            79.826727,30.115662,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Barkandi-Himni</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgVlBd71XkGQ9EEbndu5jB-RLIazCoKS8KkPiAWpGgNwEWP8fwRErkCr-6WSQaA-zTwFln6-vLTembSrAh9JjIlj5kAgjWiVEl6UsPibZcWnD3NNB_d3VeRaq56daMGNGlf2_NwHX_kt07MnQ2xdQgY1GxKUjnOfDKu9Gr_sC9l1jJyuDqZJnRfGP_2TmNm-AhIRJK-IbLYeck?fife=s16383" height="200" width="auto" /><br><br>Date : 21-05-2019 11:28:53]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgVlBd71XkGQ9EEbndu5jB-RLIazCoKS8KkPiAWpGgNwEWP8fwRErkCr-6WSQaA-zTwFln6-vLTembSrAh9JjIlj5kAgjWiVEl6UsPibZcWnD3NNB_d3VeRaq56daMGNGlf2_NwHX_kt07MnQ2xdQgY1GxKUjnOfDKu9Gr_sC9l1jJyuDqZJnRfGP_2TmNm-AhIRJK-IbLYeck?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            79.772233,30.118849,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ali Khal</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhNKmWZPOG5tgubOMgbu2LDyEbij6CUTNqvZwKtO7mAMEMsnQ6xtdVyDYeSVSrPQ95wECl-hYDCvkLdiQ4l2UId8jrYNUWX8Qecx_cRR3FTqjPZtQ710dtQama89qW4We5IpJTmRHGTeC8qP2wWIOFnUNPYqAoN6NREIeEGZBY7K7ZQDOyHX1FUSfUwXA4_koug8Uxm0DRaMKQ?fife=s16383" height="200" width="auto" /><br><br>Date : 22-05-2019 10:02:06]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhNKmWZPOG5tgubOMgbu2LDyEbij6CUTNqvZwKtO7mAMEMsnQ6xtdVyDYeSVSrPQ95wECl-hYDCvkLdiQ4l2UId8jrYNUWX8Qecx_cRR3FTqjPZtQ710dtQama89qW4We5IpJTmRHGTeC8qP2wWIOFnUNPYqAoN6NREIeEGZBY7K7ZQDOyHX1FUSfUwXA4_koug8Uxm0DRaMKQ?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            79.666023,30.189583,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kukin Khal</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj8mwcy6FtfQCWYleV4jOrJnE2BI447_wCjhuU91Uo9QPW8TUBkmzzBNE8ASFzDCKYXfmE3rQgR7wIDyQwLaFxpaLoLjWnQiw1dspbK1dEID-z1nVXF5lk105VG51uO0L0qNV-G4wMTVPIETYtyjoyWjq8z6OWWKCojiP1aBlsFFcLBvKHR01A4PwCiuicCyBYQJ8hMETUjT1E?fife=s16383" height="200" width="auto" /><br><br>Date : 22-05-2019 14:17:43]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj8mwcy6FtfQCWYleV4jOrJnE2BI447_wCjhuU91Uo9QPW8TUBkmzzBNE8ASFzDCKYXfmE3rQgR7wIDyQwLaFxpaLoLjWnQiw1dspbK1dEID-z1nVXF5lk105VG51uO0L0qNV-G4wMTVPIETYtyjoyWjq8z6OWWKCojiP1aBlsFFcLBvKHR01A4PwCiuicCyBYQJ8hMETUjT1E?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            79.614936,30.227739,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Surya Ghat</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjq9pa16qYDA6a1vuTJN0DzfSrWK_YZ8OeIDkd67bE0KDdbDc4yIk5LbPo9KIBmPkzbXHFOQuCPYFRMwu9LclvMGe-Jnw3Q05lxTXXSe53TlJoPdAarU-jtFNTo_9Ere1BPHL6HQ4eZXZxCrrS1W2ywCI1sWCF5HMINHu4nf-xsG-LfElqKHb7MFbwqTmhHtGawMxAQHppp5Fs?fife=s16383" height="200" width="auto" /><br><br>Date : 23-05-2019 10:55:11]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjq9pa16qYDA6a1vuTJN0DzfSrWK_YZ8OeIDkd67bE0KDdbDc4yIk5LbPo9KIBmPkzbXHFOQuCPYFRMwu9LclvMGe-Jnw3Q05lxTXXSe53TlJoPdAarU-jtFNTo_9Ere1BPHL6HQ4eZXZxCrrS1W2ywCI1sWCF5HMINHu4nf-xsG-LfElqKHb7MFbwqTmhHtGawMxAQHppp5Fs?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            79.543086,30.32822,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kuari</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZh2tQYaS5xAGtQQyQwsli9h8V6NXJ5ztqX6Ax_KQGoiq8ueKmZS1zbYwupNMWepXJFc3lXRqYoRjNocHIQ-sAhmn3qfsJWEulcF7z8T7u7XSCh3zk6POOVHrHDKHknYpsJj0zdLX7L8OwUEYqUfe3iwo93KFErv_6GgPvmv_2UtiU8OGEi3bPmp2oiokPd9BgKrVJGPYY8a9uI?fife=s16383" height="200" width="auto" /><br><br>Date : 24-05-2019 09:21:20]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZh2tQYaS5xAGtQQyQwsli9h8V6NXJ5ztqX6Ax_KQGoiq8ueKmZS1zbYwupNMWepXJFc3lXRqYoRjNocHIQ-sAhmn3qfsJWEulcF7z8T7u7XSCh3zk6POOVHrHDKHknYpsJj0zdLX7L8OwUEYqUfe3iwo93KFErv_6GgPvmv_2UtiU8OGEi3bPmp2oiokPd9BgKrVJGPYY8a9uI?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            79.572604,30.446877,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Naola</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgcdgXQmpV-iNoP-t-69EIai7np-8aN09rwD_iDP20oCgsJy8sflV4NmezuRSqubWugN-3-YStavBfqMHsFeX-mV2neWj4NOjQvdIFpkwP-8L9bfNFBCTpBaRuK5yqjx6OV8ZkvxhB01RVchLrorZySGlySOeDtVAraC8d-N-bx1TF21U-HWw6veWdqifkYFKQRlrazEaYdjK4?fife=s16383" height="200" width="auto" /><br><br>Date : 26-05-2019 14:33:45]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgcdgXQmpV-iNoP-t-69EIai7np-8aN09rwD_iDP20oCgsJy8sflV4NmezuRSqubWugN-3-YStavBfqMHsFeX-mV2neWj4NOjQvdIFpkwP-8L9bfNFBCTpBaRuK5yqjx6OV8ZkvxhB01RVchLrorZySGlySOeDtVAraC8d-N-bx1TF21U-HWw6veWdqifkYFKQRlrazEaYdjK4?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            79.326101,30.494459,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kyunkhola Khal</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgP3Awx6W60EkgtoRT3L-Y5WRLbYpKGbh0ecH-AFizn9ecKdMpXwezwdvntW0VblQdQ83UtTfXW4ZxM_7TNXfG1zGZPrvxfBCV4v6x8JLSYF_V4fhhmhNfoL3ZfYCV11tiz9hHeQTPnXGGtPiTMsY-c7Kx6sNkjP5JIAC0nGE2PwJy0WALH-sHo0Id5tOKN48Ln8p3gCwQrFec?fife=s16383" height="200" width="auto" /><br><br>Date : 28-05-2019 10:38:14]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgP3Awx6W60EkgtoRT3L-Y5WRLbYpKGbh0ecH-AFizn9ecKdMpXwezwdvntW0VblQdQ83UtTfXW4ZxM_7TNXfG1zGZPrvxfBCV4v6x8JLSYF_V4fhhmhNfoL3ZfYCV11tiz9hHeQTPnXGGtPiTMsY-c7Kx6sNkjP5JIAC0nGE2PwJy0WALH-sHo0Id5tOKN48Ln8p3gCwQrFec?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            78.915517,30.626334,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Reeh-Gainwali</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi1wkrS8GIOJ7Y-3AsClAuRBnV92eHOVs6T8L7WCsoq3og0qYtb2-GteNzHfsgL9pojlx2cJCPzwOv_yRVVT1JwpeMHRGVmcQB2RTulUBZVpdbdcYoXkq54Y7j1GKcpm36wevQsB_ML2nWYNbyZ3ptbE6iD1IO-cmn6q4EchTMhtcyrUwl4qCO6qBpwAWsqD-P2DE8BNZsXXrc?fife=s16383" height="200" width="auto" /><br><br>Date : 29-05-2019 13:13:57]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi1wkrS8GIOJ7Y-3AsClAuRBnV92eHOVs6T8L7WCsoq3og0qYtb2-GteNzHfsgL9pojlx2cJCPzwOv_yRVVT1JwpeMHRGVmcQB2RTulUBZVpdbdcYoXkq54Y7j1GKcpm36wevQsB_ML2nWYNbyZ3ptbE6iD1IO-cmn6q4EchTMhtcyrUwl4qCO6qBpwAWsqD-P2DE8BNZsXXrc?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            78.792647,30.610902,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Gainwalli-Pinswar</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjhLh4tIQXBIZhu4zuw5hes4jlyQLZE6zfUMGbPhvYgoTIqktH474xaI6ZrJzyKIFT3RiJXLZIjWl_qrEj2UAv8AWabSi6aZCIj2B5nJ7x9Z83B0F6vN0oT5soz22ynu8P1RuexCL3Ft_GCsMt2P1PwtD9zJcjeqY48W8kOQyL9XAiSstq0CFeV38F0dU33tbxcPXxzVg0mfp4?fife=s16383" height="200" width="auto" /><br><br>Date : 30-05-2019 07:06:35]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjhLh4tIQXBIZhu4zuw5hes4jlyQLZE6zfUMGbPhvYgoTIqktH474xaI6ZrJzyKIFT3RiJXLZIjWl_qrEj2UAv8AWabSi6aZCIj2B5nJ7x9Z83B0F6vN0oT5soz22ynu8P1RuexCL3Ft_GCsMt2P1PwtD9zJcjeqY48W8kOQyL9XAiSstq0CFeV38F0dU33tbxcPXxzVg0mfp4?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            78.714169,30.648212,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pinswar-Malla</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi1cjuv2zypb-rkuMI-Dp8bGLDpEOV04tUb-z7txq6e5eH5xvkV4fkGh8hNiLfrFLZGzKMD_qxRfvt937YifN3btn9kGxpkxG-MIevWmPNsDBLBc_bbWOBqwQ1lxkV_Yv94bVlKmZRwXaPiNg4Y6WBSTdMLIfqXCZNdgzEQIlbJreUhmXclB14bGFr1wYUDdwQNrFNyRWk1ong?fife=s16383" height="200" width="auto" /><br><br>Date : 30-05-2019 13:46:36]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi1cjuv2zypb-rkuMI-Dp8bGLDpEOV04tUb-z7txq6e5eH5xvkV4fkGh8hNiLfrFLZGzKMD_qxRfvt937YifN3btn9kGxpkxG-MIevWmPNsDBLBc_bbWOBqwQ1lxkV_Yv94bVlKmZRwXaPiNg4Y6WBSTdMLIfqXCZNdgzEQIlbJreUhmXclB14bGFr1wYUDdwQNrFNyRWk1ong?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            78.676253,30.711243,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Dayara</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiN5Q8y2I7aOHfxTM9kSibZV9MIAVuyDG9EFk5UDLmVlUkESFPuR8QDUjKAtV6q2IG1IBpxrozJyFhktuFvY2sCNtH7jUsqljeMYFOB1G3sSsw0XTmcUKj0UyG7MaIxSBMvEfSmyVFtWto5CDgdVbQzuAFCA7Qfh7tzIQzZotYzzHVXu-SAomwzj-ZLyecZlq35YkIzQeBCQss?fife=s16383" height="200" width="auto" /><br><br>Date : 31-05-2019 14:49:48]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiN5Q8y2I7aOHfxTM9kSibZV9MIAVuyDG9EFk5UDLmVlUkESFPuR8QDUjKAtV6q2IG1IBpxrozJyFhktuFvY2sCNtH7jUsqljeMYFOB1G3sSsw0XTmcUKj0UyG7MaIxSBMvEfSmyVFtWto5CDgdVbQzuAFCA7Qfh7tzIQzZotYzzHVXu-SAomwzj-ZLyecZlq35YkIzQeBCQss?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            78.547461,30.846691,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Darwa</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiW9JyAxm58cKuNAzbODbK8XvrHzHndu3FyqzvP8Iy7GOSyGK8NoqaP0eMapCTfUtYE9QoY2vKfttnBKrTHrk3OieMypvUpR95xK3Jv3bGTwxkWrUHbn7QlUpEg45Z-V4QMN3YytgPyhZuG55NB0onAu6-xVJadtbavj6F7XrtcgHeoI3P8WvEpBwxUGPALJ4s7KVmBlzBiF00?fife=s16383" height="200" width="auto" /><br><br>Date : 01-06-2019 10:18:38]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiW9JyAxm58cKuNAzbODbK8XvrHzHndu3FyqzvP8Iy7GOSyGK8NoqaP0eMapCTfUtYE9QoY2vKfttnBKrTHrk3OieMypvUpR95xK3Jv3bGTwxkWrUHbn7QlUpEg45Z-V4QMN3YytgPyhZuG55NB0onAu6-xVJadtbavj6F7XrtcgHeoI3P8WvEpBwxUGPALJ4s7KVmBlzBiF00?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            78.511847,30.914117,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Darwa x 2</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhdzGhZYeD2irqpMxgw7OaF6Zb_hcFJ2LuusJ98_XNwtCZB88EwwO5-qDLT_0--dTuu9rktqoxmDNRF5n6oAwhOwKeEJYpOstFc6CK3LK13V4D0z3ucqMOLTmLeaYzbXqficNDs6qD5JcYjVISfH7vzd_v6-ST-epAWRIOeGRH3JvIg-zeq792f299EL25RP5ifn0bZtsL8KCQ?fife=s16383" height="200" width="auto" /><br><br>Date : 02-06-2019 08:48:51]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhdzGhZYeD2irqpMxgw7OaF6Zb_hcFJ2LuusJ98_XNwtCZB88EwwO5-qDLT_0--dTuu9rktqoxmDNRF5n6oAwhOwKeEJYpOstFc6CK3LK13V4D0z3ucqMOLTmLeaYzbXqficNDs6qD5JcYjVISfH7vzd_v6-ST-epAWRIOeGRH3JvIg-zeq792f299EL25RP5ifn0bZtsL8KCQ?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            78.511601,30.913806,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Darsaun-Jewanu</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgjiuN5pLiICaCetM3Tk6DQ2X6bbH2BUjkFDLIFVAwfbzN5hFsBABPBFECyQetFmezOybcEaooR9Kdw-gsK6WnrEdvIZpucl3KXnijJJ0MxmpV9iuKk_EKt8x617K7tRk1Xrfoghhs23TNQCb6RmFiMWyKWKalxIYnvyXA88Nkpn3__hQTgFx7Kz-KSBPOvdeM6-tfpwaf7Qyg?fife=s16383" height="200" width="auto" /><br><br>Date : 05-06-2019 10:18:35]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgjiuN5pLiICaCetM3Tk6DQ2X6bbH2BUjkFDLIFVAwfbzN5hFsBABPBFECyQetFmezOybcEaooR9Kdw-gsK6WnrEdvIZpucl3KXnijJJ0MxmpV9iuKk_EKt8x617K7tRk1Xrfoghhs23TNQCb6RmFiMWyKWKalxIYnvyXA88Nkpn3__hQTgFx7Kz-KSBPOvdeM6-tfpwaf7Qyg?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            78.183244,30.952555,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kedarkanta</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZixqIKjyJoP_Ud3KjJw98cc9fNM2FPAkdStVUadZfKYyZoP7IjPugqfbgG8ecInyKRxgY3HiW8vw7pJXjjeto2nvjTtQkTa7naIz2DEB5ePUnNe3wxjbSQcOsKq09q67PpYUYn7DrEtNuwaOksEcKOidvBH5MJvyK48gKnlJBWdPjEaGAfFMd7dGOWAY1HFIMzPouiMT31i0kE?fife=s16383" height="200" width="auto" /><br><br>Date : 05-06-2019 15:04:11]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZixqIKjyJoP_Ud3KjJw98cc9fNM2FPAkdStVUadZfKYyZoP7IjPugqfbgG8ecInyKRxgY3HiW8vw7pJXjjeto2nvjTtQkTa7naIz2DEB5ePUnNe3wxjbSQcOsKq09q67PpYUYn7DrEtNuwaOksEcKOidvBH5MJvyK48gKnlJBWdPjEaGAfFMd7dGOWAY1HFIMzPouiMT31i0kE?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            78.171764,31.022582,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Chansal</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj2uF5c3xE6MOjD2-73PlrnTe0fV49wysPJZcrJsv-zDgNJsXbCbwOabE4uChLJdQtY0HIzqQCVKvQnQk__lLrdqeCXXbFxhhkXIDm18eAQ7opz8OoxQqyH8lBarpd04d9VM4rghBZnLOBvF9o6ZSr-NEWEvGr4i_eClidm0986kTMabostg5zMZqf3qswDBIztZKprN4QuC08?fife=s16383" height="200" width="auto" /><br><br>Date : 07-06-2019 10:38:34]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj2uF5c3xE6MOjD2-73PlrnTe0fV49wysPJZcrJsv-zDgNJsXbCbwOabE4uChLJdQtY0HIzqQCVKvQnQk__lLrdqeCXXbFxhhkXIDm18eAQ7opz8OoxQqyH8lBarpd04d9VM4rghBZnLOBvF9o6ZSr-NEWEvGr4i_eClidm0986kTMabostg5zMZqf3qswDBIztZKprN4QuC08?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.994827,31.206736,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bashleo</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi8IfKFi2MDnfDmlKRE1UaQl91qcWLJ01Cj8c1GvI2W7Mh8O7tc-_BNZTSHbN-8qDqV79XPUDDywvjWu-oopjnzfy0Pt2aUPRvzltOwzT66tHFt1X5U1ScoFNMAHpIcpsSSDgLDYnplBtRQgHneQ2uC9-c2mVEKhj2Ksw-jQk4X1auvESXtybrIluB5WspIpTrbTYISvzC_cjs?fife=s16383" height="200" width="auto" /><br><br>Date : 09-06-2019 08:05:12]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi8IfKFi2MDnfDmlKRE1UaQl91qcWLJ01Cj8c1GvI2W7Mh8O7tc-_BNZTSHbN-8qDqV79XPUDDywvjWu-oopjnzfy0Pt2aUPRvzltOwzT66tHFt1X5U1ScoFNMAHpIcpsSSDgLDYnplBtRQgHneQ2uC9-c2mVEKhj2Ksw-jQk4X1auvESXtybrIluB5WspIpTrbTYISvzC_cjs?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.506428,31.569499,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Rakhundi Top</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjr34LpicxxnKMe9yLRNNWYPyndYZ8h-aa6mWJKWgt6ps4RvcD6Nh7ddfnh7JQv3OlB2w6qTh2xHPU4tSAXzrfQxT9yiubRf0A0N1T-0dB-7xgGLEMYuJFFIZiixY5gwn7J4MqcVk72sRcQ7GdgAP1Vg6wPvcD6P86p08tTWwdDH3HN5c8iYqx8I8ZH7V745zK2krCpWUUTXOA?fife=s16383" height="200" width="auto" /><br><br>Date : 10-06-2019 14:43:14]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjr34LpicxxnKMe9yLRNNWYPyndYZ8h-aa6mWJKWgt6ps4RvcD6Nh7ddfnh7JQv3OlB2w6qTh2xHPU4tSAXzrfQxT9yiubRf0A0N1T-0dB-7xgGLEMYuJFFIZiixY5gwn7J4MqcVk72sRcQ7GdgAP1Vg6wPvcD6P86p08tTWwdDH3HN5c8iYqx8I8ZH7V745zK2krCpWUUTXOA?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.49189,31.700821,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tirthan-Sainj</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiUWmzzpR_OZ4nkSimtxkmQfwBAB-513sligIax7-NjpHH46IpFYNDDsM8NdAFT-Got0mVmrbpLu8Hi7K7lwOQpcnoVLjnqcfH2Li8-4QghdCZYvw0XRyGnRxc5Y0BDzpTHg1BbyFsETDJWKA1XT80iaJOFZldQ6-X4kjUSsM32ra0DsjqFRUfE86TK37lDtULjbY4Rwukv_5M?fife=s16383" height="200" width="auto" /><br><br>Date : 10-06-2019 18:12:22]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiUWmzzpR_OZ4nkSimtxkmQfwBAB-513sligIax7-NjpHH46IpFYNDDsM8NdAFT-Got0mVmrbpLu8Hi7K7lwOQpcnoVLjnqcfH2Li8-4QghdCZYvw0XRyGnRxc5Y0BDzpTHg1BbyFsETDJWKA1XT80iaJOFZldQ6-X4kjUSsM32ra0DsjqFRUfE86TK37lDtULjbY4Rwukv_5M?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.472985,31.730692,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kandi Galu</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiULokwj6ptsu_T14sp3L2HCx6D4K6FB9gsWGAddFTrsGzIQgz6rG3PzJE93kcRoVRp4zf4xiO4CCnFJ-FnLL9stoZMht1uJFiIzlvmfN3heZVwBL2qIW4Bu1eU7Uacx8PlFqM6JLei6cXiXmv7f9BQleemC1sG5TTvKa6uPxV2R1xmdSk4GbtLcYJmv3fAHE_0r3MhWHAggsk?fife=s16383" height="200" width="auto" /><br><br>Date : 13-06-2019 17:38:54]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiULokwj6ptsu_T14sp3L2HCx6D4K6FB9gsWGAddFTrsGzIQgz6rG3PzJE93kcRoVRp4zf4xiO4CCnFJ-FnLL9stoZMht1uJFiIzlvmfN3heZVwBL2qIW4Bu1eU7Uacx8PlFqM6JLei6cXiXmv7f9BQleemC1sG5TTvKa6uPxV2R1xmdSk4GbtLcYJmv3fAHE_0r3MhWHAggsk?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.413622,31.841434,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sari</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhCZx6m4PAYLyTlikzh77DjhrX16VCIivjM8XRQ3XNKtAMG0siUBe6eiU8zvHIauY1Qu-aKPzNFLiqR9LAa_0DYMgT1WMntNYtEK9rSTsvEP0UDxlbr9PWP9PEyJP1e315PTxAOMJFLwks7nGz9bzyiGcij6691gmxbjZuEI_7Dez47nmhFWZLxyKMq5IdnaHvfuR5wyyCbBK0?fife=s16383" height="200" width="auto" /><br><br>Date : 16-06-2019 11:41:59]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhCZx6m4PAYLyTlikzh77DjhrX16VCIivjM8XRQ3XNKtAMG0siUBe6eiU8zvHIauY1Qu-aKPzNFLiqR9LAa_0DYMgT1WMntNYtEK9rSTsvEP0UDxlbr9PWP9PEyJP1e315PTxAOMJFLwks7nGz9bzyiGcij6691gmxbjZuEI_7Dez47nmhFWZLxyKMq5IdnaHvfuR5wyyCbBK0?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.938636,32.077862,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Barot-Johindernagar</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZh-Pc-d2CRTv0z9Q-_RH2fL5a80A3LEvnPkso78h6YIayYbLHKc6rM7IZyQeLPpXlqXoaYaPKUkpiLFO_mte7NOACzE5GEY4ejC4m9zB3CTQP5dp34xfmh6pvGEQJnLeo5clogmaC8dTfSaWa5SDWJ1ry8TELqA5AlfktNRFQyzqwfC4j2AQlM3fJBCinz_cuU4dqDgH35QuKc?fife=s16383" height="200" width="auto" /><br><br>Date : 17-06-2019 11:12:58]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZh-Pc-d2CRTv0z9Q-_RH2fL5a80A3LEvnPkso78h6YIayYbLHKc6rM7IZyQeLPpXlqXoaYaPKUkpiLFO_mte7NOACzE5GEY4ejC4m9zB3CTQP5dp34xfmh6pvGEQJnLeo5clogmaC8dTfSaWa5SDWJ1ry8TELqA5AlfktNRFQyzqwfC4j2AQlM3fJBCinz_cuU4dqDgH35QuKc?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.825228,32.031194,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kareri</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjCjzu-K9eGJgtTNS7xPS5ONqnbteQcEy0tT17GYrY7Ppuq2LlrEkRWgSYjCby4W2Qg3nUNEikkiE9vmG0W_em93cEBpMQTMFd7kaTVX-GPZTqVX2Ok0WF77fEcZVP3B5mYoRQiU9VCSIja5ZGvAfH8Ofiys28qgGJbsWrxsyOH6lxn4K8tSoIY5UKNwoTA9Ln3PEcc2OekGFI?fife=s16383" height="200" width="auto" /><br><br>Date : 18-06-2019 15:44:21]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjCjzu-K9eGJgtTNS7xPS5ONqnbteQcEy0tT17GYrY7Ppuq2LlrEkRWgSYjCby4W2Qg3nUNEikkiE9vmG0W_em93cEBpMQTMFd7kaTVX-GPZTqVX2Ok0WF77fEcZVP3B5mYoRQiU9VCSIja5ZGvAfH8Ofiys28qgGJbsWrxsyOH6lxn4K8tSoIY5UKNwoTA9Ln3PEcc2OekGFI?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.280302,32.318905,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Baleni</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiN1BpKJ7apo36kmZmQFku4fvk8N_bYaEwG3IK8UdkZwnMF1aFc6pt0R3zFq2tTOzWMI6-Q2Ifq8Uqw-vvtsaYdx7wWrLus4Iv06lvG2ON9bqOP0Sfby2J-ffinSG-y_Je0nDu-1tOzzpfB3Ip1hAiON-Y0_6RaBJyV9p6b-_oB1gO-o7DKiLcKYoY2ZH-isnuuURTtFrNnppI?fife=s16383" height="200" width="auto" /><br><br>Date : 20-06-2019 10:36:41]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiN1BpKJ7apo36kmZmQFku4fvk8N_bYaEwG3IK8UdkZwnMF1aFc6pt0R3zFq2tTOzWMI6-Q2Ifq8Uqw-vvtsaYdx7wWrLus4Iv06lvG2ON9bqOP0Sfby2J-ffinSG-y_Je0nDu-1tOzzpfB3Ip1hAiON-Y0_6RaBJyV9p6b-_oB1gO-o7DKiLcKYoY2ZH-isnuuURTtFrNnppI?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.285592,32.360294,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Minkani</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjMPAy2tULFYo-gdi_stWzAuPIV6Ev5vpEet2NbsxZzE9EeGyGTNe4L-vGROxQ52uM8mjo_8unucWMHxNAaZpkMVD6y117TBvBypCRTtgMak_9J9Eak-Q_Dlh876VRpcR-yCS8C5-uGWH14Dn1m6XAVLGvVf_xokWBe8K2HTOn0azpcGFVqMDKUrldx0ztSOIAgtrs45y-vo9A?fife=s16383" height="200" width="auto" /><br><br>Date : 20-06-2019 16:59:39]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjMPAy2tULFYo-gdi_stWzAuPIV6Ev5vpEet2NbsxZzE9EeGyGTNe4L-vGROxQ52uM8mjo_8unucWMHxNAaZpkMVD6y117TBvBypCRTtgMak_9J9Eak-Q_Dlh876VRpcR-yCS8C5-uGWH14Dn1m6XAVLGvVf_xokWBe8K2HTOn0azpcGFVqMDKUrldx0ztSOIAgtrs45y-vo9A?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.291894,32.339687,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Indrahar</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgrFQyPyBzRxhisdKTQmodCSoaP19Bda76-eGsCx7v0tdANe5SsqYaByPs4ZDVmv9VhiAPsQXDeuG_Kk9b-iovGdWHrlB4NiCthqIiOTLN6LkIBChGFM-A_H5-rUUuSwZIVIx7A3b9x8eJLUxThAdLzHqbWukvOKY1F7BUoL_R3ZGlvl1DpqkN5IoiZ0PfZqdcDrXgFq2BI0QA?fife=s16383" height="200" width="auto" /><br><br>Date : 22-06-2019 10:28:16]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgrFQyPyBzRxhisdKTQmodCSoaP19Bda76-eGsCx7v0tdANe5SsqYaByPs4ZDVmv9VhiAPsQXDeuG_Kk9b-iovGdWHrlB4NiCthqIiOTLN6LkIBChGFM-A_H5-rUUuSwZIVIx7A3b9x8eJLUxThAdLzHqbWukvOKY1F7BUoL_R3ZGlvl1DpqkN5IoiZ0PfZqdcDrXgFq2BI0QA?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.381272,32.297542,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Waru</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj4UvnE5PjGOnA-9-TxMOU9ZEhl7l02WGahaFK-RlSwyHbsC-XT3NtFLAZPovL34niLP65JU4yLVQAF_Od6bdrlTlk5CWd0uISxIo8L9EIFFwk_AEAop4QsMxR7_ErqoQEExNWAtRh0kuTT3XFbq6eo94Z_xi0QKwWX63ZZhf3n-v_GHPFgEdOoWM-FAtBvu7o6Du8UO-dhkNc?fife=s16383" height="200" width="auto" /><br><br>Date : 25-06-2019 07:55:44]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj4UvnE5PjGOnA-9-TxMOU9ZEhl7l02WGahaFK-RlSwyHbsC-XT3NtFLAZPovL34niLP65JU4yLVQAF_Od6bdrlTlk5CWd0uISxIo8L9EIFFwk_AEAop4QsMxR7_ErqoQEExNWAtRh0kuTT3XFbq6eo94Z_xi0QKwWX63ZZhf3n-v_GHPFgEdOoWM-FAtBvu7o6Du8UO-dhkNc?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.635957,32.188438,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Triund</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZg_ruizNasXusbFnntk-TUWQFCXn2uB9ZpFi8wX5EFKpQT7q5DFT1mUbNi_bXdoXjT0LjOSNexbUGSSIDBHnSdqHTZSL72o944W91T8qOcoKNG1a8AxotTeC74-nomae47AXXuYDrDYZVYlJZNeMhs2SCjpwLS95b4ROMSSYPAUYrFF0TSsrb5lILg9uX3x4Fg9F6PP2nENC2g?fife=s16383" height="200" width="auto" /><br><br>Date : 27-06-2019 17:59:01]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZg_ruizNasXusbFnntk-TUWQFCXn2uB9ZpFi8wX5EFKpQT7q5DFT1mUbNi_bXdoXjT0LjOSNexbUGSSIDBHnSdqHTZSL72o944W91T8qOcoKNG1a8AxotTeC74-nomae47AXXuYDrDYZVYlJZNeMhs2SCjpwLS95b4ROMSSYPAUYrFF0TSsrb5lILg9uX3x4Fg9F6PP2nENC2g?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.353054,32.2702,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Gaj</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiG02T9eO4GHxiqZt4xw0doYnG_ID_CsaoJr_OVo6H75IWJDu9jYKoZOZO0qECmGXmOjZCuIHtJs5YiRJNpCAMOMVSPvWEk4MaQTWJU63hJLIZlR1MPIWUF9MnQ2BNecmLD40pMnecmPN4eawOqF1rPqbNviyPal2YB5TRKfCTfZl6V8ryTkeZDd0_IKWJi7ZUqN5AqJq-bVi0?fife=s16383" height="200" width="auto" /><br><br>Date : 30-06-2019 11:15:46]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiG02T9eO4GHxiqZt4xw0doYnG_ID_CsaoJr_OVo6H75IWJDu9jYKoZOZO0qECmGXmOjZCuIHtJs5YiRJNpCAMOMVSPvWEk4MaQTWJU63hJLIZlR1MPIWUF9MnQ2BNecmLD40pMnecmPN4eawOqF1rPqbNviyPal2YB5TRKfCTfZl6V8ryTkeZDd0_IKWJi7ZUqN5AqJq-bVi0?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.321255,32.336251,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Gadasru Mahadev</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZg6POGYXoTR58GfERCbK68u-pil7YBa5mGX5CsI4h5O0EKEoLtExzuljIcQiC4DL2NWi9jIql5G_5OvawDtxgOsB-sxE2s7SWkXOkPU-WnvYwm_vZZSZqQs36Oem9NlnJNQoaLf5JzIjvyYjysz5DiSpjKDxGklRYPk1Ox5EyxhZkNrVCM5P1TTt6yYm1ROgwI8jJEI7fKb4Ns?fife=s16383" height="200" width="auto" /><br><br>Date : 02-07-2019 09:22:08]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZg6POGYXoTR58GfERCbK68u-pil7YBa5mGX5CsI4h5O0EKEoLtExzuljIcQiC4DL2NWi9jIql5G_5OvawDtxgOsB-sxE2s7SWkXOkPU-WnvYwm_vZZSZqQs36Oem9NlnJNQoaLf5JzIjvyYjysz5DiSpjKDxGklRYPk1Ox5EyxhZkNrVCM5P1TTt6yYm1ROgwI8jJEI7fKb4Ns?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.300282,32.883078,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Marhu</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgrK1WR2C2vGveU1o7K1O3MAmrBINe-fGXZznLvh8MADIokaE4IQS-T0t2zP3Mch-LAqy3OWU2SA5cHWPDxDnQ45fLx4YP5TwDoInAU2j5qZPzCdpDYXdbeDDUMvLfKPg7AauQ3fVTU3BIl1LGhcRTzbBDSBA0-PFYWxxAIK8ugnZ_zasS7Y-oVYH7DaLzBYa_kU_nm8hhVUAM?fife=s16383" height="200" width="auto" /><br><br>Date : 04-07-2019 12:41:33]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgrK1WR2C2vGveU1o7K1O3MAmrBINe-fGXZznLvh8MADIokaE4IQS-T0t2zP3Mch-LAqy3OWU2SA5cHWPDxDnQ45fLx4YP5TwDoInAU2j5qZPzCdpDYXdbeDDUMvLfKPg7AauQ3fVTU3BIl1LGhcRTzbBDSBA0-PFYWxxAIK8ugnZ_zasS7Y-oVYH7DaLzBYa_kU_nm8hhVUAM?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.386305,32.7793,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Darati</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZg_8YQkPgSPzOXXyvaAeggPJ2qB-KIbAUO_M0rIX8IXs4FbjGLkj0j3dZyhjbN1SKET-chjyRGbv5MKza09ToZSq-FUY3xyLFuNfbGX0FoG-HkikUWBoFAs9cYMSm5-2rS80VoO0DTbMN-KlabggyCvuKVXbe1g_6qJsl7a_yuCnvZkr5Bz66LjCvnXW8kRVOYy239boXRuzSo?fife=s16383" height="200" width="auto" /><br><br>Date : 05-07-2019 16:03:31]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZg_8YQkPgSPzOXXyvaAeggPJ2qB-KIbAUO_M0rIX8IXs4FbjGLkj0j3dZyhjbN1SKET-chjyRGbv5MKza09ToZSq-FUY3xyLFuNfbGX0FoG-HkikUWBoFAs9cYMSm5-2rS80VoO0DTbMN-KlabggyCvuKVXbe1g_6qJsl7a_yuCnvZkr5Bz66LjCvnXW8kRVOYy239boXRuzSo?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.39756,32.734276,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Chaurasi</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhwzZ3vmrxy46uV-4fF4GzMwmWCFqSIqDxg2cqgjXn_ETUUIZPYNkoikHnkr8fFrp-jpyujVXT6M6CqJVb1dg31t8RNjX4ykg8pEgJC1swv6Ac22_hvvvXoYsLk-pOto5FKsDFVoEybsVXvbfgwiMIuqhS8Scdi2J5UYvjOI0DUa_F19FZ6u7-zbMp1tjPThd33_jMtbXfqCFw?fife=s16383" height="200" width="auto" /><br><br>Date : 07-07-2019 13:16:19]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhwzZ3vmrxy46uV-4fF4GzMwmWCFqSIqDxg2cqgjXn_ETUUIZPYNkoikHnkr8fFrp-jpyujVXT6M6CqJVb1dg31t8RNjX4ykg8pEgJC1swv6Ac22_hvvvXoYsLk-pOto5FKsDFVoEybsVXvbfgwiMIuqhS8Scdi2J5UYvjOI0DUa_F19FZ6u7-zbMp1tjPThd33_jMtbXfqCFw?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.409166,32.595885,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kang La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgSfWMQL2hajTeun5kJx95i7njuoDdliO6Gw5wyTGroRJSm8oxTWhPtdsG2prbQJ19voj82G-ZIeq45jB8UVfeBnrrTpDSTf3oUpdSPdf-QmfzWk795Ns_TbkoGm8CVAnjVu1MGYbImEtqxzpMzYIQh6avtOeXuhtMeBEkno2-woQfEFc7MIaHXrygAANh02TjlGPkLV2-1coM?fife=s16383" height="200" width="auto" /><br><br>Date : 13-07-2019 09:03:59]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgSfWMQL2hajTeun5kJx95i7njuoDdliO6Gw5wyTGroRJSm8oxTWhPtdsG2prbQJ19voj82G-ZIeq45jB8UVfeBnrrTpDSTf3oUpdSPdf-QmfzWk795Ns_TbkoGm8CVAnjVu1MGYbImEtqxzpMzYIQh6avtOeXuhtMeBEkno2-woQfEFc7MIaHXrygAANh02TjlGPkLV2-1coM?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.819339,33.236626,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Namste La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjsQ_mAdsReimOZh_r1L7GpW_CuElGMFuGuiLUH0vaeTaGf9bIaxQZ-hW7YciOig5prWI6osheZT2hnWZX_pwabPyKsiJS-c8Wb-IgzBEOZcC2sjqCHFn85wfY4uNTxXzlIqicX7yOxpx7HlWXlmUBpHpYrMvWCiaDMYJXp5awTb55hJdfTDcDxstvJ6RGP4WH8wS6xu-joRCg?fife=s16383" height="200" width="auto" /><br><br>Date : 14-07-2019 14:09:20]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjsQ_mAdsReimOZh_r1L7GpW_CuElGMFuGuiLUH0vaeTaGf9bIaxQZ-hW7YciOig5prWI6osheZT2hnWZX_pwabPyKsiJS-c8Wb-IgzBEOZcC2sjqCHFn85wfY4uNTxXzlIqicX7yOxpx7HlWXlmUBpHpYrMvWCiaDMYJXp5awTb55hJdfTDcDxstvJ6RGP4WH8wS6xu-joRCg?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.968359,33.713813,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Namste La x 2</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiBf6Xt80kiyhrPPjcds-aNPHbRX-C3XIVChM1bHmNocqiZbVXupWMHLX_SYaPpd7yiWI9Fqd2cuoUhLpXGQWMT8DpGTs7Y-WmPer6yQ0Hfu_iAlz2_w-XZo_b_s7-FdsLVWJ3SSTJZkgGFjKc1Cq5UiD82xn-EKpYlnBeNXhLuiB58JSebclyTirdZuMgv2wm3ffdNaX8NTQk?fife=s16383" height="200" width="auto" /><br><br>Date : 15-07-2019 10:28:37]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiBf6Xt80kiyhrPPjcds-aNPHbRX-C3XIVChM1bHmNocqiZbVXupWMHLX_SYaPpd7yiWI9Fqd2cuoUhLpXGQWMT8DpGTs7Y-WmPer6yQ0Hfu_iAlz2_w-XZo_b_s7-FdsLVWJ3SSTJZkgGFjKc1Cq5UiD82xn-EKpYlnBeNXhLuiB58JSebclyTirdZuMgv2wm3ffdNaX8NTQk?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.968317,33.713723,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Parfi La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZggVpMnxAn0LMFOiPbSt1m-tvqtDY3pRRm2pLjYoEVi05-bOEU5cyp-1KzxDbptl79D0riPbB8TKuUJmcmr0BJnPTWVjk8XlQV_Ka913lkUsPUkUN080s8fFuwYse23zzom2iBUmmZl_2SPGZa4DkvI8SLXAfi2A02ENF8yXRiXv2LriuXudvGM8q7Z7YBcjWfVdhS_GtFMlPw?fife=s16383" height="200" width="auto" /><br><br>Date : 15-07-2019 17:58:02]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZggVpMnxAn0LMFOiPbSt1m-tvqtDY3pRRm2pLjYoEVi05-bOEU5cyp-1KzxDbptl79D0riPbB8TKuUJmcmr0BJnPTWVjk8XlQV_Ka913lkUsPUkUN080s8fFuwYse23zzom2iBUmmZl_2SPGZa4DkvI8SLXAfi2A02ENF8yXRiXv2LriuXudvGM8q7Z7YBcjWfVdhS_GtFMlPw?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.833969,33.779058,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Hanuma La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhc7Yd6TIh0L7NhxVGUqpbpE69Cokshvk4m6QDU9zuB8uA75xkNtKCP3T0sOsFTBkz1NS1I--AtZV46weE-F3rR_MsSJ6FyN-E1XWLK25RxsNvak2PW5fZVLM_uLDN7-Xo8cRE-YLmKz0Hep_poTUBMza1T9rSckScEmAoO09TtvvL5CLvEr7flVY8WiuNu197b0H__6fIe20s?fife=s16383" height="200" width="auto" /><br><br>Date : 16-07-2019 09:51:45]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhc7Yd6TIh0L7NhxVGUqpbpE69Cokshvk4m6QDU9zuB8uA75xkNtKCP3T0sOsFTBkz1NS1I--AtZV46weE-F3rR_MsSJ6FyN-E1XWLK25RxsNvak2PW5fZVLM_uLDN7-Xo8cRE-YLmKz0Hep_poTUBMza1T9rSckScEmAoO09TtvvL5CLvEr7flVY8WiuNu197b0H__6fIe20s?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.79155,33.871191,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Netuke La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgijuX0Gg4cQJ52MltBhP2JQNoWMj2yhueev8u-7k8AjWt_8strV4SuhUI67zBN9IiIM7wqKw5uib63ZYR9zoS2eP0ccMEfmjAK6lIv7G1CSVHPSq0l2-s_LIuklmN6lcOAzfGFIhzt_KezBhtqfjv8WoIRVnZq4dx3y_fDZg0_Bj-kfXE_o7RNPElYz6t_sJWl17bTj48orfM?fife=s16383" height="200" width="auto" /><br><br>Date : 16-07-2019 15:03:31]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgijuX0Gg4cQJ52MltBhP2JQNoWMj2yhueev8u-7k8AjWt_8strV4SuhUI67zBN9IiIM7wqKw5uib63ZYR9zoS2eP0ccMEfmjAK6lIv7G1CSVHPSq0l2-s_LIuklmN6lcOAzfGFIhzt_KezBhtqfjv8WoIRVnZq4dx3y_fDZg0_Bj-kfXE_o7RNPElYz6t_sJWl17bTj48orfM?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.858686,33.900433,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kyupka La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj2q0ud8hrqbAPZsWzTfAxtgkqJRhno7pHwC1Y_NImMHD6rhQPd11GQ8yVOwlSfH2JTFFrfEbUOHo2hpF0lc2FjXzsmSO6dnSB27UvBOG-B_ltN0KsWbCeXVl7KEgIeKVaxA3DQbMWXCbHu-JHcERSNRQw07k9rd9W-OaszdPhFN07cXoLKYwCuxlmAS2tsNajHZowgcirZ5sI?fife=s16383" height="200" width="auto" /><br><br>Date : 17-07-2019 07:59:45]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj2q0ud8hrqbAPZsWzTfAxtgkqJRhno7pHwC1Y_NImMHD6rhQPd11GQ8yVOwlSfH2JTFFrfEbUOHo2hpF0lc2FjXzsmSO6dnSB27UvBOG-B_ltN0KsWbCeXVl7KEgIeKVaxA3DQbMWXCbHu-JHcERSNRQw07k9rd9W-OaszdPhFN07cXoLKYwCuxlmAS2tsNajHZowgcirZ5sI?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.881059,33.928183,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Singge La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgSL-g5DZ1TEPR5DsxUzBttNVpvh-XgCAuJU9I81_tWmVFV-1zLyxU_-1eK5gyLdWY9Yjif3wUuzvJR8InzKHXWYMkGl-tyceqzwWq97DAVJ5L9FQU4RCvruIdedpk-dhuyUteytJuoBXhgPXuiN-3gBlE-q2WFO00zpqaBFQYVeY-kIYWmyKca2idLGvRsN8zu3nRvGLnw-R4?fife=s16383" height="200" width="auto" /><br><br>Date : 17-07-2019 10:37:37]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgSL-g5DZ1TEPR5DsxUzBttNVpvh-XgCAuJU9I81_tWmVFV-1zLyxU_-1eK5gyLdWY9Yjif3wUuzvJR8InzKHXWYMkGl-tyceqzwWq97DAVJ5L9FQU4RCvruIdedpk-dhuyUteytJuoBXhgPXuiN-3gBlE-q2WFO00zpqaBFQYVeY-kIYWmyKca2idLGvRsN8zu3nRvGLnw-R4?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.902237,33.972906,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sirsir La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiKKNvdXoVLOiQljOKHchj79Qy4as_v4kDhn19dVRlkstaw5KawRIcIzxc57mdcsucAjfvje0o8tsPC8oYmdeNawAm7V1vAAV1dCwnz9h0G028X_vCo8xk9Cdm5Fjz-2UpvVWSrqmsx7hRmwhiKlenXxqsfCiPsfsP8-SsByBsTHCfNjs8Wm73NZica_bNxhKQ1V-p6PgOsbYM?fife=s16383" height="200" width="auto" /><br><br>Date : 17-07-2019 17:42:28]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiKKNvdXoVLOiQljOKHchj79Qy4as_v4kDhn19dVRlkstaw5KawRIcIzxc57mdcsucAjfvje0o8tsPC8oYmdeNawAm7V1vAAV1dCwnz9h0G028X_vCo8xk9Cdm5Fjz-2UpvVWSrqmsx7hRmwhiKlenXxqsfCiPsfsP8-SsByBsTHCfNjs8Wm73NZica_bNxhKQ1V-p6PgOsbYM?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.788212,34.099095,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Nigutste La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhHr1fRRu8DPnnPvZeUGIiPoOFhunLiYSjSHC8kqhuWySBewZ8CG7eXxUAY07-l3FGFSw6jFYNIJta8CiRsCHyqa9adt-zLk-jgK9eso5TaO599HH44Y0GI9x8RPP8mXcb_EA6L5QuU0hZCi_eC4rj6bOJehYMB3uVlLxejhdULGOCgdmDbwX8sHMDdIn2UbGUzyZOMZNduqwQ?fife=s16383" height="200" width="auto" /><br><br>Date : 18-07-2019 08:07:10]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhHr1fRRu8DPnnPvZeUGIiPoOFhunLiYSjSHC8kqhuWySBewZ8CG7eXxUAY07-l3FGFSw6jFYNIJta8CiRsCHyqa9adt-zLk-jgK9eso5TaO599HH44Y0GI9x8RPP8mXcb_EA6L5QuU0hZCi_eC4rj6bOJehYMB3uVlLxejhdULGOCgdmDbwX8sHMDdIn2UbGUzyZOMZNduqwQ?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.73224,34.140592,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Yogma La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjoV1vLyGvgnWCUMhWxLlgTwobp5kiMBg7rZo1ZmyxeHTp3qHgyGB3NrXdNaZbHbWn_u6Rvi2MFOfvdI0LjhspYC0WRNqhJlGk_L9YtsSoO8OswMR6OkQx4B75MXNzQPdMRhDl7KiGCwwchvj7XCYeuvhTO1PJ_CpNoN4kiIgndHIJzR1VoJcKlCHEGFp4gqT7ZaVLPwrJ4ZdE?fife=s16383" height="200" width="auto" /><br><br>Date : 18-07-2019 11:45:52]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjoV1vLyGvgnWCUMhWxLlgTwobp5kiMBg7rZo1ZmyxeHTp3qHgyGB3NrXdNaZbHbWn_u6Rvi2MFOfvdI0LjhspYC0WRNqhJlGk_L9YtsSoO8OswMR6OkQx4B75MXNzQPdMRhDl7KiGCwwchvj7XCYeuvhTO1PJ_CpNoN4kiIgndHIJzR1VoJcKlCHEGFp4gqT7ZaVLPwrJ4ZdE?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.677808,34.177609,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Prinkti La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhFtyRIeEV_xEkVX9Wd7CieZ9NJOBw4PAVCspzwMI0u6xClRDuf4aIpf7ooyDMWDNZhgG5G11IlDrnHjj_engN2GLrcKib60w4sWlnJ-D1EwnJE1lqOW7aWpZXMncb1QRgguNjzUPrRyKFE4VlsO3MUzmJfrqKQTy8KL5xFggNM7iLxIgodoqn5qXL2ZpP-UE7T-q5giajV0Js?fife=s16383" height="200" width="auto" /><br><br>Date : 19-07-2019 10:17:45]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhFtyRIeEV_xEkVX9Wd7CieZ9NJOBw4PAVCspzwMI0u6xClRDuf4aIpf7ooyDMWDNZhgG5G11IlDrnHjj_engN2GLrcKib60w4sWlnJ-D1EwnJE1lqOW7aWpZXMncb1QRgguNjzUPrRyKFE4VlsO3MUzmJfrqKQTy8KL5xFggNM7iLxIgodoqn5qXL2ZpP-UE7T-q5giajV0Js?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.782228,34.265056,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Konski La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZje3G4Scicj6Du4j2n9cApZntOcMQYPco2yDNlXiSxiXdtBXPuvZClU9yDUcLdwvkHmmo7UJDEX4DsVvyLyMibNbW3BxyRJjnK-CLirg9PqolkZHgYkyKCa5itcmWDRO16JTEwDRxZ_dxbmt7D5qW86pP4q9FLgatI5_1DeG2W9Jj-KTwauCTKlP-pH8vIJP2ikf2NlySlqR00?fife=s16383" height="200" width="auto" /><br><br>Date : 19-07-2019 18:09:20]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZje3G4Scicj6Du4j2n9cApZntOcMQYPco2yDNlXiSxiXdtBXPuvZClU9yDUcLdwvkHmmo7UJDEX4DsVvyLyMibNbW3BxyRJjnK-CLirg9PqolkZHgYkyKCa5itcmWDRO16JTEwDRxZ_dxbmt7D5qW86pP4q9FLgatI5_1DeG2W9Jj-KTwauCTKlP-pH8vIJP2ikf2NlySlqR00?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.009539,34.151372,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lanak La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgmwFmScdz7Ls_98GUKQeqNvUTSj1gcYmyeOY5KVqkz8NTJ3snDKHJ4rAhtoiedItRGYeJJprrCFFeC9zuNOq4P_oRGhSrUtxPW1-jOmTCbYukF0-Ve-l-4TmDq94ju1XzvmYKI_l1Nsrl8YYyZXu9aG_bermIPp7lJ6N-KnpZ2kNtFj3yGAY-hyr_pPBEt7g6iCvd6uVjgWEo?fife=s16383" height="200" width="auto" /><br><br>Date : 20-07-2019 11:19:32]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgmwFmScdz7Ls_98GUKQeqNvUTSj1gcYmyeOY5KVqkz8NTJ3snDKHJ4rAhtoiedItRGYeJJprrCFFeC9zuNOq4P_oRGhSrUtxPW1-jOmTCbYukF0-Ve-l-4TmDq94ju1XzvmYKI_l1Nsrl8YYyZXu9aG_bermIPp7lJ6N-KnpZ2kNtFj3yGAY-hyr_pPBEt7g6iCvd6uVjgWEo?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.129967,34.101598,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Dungduchen La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiramt23CqIJf3DJJ2YJa6NWoNXtbjClu7lMkrFopSohmKjptdPO8J9WpqptI3acMv497PWtkQDsr3vCs0uifYtlkUE12615wJU82WSboZQ7IsRldB5B9Ih3y_mQusE_-wY_JQeb9fE6SnKJxWe16bWIv-tdbUjBaxKfu1aF2-mK0u7c99nSM5OkGdNVllcbLQRl8hodzuOgj8?fife=s16383" height="200" width="auto" /><br><br>Date : 20-07-2019 13:23:32]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiramt23CqIJf3DJJ2YJa6NWoNXtbjClu7lMkrFopSohmKjptdPO8J9WpqptI3acMv497PWtkQDsr3vCs0uifYtlkUE12615wJU82WSboZQ7IsRldB5B9Ih3y_mQusE_-wY_JQeb9fE6SnKJxWe16bWIv-tdbUjBaxKfu1aF2-mK0u7c99nSM5OkGdNVllcbLQRl8hodzuOgj8?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.159266,34.088655,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Zalung Karpo La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhVfPWLq9B1hEI08nMeaaW1QKnjIZbow-1xW_Yaqith31DpRKpJhn6Y0453lpPKwfR3vWT0xrfeY5odB5UZbXIbVADeL4wGpbdWFSHA30Q3B7t2EIytx0HqCsN8E5GSKxMFmj48e2kUmEcrn58owagkgtHaKkNoEE-3Z1d-CFu8TK6tF1W5_FIuCn0toXd9Yzb9MSryN3fIpY0?fife=s16383" height="200" width="auto" /><br><br>Date : 22-07-2019 12:47:38]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhVfPWLq9B1hEI08nMeaaW1QKnjIZbow-1xW_Yaqith31DpRKpJhn6Y0453lpPKwfR3vWT0xrfeY5odB5UZbXIbVADeL4wGpbdWFSHA30Q3B7t2EIytx0HqCsN8E5GSKxMFmj48e2kUmEcrn58owagkgtHaKkNoEE-3Z1d-CFu8TK6tF1W5_FIuCn0toXd9Yzb9MSryN3fIpY0?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.454319,33.699552,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Yar La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiTDQqwWZ64nVpZcG5nJt4uhqtISczpuiqwYZ03DMPQlF-kcwEgewp1dAak606c5S7L4leK5wLidyLBkTqDc6fCSM8553t1fmLikJjymGHlYnAEGp9WqsvIt1AWOQ443fhnOgSZcWcYZxDTfEzmnlkC_hbBJkKlv4KnCpyiH4YE8yoO7CUixw1T6XgMJy3ce8qXTRvIiRVFmx4?fife=s16383" height="200" width="auto" /><br><br>Date : 23-07-2019 10:06:12]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiTDQqwWZ64nVpZcG5nJt4uhqtISczpuiqwYZ03DMPQlF-kcwEgewp1dAak606c5S7L4leK5wLidyLBkTqDc6fCSM8553t1fmLikJjymGHlYnAEGp9WqsvIt1AWOQ443fhnOgSZcWcYZxDTfEzmnlkC_hbBJkKlv4KnCpyiH4YE8yoO7CUixw1T6XgMJy3ce8qXTRvIiRVFmx4?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.615253,33.411784,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pogmar La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhh5gkd6HFG2tco31q1mRhrDfTaJUbNflnEPUqWA2NOkZWPaA5YlRj24jvS_P867hyBtO7uKE-QQQWXZhJGDDaB_5ExpWzSo9vmut8ScYiD7dKudn96m5vymRKCip8ktwmjsAdAPtuQCK3X3J362_pyS-MrZS95fio4Y6nBjtvYnNTDmVEqGNPswBYF5Z21jRRp3fLlic57zAE?fife=s16383" height="200" width="auto" /><br><br>Date : 23-07-2019 15:59:35]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhh5gkd6HFG2tco31q1mRhrDfTaJUbNflnEPUqWA2NOkZWPaA5YlRj24jvS_P867hyBtO7uKE-QQQWXZhJGDDaB_5ExpWzSo9vmut8ScYiD7dKudn96m5vymRKCip8ktwmjsAdAPtuQCK3X3J362_pyS-MrZS95fio4Y6nBjtvYnNTDmVEqGNPswBYF5Z21jRRp3fLlic57zAE?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.760322,33.258238,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Shingbuk La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhgerF-JaK-xoIm3VeMUXuupgAyAweCvYRBDeJGHP8E_1UiIG5MfBBeWn-PqojiFic2uK2ICB1LqRVa0w-xQ_l1yd0YiIzqniy2I82awr3eIekpGEZnKzCTiO9DRr-0UgSDuHID4yhOQxN1PjvPoPLv8ElsuMWPMxMzgdy3t-cWHore8ZsLraYJJcwYdSyAa25DPm7y7Xj_XZY?fife=s16383" height="200" width="auto" /><br><br>Date : 24-07-2019 11:13:07]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhgerF-JaK-xoIm3VeMUXuupgAyAweCvYRBDeJGHP8E_1UiIG5MfBBeWn-PqojiFic2uK2ICB1LqRVa0w-xQ_l1yd0YiIzqniy2I82awr3eIekpGEZnKzCTiO9DRr-0UgSDuHID4yhOQxN1PjvPoPLv8ElsuMWPMxMzgdy3t-cWHore8ZsLraYJJcwYdSyAa25DPm7y7Xj_XZY?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.944021,33.472164,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Mandalchan La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhQIc1as3A1tJPF9PXFIITrMytK11oCydERyycR5JQhEPdmQvKgel6eRnWMPCg0b2sFqzgFqHDVxI0fnAVU68h4yi5sL6lEs2FI5OoCktBun11CN_kA_id9PViFFEoOavEBIM23cqngpGKu9w-7mHuV43WN3go7mnbkKZii42tLtLRnk70s2jNvm9L-hIqg-zc8fJO2UE90xEM?fife=s16383" height="200" width="auto" /><br><br>Date : 24-07-2019 12:39:49]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhQIc1as3A1tJPF9PXFIITrMytK11oCydERyycR5JQhEPdmQvKgel6eRnWMPCg0b2sFqzgFqHDVxI0fnAVU68h4yi5sL6lEs2FI5OoCktBun11CN_kA_id9PViFFEoOavEBIM23cqngpGKu9w-7mHuV43WN3go7mnbkKZii42tLtLRnk70s2jNvm9L-hIqg-zc8fJO2UE90xEM?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.910519,33.504802,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kyamar La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhJdWsdV6eF_AInFVrQEyQSgjMgJKaq6NlVZMJXxFXCdRUYJ_fD64SFcMjryEHtFzifQoALV1XVy7IzYyw4hCn1JGGvpk_kGWSsbHEi-dZOVTm9U9FKi6evT8DT95SjM_OuAM3Xi8wnyAJ2zU0hyDm7XNc-e4OkN7TdDmpJ7H-obctJMOVsl_UIBwKY9LrRz3IcoB4zxeo7UlU?fife=s16383" height="200" width="auto" /><br><br>Date : 24-07-2019 13:52:44]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhJdWsdV6eF_AInFVrQEyQSgjMgJKaq6NlVZMJXxFXCdRUYJ_fD64SFcMjryEHtFzifQoALV1XVy7IzYyw4hCn1JGGvpk_kGWSsbHEi-dZOVTm9U9FKi6evT8DT95SjM_OuAM3Xi8wnyAJ2zU0hyDm7XNc-e4OkN7TdDmpJ7H-obctJMOVsl_UIBwKY9LrRz3IcoB4zxeo7UlU?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.89513,33.531255,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Shapodak La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZg_hsyoQ1WObWW_nbm8lWpJqjXqaFaCLIVs2t_q1_dCX432uq5Q5tbLRw5oNjY1WaTEzlL8_O-_q0DO2QURCdI5KYDqYr-YNjtu8otI7VE6kCKjyHsTpNIxTRwltPeUOImWtHTtCjJAOBopgPyDo5slU3N7PoTcBtKPmISGEH_p7L5nok0Lw4mBTrQGBrGxV2Ps1FJ0FQQVhrs?fife=s16383" height="200" width="auto" /><br><br>Date : 25-07-2019 10:41:18]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZg_hsyoQ1WObWW_nbm8lWpJqjXqaFaCLIVs2t_q1_dCX432uq5Q5tbLRw5oNjY1WaTEzlL8_O-_q0DO2QURCdI5KYDqYr-YNjtu8otI7VE6kCKjyHsTpNIxTRwltPeUOImWtHTtCjJAOBopgPyDo5slU3N7PoTcBtKPmISGEH_p7L5nok0Lw4mBTrQGBrGxV2Ps1FJ0FQQVhrs?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.698657,33.791626,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Shang La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZinCAvsi-EJfpRJO9mVjcBkvbZbAyRa02dxzkTfr6jeUYSOhP5DopHhZNQ81awt3liEMsMCy55e4IY_MmYsFBSIbOE8MipbRwWnsRCG72ioTQreuqy7SBv06MNkin_IuiKOokJqI5tTl31gv_oSJAuZPt3xNDytDGKh109cO9m4emeRwMNhjwperc9Q_4wpfWvB24scMF3vtEQ?fife=s16383" height="200" width="auto" /><br><br>Date : 27-07-2019 10:58:42]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZinCAvsi-EJfpRJO9mVjcBkvbZbAyRa02dxzkTfr6jeUYSOhP5DopHhZNQ81awt3liEMsMCy55e4IY_MmYsFBSIbOE8MipbRwWnsRCG72ioTQreuqy7SBv06MNkin_IuiKOokJqI5tTl31gv_oSJAuZPt3xNDytDGKh109cO9m4emeRwMNhjwperc9Q_4wpfWvB24scMF3vtEQ?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.589117,33.905037,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Stok Kangri</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZix1TDEj8nfVM39AbPaRxaxVw1QKhmvRDjluTuD24FPaMcbwkYPsHR2Rrfb-hfwaqVMf9v_R_K9kHjSljmehj-cLTInGD50hewq85b20Bt-LxQ6et6zqBhyOy8xWkQnccdXXq6UVfLHvf3ewKPLJGjBzjarubchgawhcpx_3UZlyPrBqTNo5nP-9bdFCtq1Krt09IK8Y0RdZJg?fife=s16383" height="200" width="auto" /><br><br>Date : 28-07-2019 05:55:28]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZix1TDEj8nfVM39AbPaRxaxVw1QKhmvRDjluTuD24FPaMcbwkYPsHR2Rrfb-hfwaqVMf9v_R_K9kHjSljmehj-cLTInGD50hewq85b20Bt-LxQ6et6zqBhyOy8xWkQnccdXXq6UVfLHvf3ewKPLJGjBzjarubchgawhcpx_3UZlyPrBqTNo5nP-9bdFCtq1Krt09IK8Y0RdZJg?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.442215,33.986268,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Stok La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZh9tkYoLhVllpabxLuBOAWvp8WRqMyRBdOugG43vcjVK6EppQIBnoBbRkFKBk5CkB19kGAwXWGW2q1bucuXBXdvCniOHjFWCZLaKHGNUCX0kmO65TW9YjmvGoq_MCIpHph_iz3CWaTapzuJKX_VPsJoAVlnRA6YumhRifiDh4Yb90-jaaZ-OSNkvNkT67dIQVlo3q4UPtYxRW8?fife=s16383" height="200" width="auto" /><br><br>Date : 28-07-2019 13:29:32]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZh9tkYoLhVllpabxLuBOAWvp8WRqMyRBdOugG43vcjVK6EppQIBnoBbRkFKBk5CkB19kGAwXWGW2q1bucuXBXdvCniOHjFWCZLaKHGNUCX0kmO65TW9YjmvGoq_MCIpHph_iz3CWaTapzuJKX_VPsJoAVlnRA6YumhRifiDh4Yb90-jaaZ-OSNkvNkT67dIQVlo3q4UPtYxRW8?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.474226,34.034844,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ganda La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhMJT0lrEhQqskKMhUKrB7jUfBfXYY-t3E8hCR15E5j5bE7d-SA8EYj3_oHMVqx-EbrWAi54_YNz6NaMUdak9KgKIeQk2jqAPoJR1Fq9W29CFyVQOezxQ6QDNyjsEepEj8nbLz-iRaNgWUZVSInREpsLjaln0I32jpLmqcBGA2dJkNsApPzwUYLDZMBRv13hh_zflFF3bQ5P_4?fife=s16383" height="200" width="auto" /><br><br>Date : 29-07-2019 09:09:15]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhMJT0lrEhQqskKMhUKrB7jUfBfXYY-t3E8hCR15E5j5bE7d-SA8EYj3_oHMVqx-EbrWAi54_YNz6NaMUdak9KgKIeQk2jqAPoJR1Fq9W29CFyVQOezxQ6QDNyjsEepEj8nbLz-iRaNgWUZVSInREpsLjaln0I32jpLmqcBGA2dJkNsApPzwUYLDZMBRv13hh_zflFF3bQ5P_4?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.362711,34.041648,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Stakspi La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjEvzPgDMhm5e0T7bbsNPrupXEkzHhSJ0_OMRoJ6X7e3SYI9JtTANIcd4iK3xx3EJ8WcdEfLM1HIW7fDxZ6yK7HMNvbyG_nQuGGmpHmOa_hskhpPVDZRqGTQ51TNtoJfs6Cy0uWP1ozuZgQ7AUOakdKFc_ulUkZFpj7H1o33Rvm8cO5uOTzigQ1sfxkAR3RgefERSY_rCMnb88?fife=s16383" height="200" width="auto" /><br><br>Date : 30-07-2019 09:00:01]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjEvzPgDMhm5e0T7bbsNPrupXEkzHhSJ0_OMRoJ6X7e3SYI9JtTANIcd4iK3xx3EJ8WcdEfLM1HIW7fDxZ6yK7HMNvbyG_nQuGGmpHmOa_hskhpPVDZRqGTQ51TNtoJfs6Cy0uWP1ozuZgQ7AUOakdKFc_ulUkZFpj7H1o33Rvm8cO5uOTzigQ1sfxkAR3RgefERSY_rCMnb88?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.166339,34.168572,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Mangyu La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi2U7aD3v_usgPeT2MjyLEo4wGY8kUmmcDTAVCrHaeM1LHXVB3qntd6k2HILqykuHsqazqTCQwcoSiVlm5Ll8IISCvU36geX5yvrc1DxQqSQRCzJMEruCwvgALTXX_mvAa8y0MXAx6CiI3L__-R9PljtRaM6YITc0nTlvRq5P7tUxmWkoQuD-V2Z7sbFysNDbHiIIicf5_8UZY?fife=s16383" height="200" width="auto" /><br><br>Date : 31-07-2019 07:16:20]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi2U7aD3v_usgPeT2MjyLEo4wGY8kUmmcDTAVCrHaeM1LHXVB3qntd6k2HILqykuHsqazqTCQwcoSiVlm5Ll8IISCvU36geX5yvrc1DxQqSQRCzJMEruCwvgALTXX_mvAa8y0MXAx6CiI3L__-R9PljtRaM6YITc0nTlvRq5P7tUxmWkoQuD-V2Z7sbFysNDbHiIIicf5_8UZY?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.023345,34.248379,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ipti La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZglyTt6xLb0MSfPh-yWQRm1CStKDI-InUfXLsyskXpLX1gJnp8VS1blLNP7KKqXrztKBS5p83DsWTUshD-KnNGHshsre14uta_JV-hwTpsgA7gis3K6p_nbWf6yZM2Okg1Dbyr4mX1F4D44zUZqLEfLObwfSNDX_vRXg61CrJ791-O0cYO5nXQdi3qSyBB4CxQ25kbQplXxt7w?fife=s16383" height="200" width="auto" /><br><br>Date : 31-07-2019 08:57:33]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZglyTt6xLb0MSfPh-yWQRm1CStKDI-InUfXLsyskXpLX1gJnp8VS1blLNP7KKqXrztKBS5p83DsWTUshD-KnNGHshsre14uta_JV-hwTpsgA7gis3K6p_nbWf6yZM2Okg1Dbyr4mX1F4D44zUZqLEfLObwfSNDX_vRXg61CrJ791-O0cYO5nXQdi3qSyBB4CxQ25kbQplXxt7w?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.988216,34.268047,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tar La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhOUhinhw3jm1T1OE8DbnioqA4hAnjs253icXAdI2jm2KD_gz0wLsYs84AS8Rj-zENYL4s1bF39SnHKhxhrTpzGf8S6f8g1MxEnISjOuQ34gd0o1t6fj23iFLGxGSKg_E8eQfwpI1OnDHqKm14MLnD3cYqVtyoEK56A1b8KET5GCAAN3F2rCnLdAXykgmpO28vZjNZJl6Em8H4?fife=s16383" height="200" width="auto" /><br><br>Date : 31-07-2019 14:35:53]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhOUhinhw3jm1T1OE8DbnioqA4hAnjs253icXAdI2jm2KD_gz0wLsYs84AS8Rj-zENYL4s1bF39SnHKhxhrTpzGf8S6f8g1MxEnISjOuQ34gd0o1t6fj23iFLGxGSKg_E8eQfwpI1OnDHqKm14MLnD3cYqVtyoEK56A1b8KET5GCAAN3F2rCnLdAXykgmpO28vZjNZJl6Em8H4?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.926705,34.235973,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Prinkti La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjpoFjXnKpByiLa7ce2ZboNuBs8Qlg8yC92lqHNESe4NXahe-d5DAPpGoZcHTAZzS7tTu_i_AArMpOqRjzC96JmH41fVSp6AOtTmzve5kyQZBd2cMbi0vNAHduj7rOdfzhN0aioDBkojRZCfJcFGvPM4LXI2DxzSi5_v5WM-fSvvr1Cxfmd375spnpoIVxsNyuHbt7pnFTjILc?fife=s16383" height="200" width="auto" /><br><br>Date : 02-08-2019 17:33:02]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjpoFjXnKpByiLa7ce2ZboNuBs8Qlg8yC92lqHNESe4NXahe-d5DAPpGoZcHTAZzS7tTu_i_AArMpOqRjzC96JmH41fVSp6AOtTmzve5kyQZBd2cMbi0vNAHduj7rOdfzhN0aioDBkojRZCfJcFGvPM4LXI2DxzSi5_v5WM-fSvvr1Cxfmd375spnpoIVxsNyuHbt7pnFTjILc?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.782241,34.265095,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Yogma La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiVgrHiv-TSl2bsZkElaBPkbXBn4j3mDf8eaTl1HfCRTCfUgT_rR2I5uDyipk9O6lfc5DtOSKSAGEO8Ek22cdXHhY4MtkZDTECB7QXHyp-ubGUYzIyD24XQ9UbYmwHlM9-VR7u9vm4lPca487qG7flPHZFX57qbOFRq0LyisUylCs6tCZYFd8btBNQo72q98yUd-u1swOJNhfo?fife=s16383" height="200" width="auto" /><br><br>Date : 03-08-2019 17:45:59]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiVgrHiv-TSl2bsZkElaBPkbXBn4j3mDf8eaTl1HfCRTCfUgT_rR2I5uDyipk9O6lfc5DtOSKSAGEO8Ek22cdXHhY4MtkZDTECB7QXHyp-ubGUYzIyD24XQ9UbYmwHlM9-VR7u9vm4lPca487qG7flPHZFX57qbOFRq0LyisUylCs6tCZYFd8btBNQo72q98yUd-u1swOJNhfo?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.677848,34.177533,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kanji La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgU0XPCDCZnmLEBqmsNOypL_qiyeMs5ZFKEUhW20pKSaB_paw0KO25v-eoaiCck3oDXGXKKug2ptSUKMHIIrJRGiLrW9gjtw4TjMLw8QnA4vesVleV51_ogMzQ7DXH2miX_1pd7h4lw1n4Gq9s2dyPqEdPF7xVMdDqgdr1bia-1jzBzW22BIK4eYjId5vo_P9sVf96a0DEwkag?fife=s16383" height="200" width="auto" /><br><br>Date : 05-08-2019 14:14:40]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgU0XPCDCZnmLEBqmsNOypL_qiyeMs5ZFKEUhW20pKSaB_paw0KO25v-eoaiCck3oDXGXKKug2ptSUKMHIIrJRGiLrW9gjtw4TjMLw8QnA4vesVleV51_ogMzQ7DXH2miX_1pd7h4lw1n4Gq9s2dyPqEdPF7xVMdDqgdr1bia-1jzBzW22BIK4eYjId5vo_P9sVf96a0DEwkag?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.527138,34.108465,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pidong La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjkM1uVvcXapYM6gvf1dgoiN2Q-nWSxfyrH67svYbGTbZNEp70qGqlPlrQy6aM_f7XPnjMh3px1pQx7k644DNa073pYUN02xAB7lUBAlzPSBJHYX1UfR6GgjeUgiG9QePTYcErr1s-UPcJg0q6ew3JFdKayqEuZiPu5ukwMQa1hrnbVpjo6DRF21r-z_b5HxljGoGTtj5if2d4?fife=s16383" height="200" width="auto" /><br><br>Date : 06-08-2019 13:41:37]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjkM1uVvcXapYM6gvf1dgoiN2Q-nWSxfyrH67svYbGTbZNEp70qGqlPlrQy6aM_f7XPnjMh3px1pQx7k644DNa073pYUN02xAB7lUBAlzPSBJHYX1UfR6GgjeUgiG9QePTYcErr1s-UPcJg0q6ew3JFdKayqEuZiPu5ukwMQa1hrnbVpjo6DRF21r-z_b5HxljGoGTtj5if2d4?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.557274,34.006065,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Barmai La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjMDnNiNbfDk6hdJgD17-lGXGxwaB15b_Dm_fmT9tYBJI4Snnnumk8SiY2eB3ZIwcBGgWTRwfrseBsCwihBUNf_Sx_O04E-F6mThOpEO1rAbKDj6jSrbrHWYVsISOyW3dQLQobPgKzfiZUbB0loViXjzqbHekZdOoYm5RSBLu3SP67luElrbr2BQjb97PU5Y62MMUgLkXUQgYM?fife=s16383" height="200" width="auto" /><br><br>Date : 07-08-2019 13:30:15]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjMDnNiNbfDk6hdJgD17-lGXGxwaB15b_Dm_fmT9tYBJI4Snnnumk8SiY2eB3ZIwcBGgWTRwfrseBsCwihBUNf_Sx_O04E-F6mThOpEO1rAbKDj6jSrbrHWYVsISOyW3dQLQobPgKzfiZUbB0loViXjzqbHekZdOoYm5RSBLu3SP67luElrbr2BQjb97PU5Y62MMUgLkXUQgYM?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.763079,33.903622,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Netuke La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgYVt3NEKdK6Q_RzXnqPqhpfYnl5qyN5C8Squ-TZNfU5IYG8MtcktVnV2gpguCCLarW5oXih0h7pu_k2C9tHUufVJqBy2QkvrStl6HhvXRC9fcAl3NiSzZJi9ogab2vsnrj9j1mCL6KBdPyoQoouA7Q6Uk6wmDnSesr2gWuWolj6yNmsT8LW29-8hZtbMByFy58tMSRQ1q9YNY?fife=s16383" height="200" width="auto" /><br><br>Date : 07-08-2019 17:35:44]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgYVt3NEKdK6Q_RzXnqPqhpfYnl5qyN5C8Squ-TZNfU5IYG8MtcktVnV2gpguCCLarW5oXih0h7pu_k2C9tHUufVJqBy2QkvrStl6HhvXRC9fcAl3NiSzZJi9ogab2vsnrj9j1mCL6KBdPyoQoouA7Q6Uk6wmDnSesr2gWuWolj6yNmsT8LW29-8hZtbMByFy58tMSRQ1q9YNY?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.858813,33.900401,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kyupka La x 2</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjUOwdV_gw3-nbUiJBAsJIheQFh62u3Bdp2ow6rrl8aCOKiOY9InryCX9yFqTetr4utt8d6w8ISCQ2YdQ0aMXXIM75jODvM6CejQpOmlfhNTH-Ym9kyLzu0EEC-1fAjRgoHXw1wCvJVMCe0jSZh4foayZ_axPbUPW1Wot2F3u6kEbmlEkIV4_wJNqdOILlqUPS_wDz6Zz7f3oA?fife=s16383" height="200" width="auto" /><br><br>Date : 08-08-2019 08:01:10]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjUOwdV_gw3-nbUiJBAsJIheQFh62u3Bdp2ow6rrl8aCOKiOY9InryCX9yFqTetr4utt8d6w8ISCQ2YdQ0aMXXIM75jODvM6CejQpOmlfhNTH-Ym9kyLzu0EEC-1fAjRgoHXw1wCvJVMCe0jSZh4foayZ_axPbUPW1Wot2F3u6kEbmlEkIV4_wJNqdOILlqUPS_wDz6Zz7f3oA?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.885107,33.922665,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tsarap II</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgWZ949CaoABuFQr2gaE2nQt8w9UovcU_41Bx3OUoMPWZJhUsv9qZ4WyLQIny6OeBmG1Rv6hDMJpgEwLTPTc0tqG7IyvrOHxjloTwbggWCBg79heFzkBEHgBf0w7DrBJKAlwB3luY0CqQ8RW-wPGD651wqUbYDhXxbV0uqrzCaBEIW-gynAXDBkGWJt70L18HFdqH63-VJ2VRo?fife=s16383" height="200" width="auto" /><br><br>Date : 14-08-2019 12:04:53]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgWZ949CaoABuFQr2gaE2nQt8w9UovcU_41Bx3OUoMPWZJhUsv9qZ4WyLQIny6OeBmG1Rv6hDMJpgEwLTPTc0tqG7IyvrOHxjloTwbggWCBg79heFzkBEHgBf0w7DrBJKAlwB3luY0CqQ8RW-wPGD651wqUbYDhXxbV0uqrzCaBEIW-gynAXDBkGWJt70L18HFdqH63-VJ2VRo?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.485622,33.13195,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Marang La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiHThlz9YXnYb9n-JevCRfKpB-_RR0ALHyGGtkbutO2tNuDHPn6-QImh-R_ww2lsk60c1ZplVDCV5Rs3gE9GQu1BCAbSx7z1a6qIyUkYuZKRR9s7M05yZhzdxRkSEzugMsGvJrRKTdQ1Xwrs7oE6rVc3PbcDPbMTQBMjyhdBPksHqoYMUzBEk6GmLZhTEKXw5emXQ0BlUKpJng?fife=s16383" height="200" width="auto" /><br><br>Date : 14-08-2019 17:04:18]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiHThlz9YXnYb9n-JevCRfKpB-_RR0ALHyGGtkbutO2tNuDHPn6-QImh-R_ww2lsk60c1ZplVDCV5Rs3gE9GQu1BCAbSx7z1a6qIyUkYuZKRR9s7M05yZhzdxRkSEzugMsGvJrRKTdQ1Xwrs7oE6rVc3PbcDPbMTQBMjyhdBPksHqoYMUzBEk6GmLZhTEKXw5emXQ0BlUKpJng?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.56602,33.153147,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jinzby La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZg_Q5ZwgsrS9fukNTPnfX2pl5UnW30rUKCUBjEe-slA_hgofqg6ZheaRgS8tlcxDpdGaKor7s_weaiZpDEtlW3kdy8iq-HBVXHdiFDM3vtY2ODGZlVwRaIKlZ3VhL6-27bmX7fGZ_ZtTo__5_nKQZVTdFV9nmRib_lg9XddJ4YtXVIw7a_8fDlIPpHD5yE7OFwZdb9aYa91ASQ?fife=s16383" height="200" width="auto" /><br><br>Date : 15-08-2019 07:32:07]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZg_Q5ZwgsrS9fukNTPnfX2pl5UnW30rUKCUBjEe-slA_hgofqg6ZheaRgS8tlcxDpdGaKor7s_weaiZpDEtlW3kdy8iq-HBVXHdiFDM3vtY2ODGZlVwRaIKlZ3VhL6-27bmX7fGZ_ZtTo__5_nKQZVTdFV9nmRib_lg9XddJ4YtXVIw7a_8fDlIPpHD5yE7OFwZdb9aYa91ASQ?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.618227,33.202122,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pogmar La x 2</name>
+        <description><![CDATA[<img src="https://lh3.googleusercontent.com/umsh/AN6v0v6G5n1UafYa0VOORRvvvYopk7afTVB6P7_mvJ1fPAcDNQzthC0JsQTd8t2u4K1JYYW5o581xqlHcRah" height="200" width="auto" /><br><br>Date : 15-08-2019 15:53:14<br><br><img src="https://lh3.googleusercontent.com/umsh/AN6v0v7WOABNxw9Khgw0Rth8ghG7RGFrzCalhrXemXY46K_csaUsInWQq2fZtA5jae4BbZOpdpVo-fCDTDtNV3-q8MjQQCMgOyM3B2VCY8yEWT9wRsDkmuce5bucqKJWRuh7deOBenxmWA8OdPjdy_nWwxykPVmHz2xriOYMSW6a3Ff3ejLC2ZQzoSMDzc_41Adx706NuQZPn65N670TTWclrDAZ" height="200" width="auto" /><br><br><img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgMkYpTn5a1RiJHP0Yr9Js60RFHoBvtfT5kdTaWhjIRURZJxVVcWmxb5AV63oNilcvk5C5nHsBzAhc_tI5_jr0kwzqymJjsRBaDyWLl-lxOy0dWm5mlHHeO-XG6WQvYcHKdlL8ZrE1UFkZI4vuc0080cAfA-M-otgfIXg0zIVCwhtmcjsL5W2U5Vb9Bh4ZzUDFSTo3-HIWKTjs?fife=s16383" height="200" width="auto" />]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://lh3.googleusercontent.com/umsh/AN6v0v6G5n1UafYa0VOORRvvvYopk7afTVB6P7_mvJ1fPAcDNQzthC0JsQTd8t2u4K1JYYW5o581xqlHcRah https://lh3.googleusercontent.com/umsh/AN6v0v7WOABNxw9Khgw0Rth8ghG7RGFrzCalhrXemXY46K_csaUsInWQq2fZtA5jae4BbZOpdpVo-fCDTDtNV3-q8MjQQCMgOyM3B2VCY8yEWT9wRsDkmuce5bucqKJWRuh7deOBenxmWA8OdPjdy_nWwxykPVmHz2xriOYMSW6a3Ff3ejLC2ZQzoSMDzc_41Adx706NuQZPn65N670TTWclrDAZ https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgMkYpTn5a1RiJHP0Yr9Js60RFHoBvtfT5kdTaWhjIRURZJxVVcWmxb5AV63oNilcvk5C5nHsBzAhc_tI5_jr0kwzqymJjsRBaDyWLl-lxOy0dWm5mlHHeO-XG6WQvYcHKdlL8ZrE1UFkZI4vuc0080cAfA-M-otgfIXg0zIVCwhtmcjsL5W2U5Vb9Bh4ZzUDFSTo3-HIWKTjs?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.760191,33.258283,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tsarap II x 2</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjPHMSbqnIvLgNDSfGZUDXO6P-RUCI5Bjc4c0MluP4nHfgEXVA2q5pilleVDKfhWsfiqr1bBY0tEIsOWT1vwxLV96CZlrXrJxCSDgSJjOHrcjTNx1P5vRufy5EBY6t34vLtNMCDz-qW3EdruSReB3gvOtcuPdwVPcW4O26eTdWOTay8Mp5xvtCjNJmotjSPRG-BZ9StDE4egWo?fife=s16383" height="200" width="auto" /><br><br>Date : 17-08-2019 14:38:12]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjPHMSbqnIvLgNDSfGZUDXO6P-RUCI5Bjc4c0MluP4nHfgEXVA2q5pilleVDKfhWsfiqr1bBY0tEIsOWT1vwxLV96CZlrXrJxCSDgSJjOHrcjTNx1P5vRufy5EBY6t34vLtNMCDz-qW3EdruSReB3gvOtcuPdwVPcW4O26eTdWOTay8Mp5xvtCjNJmotjSPRG-BZ9StDE4egWo?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.485366,33.13195,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tsarap I x 2</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjpaqWiQW_UFZ16W_q55owaX4Z06nq9NxTy3ji7PkGunuBw63hcAzJCjkNpijT3gNfl_1YDQVZQuSzYUQFy91jTB1Kqa-N1th1gA5pE2ZH3wd46iQqfmL4HASuIpjETCaOluds3cuDFbDSPNYpauhhojqmYT9_VnsHj4H_oJRQo2pRynNf1imsmgmcpaVO-XunI-zk8ekDG2CU?fife=s16383" height="200" width="auto" /><br><br>Date : 17-08-2019 16:13:00]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjpaqWiQW_UFZ16W_q55owaX4Z06nq9NxTy3ji7PkGunuBw63hcAzJCjkNpijT3gNfl_1YDQVZQuSzYUQFy91jTB1Kqa-N1th1gA5pE2ZH3wd46iQqfmL4HASuIpjETCaOluds3cuDFbDSPNYpauhhojqmYT9_VnsHj4H_oJRQo2pRynNf1imsmgmcpaVO-XunI-zk8ekDG2CU?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.47225,33.150363,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tsarap II x 3</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiLCb57aVNeC_sex_azkbxYLBTZKHEg0WFEQY-QVBZ6eePqqAtXPPU7ugkSV-ET3DH9Q4LQDuWVXH_swWJekesga0yN9iWmy5AEIOqpaMWcpssGzFvjw8GYbDQ9fhgyqW6-yUhnEgtoNDYqtyDfIR-TNeCHknRM8P1Y-gxwWfVrSND_NEk8zjgbYnsvDXOMZSy1fx9O_dFeYzo?fife=s16383" height="200" width="auto" /><br><br>Date : 18-08-2019 17:24:46]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiLCb57aVNeC_sex_azkbxYLBTZKHEg0WFEQY-QVBZ6eePqqAtXPPU7ugkSV-ET3DH9Q4LQDuWVXH_swWJekesga0yN9iWmy5AEIOqpaMWcpssGzFvjw8GYbDQ9fhgyqW6-yUhnEgtoNDYqtyDfIR-TNeCHknRM8P1Y-gxwWfVrSND_NEk8zjgbYnsvDXOMZSy1fx9O_dFeYzo?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.485632,33.131876,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Rangcha Galli</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj9Oa09VV0HM_25cI14ucv4NaayVEe5RO0ZtBUfugnWUTYZSssmpymuzblP1ktCFUBJE_rr934FfcUni2RuLNmFr5W6sJHmLkxhrNaGLUIejLfjTIXj84dPE0N536tn8QtCjvpvHG2JQL28YiMgt3_w0YdVAClhK34oSyg2J-JJxuGV-pTv7j-jUgDpgPMTt1UUISG0cJoa2QY?fife=s16383" height="200" width="auto" /><br><br>Date : 21-08-2019 14:44:44]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj9Oa09VV0HM_25cI14ucv4NaayVEe5RO0ZtBUfugnWUTYZSssmpymuzblP1ktCFUBJE_rr934FfcUni2RuLNmFr5W6sJHmLkxhrNaGLUIejLfjTIXj84dPE0N536tn8QtCjvpvHG2JQL28YiMgt3_w0YdVAClhK34oSyg2J-JJxuGV-pTv7j-jUgDpgPMTt1UUISG0cJoa2QY?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.040415,32.538905,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Beas Kund</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjWwgxpthCDRHDo1YrusjOYwn30vicf2FCLPIYzVgbl82LUU6HLDCWMkSZNVs7HIY74aU_KdZdzbWQ9eUm94siTv82uo4OCQfSD097O4lERuPf2w1iMLdHklkMwqCZHM5AcJmuTVDAqsh9WRJmRkNF0yREsymqzYi5MO_o0U2jIrZm3uGExutRoOHG-gtsv-CzL0-_vRE-d_g0?fife=s16383" height="200" width="auto" /><br><br>Date : 23-08-2019 15:31:27]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjWwgxpthCDRHDo1YrusjOYwn30vicf2FCLPIYzVgbl82LUU6HLDCWMkSZNVs7HIY74aU_KdZdzbWQ9eUm94siTv82uo4OCQfSD097O4lERuPf2w1iMLdHklkMwqCZHM5AcJmuTVDAqsh9WRJmRkNF0yREsymqzYi5MO_o0U2jIrZm3uGExutRoOHG-gtsv-CzL0-_vRE-d_g0?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.082013,32.361633,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Shitidar Base</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZh0nsnMUFO8C8BbKygf5-57eIUUXTWaBaZ_HuXlZYpd2W_4Y1Spx3hO1Ka5DtXpBFDU2wLgjTYhsrzUePtAtos9hFdXwrdkRE6htpljC1scVSs9hg5eubMHh66nnxvnmfc_TKYELe4T2b7n4w6LiTUgLM0JxNs1MDYpAMrEw_MWw4MEp0_LLg0q-w-4M43Bs8O9nU4Oz98sUfk?fife=s16383" height="200" width="auto" /><br><br>Date : 24-08-2019 12:29:22]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZh0nsnMUFO8C8BbKygf5-57eIUUXTWaBaZ_HuXlZYpd2W_4Y1Spx3hO1Ka5DtXpBFDU2wLgjTYhsrzUePtAtos9hFdXwrdkRE6htpljC1scVSs9hg5eubMHh66nnxvnmfc_TKYELe4T2b7n4w6LiTUgLM0JxNs1MDYpAMrEw_MWw4MEp0_LLg0q-w-4M43Bs8O9nU4Oz98sUfk?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.079732,32.390987,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kaliheni</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhmLlVUoBlgg904BxD5xqUAKfWWxIKYu44PSeVxCt2MysxonHU785-SHtZULgW3NFRoo3dUJeIohhTCUCifiqahTafZp0siC8UsoLc_gwKGU_ojK9KbHx65oMbXgZLmaGbOE_jywBjJa5tZml3RtJsLqb94mr8qhQgO36BNC4JObYU3k32YyrcC9rj0AwKJ56440ITmZitGzn4?fife=s16383" height="200" width="auto" /><br><br>Date : 26-08-2019 14:15:16]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhmLlVUoBlgg904BxD5xqUAKfWWxIKYu44PSeVxCt2MysxonHU785-SHtZULgW3NFRoo3dUJeIohhTCUCifiqahTafZp0siC8UsoLc_gwKGU_ojK9KbHx65oMbXgZLmaGbOE_jywBjJa5tZml3RtJsLqb94mr8qhQgO36BNC4JObYU3k32YyrcC9rj0AwKJ56440ITmZitGzn4?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.049415,32.220816,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Thamsar</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgqy_eXBe6ObgBO1ojODov_Bu_-Y3hccdXXLD3Sad_NlsY9-YHx39ayUYb6hA-GGxK-blDWRbIAElbY6J9CxhthZyU-LcWM4CQFN_0XU6JzvciVXu0V_6cn7VZLFIGj0ldm___Wa9hiuA4gn2AXPDX4rrCn7EKu26LrF_HmTsNaCaAKbnCjeS-Yft7zha5-eRFcuQQ9eVw-EK0?fife=s16383" height="200" width="auto" /><br><br>Date : 29-08-2019 10:56:06]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgqy_eXBe6ObgBO1ojODov_Bu_-Y3hccdXXLD3Sad_NlsY9-YHx39ayUYb6hA-GGxK-blDWRbIAElbY6J9CxhthZyU-LcWM4CQFN_0XU6JzvciVXu0V_6cn7VZLFIGj0ldm___Wa9hiuA4gn2AXPDX4rrCn7EKu26LrF_HmTsNaCaAKbnCjeS-Yft7zha5-eRFcuQQ9eVw-EK0?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.77778,32.225873,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Dynasaur Lake</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj2V20-KqZxUH--WsTpBR2QSI5aNxX2ojZN_vdFlCRXyWjKwcqr_oLertf-49XHXgMIwotOFcwdLk4S0b17wsN5O3n_rEUshGAoaVPC35apxLUfHaD5DT9v6LiCc-hC9mzGXhm2-8zVi0q1HUbsjgLDQm-wHMu_OpY0Tr9pdBB0apfmUGsgHEeVWW9MhydIjGVGU3tcr0SPO6A?fife=s16383" height="200" width="auto" /><br><br>Date : 30-08-2019 17:22:16]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj2V20-KqZxUH--WsTpBR2QSI5aNxX2ojZN_vdFlCRXyWjKwcqr_oLertf-49XHXgMIwotOFcwdLk4S0b17wsN5O3n_rEUshGAoaVPC35apxLUfHaD5DT9v6LiCc-hC9mzGXhm2-8zVi0q1HUbsjgLDQm-wHMu_OpY0Tr9pdBB0apfmUGsgHEeVWW9MhydIjGVGU3tcr0SPO6A?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.934137,32.113193,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sari</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj1QKiYl-vNbcFz5BhxuEovU5n_b-40R3QbEXE8fpGTPI9H8GSHZkVQJRYf58uWPBJMuf9e1tYwlTr8KUjCEnpr7Ajq4JHsjnIaF1Ga4BvYVZIJJ_uuo-uhOp8C22tLMNWd6GVjB4UgVlvgdq3BZLwSkqbB0-rSJ5ugpjbtr56qDnMFoyuGF05-fsd47Bz-Y9I5jvK1KYSxBl8?fife=s16383" height="200" width="auto" /><br><br>Date : 31-08-2019 10:16:53]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj1QKiYl-vNbcFz5BhxuEovU5n_b-40R3QbEXE8fpGTPI9H8GSHZkVQJRYf58uWPBJMuf9e1tYwlTr8KUjCEnpr7Ajq4JHsjnIaF1Ga4BvYVZIJJ_uuo-uhOp8C22tLMNWd6GVjB4UgVlvgdq3BZLwSkqbB0-rSJ5ugpjbtr56qDnMFoyuGF05-fsd47Bz-Y9I5jvK1KYSxBl8?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.940819,32.100908,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Makori</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZh85iNqHGSg2YHgDntRKpOx6TKuS7kt_cnEL_bzwEX-4q5h0HmSLKLgGWZ9V5jOPz8w8rtiANdpCsRUg9tR0uaprXXX5AHM-LpN-vDO_fGZx5HIEbN628Y3hASwTwnvyiqoGukISu5_Fh-Jksqzmz33rkCOgoXrCWtMKiGFiloRiDxanjGfvQhy7AhcjkT4DXHZ28jxenMP5dc?fife=s16383" height="200" width="auto" /><br><br>Date : 03-09-2019 10:36:19]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZh85iNqHGSg2YHgDntRKpOx6TKuS7kt_cnEL_bzwEX-4q5h0HmSLKLgGWZ9V5jOPz8w8rtiANdpCsRUg9tR0uaprXXX5AHM-LpN-vDO_fGZx5HIEbN628Y3hASwTwnvyiqoGukISu5_Fh-Jksqzmz33rkCOgoXrCWtMKiGFiloRiDxanjGfvQhy7AhcjkT4DXHZ28jxenMP5dc?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.90631,32.207675,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sukh Dali</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgCZCyU3dH5ID1tUabNfd1ap7FKC9cvLTLr2zBxnlwyaSHxXjcThcbTf_fRzJPqrlxF_ykvADZ42ehDQU8-zauc8kHO1Q82tFobm0qEm9DjGMv9pKPM9TqRCXf1BfkWY1plm3yGSdh-Y0Jv2xnR-nyktJ4f_-K75lMNy-8n-hxXJcJuTMe4xawJF_Z50rbzctcenqwOge2uZKY?fife=s16383" height="200" width="auto" /><br><br>Date : 06-09-2019 12:31:33]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgCZCyU3dH5ID1tUabNfd1ap7FKC9cvLTLr2zBxnlwyaSHxXjcThcbTf_fRzJPqrlxF_ykvADZ42ehDQU8-zauc8kHO1Q82tFobm0qEm9DjGMv9pKPM9TqRCXf1BfkWY1plm3yGSdh-Y0Jv2xnR-nyktJ4f_-K75lMNy-8n-hxXJcJuTMe4xawJF_Z50rbzctcenqwOge2uZKY?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.629421,32.382222,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Dham Godi</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZicnZlcu1ywEz7TicuKYNQu8BiGZg8pZ2t9jjFGT5F3D21s9tQKxhryavsXCz9A4jIDjRzirR3Oa920mG5zDWy519j8koSFgA1R_lPqHbNrU8fS61k9g9iEsZOU8-hlabS2ZkNy4vcqHm9FxcqTJpbIXzXdXRw1rdKdl-8AAUO1Qh0XUv01C7MqIy6LMepRp3l5dzpYpmxcq0Q?fife=s16383" height="200" width="auto" /><br><br>Date : 06-09-2019 16:30:29]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZicnZlcu1ywEz7TicuKYNQu8BiGZg8pZ2t9jjFGT5F3D21s9tQKxhryavsXCz9A4jIDjRzirR3Oa920mG5zDWy519j8koSFgA1R_lPqHbNrU8fS61k9g9iEsZOU8-hlabS2ZkNy4vcqHm9FxcqTJpbIXzXdXRw1rdKdl-8AAUO1Qh0XUv01C7MqIy6LMepRp3l5dzpYpmxcq0Q?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.676301,32.384556,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sure Sankri</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgz41SiGrmf6mOf6D65Qkxef7QXBrsRGnJIUnaiH3aVdCWWKQYKwyBLzJj1Vl-pNw4fk_H7Yvlgd2hlrsIhaOGSz0XlRNNBjLxf6r9WDg_tZbEFoqZ0M-mfIL8-sS0nFURYgwb91Lo3ZrOkb77REXpNKgeYW2zCjMaYSFZRfeSgqRtRwySpXx9Ytr-JXuWWYF5xuIB4jkZCrFI?fife=s16383" height="200" width="auto" /><br><br>Date : 05-06-2019 14:16:38]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgz41SiGrmf6mOf6D65Qkxef7QXBrsRGnJIUnaiH3aVdCWWKQYKwyBLzJj1Vl-pNw4fk_H7Yvlgd2hlrsIhaOGSz0XlRNNBjLxf6r9WDg_tZbEFoqZ0M-mfIL8-sS0nFURYgwb91Lo3ZrOkb77REXpNKgeYW2zCjMaYSFZRfeSgqRtRwySpXx9Ytr-JXuWWYF5xuIB4jkZCrFI?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            78.186502,31.023167,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Haudi Ki Goth</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhTRyGGtc2K9PHwNr03Qy3Gyl1vZqXDKTtgUp5ihnksEFnPcWH2J0lVcmZd-fyrDSt-rx_Nf0rEiLxhsGOmRWONKaLAbof_UTNnFlvmppLIferSZs2wg0_addEI3-E4qxK24ZOPUKVZWRTWQ2IwK86qykvPT5N1lsxc8Ht6bHxIxXeJO-rFrZNw8Jj5K2AGdJDjrkCiJ0BvR84?fife=s16383" height="200" width="auto" /><br><br>Date : 26-06-2019 17:37:38]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhTRyGGtc2K9PHwNr03Qy3Gyl1vZqXDKTtgUp5ihnksEFnPcWH2J0lVcmZd-fyrDSt-rx_Nf0rEiLxhsGOmRWONKaLAbof_UTNnFlvmppLIferSZs2wg0_addEI3-E4qxK24ZOPUKVZWRTWQ2IwK86qykvPT5N1lsxc8Ht6bHxIxXeJO-rFrZNw8Jj5K2AGdJDjrkCiJ0BvR84?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.392044,32.24734,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Laka Deep</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhFw-sLP4nyQ7IABSZ9fGKAmnvWkWc6fgpEae2pTebEX7Y22vB6zGpWAOhaZ1y6ckl6GgbcY-g16fYqtKPz7ZpqIQPnfF0zRiCw0tIIpNkZRKknDFTU1DWa36bbwhm5MsMeCM_5s9uZOtMcLosXu8jaSEbdX1iWFxMWbFPmU8L_PaRUs--3zgtn4pwkZXMPQLqVIvi9YuNUf-M?fife=s16383" height="200" width="auto" /><br><br>Date : 29-06-2019 11:04:19]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhFw-sLP4nyQ7IABSZ9fGKAmnvWkWc6fgpEae2pTebEX7Y22vB6zGpWAOhaZ1y6ckl6GgbcY-g16fYqtKPz7ZpqIQPnfF0zRiCw0tIIpNkZRKknDFTU1DWa36bbwhm5MsMeCM_5s9uZOtMcLosXu8jaSEbdX1iWFxMWbFPmU8L_PaRUs--3zgtn4pwkZXMPQLqVIvi9YuNUf-M?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.364453,32.282546,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Balsi Khal</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi-iPoT53Q6qSHdbLlvL8fuVADmUL1G9ek9fQFwb2wBT67BsKHsv_yhTa_GUoa9g7Js5hGJ4ODAnQ58vJYVobmenuG45DDitrL7TcJoaN0LjDnhZ0ELtgydF9AyTWHT2S9sh286EqU1C-4KHCQlv4PAibmTm98ZKYFk_4bQCfCXcrG9jiX7X9EWGUmLPbb5yiqzL87eg43Yj5Q?fife=s16383" height="200" width="auto" /><br><br>Date : 10-05-2019 09:00:01]]></description>
+        <styleUrl>#icon-1899-DB4436</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi-iPoT53Q6qSHdbLlvL8fuVADmUL1G9ek9fQFwb2wBT67BsKHsv_yhTa_GUoa9g7Js5hGJ4ODAnQ58vJYVobmenuG45DDitrL7TcJoaN0LjDnhZ0ELtgydF9AyTWHT2S9sh286EqU1C-4KHCQlv4PAibmTm98ZKYFk_4bQCfCXcrG9jiX7X9EWGUmLPbb5yiqzL87eg43Yj5Q?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            80.473754,30.058606,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jalsu Pass</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgkokvNfekafzbvjm69uTJeCe6pnPIrrYQP60MF2Q0QzLX8xx4M6XLGoyRoVsh0d4IHykUtg5sUh9sFZqBnzezDjq0Bx0b6pVeNrqPNahi9iX_DjKk84x8L22BgRDmhblU2vtiEiHLcRHhKzemmMvs8gQdu4mfTYz98CdwQwFxoVbG9_EDICdV2RvgkW092OC5VzVFUrzEm0mE?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgkokvNfekafzbvjm69uTJeCe6pnPIrrYQP60MF2Q0QzLX8xx4M6XLGoyRoVsh0d4IHykUtg5sUh9sFZqBnzezDjq0Bx0b6pVeNrqPNahi9iX_DjKk84x8L22BgRDmhblU2vtiEiHLcRHhKzemmMvs8gQdu4mfTYz98CdwQwFxoVbG9_EDICdV2RvgkW092OC5VzVFUrzEm0mE?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.6844968,32.1821069,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Waru-Jalsu</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhLRjJV3fEti52VIxC6REf4m2MzvT3_tkiN8eMKxDaIq364PIBgYSsYgJXlqoFT5XhWNpYzR8g8uKhWkAdeaqbIUcShNWQe1JPlCeyFepimuczsQ22g4ATwHBqJT_ZCbL2xpR6wuQlLD0Dgc65csDPZy1Ssd2Rp_eNGZicaMF-d-igEkb3cY1syXhLST_LQLbeHWKulc3hX5Ls?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhLRjJV3fEti52VIxC6REf4m2MzvT3_tkiN8eMKxDaIq364PIBgYSsYgJXlqoFT5XhWNpYzR8g8uKhWkAdeaqbIUcShNWQe1JPlCeyFepimuczsQ22g4ATwHBqJT_ZCbL2xpR6wuQlLD0Dgc65csDPZy1Ssd2Rp_eNGZicaMF-d-igEkb3cY1syXhLST_LQLbeHWKulc3hX5Ls?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.6609627,32.2318881,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Laka Deep</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi9ozcUvh2vKJzMxCgBMnc19RLloQS-ueH2NqgIughpNLx1oL_-7LIfX8QhXVTIg4gEwXjxpybda6itZt6M1_atLK2j0vmouCwpJdLIZ_NsAPD4gIWlD_FFK6jmw6Z7Xs9VJKojna2ZcVN-PYsBkzNL7xdk2B1DMewhNvfyVUsBxM4TrQGLECpOedhUuRv4IHbGYj720BMIArE?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi9ozcUvh2vKJzMxCgBMnc19RLloQS-ueH2NqgIughpNLx1oL_-7LIfX8QhXVTIg4gEwXjxpybda6itZt6M1_atLK2j0vmouCwpJdLIZ_NsAPD4gIWlD_FFK6jmw6Z7Xs9VJKojna2ZcVN-PYsBkzNL7xdk2B1DMewhNvfyVUsBxM4TrQGLECpOedhUuRv4IHbGYj720BMIArE?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.3647178,32.283085,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tsarap I x 3</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjzR4JtlANh4St9Ip3OHf7a9JIpQ6wZ8fsnBNbEId0xtuN3BwdWcn4hhPmORMVkCnlw9e5R5aggE8Sx1qtR7v9gmjpkYv3n30hP6oFhAyajxFuDEPABsBf_lU8lqTgtsi-kXmVps0H6lQkMbLs9a4aVsWppRsXp2d6F-8uCkxpT7hLWOPOjFyLT70WzVdC13CiBbj-Ngu1EV5Q?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjzR4JtlANh4St9Ip3OHf7a9JIpQ6wZ8fsnBNbEId0xtuN3BwdWcn4hhPmORMVkCnlw9e5R5aggE8Sx1qtR7v9gmjpkYv3n30hP6oFhAyajxFuDEPABsBf_lU8lqTgtsi-kXmVps0H6lQkMbLs9a4aVsWppRsXp2d6F-8uCkxpT7hLWOPOjFyLT70WzVdC13CiBbj-Ngu1EV5Q?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.47225,33.150363,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tsarap I</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZicpRWKCr8BQglhu8LZOlrLsfQixlWR23e1ayQmqklgTDrT2tkdWxYYO9a4jkW_-NpcrkXMxVlI2nWbd_rHl27Px_GihLMFmWSrAQKlvLJnnZKiXxONIM6VaUag345Jr-vKezEEffQcl3iOjw8hKDWTqs3Vk_tiWCoPk42u0R7YQ16mNeWZql1dbBSY9X4AtVLoiRyUNC0Qy30?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZicpRWKCr8BQglhu8LZOlrLsfQixlWR23e1ayQmqklgTDrT2tkdWxYYO9a4jkW_-NpcrkXMxVlI2nWbd_rHl27Px_GihLMFmWSrAQKlvLJnnZKiXxONIM6VaUag345Jr-vKezEEffQcl3iOjw8hKDWTqs3Vk_tiWCoPk42u0R7YQ16mNeWZql1dbBSY9X4AtVLoiRyUNC0Qy30?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.47225,33.150363,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kalicho</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhgBJ3Tgaj4G49RsbnPrUmXUYyaCEw7PTSk_SslanfkN4EtUO9Oo3tlcgd_vvhYlXg6V0DNKAr3NNvYWGoNyvPttrovBxPK1FwMtSe4kBgQRIAkhAWBZcMsPOdoaUrhKAHRvMQTjABrXy9iBNZeLB1vTS8_ycUcxqVqbFh2q6OR3OZ1W6_qqIK-m-nY2OUZPO0BdazO1p9QOHU?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhgBJ3Tgaj4G49RsbnPrUmXUYyaCEw7PTSk_SslanfkN4EtUO9Oo3tlcgd_vvhYlXg6V0DNKAr3NNvYWGoNyvPttrovBxPK1FwMtSe4kBgQRIAkhAWBZcMsPOdoaUrhKAHRvMQTjABrXy9iBNZeLB1vTS8_ycUcxqVqbFh2q6OR3OZ1W6_qqIK-m-nY2OUZPO0BdazO1p9QOHU?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.593834,32.629395,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Panchachulla Base</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhsiUl0klc4O29kZJXtzLwp23E2mghv6vYaa7vNbnrY9MyP_2hg4-1a3CVvtt8I9LezsBrhx8ETFegZZygZnSDIPKfFaMB608biCZ-c8zEYGEcRJDO0sVbYAYL9m38y0uVtvIo7NGv75ueP3LCiwqJsVJJuwr60JpmkwZWllEXHQH62EzlDLq53RuWuVuxj6GRnc29quPc5fQ?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhsiUl0klc4O29kZJXtzLwp23E2mghv6vYaa7vNbnrY9MyP_2hg4-1a3CVvtt8I9LezsBrhx8ETFegZZygZnSDIPKfFaMB608biCZ-c8zEYGEcRJDO0sVbYAYL9m38y0uVtvIo7NGv75ueP3LCiwqJsVJJuwr60JpmkwZWllEXHQH62EzlDLq53RuWuVuxj6GRnc29quPc5fQ?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            80.5417568,30.2543306,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Nialo Konste La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjJzlNyHdDEUBpEWy92rcpNaDcUjj_lxIMyWwJQxP-oL7S3RLCMV91f29B2L-NvPwmGPp0tbyDrnNIYMbbSLiMeekeV242RcqGw8ASbBczsnky2wN_C4lVIGYOQmYmMlfMl77RJkCFYqjKVDCs1KENgSKqVMWkU0OTDz2WoQnFmCyX_RS8mecJI8eYMsN1x7VdbkV1qtSwIMUU?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjJzlNyHdDEUBpEWy92rcpNaDcUjj_lxIMyWwJQxP-oL7S3RLCMV91f29B2L-NvPwmGPp0tbyDrnNIYMbbSLiMeekeV242RcqGw8ASbBczsnky2wN_C4lVIGYOQmYmMlfMl77RJkCFYqjKVDCs1KENgSKqVMWkU0OTDz2WoQnFmCyX_RS8mecJI8eYMsN1x7VdbkV1qtSwIMUU?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.2783400000001,33.32895,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Gotunte La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi-jWUMLIeRZgbtn7z01Chowbf0HVJbpJ5UlM4C2LC6xPpifuP81lRmGJQYLb_Fmn9q5yKE7BkvHOYd8aTyKS3pV9w6-3PuHeCkPUjHIFnhTNFeiKtHHdveaNunmghAcJgci59D-FdBpGtoL11grnYqk4tJAzZKb_Dw2p0LR1DA-JnMGWyQ5mxxOd1kp17lNoDNXdy65vehdFA?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi-jWUMLIeRZgbtn7z01Chowbf0HVJbpJ5UlM4C2LC6xPpifuP81lRmGJQYLb_Fmn9q5yKE7BkvHOYd8aTyKS3pV9w6-3PuHeCkPUjHIFnhTNFeiKtHHdveaNunmghAcJgci59D-FdBpGtoL11grnYqk4tJAzZKb_Dw2p0LR1DA-JnMGWyQ5mxxOd1kp17lNoDNXdy65vehdFA?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            77.3155899999999,33.30399,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Parfi La x 2</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj5H00Cn52LHbOERxeH9Y6Wa86P8zafBfIg1VRMjMJo6xC_77Tv4eVTgzeW4mW65oevzb1yu1urilVsE09abxWgQOgvCMKxsb22zQcG_MSWIfnG1rJWSrk0JKoQo6LhVwmA565-qhgvnLRJky31YU3-MnBhx7BBn5kxqVsTnKnUyz3F2PdWVPYg8Zf7G9DloH5NTQ-xJLdDdhE?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZj5H00Cn52LHbOERxeH9Y6Wa86P8zafBfIg1VRMjMJo6xC_77Tv4eVTgzeW4mW65oevzb1yu1urilVsE09abxWgQOgvCMKxsb22zQcG_MSWIfnG1rJWSrk0JKoQo6LhVwmA565-qhgvnLRJky31YU3-MnBhx7BBn5kxqVsTnKnUyz3F2PdWVPYg8Zf7G9DloH5NTQ-xJLdDdhE?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.833969,33.779058,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Hanuma La x 2</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi0arddWXxuGF-2tUya5GHLsOVypQUvXhoAxJBom5IiwHHUjOQlrnqCFnjLcUkTp5re7MOMrxy-LkooMrt52xyy53pq-G4LBjnpUf1soKWR9iZGxB4OLfjuCCQ5K0BDc7IExyb7V7oaj2J54sHn0u77EQVzf6Hepqmx-SRqYtLlQadPGqsKefgvtFMssCYD3HTEXrvvcNUy63I?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZi0arddWXxuGF-2tUya5GHLsOVypQUvXhoAxJBom5IiwHHUjOQlrnqCFnjLcUkTp5re7MOMrxy-LkooMrt52xyy53pq-G4LBjnpUf1soKWR9iZGxB4OLfjuCCQ5K0BDc7IExyb7V7oaj2J54sHn0u77EQVzf6Hepqmx-SRqYtLlQadPGqsKefgvtFMssCYD3HTEXrvvcNUy63I?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.7915162,33.8709559,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kong La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZh7x21m1CQDwecsYE3ZrIdllI06ZXkX3Q29S0S9TQJAkYXA-7D9Sap6XB8IOHDjDgA8mV1Ko6yQxH9DSBQJ6P73bdjUre9cOaXPv50zGarks-F8OgM9_q1_Cuad0Cg8Q8I1P0TYZAYgjVIDhghJZEH3yyBP8ua78YK7tv-y8lNTdnVQ2AgIgBOTl1ovMbhc-ilKeDuU6dtzqhs?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZh7x21m1CQDwecsYE3ZrIdllI06ZXkX3Q29S0S9TQJAkYXA-7D9Sap6XB8IOHDjDgA8mV1Ko6yQxH9DSBQJ6P73bdjUre9cOaXPv50zGarks-F8OgM9_q1_Cuad0Cg8Q8I1P0TYZAYgjVIDhghJZEH3yyBP8ua78YK7tv-y8lNTdnVQ2AgIgBOTl1ovMbhc-ilKeDuU6dtzqhs?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.91534,33.92024,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kong La x 2</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjbw4tgcyoq2td-us3bYSXsamqWmsGgIyA-O9vNiYFmOFtwF3PLq_-IGzTbBvLuRjGYngaylXqDAZe7yRzgLy1LTEZtbYs_PZHJp5vHi40xwce5tCmcZZaL-Ab_w_-aU416ZWBcLKgyvUmRdg69qUYkU6mXTjQQhFzBVo-1VjU2fF5s-KLM4RjvdG4TiYCm8QFGr2gf2GkM5Rc?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZjbw4tgcyoq2td-us3bYSXsamqWmsGgIyA-O9vNiYFmOFtwF3PLq_-IGzTbBvLuRjGYngaylXqDAZe7yRzgLy1LTEZtbYs_PZHJp5vHi40xwce5tCmcZZaL-Ab_w_-aU416ZWBcLKgyvUmRdg69qUYkU6mXTjQQhFzBVo-1VjU2fF5s-KLM4RjvdG4TiYCm8QFGr2gf2GkM5Rc?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.9156835,33.9199907,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Chochogori La</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgQ63qRsh1lEAQzQIpCH8I1sWGtKPalO3dAZxGaJ_NgAvC2M4kFT3WfevjayRl6WdCHn2nIkBK3gGrxRmA4b34fBzjY8t2Iv7MBjFBFlP45Kyt1laTFvFH4G1uXwLo-7KjgGDWrm3GtenHPYfOZbdbVnehwk1YCZ1zAQr6lBjzcBJZ9RZvd5YlWWXF97KX8KUK-7MyfkDXQev0?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgQ63qRsh1lEAQzQIpCH8I1sWGtKPalO3dAZxGaJ_NgAvC2M4kFT3WfevjayRl6WdCHn2nIkBK3gGrxRmA4b34fBzjY8t2Iv7MBjFBFlP45Kyt1laTFvFH4G1uXwLo-7KjgGDWrm3GtenHPYfOZbdbVnehwk1YCZ1zAQr6lBjzcBJZ9RZvd5YlWWXF97KX8KUK-7MyfkDXQev0?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.91743,33.90718,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Chochogori La x 2</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhgtQqjNmSYPl14C1cuVEMxfYifJ6V_tMOUHbTwHVAEGdu97HPWCFWGFhACeR6NWJ5h6Kl0v4PFUu317k8JRZGCS-OHfEiMoTKGZIv-LpCf6K_xnwwWuOVbRUazRrhVSSt5wgyfjYtAwweQE8psJUQZQyOSjFkXJjBY5Bo1oT5pZ-NEOt_k25lm0Ec268JFTsC0wjLcMdar2kU?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhgtQqjNmSYPl14C1cuVEMxfYifJ6V_tMOUHbTwHVAEGdu97HPWCFWGFhACeR6NWJ5h6Kl0v4PFUu317k8JRZGCS-OHfEiMoTKGZIv-LpCf6K_xnwwWuOVbRUazRrhVSSt5wgyfjYtAwweQE8psJUQZQyOSjFkXJjBY5Bo1oT5pZ-NEOt_k25lm0Ec268JFTsC0wjLcMdar2kU?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.9174731,33.9066814,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kyupka La x 3</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgJmXYtjYEpJSlfxuPOUVma4y55Qrm26s5CfmTJRSxuXsST3TQkS2MVeGtpb4RXlgp5zDemj8x9tKUKh8u7L8VRqxHP1BUyhwOozfD-dihcT-MbCzkm9N8nyR_TJ2Hdl8k43GiZdmIR3klJE9GzLo6tWFKLXI91Ep93UIdK62NpZUGzq3LuS92v8xkg3hxS94nK141zo9luV5E?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZgJmXYtjYEpJSlfxuPOUVma4y55Qrm26s5CfmTJRSxuXsST3TQkS2MVeGtpb4RXlgp5zDemj8x9tKUKh8u7L8VRqxHP1BUyhwOozfD-dihcT-MbCzkm9N8nyR_TJ2Hdl8k43GiZdmIR3klJE9GzLo6tWFKLXI91Ep93UIdK62NpZUGzq3LuS92v8xkg3hxS94nK141zo9luV5E?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            76.8853192,33.9230908,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ralam</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiCn-AIXEjirS5RlmKePZaZKxgWQGHBiY1J7p-Yp9GNkPuVWwbh_UFZtROJ2BbyxDihNx2SBN8prgarONFC5ZYC8m21HersMmuU1qB2OHKZSlrj7I_hDkUlMQaFBMqvhroCTeVSBYc-F3KSjif7cvQXgt0mXRdBBxbcqPjCte97cdHjvAE6atr573uv48g-k9J8isGXMR40g-w?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZiCn-AIXEjirS5RlmKePZaZKxgWQGHBiY1J7p-Yp9GNkPuVWwbh_UFZtROJ2BbyxDihNx2SBN8prgarONFC5ZYC8m21HersMmuU1qB2OHKZSlrj7I_hDkUlMQaFBMqvhroCTeVSBYc-F3KSjif7cvQXgt0mXRdBBxbcqPjCte97cdHjvAE6atr573uv48g-k9J8isGXMR40g-w?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            80.2854411999999,30.3102915,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Darti Kharak</name>
+        <description><![CDATA[<img src="https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhP0GsMHDcpeJNbp-lqwNO6U8r6jGOMflH5yhk3eSmNmf_hfLaq-Sk6e8GfVR4IHVggPGpS_b5Cn2G4bwpaAw5qIrrzzhyoC5UbdbC4ynq6tlIUzBOE8idKPMPZsRh-b2cMg8v45sTE7bqxxJ-sOpukR7oav41wV5dq3MzwylkC14bbRSEjMXQ-LoKDf7iMQ41Uk_sD1Y1D1XE?fife=s16383" height="200" width="auto" /><br><br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="gx_media_links">
+            <value>https://mymaps.usercontent.google.com/hostedimage/m/*/3ABkJAZhP0GsMHDcpeJNbp-lqwNO6U8r6jGOMflH5yhk3eSmNmf_hfLaq-Sk6e8GfVR4IHVggPGpS_b5Cn2G4bwpaAw5qIrrzzhyoC5UbdbC4ynq6tlIUzBOE8idKPMPZsRh-b2cMg8v45sTE7bqxxJ-sOpukR7oav41wV5dq3MzwylkC14bbRSEjMXQ-LoKDf7iMQ41Uk_sD1Y1D1XE?fife=s16383</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            80.4458500000001,30.054441,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>
