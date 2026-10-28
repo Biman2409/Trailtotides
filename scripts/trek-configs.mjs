@@ -3,9 +3,10 @@
 //         OpenStreetMap; { name, at: [lat, lng] } carries coordinates read off OpenStreetMap
 //         (a place, a campsite, or the end of a named trail segment) for when the search can't
 //         find it by name. q overrides the search text. A loop lists its start again at the end.
-// camps   camps OpenStreetMap doesn't have: { name: [stopA, stopB, share] } puts one that share
-//         of the way along the trail from stop A to stop B. Days that reach them are marked
-//         approximate.
+// camps   camps between two stops: { name: [stopA, stopB, share, aka?] }. Looked up in
+//         OpenStreetMap by name and by the other names in aka, near where they should be; one it
+//         doesn't have is put that share of the way along the trail from stop A to stop B, and
+//         days that reach it are marked approximate.
 // near    added to place searches to pick the right one of several places with the same name
 // side    out-and-back high points off the line, as points; extra: places only the days visit
 // days    { to, via?, side?: { name, km, up }, note } walks from last night's stop;
@@ -109,7 +110,7 @@ export const TREKS = {
   "manaslu-circuit": {
     near: "Gorkha, Nepal",
     stops: ["Soti Khola", { name: "Machha Khola", q: "Machhakhola", at: [28.22931, 84.87377] }, "Jagat", "Deng", "Namrung", "Lho", { name: "Samagaun", q: "Samagau", at: [28.58467, 84.64404] }, "Samdo", { name: "Larkya La", at: [28.66392, 84.52031] }, "Bimthang", { name: "Dharapani", at: [28.519, 84.35838] }],
-    camps: { Dharmasala: ["Samdo", "Larkya La", 0.55] },
+    camps: { Dharmasala: ["Samdo", "Larkya La", 0.55, ["Larkya Phedi", "Dharamsala", "Dharamshala", "Larke Phedi"]] },
     days: [
       { to: "Machha Khola", note: "Up the Budhi Gandaki gorge on a path cut into its side" },
       { to: "Jagat", note: "Past the hot springs at Tatopani into the restricted area: permits are checked here" },

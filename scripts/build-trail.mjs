@@ -32,11 +32,11 @@ for (const k of ["log", "warn", "error"]) {
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// A map service request, tried up to three times with a time limit on each: these free services
+// A map service request, tried up to five times with a time limit on each: these free services
 // drop connections and rate-limit now and then. Returns the parsed JSON, or the text with text: true
 async function request(url, { headers = UA, timeout = 60000, text = false } = {}) {
   let last;
-  for (let attempt = 1; attempt <= 3; attempt++) {
+  for (let attempt = 1; attempt <= 5; attempt++) {
     try {
       const res = await fetch(url, { headers, signal: AbortSignal.timeout(timeout) });
       if (res.ok) return text ? await res.text() : await res.json();
@@ -46,7 +46,7 @@ async function request(url, { headers = UA, timeout = 60000, text = false } = {}
       last = e;
       if (e.message?.match(/ 4\d\d /) && !e.message.includes(" 429 ")) throw e;
     }
-    await sleep(5000 * attempt);
+    await sleep(5000 * 2 ** (attempt - 1)); // 5, 10, 20, 40 s
   }
   throw last;
 }
@@ -221,13 +221,15 @@ async function build(slug) {
     return dist([p.lat, p.lng], [a.lat + t * dy, (ax + t * dx) / k]);
   };
   const via = stops.slice(0, -1).map(() => []);
-  for (const [campName, [a, b, frac]] of Object.entries(trek.camps ?? {})) {
+  for (const [campName, [a, b, frac, aka = []]] of Object.entries(trek.camps ?? {})) {
     const ia = stops.findIndex((s) => s.name === a);
     const ib = stops.findIndex((s, i) => i > ia && s.name === b);
     if (ia < 0 || ib < 0) throw new Error(`Camp ${campName}: ${a} and ${b} must be stops in that order`);
     const A = stops[ia], B = stops[ib];
     const guess = [A.lat + frac * (B.lat - A.lat), A.lng + frac * (B.lng - A.lng)];
-    const m = matchPlace(index, campName, { near: guess, maxD: Math.max(2500, 0.6 * dist([A.lat, A.lng], [B.lat, B.lng])) });
+    const maxD = Math.max(2500, 0.6 * dist([A.lat, A.lng], [B.lat, B.lng]));
+    // The camp's own name first, then the other names it goes by (aka)
+    const m = [campName, ...aka].map((n) => matchPlace(index, n, { near: guess, maxD, as: campName })).find(Boolean);
     if (!m || taken(m.lat, m.lng)) {
       // Names nearby that start the same way, in case OSM spells the camp differently
       const stem = campName.toLowerCase().replace(/[^a-z]/g, "").slice(0, 4);

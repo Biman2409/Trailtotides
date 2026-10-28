@@ -1,5 +1,3 @@
 # Treks the Build trails workflow rebuilds when this file or the builder changes on a push
 # (one slug per line, or "all"). A manual run can name its own.
-annapurna-base-camp
 manaslu-circuit
-khopra-danda
