@@ -13,7 +13,6 @@ on:
 
 permissions:
   contents: write
-  actions: read
 
 concurrency:
   group: fetch-ultrajourneys-${{ github.ref }}
@@ -37,17 +36,6 @@ jobs:
         run: |
           { echo '```'; cat fetch.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
-      # A trail build on the same branch commits too: let it finish first, then commit on top
-      - name: Wait for trail builds on this branch
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          for i in $(seq 1 90); do
-            n=$(gh run list -R "$GITHUB_REPOSITORY" --workflow build-trails.yml --branch "$GITHUB_REF_NAME" --json status --jq '[.[] | select(.status != "completed")] | length')
-            [ "$n" = "0" ] && exit 0
-            echo "Waiting for $n trail build(s)…"; sleep 60
-          done
-
       - name: Commit
         run: |
           git config user.name "Trail to Tides"
@@ -55,5 +43,6 @@ jobs:
           git add research/ultrajourneys
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git commit -m "Research: ultrajourneys.org maps posts and tracks, fetched on GitHub Actions" -m "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          git pull --rebase origin "$GITHUB_REF_NAME"
-          git push origin HEAD:"$GITHUB_REF_NAME"
+          # A trail build may be committing to the branch too
+          for i in 1 2 3 4 5; do git pull -q --rebase origin "$GITHUB_REF_NAME" && git push -q origin HEAD:"$GITHUB_REF_NAME" && exit 0; sleep 10; done
+          exit 1
