@@ -32,3 +32,23 @@ Build trails run 40681718153, 2026-10-28T11:41:08Z
 [ 285s]   day  1 walk   Gulaba → Rola Kholi  4.5 km +950 −0
 [ 285s]   day  2 walk   Rola Kholi → Rola Kholi  12 km +730 −730
 [ 285s]   day  3 walk   Rola Kholi → Gulaba  4.5 km +0 −940
+── ali-bedni-bugyal 11:47:02
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] ali-bedni-bugyal: place list unavailable (Overpass 502 ), using place search only
+[ 222s]   leg Lohajung → Didna (4.3 km apart)
+[ 224s]   leg Didna → Ali Bugyal (3.1 km apart)
+[ 225s]   leg Ali Bugyal → Bedni Bugyal (3.2 km apart)
+[ 227s]   leg Bedni Bugyal → Wan (5.0 km apart)
+[ 229s] ali-bedni-bugyal: 28.4 km, +2190 m, highest 3624 m, 0 km drawn straight, 749 → 260 points
+[ 229s]   km     0  Lohajung (2335 m, given, 30.1283,79.619)
+[ 229s]   km   7.7  Didna (2459 m, osm, 30.16473,79.63419)  4.3 km from last
+[ 229s]   km  13.9  Ali Bugyal (3502 m, osm, 30.18229,79.65865)  3.1 km from last
+[ 229s]   km  17.8  Bedni Bugyal (3501 m, osm, 30.20929,79.66919)  3.2 km from last
+[ 229s]   km  28.4  Wan (2454 m, osm, 30.20504,79.61753)  5.0 km from last
+[ 229s]   day  1 walk   Lohajung → Didna  7.7 km +630 −470
+[ 229s]   day  2 walk   Didna → Ali Bugyal  6.2 km +1010 −140
+[ 229s]   day  3 walk   Ali Bugyal → Bedni Bugyal  3.9 km +270 −180 (approx)
+[ 229s]   day  4 walk   Bedni Bugyal → Wan  10.6 km +280 −1270
