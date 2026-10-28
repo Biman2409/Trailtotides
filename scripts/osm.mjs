@@ -23,8 +23,12 @@ async function overpass(query) {
     try {
       const res = await fetch(url, { method: "POST", headers: { ...UA, "Content-Type": "application/x-www-form-urlencoded" }, body: "data=" + encodeURIComponent(query), signal: AbortSignal.timeout(90000) });
       if (res.ok) return await res.json();
-      last = new Error(`Overpass ${res.status}`);
-    } catch (e) { last = e; }
+      // Overpass explains a rejected query in the page it sends back
+      const why = (await res.text()).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").match(/(Error|error|remark)[^.]*\.?/)?.[0] ?? "";
+      last = new Error(`Overpass ${res.status} ${why.slice(0, 300)}`);
+      last.bad = /static error|parse error/i.test(why); // the query itself is wrong: another mirror won't help
+      if (last.bad) throw last;
+    } catch (e) { if (e.bad) throw e; last = e; }
     console.warn(`  overpass: ${new URL(url).host} ${last.message}`);
     await sleep(3000 * (attempt + 1)); // busy or rate-limited: wait and try the next mirror
   }
