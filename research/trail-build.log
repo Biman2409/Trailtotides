@@ -33,3 +33,25 @@ Build trails run 40673988991, 2026-10-28T10:40:41Z
 [ 451s]   day  5 walk   Gadsar Lake → Satsar  14.6 km +420 −350
 [ 451s]   day  6 walk   Satsar → Gangbal Lake  7 km +420 −540 (approx)
 [ 451s]   day  7 walk   Gangbal Lake → Naranag  13 km +100 −1390
+── tarsar-marsar-trek 10:48:15
+[  24s] tarsar-marsar-trek: 461 named places in OpenStreetMap around the trek
+[  41s]   ? Tarsar Pass not matched; nearby: Tarsar Lake (other, 2.2 km), Tar Sar (water, 1.9 km)
+[  41s]   leg Aru → Lidderwat (9.1 km apart)
+[  43s]   leg Lidderwat → Tarsar Lake (10.4 km apart)
+[  45s]   leg Tarsar Lake → Sundersar (3.8 km apart)
+[  46s]   leg Sundersar → Marsar Lake (1.3 km apart)
+[  49s] tarsar-marsar-trek: 32 km, +1860 m, highest 4016 m, 0 km drawn straight, 1135 → 252 points
+[  49s]   km     0  Aru (2413 m, osm, 34.09029,75.26244)
+[  49s]   km  10.9  Lidderwat (2859 m, osm, 34.17209,75.25476)  9.1 km from last
+[  49s]   km  23.7  Tarsar Lake (3781 m, osm, 34.13958,75.14886)  10.4 km from last
+[  49s]   km  29.7  Sundersar (3934 m, osm, 34.15607,75.11285)  3.8 km from last
+[  49s]   km    32  Marsar Lake (3808 m, osm, 34.14424,75.11091)  1.3 km from last
+[  49s]   camp (estimated): Shekwas (3252 m, 34.16518,75.20026)
+[  49s]   camp (estimated): Tarsar Pass (3791 m, 34.15387,75.14009)
+[  49s]   day  1 walk   Aru → Lidderwat  10.9 km +480 −30
+[  49s]   day  2 walk   Lidderwat → Shekwas  6.4 km +440 −100 (approx)
+[  49s]   day  3 walk   Shekwas → Tarsar Lake  6.3 km +560 −0 (approx)
+[  49s]   day  4 walk   Tarsar Lake → Sundersar  5.7 km +290 −150 (approx)
+[  49s]   day  5 walk   Sundersar → Sundersar  5.3 km +260 −250
+[  49s]   day  6 walk   Sundersar → Lidderwat  18.5 km +230 −1300
+[  49s]   day  7 walk   Lidderwat → Aru  10.9 km +20 −470
