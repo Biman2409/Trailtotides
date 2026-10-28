@@ -104,3 +104,13 @@ Build trails run 40713884646, 2026-10-28T15:14:24Z
 [ 259s]   day  2 walk   Gulling → Khullara  3.9 km +1070 −0
 [ 259s]   day  3 walk   Khullara → Khullara  8.1 km +1170 −1170
 [ 259s]   day  4 walk   Khullara → Dhak  7.8 km +100 −1410
+── beas-kund 15:28:19
+[  37s] beas-kund: 602 named places in OpenStreetMap around the trek
+[  54s]   leg Dhundi → Bakarthach (2.9 km apart)
+[  56s]   leg Bakarthach → Beas Kund (1.7 km apart)
+[  58s] beas-kund: 6.8 km, +970 m, highest 3609 m, 0 km drawn straight, 195 → 62 points
+[  58s]   km     0  Dhundi (2889 m, osm, 32.35553,77.12653)
+[  58s]   km   6.8  Beas Kund (3609 m, osm, 32.36058,77.08136)  4.3 km from last
+[  58s]   day  1 walk   Dhundi → Bakarthach  4.7 km +690 −260
+[  58s]   day  2 walk   Bakarthach → Bakarthach  4.2 km +280 −260
+[  58s]   day  3 walk   Bakarthach → Dhundi  4.7 km +270 −700
