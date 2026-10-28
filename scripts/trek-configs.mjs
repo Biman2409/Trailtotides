@@ -572,13 +572,13 @@ export const TREKS = {
       { name: "Nimaling", at: [33.7865, 77.59409] },
       { name: "Chokdo", q: "Chogdo", at: [33.83044, 77.66908] },
     ],
-    camps: { "Kongmaru La": ["Nimaling", "Chokdo", 0.3] },
+    camps: { "Kongmaru La": ["Nimaling", "Chokdo", 0.3, ["Kangmaru La", "Gongmaru La", "Gonomaru La"]] },
     days: [
       { to: "Skiu", note: "Cross the Zanskar at Chilling and walk into the dry Markha gorge" },
       { to: "Markha", note: "A long, hot day along the river, wading it in places" },
       { to: "Hankar", note: "Past Tacha monastery on its cliff, Kang Yatse coming into view" },
       { to: "Nimaling", note: "Up onto the high plateau below Kang Yatse, where herders summer their yaks" },
-      { to: "Chokdo", via: ["Kongmaru La"], note: "Over Kongmaru La at 5,200 m, the trek's highest point, and down a red-rock gorge" },
+      { to: "Chokdo", via: ["Kongmaru La"], note: "Over Kongmaru La at 5,260 m, the trek's highest point, and down a red-rock gorge" },
     ],
   },
 
