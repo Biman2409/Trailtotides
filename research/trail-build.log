@@ -124,3 +124,18 @@ Build trails run 40681718153, 2026-10-28T11:41:08Z
 [  45s]   day  2 walk   Deoriatal → Rohini Bugyal  7.8 km +480 −180 (approx)
 [  45s]   day  3 walk   Rohini Bugyal → Chopta  7.8 km +570 −350
 [  45s]   day  4 walk   Chopta → Chopta  12.8 km +940 −950
+── gaumukh-tapovan 12:01:03
+[  38s] gaumukh-tapovan: 115 named places in OpenStreetMap around the trek
+[  39s]   leg Gangotri → Bhojbasa (11.7 km apart)
+[  41s]   leg Bhojbasa → Gaumukh (4.2 km apart)
+[  42s]   leg Gaumukh → Tapovan (1.4 km apart)
+[  44s] gaumukh-tapovan: 20.2 km, +1300 m, highest 4321 m, 0 km drawn straight, 552 → 196 points
+[  44s]   km     0  Gangotri (3300 m, osm, 30.99437,78.93987)
+[  44s]   km  13.8  Bhojbasa (3792 m, osm, 30.95045,79.05151)  11.7 km from last
+[  44s]   km  18.5  Gaumukh (4050 m, osm, 30.92448,79.08407)  4.2 km from last
+[  44s]   km  20.2  Tapovan (4311 m, osm, 30.9142,79.07652)  1.4 km from last
+[  44s]   day  1 walk   Gangotri → Bhojbasa  13.8 km +810 −90
+[  44s]   day  2 walk   Bhojbasa → Tapovan  6.4 km +490 −0
+[  44s]   day  3 rest   Tapovan → Tapovan
+[  44s]   day  4 walk   Tapovan → Bhojbasa  6.4 km +0 −510
+[  44s]   day  5 walk   Bhojbasa → Gangotri  13.8 km +110 −830
