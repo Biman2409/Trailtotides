@@ -112,7 +112,10 @@ async function place(stop, trek, prev = null) {
     const where = s.at ? { near: s.at, maxD: 2000 } : prev ? { near: [prev.lat, prev.lng], maxD: s.optional ? 5000 : 25000 } : { near: trek.centre, maxD: 80000 };
     const m = matchPlace(index, n, { as: s.name, ...where });
     if (m && !taken(m.lat, m.lng)) {
-      const p = { name: s.name, lat: +m.lat.toFixed(5), lng: +m.lng.toFixed(5), ele: m.ele ?? (await heights([[m.lat, m.lng]]))[0], from: "osm" };
+      // The middle of a big meadow or lake can be far from the camp on its edge: when the stop
+      // has its own coordinates, they stay, and OSM only confirms the place (and its height)
+      const [lat, lng] = m.area && s.at ? s.at : [+m.lat.toFixed(5), +m.lng.toFixed(5)];
+      const p = { name: s.name, lat, lng, ele: (m.area && s.at ? null : m.ele) ?? (await heights([[lat, lng]]))[0], from: "osm" };
       found.set(s.name, p);
       return p;
     }

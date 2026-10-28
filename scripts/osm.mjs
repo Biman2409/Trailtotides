@@ -74,7 +74,8 @@ export async function placesNear(box) {
     const names = [t.name, t["name:en"], t.alt_name, t.official_name, t.old_name, t.int_name, t.short_name, t.loc_name]
       .filter(Boolean).flatMap((n) => n.split(";")).map((n) => n.trim()).filter(Boolean);
     const ele = t.ele ? Math.round(parseFloat(String(t.ele).replace(",", "."))) : null;
-    return { name: t.name, names, lat, lng, ele: Number.isFinite(ele) ? ele : null, kind: kindOf(t) };
+    // area: a meadow, lake or glacier mapped as a shape, whose point here is only its middle
+    return { name: t.name, names, lat, lng, ele: Number.isFinite(ele) ? ele : null, kind: kindOf(t), area: el.type !== "node" };
   }).filter((p) => p.lat != null && p.names.length);
 }
 
