@@ -1,43 +1,38 @@
-Build trails run 40664601217, 2026-10-28T09:29:22Z
-── manaslu-circuit 09:29:22
-[  31s] manaslu-circuit: 921 named places in OpenStreetMap around the trek
-[  36s]   leg Soti Khola → Machha Khola (10.6 km apart)
-[  39s]   leg Machha Khola → Jagat (13.7 km apart)
-[  41s]   leg Jagat → Deng (14.5 km apart)
-[  42s]   leg Deng → Namrung (12.2 km apart)
-[  44s]   leg Namrung → Lho (7.2 km apart)
-[  46s]   leg Lho → Samagaun (5.8 km apart)
-[  47s]   leg Samagaun → Samdo (7.4 km apart)
-[  49s]   leg Samdo → Larkya La (11.2 km apart)
-[  51s]   leg Larkya La → Bimthang (5.8 km apart)
-[  54s]   overpass: overpass-api.de Overpass 502 
-[ 147s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 243s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 287s]   ~ Larkya La → Bimthang: a 242.7 km detour for 5.8 km; routed over mapped paths, 0.0 of 8.6 km bridged
-[ 484s]   ! path search failed: fetch failed
-[ 484s]   ! Larkya La → Bimthang: a 242.7 km detour for 5.8 km; drawn straight
-[ 485s]   leg Bimthang → Dharapani (16.9 km apart)
-[ 487s] manaslu-circuit: 132.5 km, +6450 m, highest 5559 m, 5.8 km drawn straight, 8987 → 1360 points
-[ 487s]   km     0  Soti Khola (659 m, osm, 28.13534,84.85466)
-[ 487s]   km  13.1  Machha Khola (837 m, osm, 28.22931,84.87377)  10.6 km from last
-[ 487s]   km  29.9  Jagat (1317 m, osm, 28.35141,84.89586)  13.7 km from last
-[ 487s]   km  48.5  Deng (1889 m, osm, 28.47907,84.86704)  14.5 km from last
-[ 487s]   km  65.3  Namrung (2574 m, osm, 28.54506,84.76788)  12.2 km from last
-[ 487s]   km  74.7  Lho (3170 m, osm, 28.57405,84.70199)  7.2 km from last
-[ 487s]   km    82  Samagaun (3530 m, osm, 28.58467,84.64404)  5.8 km from last
-[ 487s]   km  90.2  Samdo (3895 m, osm, 28.65087,84.63414)  7.4 km from last
-[ 487s]   km 103.3  Larkya La (5106 m, osm, 28.66392,84.52031)  11.2 km from last
-[ 487s]   km 109.1  Bimthang (3705 m, osm, 28.63384,84.47129)  5.8 km from last
-[ 487s]   km 132.5  Dharapani (1860 m, osm, 28.519,84.35838)  16.9 km from last
-[ 487s]   camp (estimated): Dharmasala (4670 m, 28.66279,84.57479)
-[ 487s]   day  1 walk   Soti Khola → Machha Khola  13.1 km +470 −230
-[ 487s]   day  2 walk   Machha Khola → Jagat  16.8 km +650 −150
-[ 487s]   day  3 walk   Jagat → Deng  18.7 km +910 −380
-[ 487s]   day  4 walk   Deng → Namrung  16.8 km +1200 −480
-[ 487s]   day  5 walk   Namrung → Lho  9.4 km +600 −30
-[ 487s]   day  6 walk   Lho → Samagaun  7.3 km +480 −130
-[ 487s]   day  7 rest   Samagaun → Samagaun
-[ 487s]   day  8 walk   Samagaun → Samdo  8.2 km +340 −0
-[ 487s]   day  9 walk   Samdo → Dharmasala  7.2 km +800 −0 (approx)
-[ 487s]   day 10 walk   Dharmasala → Bimthang  11.7 km +930 −1890
-[ 487s]   day 11 walk   Bimthang → Dharapani  23.4 km +60 −1870
+Build trails run 40665916576, 2026-10-28T09:39:24Z
+── manaslu-circuit 09:39:24
+[  37s] manaslu-circuit: 921 named places in OpenStreetMap around the trek
+[  42s]   leg Soti Khola → Machha Khola (10.6 km apart)
+[  44s]   leg Machha Khola → Jagat (13.7 km apart)
+[  45s]   leg Jagat → Deng (14.5 km apart)
+[  47s]   leg Deng → Namrung (12.2 km apart)
+[  49s]   leg Namrung → Lho (7.2 km apart)
+[  51s]   leg Lho → Samagaun (5.8 km apart)
+[  52s]   leg Samagaun → Samdo (7.4 km apart)
+[  54s]   leg Samdo → Larkya La (11.2 km apart)
+[  56s]   leg Larkya La → Bimthang (5.8 km apart)
+[  93s]   ~ Larkya La → Bimthang: a 242.7 km detour for 5.8 km; routed over mapped paths, 0.0 of 8.6 km bridged
+[ 110s]   leg Bimthang → Dharapani (16.9 km apart)
+[ 112s] manaslu-circuit: 135.3 km, +5990 m, highest 5163 m, 0 km drawn straight, 10309 → 1445 points
+[ 112s]   km     0  Soti Khola (659 m, osm, 28.13534,84.85466)
+[ 112s]   km  13.1  Machha Khola (837 m, osm, 28.22931,84.87377)  10.6 km from last
+[ 112s]   km  29.9  Jagat (1317 m, osm, 28.35141,84.89586)  13.7 km from last
+[ 112s]   km  48.5  Deng (1889 m, osm, 28.47907,84.86704)  14.5 km from last
+[ 112s]   km  65.3  Namrung (2574 m, osm, 28.54506,84.76788)  12.2 km from last
+[ 112s]   km  74.7  Lho (3170 m, osm, 28.57405,84.70199)  7.2 km from last
+[ 112s]   km    82  Samagaun (3530 m, osm, 28.58467,84.64404)  5.8 km from last
+[ 112s]   km  90.2  Samdo (3895 m, osm, 28.65087,84.63414)  7.4 km from last
+[ 112s]   km 103.3  Larkya La (5106 m, osm, 28.66392,84.52031)  11.2 km from last
+[ 112s]   km 111.8  Bimthang (3705 m, osm, 28.63384,84.47129)  5.8 km from last
+[ 112s]   km 135.3  Dharapani (1860 m, osm, 28.519,84.35838)  16.9 km from last
+[ 112s]   camp (estimated): Dharmasala (4670 m, 28.66279,84.57479)
+[ 112s]   day  1 walk   Soti Khola → Machha Khola  13.1 km +470 −230
+[ 112s]   day  2 walk   Machha Khola → Jagat  16.8 km +650 −150
+[ 112s]   day  3 walk   Jagat → Deng  18.7 km +910 −380
+[ 112s]   day  4 walk   Deng → Namrung  16.8 km +1200 −480
+[ 112s]   day  5 walk   Namrung → Lho  9.4 km +600 −30
+[ 112s]   day  6 walk   Lho → Samagaun  7.3 km +480 −130
+[ 112s]   day  7 rest   Samagaun → Samagaun
+[ 112s]   day  8 walk   Samagaun → Samdo  8.2 km +340 −0
+[ 112s]   day  9 walk   Samdo → Dharmasala  7.2 km +800 −0 (approx)
+[ 112s]   day 10 walk   Dharmasala → Bimthang  14.4 km +470 −1420
+[ 112s]   day 11 walk   Bimthang → Dharapani  23.4 km +60 −1870
