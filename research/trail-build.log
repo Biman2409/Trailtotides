@@ -121,3 +121,29 @@ Build trails run 40693741914, 2026-10-28T13:08:43Z
 [ 405s]   day  5 walk   Manang → Yak Kharka  9.7 km +500 −20
 [ 405s]   day  6 walk   Yak Kharka → Thorong Phedi  7.4 km +590 −70
 [ 405s]   day  7 walk   Thorong Phedi → Muktinath  13.7 km +840 −1640
+── khopra-danda 13:24:58
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  84s] khopra-danda: 1298 named places in OpenStreetMap around the trek
+[ 103s]   leg Nayapul → Ulleri (7.3 km apart)
+[ 105s]   leg Ulleri → Ghorepani (6.2 km apart)
+[ 107s]   leg Ghorepani → Swanta (3.7 km apart)
+[ 109s]   leg Swanta → Khopra Danda (4.5 km apart)
+[ 111s]   overpass: overpass-api.de Overpass 502 
+[ 204s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 300s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 343s]   ~ Swanta → Khopra Danda: a 15.6 km detour for 4.5 km; routed over mapped paths, 0.0 of 9.0 km bridged
+[ 351s] khopra-danda: 32.5 km, +3360 m, highest 3661 m, 0 km drawn straight, 2443 → 458 points
+[ 351s]   km     0  Nayapul (1013 m, osm, 28.29814,83.76791)
+[ 351s]   km  10.8  Ulleri (2005 m, osm, 28.35673,83.73538)  7.3 km from last
+[ 351s]   km  18.6  Ghorepani (2896 m, osm, 28.40249,83.69993)  6.2 km from last
+[ 351s]   km  23.5  Swanta (2238 m, osm, 28.43521,83.69098)  3.7 km from last
+[ 351s]   km  32.5  Khopra Danda (3639 m, osm, 28.47211,83.70863)  4.5 km from last
+[ 351s]   camp (estimated): Chistibung (2731 m, 28.45371,83.71096)
+[ 351s]   day  1 walk   Nayapul → Ulleri  10.8 km +1030 −20
+[ 351s]   day  2 walk   Ulleri → Ghorepani  7.9 km +810 −0
+[ 351s]   day  3 walk   Ghorepani → Swanta  4.9 km +100 −740
+[ 351s]   day  4 walk   Swanta → Chistibung  4.5 km +520 −20 (approx)
+[ 351s]   day  5 walk   Chistibung → Khopra Danda  4.5 km +900 −0
+[ 351s]   day  6 walk   Khopra Danda → Khopra Danda  16 km +1000 −1000
+[ 351s]   day  7 walk   Khopra Danda → Swanta  9 km +20 −1430
+[ 351s]   day  8 walk   Swanta → Nayapul  23.5 km +750 −1950
