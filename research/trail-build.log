@@ -66,3 +66,21 @@ Build trails run 40665916576, 2026-10-28T09:39:24Z
 [ 250s]   day  7 walk   Lamuney → Thansing  7.3 km +170 −370
 [ 250s]   day  8 walk   Thansing → Tshoka  12.4 km +420 −1380
 [ 250s]   day  9 walk   Tshoka → Yuksom  11.9 km +160 −1370
+── sandakphu-phalut-trek 09:45:30
+[  34s] sandakphu-phalut-trek: 515 named places in OpenStreetMap around the trek
+[  38s]   leg Manebhanjan → Tumling (7.0 km apart)
+[  40s]   leg Tumling → Sandakphu (10.6 km apart)
+[  42s]   leg Sandakphu → Phalut (11.5 km apart)
+[  44s]   leg Phalut → Gorkhey (6.0 km apart)
+[  46s] sandakphu-phalut-trek: 55.4 km, +2740 m, highest 3596 m, 0 km drawn straight, 3681 → 775 points
+[  46s]   km     0  Manebhanjan (1933 m, osm, 26.98863,88.12034)
+[  46s]   km  11.4  Tumling (2918 m, osm, 27.03126,88.06896)  7.0 km from last
+[  46s]   km  30.4  Sandakphu (3589 m, osm, 27.10481,88.00154)  10.6 km from last
+[  46s]   km  47.4  Phalut (3493 m, osm, 27.20754,88.01583)  11.5 km from last
+[  46s]   km  55.4  Gorkhey (2279 m, osm, 27.18744,88.07195)  6.0 km from last
+[  46s]   camp (estimated): Kalipokhri (2986 m, 27.07013,88.01922)
+[  46s]   day  1 walk   Manebhanjan → Tumling  11.4 km +960 −0
+[  46s]   day  2 walk   Tumling → Kalipokhri  11.4 km +470 −400 (approx)
+[  46s]   day  3 walk   Kalipokhri → Sandakphu  7.6 km +720 −140
+[  46s]   day  4 walk   Sandakphu → Phalut  16.9 km +570 −670
+[  46s]   day  5 walk   Phalut → Gorkhey  8.1 km +0 −1170
