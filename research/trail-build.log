@@ -1,117 +1,21 @@
-Build trails run 40713884646, 2026-10-28T15:14:24Z
-── dodital-darwa-pass 15:14:24
-[  38s] dodital-darwa-pass: 401 named places in OpenStreetMap around the trek
-[  44s]   leg Sangam Chatti → Agoda (3.2 km apart)
-[  46s]   leg Agoda → Manjhi (4.8 km apart)
-[  48s]   leg Manjhi → Dodital (2.6 km apart)
-[  49s]   leg Dodital → Darwa Pass (2.3 km apart)
-[  51s] dodital-darwa-pass: 18.4 km, +2430 m, highest 3764 m, 0 km drawn straight, 419 → 140 points
-[  51s]   km     0  Sangam Chatti (1615 m, osm, 30.83588,78.45063)
-[  51s]   km     4  Agoda (2138 m, given, 30.84636,78.48161)  3.2 km from last
-[  51s]   km  11.6  Manjhi (2956 m, osm, 30.87492,78.51945)  4.8 km from last
-[  51s]   km  15.7  Dodital (3071 m, osm, 30.89725,78.52606)  2.6 km from last
-[  51s]   km  18.4  Darwa Pass (3776 m, osm, 30.91411,78.51179)  2.3 km from last
-[  51s]   day  1 walk   Sangam Chatti → Agoda  4 km +530 −0
-[  51s]   day  2 walk   Agoda → Manjhi  7.6 km +1030 −230
-[  51s]   day  3 walk   Manjhi → Dodital  4.1 km +220 −80
-[  51s]   day  4 walk   Dodital → Dodital  5.5 km +650 −650
-[  51s]   day  5 walk   Dodital → Manjhi  4.1 km +80 −210
-[  51s]   day  6 walk   Manjhi → Sangam Chatti  11.6 km +260 −1590
-── deoriatal-chandrashila 15:15:16
-[  40s] deoriatal-chandrashila: 628 named places in OpenStreetMap around the trek
-[  45s]   leg Sari → Deoriatal (0.9 km apart)
-[  47s]   leg Deoriatal → Chopta (9.3 km apart)
-[  48s]   leg Chopta → Tungnath (1.3 km apart)
-[  50s]   leg Tungnath → Chandrashila (0.5 km apart)
-[  52s] deoriatal-chandrashila: 24.2 km, +2160 m, highest 3525 m, 0 km drawn straight, 689 → 266 points
-[  52s]   km     0  Sari (2016 m, osm, 30.51688,79.13526)
-[  52s]   km   1.8  Deoriatal (2384 m, osm, 30.52211,79.12754)  0.9 km from last
-[  52s]   km  17.5  Chopta (2828 m, given, 30.47786,79.21015)  9.3 km from last
-[  52s]   km  23.2  Tungnath (3481 m, osm, 30.48831,79.21673)  1.3 km from last
-[  52s]   km  24.2  Chandrashila (3651 m, osm, 30.48646,79.22123)  0.5 km from last
-[  52s]   camp (estimated): Rohini Bugyal (2673 m, 30.51661,79.20033)
-[  52s]   day  1 walk   Sari → Deoriatal  1.8 km +350 −0
-[  52s]   day  2 walk   Deoriatal → Rohini Bugyal  7.9 km +480 −180 (approx)
-[  52s]   day  3 walk   Rohini Bugyal → Chopta  7.8 km +570 −350
-[  52s]   day  4 walk   Chopta → Chopta  13.5 km +950 −950
-── gokyo-lakes 15:16:11
+Build trails run 40762148910, 2026-10-28T20:19:00Z
+── deoriatal-chandrashila 20:19:00
 [   1s]   overpass: overpass-api.de Overpass 502 
 [  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
 [ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 199s]   overpass: overpass-api.de Overpass 502 
-[ 211s] gokyo-lakes: place list unavailable (Overpass 502 ), using place search only
-[ 224s]   leg Lukla → Phakding (6.0 km apart)
-[ 226s]   leg Phakding → Namche Bazaar (7.1 km apart)
-[ 228s]   leg Namche Bazaar → Dole (7.3 km apart)
-[ 229s]   leg Dole → Machhermo (4.2 km apart)
-[ 231s]   leg Machhermo → Gokyo (6.1 km apart)
-[ 233s] gokyo-lakes: 41.4 km, +2650 m, highest 4765 m, 0 km drawn straight, 2179 → 489 points
-[ 233s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
-[ 233s]   km   7.4  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
-[ 233s]   km  17.7  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
-[ 233s]   km  29.4  Dole (4036 m, osm, 27.86733,86.72997)  7.3 km from last
-[ 233s]   km  34.4  Machhermo (4386 m, osm, 27.90288,86.7156)  4.2 km from last
-[ 233s]   km  41.4  Gokyo (4750 m, osm, 27.95409,86.69459)  6.1 km from last
-[ 233s]   side trip: Gokyo Ri (5357 m, osm)
-[ 233s]   day  1 walk   Lukla → Phakding  7.4 km +90 −320
-[ 233s]   day  2 walk   Phakding → Namche Bazaar  10.4 km +840 −70
-[ 233s]   day  3 rest   Namche Bazaar → Namche Bazaar
-[ 233s]   day  4 walk   Namche Bazaar → Dole  11.6 km +940 −330
-[ 233s]   day  5 walk   Dole → Machhermo  5.1 km +390 −20
-[ 233s]   day  6 walk   Machhermo → Gokyo  6.9 km +360 −0
-[ 233s]   day  7 walk   Gokyo → Gokyo  4 km +600 −600
-[ 233s]   day  8 walk   Gokyo → Dole  12 km +20 −740
-[ 233s]   day  9 walk   Dole → Namche Bazaar  11.6 km +330 −940
-[ 233s]   day 10 walk   Namche Bazaar → Lukla  17.7 km +360 −930
-── kedarkantha-trek 15:20:06
-[   1s]   overpass: overpass-api.de Overpass 502 
-[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 199s]   overpass: overpass-api.de Overpass 502 
-[ 211s] kedarkantha-trek: place list unavailable (Overpass 502 ), using place search only
-[ 221s]   leg Sankri → Juda Ka Talab (2.8 km apart)
-[ 223s]   leg Juda Ka Talab → Kedarkantha Base (1.5 km apart)
-[ 225s]   leg Kedarkantha Base → Kedarkantha (2.1 km apart)
-[ 227s]   leg Kedarkantha → Hargaon (4.0 km apart)
-[ 228s]   leg Hargaon → Sankri (2.2 km apart)
-[ 230s] kedarkantha-trek: 19.9 km, +1840 m, highest 3793 m, 0 km drawn straight, 755 → 289 points
-[ 230s]   km     0  Sankri (1899 m, osm, 31.07802,78.18411)
-[ 230s]   km   4.6  Juda Ka Talab (2813 m, osm, 31.05249,78.1843)  2.8 km from last
-[ 230s]   km   6.9  Kedarkantha Base (3063 m, osm, 31.04106,78.17546)  1.5 km from last
-[ 230s]   km  10.6  Kedarkantha (3786 m, given, 31.02257,78.17188)  2.1 km from last
-[ 230s]   km  15.7  Hargaon (2728 m, osm, 31.05817,78.18007)  4.0 km from last
-[ 230s]   km  19.9  Sankri (1899 m, osm, 31.07802,78.18411)  2.2 km from last
-[ 230s]   day  1 walk   Sankri → Juda Ka Talab  4.6 km +890 −0
-[ 230s]   day  2 walk   Juda Ka Talab → Kedarkantha Base  2.2 km +260 −0
-[ 230s]   day  3 walk   Kedarkantha Base → Hargaon  8.9 km +680 −1050
-[ 230s]   day  4 walk   Hargaon → Sankri  4.2 km +0 −790
-── pangarchulla-peak 15:23:58
-[  42s] pangarchulla-peak: 280 named places in OpenStreetMap around the trek
-[  43s]   leg Dhak → Khullara (4.9 km apart)
-[  45s]   leg Khullara → Pangarchulla (4.0 km apart)
-[  48s]   overpass: overpass-api.de Overpass 502 
-[ 141s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 237s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 246s]   overpass: overpass-api.de Overpass 502 
-[ 258s]   ! path search failed: Overpass 502 
-[ 258s]   ! Khullara → Pangarchulla: nearest path is 2022 m away; drawn straight
-[ 259s] pangarchulla-peak: 11.8 km, +2570 m, highest 4559 m, 4 km drawn straight, 193 → 80 points
-[ 259s]   km     0  Dhak (2106 m, osm, 30.49886,79.61134)
-[ 259s]   km   7.8  Khullara (3393 m, osm, 30.45968,79.58748)  4.9 km from last
-[ 259s]   km  11.8  Pangarchulla (4559 m, osm, 30.42367,79.59214)  4.0 km from last
-[ 259s]   camp (estimated): Gulling (2284 m, 30.4793,79.60696)
-[ 259s]   day  1 walk   Dhak → Gulling  3.9 km +320 −80 (approx)
-[ 259s]   day  2 walk   Gulling → Khullara  3.9 km +1070 −0
-[ 259s]   day  3 walk   Khullara → Khullara  8.1 km +1170 −1170
-[ 259s]   day  4 walk   Khullara → Dhak  7.8 km +100 −1410
-── beas-kund 15:28:19
-[  37s] beas-kund: 602 named places in OpenStreetMap around the trek
-[  54s]   leg Dhundi → Bakarthach (2.9 km apart)
-[  56s]   leg Bakarthach → Beas Kund (1.7 km apart)
-[  58s] beas-kund: 6.8 km, +970 m, highest 3609 m, 0 km drawn straight, 195 → 62 points
-[  58s]   km     0  Dhundi (2889 m, osm, 32.35553,77.12653)
-[  58s]   km   6.8  Beas Kund (3609 m, osm, 32.36058,77.08136)  4.3 km from last
-[  58s]   day  1 walk   Dhundi → Bakarthach  4.7 km +690 −260
-[  58s]   day  2 walk   Bakarthach → Bakarthach  4.2 km +280 −260
-[  58s]   day  3 walk   Bakarthach → Dhundi  4.7 km +270 −700
-Done 15:29:19, 0 failed
+[ 234s] deoriatal-chandrashila: 628 named places in OpenStreetMap around the trek
+[ 239s]   leg Sari → Deoriatal (0.9 km apart)
+[ 241s]   leg Deoriatal → Chopta (9.3 km apart)
+[ 242s]   leg Chopta → Tungnath (1.3 km apart)
+[ 244s]   leg Tungnath → Chandrashila (0.5 km apart)
+[ 246s] deoriatal-chandrashila: 24.2 km, +2160 m, highest 3525 m, 0 km drawn straight, 689 → 266 points
+[ 246s]   km     0  Sari (2016 m, osm, 30.51688,79.13526)
+[ 246s]   km   1.8  Deoriatal (2384 m, osm, 30.52211,79.12754)  0.9 km from last
+[ 246s]   km  17.5  Chopta (2828 m, given, 30.47786,79.21015)  9.3 km from last
+[ 246s]   km  23.2  Tungnath (3481 m, osm, 30.48831,79.21673)  1.3 km from last
+[ 246s]   km  24.2  Chandrashila (3651 m, osm, 30.48646,79.22123)  0.5 km from last
+[ 246s]   camp (estimated): Rohini Bugyal (2673 m, 30.51661,79.20033)
+[ 246s]   day  1 walk   Sari → Deoriatal  1.8 km +350 −0
+[ 246s]   day  2 walk   Deoriatal → Rohini Bugyal  7.9 km +480 −180 (approx)
+[ 246s]   day  3 walk   Rohini Bugyal → Chopta  7.8 km +570 −350
+[ 246s]   day  4 walk   Chopta → Chopta  13.5 km +950 −950
