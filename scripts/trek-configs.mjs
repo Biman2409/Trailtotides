@@ -350,7 +350,7 @@ export const TREKS = {
       { name: "Bedni Bugyal", at: [30.20929, 79.66919] },
       { name: "Roopkund", q: "Rup Kund", at: [30.2621, 79.73172] },
     ],
-    camps: { "Patar Nachauni": ["Bedni Bugyal", "Roopkund", 0.35, ["Patar Nachani", "Pathar Nachauni", "Patar Nachoni", "Pathar Nachuni"]], Bhagwabasa: ["Bedni Bugyal", "Roopkund", 0.75, ["Bhagwabas", "Bhagubasa", "Bagubasa", "Bhaguwabasa"]] },
+    camps: { "Patar Nachauni": ["Bedni Bugyal", "Roopkund", 0.35, ["Patal Nachani", "Patar Nachani", "Pathar Nachauni", "Patar Nachoni", "Pathar Nachuni"]], Bhagwabasa: ["Bedni Bugyal", "Roopkund", 0.75, ["Bhagwabas", "Bhagubasa", "Bagubasa", "Bhaguwabasa"]] },
     days: [
       { to: "Didna", note: "Down to the Neel Ganga and a steep climb through forest to Didna village" },
       { to: "Bedni Bugyal", via: ["Ali Bugyal"], note: "Out onto Ali Bugyal, one of the largest high meadows in the Himalaya, and along to Bedni" },
