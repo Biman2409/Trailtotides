@@ -249,3 +249,20 @@ Build trails run 40681718153, 2026-10-28T11:41:08Z
 [  47s]   day  4 walk   Patar Nachauni → Bhagwabasa  4.4 km +410 −60
 [  47s]   day  5 walk   Bhagwabasa → Patar Nachauni  10.7 km +580 −930 (approx)
 [  47s]   day  6 walk   Patar Nachauni → Lohajung  21.4 km +820 −2450
+── satopanth-lake 12:14:56
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] satopanth-lake: place list unavailable (Overpass 502 ), using place search only
+[ 215s]   leg Mana → Satopanth Lake (13.6 km apart)
+[ 217s] satopanth-lake: 18.6 km, +1220 m, highest 4358 m, 0 km drawn straight, 3072 → 193 points
+[ 217s]   km     0  Mana (3179 m, given, 30.77048,79.49594)
+[ 217s]   km  18.6  Satopanth Lake (4346 m, osm, 30.74352,79.357)  13.6 km from last
+[ 217s]   camp (estimated): Laxmi Van (3596 m, 30.78293,79.44244)
+[ 217s]   camp (estimated): Chakrateertha (4136 m, 30.75777,79.3893)
+[ 217s]   day  1 walk   Mana → Laxmi Van  6.5 km +440 −20 (approx)
+[ 217s]   day  2 walk   Laxmi Van → Chakrateertha  7.5 km +530 −0 (approx)
+[ 217s]   day  3 walk   Chakrateertha → Satopanth Lake  4.7 km +220 −20
+[ 217s]   day  4 walk   Satopanth Lake → Laxmi Van  12.1 km +20 −760 (approx)
+[ 217s]   day  5 walk   Laxmi Van → Mana  6.5 km +0 −440
