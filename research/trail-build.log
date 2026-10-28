@@ -167,3 +167,16 @@ manaslu-circuit: FAILED (exit 1)
 [  67s]   day  2 walk   Juda Ka Talab → Kedarkantha Base  1.4 km +230 −0
 [  67s]   day  3 walk   Kedarkantha Base → Hargaon  8.6 km +720 −1050
 [  67s]   day  4 walk   Hargaon → Sankri  4.2 km +0 −790
+── har-ki-dun 09:11:58
+[  48s] har-ki-dun: 416 named places in OpenStreetMap around the trek
+[  64s]   leg Taluka → Osla (10.3 km apart)
+[  66s]   leg Osla → Har Ki Dun (9.2 km apart)
+[  67s] har-ki-dun: 22.9 km, +1540 m, highest 3514 m, 0 km drawn straight, 606 → 214 points
+[  67s]   km     0  Taluka (2097 m, osm, 31.07782,78.24579)
+[  67s]   km  11.8  Osla (2756 m, osm, 31.1189,78.34277)  10.3 km from last
+[  67s]   km  22.9  Har Ki Dun (3500 m, osm, 31.14821,78.43326)  9.2 km from last
+[  67s]   day  1 walk   Taluka → Osla  11.8 km +680 −50
+[  67s]   day  2 walk   Osla → Har Ki Dun  11.1 km +850 −90
+[  67s]   day  3 rest   Har Ki Dun → Har Ki Dun
+[  67s]   day  4 walk   Har Ki Dun → Osla  11.1 km +110 −860
+[  67s]   day  5 walk   Osla → Taluka  11.8 km +50 −690
