@@ -672,7 +672,7 @@ export const adventures: Adventure[] = [
     name: "Beas Kund Trek", tagline: "Trek to the glacial source of the Beas River above Manali",
     region: "Himalayas", state: "Himachal Pradesh", type: "Trekking", difficulty: "Hard",
     duration: "3–5 days", durationDays: "3 days", durationRange: "3 Days",
-    distance: "15km", distanceRange: "15 km", altitude: "3,892m",
+    distance: "14km", distanceRange: "14 km", altitude: "3,892m",
     baseCamp: "Dhundi",
     bestSeason: "Jul–Sep", bestMonths: ["Jul","Aug","Sep"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/beas-kund.jpeg",
