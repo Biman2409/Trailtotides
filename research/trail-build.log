@@ -82,3 +82,21 @@ Build trails run 40676322312, 2026-10-28T10:59:32Z
 [  40s]   day  1 walk   Dhundi → Bakarthach  4.7 km +690 −260
 [  40s]   day  2 walk   Bakarthach → Bakarthach  4.2 km +280 −260
 [  40s]   day  3 walk   Bakarthach → Dhundi  4.7 km +270 −700
+── bhrigu-lake 11:10:21
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  91s] bhrigu-lake: 665 named places in OpenStreetMap around the trek
+[  94s]   leg Gulaba → Rola Kholi (3.6 km apart)
+[  97s]   overpass: overpass-api.de Overpass 502 
+[ 190s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 286s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 295s]   overpass: overpass-api.de Overpass 502 
+[ 307s]   ! path search failed: Overpass 502 
+[ 307s]   ! Gulaba → Rola Kholi: a 22.4 km detour for 3.6 km; drawn straight
+[ 308s]   leg Rola Kholi → Bhrigu Lake (2.5 km apart)
+[ 311s] bhrigu-lake: 9.6 km, +1490 m, highest 4300 m, 3.6 km drawn straight, 114 → 51 points
+[ 311s]   km     0  Gulaba (2862 m, osm, 32.32231,77.20098)
+[ 311s]   km   3.6  Rola Kholi (3798 m, osm, 32.31551,77.23825)  3.6 km from last
+[ 311s]   km   9.6  Bhrigu Lake (4300 m, osm, 32.29324,77.24252)  2.5 km from last
+[ 311s]   day  1 walk   Gulaba → Rola Kholi  3.6 km +930 −0
+[ 311s]   day  2 walk   Rola Kholi → Rola Kholi  12 km +740 −740
+[ 311s]   day  3 walk   Rola Kholi → Gulaba  3.6 km +0 −930
