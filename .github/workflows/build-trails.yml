@@ -52,6 +52,19 @@ jobs:
           if [ "$TREKS" = "all" ]; then
             TREKS=$(node -e 'import("./scripts/trek-configs.mjs").then((m) => console.log(Object.keys(m.TREKS).join(" ")))')
           fi
+          # Push this run's commits; on a conflict (another run's log or trail) this run's version
+          # wins, and a rebase that still fails is undone rather than left blocking later commits
+          sync() {
+            for i in 1 2 3; do
+              if git pull -q --rebase -X theirs origin "$GITHUB_REF_NAME"; then
+                git push -q origin HEAD:"$GITHUB_REF_NAME" && return 0
+              else
+                git rebase --abort 2>/dev/null
+              fi
+              sleep 5
+            done
+            echo "push failed, will retry after the next trek" | tee -a $LOG
+          }
           failed=0
           for t in $TREKS; do
             echo "── $t $(date -u +%T)" | tee -a $LOG
@@ -60,7 +73,7 @@ jobs:
             [ "$code" = "0" ] || { failed=$((failed + 1)); echo "$t: FAILED (exit $code)" | tee -a $LOG; }
             git add src/lib/trails && git add -f $LOG # *.log is gitignored
             git commit -q -m "Trail rebuilt from OpenStreetMap: $t" -m "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            git pull -q --rebase origin "$GITHUB_REF_NAME" && git push -q origin HEAD:"$GITHUB_REF_NAME"
+            sync
           done
           echo "Done $(date -u +%T), $failed failed" | tee -a $LOG
           cp $LOG build-trails.log
@@ -92,5 +105,8 @@ jobs:
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git commit -m "Trek facts synced to the rebuilt itineraries" -m "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           # The branch may have moved while the build ran
-          git pull --rebase origin "$GITHUB_REF_NAME"
-          git push origin HEAD:"$GITHUB_REF_NAME"
+          for i in 1 2 3 4 5; do
+            git pull -q --rebase -X theirs origin "$GITHUB_REF_NAME" && git push -q origin HEAD:"$GITHUB_REF_NAME" && exit 0
+            git rebase --abort 2>/dev/null; sleep 10
+          done
+          exit 1
