@@ -582,3 +582,29 @@ Build trails run 40693741914, 2026-10-28T13:08:43Z
 [  44s]   day  4 walk   Litham → Dhunda  3.6 km +390 −0 (approx)
 [  44s]   day  5 walk   Dhunda → Munirang  5.8 km +620 −990 (approx)
 [  44s]   day  6 walk   Munirang → Barua  7.1 km +0 −1390
+── kashmir-great-lakes 14:44:30
+[  36s] kashmir-great-lakes: 477 named places in OpenStreetMap around the trek
+[  39s]   ? Gadsar Pass not matched; nearby: Gadsar campsite (camp, 7.9 km), Gadsar (water, 3.4 km)
+[  39s]   leg Sonamarg → Nichnai (10.4 km apart)
+[  72s]   ~ Sonamarg → Nichnai: a 115.0 km detour for 10.4 km; routed over mapped paths, 0.5 of 12.8 km bridged
+[  90s]   leg Nichnai → Nichnai Pass (3.1 km apart)
+[  92s]   leg Nichnai Pass → Vishansar Lake (5.7 km apart)
+[  93s]   leg Vishansar Lake → Gadsar Lake (6.8 km apart)
+[  95s]   leg Gadsar Lake → Satsar (6.0 km apart)
+[  97s]   leg Satsar → Gangbal Lake (5.4 km apart)
+[  99s]   leg Gangbal Lake → Naranag (8.9 km apart)
+[ 101s] kashmir-great-lakes: 65.3 km, +2970 m, highest 4199 m, 0.5 km drawn straight, 2043 → 566 points
+[ 101s]   km     0  Sonamarg (2661 m, osm, 34.30239,75.29656)
+[ 101s]   km  23.2  Vishansar Lake (3666 m, osm, 34.38746,75.11887)  18.9 km from last
+[ 101s]   km  30.6  Gadsar Lake (3573 m, osm, 34.4218,75.05747)  6.8 km from last
+[ 101s]   km  52.3  Gangbal Lake (3566 m, osm, 34.42556,74.94058)  10.7 km from last
+[ 101s]   km  65.3  Naranag (2263 m, osm, 34.35023,74.97212)  8.9 km from last
+[ 101s]   camp (estimated): Gadsar Pass (4079 m, 34.40832,75.09229)
+[ 101s]   camp (estimated): Zaj Pass (3814 m, 34.4282,74.98698)
+[ 101s]   day  1 walk   Sonamarg → Nichnai  12.8 km +1030 −60
+[ 101s]   day  2 walk   Nichnai → Vishansar Lake  10.4 km +470 −440 (approx)
+[ 101s]   day  3 rest   Vishansar Lake → Vishansar Lake
+[ 101s]   day  4 walk   Vishansar Lake → Gadsar Lake  7.4 km +500 −550 (approx)
+[ 101s]   day  5 walk   Gadsar Lake → Satsar  14.6 km +420 −350
+[ 101s]   day  6 walk   Satsar → Gangbal Lake  7 km +420 −540
+[ 101s]   day  7 walk   Gangbal Lake → Naranag  13 km +100 −1390
