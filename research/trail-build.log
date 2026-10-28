@@ -1,87 +1,31 @@
-Build trails run 40665916576, 2026-10-28T09:39:24Z
-── manaslu-circuit 09:39:24
-[  37s] manaslu-circuit: 921 named places in OpenStreetMap around the trek
-[  42s]   leg Soti Khola → Machha Khola (10.6 km apart)
-[  44s]   leg Machha Khola → Jagat (13.7 km apart)
-[  45s]   leg Jagat → Deng (14.5 km apart)
-[  47s]   leg Deng → Namrung (12.2 km apart)
-[  49s]   leg Namrung → Lho (7.2 km apart)
-[  51s]   leg Lho → Samagaun (5.8 km apart)
-[  52s]   leg Samagaun → Samdo (7.4 km apart)
-[  54s]   leg Samdo → Larkya La (11.2 km apart)
-[  56s]   leg Larkya La → Bimthang (5.8 km apart)
-[  93s]   ~ Larkya La → Bimthang: a 242.7 km detour for 5.8 km; routed over mapped paths, 0.0 of 8.6 km bridged
-[ 110s]   leg Bimthang → Dharapani (16.9 km apart)
-[ 112s] manaslu-circuit: 135.3 km, +5990 m, highest 5163 m, 0 km drawn straight, 10309 → 1445 points
-[ 112s]   km     0  Soti Khola (659 m, osm, 28.13534,84.85466)
-[ 112s]   km  13.1  Machha Khola (837 m, osm, 28.22931,84.87377)  10.6 km from last
-[ 112s]   km  29.9  Jagat (1317 m, osm, 28.35141,84.89586)  13.7 km from last
-[ 112s]   km  48.5  Deng (1889 m, osm, 28.47907,84.86704)  14.5 km from last
-[ 112s]   km  65.3  Namrung (2574 m, osm, 28.54506,84.76788)  12.2 km from last
-[ 112s]   km  74.7  Lho (3170 m, osm, 28.57405,84.70199)  7.2 km from last
-[ 112s]   km    82  Samagaun (3530 m, osm, 28.58467,84.64404)  5.8 km from last
-[ 112s]   km  90.2  Samdo (3895 m, osm, 28.65087,84.63414)  7.4 km from last
-[ 112s]   km 103.3  Larkya La (5106 m, osm, 28.66392,84.52031)  11.2 km from last
-[ 112s]   km 111.8  Bimthang (3705 m, osm, 28.63384,84.47129)  5.8 km from last
-[ 112s]   km 135.3  Dharapani (1860 m, osm, 28.519,84.35838)  16.9 km from last
-[ 112s]   camp (estimated): Dharmasala (4670 m, 28.66279,84.57479)
-[ 112s]   day  1 walk   Soti Khola → Machha Khola  13.1 km +470 −230
-[ 112s]   day  2 walk   Machha Khola → Jagat  16.8 km +650 −150
-[ 112s]   day  3 walk   Jagat → Deng  18.7 km +910 −380
-[ 112s]   day  4 walk   Deng → Namrung  16.8 km +1200 −480
-[ 112s]   day  5 walk   Namrung → Lho  9.4 km +600 −30
-[ 112s]   day  6 walk   Lho → Samagaun  7.3 km +480 −130
-[ 112s]   day  7 rest   Samagaun → Samagaun
-[ 112s]   day  8 walk   Samagaun → Samdo  8.2 km +340 −0
-[ 112s]   day  9 walk   Samdo → Dharmasala  7.2 km +800 −0 (approx)
-[ 112s]   day 10 walk   Dharmasala → Bimthang  14.4 km +470 −1420
-[ 112s]   day 11 walk   Bimthang → Dharapani  23.4 km +60 −1870
-── goechala 09:41:18
-[   0s]   overpass: overpass-api.de Overpass 502 
-[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 234s] goechala: 237 named places in OpenStreetMap around the trek
-[ 240s]   optional stop not in OpenStreetMap, left out: Goechala Viewpoint 1
-[ 240s]   optional side trip not in OpenStreetMap, left out: Dzongri Top
-[ 240s]   leg Yuksom → Sachen (5.4 km apart)
-[ 242s]   leg Sachen → Tshoka (2.6 km apart)
-[ 244s]   leg Tshoka → Dzongri (5.2 km apart)
-[ 245s]   leg Dzongri → Thansing (5.2 km apart)
-[ 247s]   leg Thansing → Lamuney (3.2 km apart)
-[ 249s]   leg Lamuney → Samiti Lake (1.8 km apart)
-[ 250s] goechala: 29.6 km, +3110 m, highest 4307 m, 0 km drawn straight, 908 → 357 points
-[ 250s]   km     0  Yuksom (1763 m, osm, 27.36924,88.21848)
-[ 250s]   km   7.6  Sachen (2206 m, osm, 27.41394,88.19731)  5.4 km from last
-[ 250s]   km  11.9  Tshoka (2994 m, given, 27.4327,88.18163)  2.6 km from last
-[ 250s]   km  17.9  Dzongri (3974 m, osm, 27.47537,88.16019)  5.2 km from last
-[ 250s]   km  24.2  Thansing (3926 m, osm, 27.51688,88.18392)  5.2 km from last
-[ 250s]   km  27.7  Lamuney (4130 m, osm, 27.5456,88.18604)  3.2 km from last
-[ 250s]   km  29.6  Samiti Lake (4301 m, osm, 27.56169,88.18724)  1.8 km from last
-[ 250s]   day  1 walk   Yuksom → Sachen  7.6 km +540 −90
-[ 250s]   day  2 walk   Sachen → Tshoka  4.3 km +800 −60
-[ 250s]   day  3 walk   Tshoka → Dzongri  6 km +1010 −20
-[ 250s]   day  4 rest   Dzongri → Dzongri
-[ 250s]   day  5 walk   Dzongri → Thansing  6.3 km +360 −410
-[ 250s]   day  6 walk   Thansing → Lamuney  3.5 km +190 −0
-[ 250s]   day  7 walk   Lamuney → Thansing  7.3 km +170 −370
-[ 250s]   day  8 walk   Thansing → Tshoka  12.4 km +420 −1380
-[ 250s]   day  9 walk   Tshoka → Yuksom  11.9 km +160 −1370
-── sandakphu-phalut-trek 09:45:30
-[  34s] sandakphu-phalut-trek: 515 named places in OpenStreetMap around the trek
-[  38s]   leg Manebhanjan → Tumling (7.0 km apart)
-[  40s]   leg Tumling → Sandakphu (10.6 km apart)
-[  42s]   leg Sandakphu → Phalut (11.5 km apart)
-[  44s]   leg Phalut → Gorkhey (6.0 km apart)
-[  46s] sandakphu-phalut-trek: 55.4 km, +2740 m, highest 3596 m, 0 km drawn straight, 3681 → 775 points
-[  46s]   km     0  Manebhanjan (1933 m, osm, 26.98863,88.12034)
-[  46s]   km  11.4  Tumling (2918 m, osm, 27.03126,88.06896)  7.0 km from last
-[  46s]   km  30.4  Sandakphu (3589 m, osm, 27.10481,88.00154)  10.6 km from last
-[  46s]   km  47.4  Phalut (3493 m, osm, 27.20754,88.01583)  11.5 km from last
-[  46s]   km  55.4  Gorkhey (2279 m, osm, 27.18744,88.07195)  6.0 km from last
-[  46s]   camp (estimated): Kalipokhri (2986 m, 27.07013,88.01922)
-[  46s]   day  1 walk   Manebhanjan → Tumling  11.4 km +960 −0
-[  46s]   day  2 walk   Tumling → Kalipokhri  11.4 km +470 −400 (approx)
-[  46s]   day  3 walk   Kalipokhri → Sandakphu  7.6 km +720 −140
-[  46s]   day  4 walk   Sandakphu → Phalut  16.9 km +570 −670
-[  46s]   day  5 walk   Phalut → Gorkhey  8.1 km +0 −1170
-Done 09:46:18, 0 failed
+Build trails run 40672406418, 2026-10-28T10:28:40Z
+── kashmir-great-lakes 10:28:40
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 235s] kashmir-great-lakes: 477 named places in OpenStreetMap around the trek
+[ 239s]   ? Gadsar Pass not matched; nearby: Gadsar campsite (camp, 7.9 km), Gadsar (water, 3.4 km)
+[ 239s]   ? Satsar not matched; nearby: Satsaran Bar Gali (pass, 1.8 km), Sat sar (water, 2.0 km)
+[ 239s]   leg Sonamarg → Nichnai (10.4 km apart)
+[ 280s]   ~ Sonamarg → Nichnai: a 115.0 km detour for 10.4 km; routed over mapped paths, 0.5 of 12.8 km bridged
+[ 297s]   leg Nichnai → Nichnai Pass (3.1 km apart)
+[ 299s]   leg Nichnai Pass → Vishansar Lake (5.8 km apart)
+[ 301s]   leg Vishansar Lake → Gadsar Lake (6.7 km apart)
+[ 302s]   leg Gadsar Lake → Gangbal Lake (10.7 km apart)
+[ 304s]   leg Gangbal Lake → Naranag (8.9 km apart)
+[ 306s] kashmir-great-lakes: 65.3 km, +2970 m, highest 4199 m, 0.5 km drawn straight, 2043 → 566 points
+[ 306s]   km     0  Sonamarg (2661 m, osm, 34.30239,75.29656)
+[ 306s]   km  23.4  Vishansar Lake (3667 m, osm, 34.38749,75.11822)  18.9 km from last
+[ 306s]   km  30.6  Gadsar Lake (3571 m, osm, 34.42179,75.05753)  6.7 km from last
+[ 306s]   km  52.3  Gangbal Lake (3566 m, osm, 34.42556,74.94058)  10.7 km from last
+[ 306s]   km  65.3  Naranag (2263 m, osm, 34.35023,74.97212)  8.9 km from last
+[ 306s]   camp (estimated): Gadsar Pass (4075 m, 34.40845,75.09194)
+[ 306s]   camp (estimated): Satsar (3594 m, 34.47857,75.00289)
+[ 306s]   camp (estimated): Zaj Pass (3814 m, 34.4282,74.98698)
+[ 306s]   day  1 walk   Sonamarg → Nichnai  12.8 km +1030 −60
+[ 306s]   day  2 walk   Nichnai → Vishansar Lake  10.6 km +490 −440 (approx)
+[ 306s]   day  3 rest   Vishansar Lake → Vishansar Lake
+[ 306s]   day  4 walk   Vishansar Lake → Gadsar Lake  7.3 km +490 −560 (approx)
+[ 306s]   day  5 walk   Gadsar Lake → Satsar  9.8 km +330 −350 (approx)
+[ 306s]   day  6 walk   Satsar → Gangbal Lake  11.9 km +520 −550 (approx)
+[ 306s]   day  7 walk   Gangbal Lake → Naranag  13 km +100 −1390
