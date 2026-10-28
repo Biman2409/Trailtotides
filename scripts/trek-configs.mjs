@@ -173,7 +173,7 @@ export const TREKS = {
       { name: "Bali Pass", at: [31.03299, 78.43803] },
       { name: "Janki Chatti", at: [30.97645, 78.43834] },
     ],
-    camps: { "Lower Damini": ["Bali Pass", "Janki Chatti", 0.4] },
+    camps: { "Lower Damini": ["Bali Pass", "Janki Chatti", 0.4, ["Damini", "Lower Dhamni", "Dhamni", "Damni"]] },
     days: [
       { to: "Seema", note: "Drive from Sankri to Taluka, then up the Supin river to Seema" },
       { to: "Rainbasera", note: "Into the Ruinsara valley through forest and meadows" },
@@ -207,7 +207,7 @@ export const TREKS = {
       { name: "Dodital", q: "Dodi tal", at: [30.89725, 78.52606] },
       { name: "Darwa Pass", at: [30.91411, 78.51179] },
     ],
-    camps: { Agoda: ["Sangam Chatti", "Manjhi", 0.4] },
+    camps: { Agoda: ["Sangam Chatti", "Manjhi", 0.4, ["Agora", "Agoda Village"]] },
     days: [
       { to: "Agoda", note: "Up from the road through fields to Agoda village" },
       { to: "Manjhi", note: "Into thick oak and rhododendron forest" },
@@ -256,7 +256,7 @@ export const TREKS = {
   "kuari-pass": {
     near: "Chamoli, Uttarakhand",
     stops: [DHAK, KHULLARA, { name: "Kuari Pass", at: [30.45112, 79.58154] }],
-    camps: { Gulling: ["Dhak", "Khullara", 0.5] },
+    camps: { Gulling: ["Dhak", "Khullara", 0.5, ["Guling", "Gulling Top"]] },
     days: [
       { to: "Gulling", note: "Drive from Joshimath to Dhak, then up past Tugasi village to a forest camp" },
       { to: "Khullara", note: "Through oak and rhododendron to a meadow facing Dronagiri and Hathi Ghoda" },
@@ -268,7 +268,7 @@ export const TREKS = {
   "pangarchulla-peak": {
     near: "Chamoli, Uttarakhand",
     stops: [DHAK, KHULLARA, { name: "Pangarchulla", at: [30.42367, 79.59214] }],
-    camps: { Gulling: ["Dhak", "Khullara", 0.5] },
+    camps: { Gulling: ["Dhak", "Khullara", 0.5, ["Guling", "Gulling Top"]] },
     days: [
       { to: "Gulling", note: "Drive from Joshimath to Dhak, then up past Tugasi village to a forest camp" },
       { to: "Khullara", note: "Through oak and rhododendron to a meadow facing Dronagiri and Hathi Ghoda" },
@@ -283,7 +283,7 @@ export const TREKS = {
       { name: "Mana", at: [30.77048, 79.49594] },
       { name: "Satopanth Lake", q: "Satopanth Tal", at: [30.74352, 79.357] },
     ],
-    camps: { "Laxmi Van": ["Mana", "Satopanth Lake", 0.35], Chakrateertha: ["Mana", "Satopanth Lake", 0.75] },
+    camps: { "Laxmi Van": ["Mana", "Satopanth Lake", 0.35, ["Laxmiban", "Lakshmi Van", "Laxmi Ban", "Lakshmiban"]], Chakrateertha: ["Mana", "Satopanth Lake", 0.75, ["Chakratirtha", "Chakra Tirth", "Chakrateerth", "Chakra Tirtha"]] },
     days: [
       { to: "Laxmi Van", note: "From India's last village along the Alaknanda, past the Vasudhara falls" },
       { to: "Chakrateertha", note: "Over moraine and boulders beside the Bhagirath Kharak glacier" },
@@ -301,7 +301,7 @@ export const TREKS = {
       { name: "Chopta", q: "Chopta Tungnath", at: [30.47786, 79.21015] },
       { name: "Chandrashila", at: [30.48646, 79.22123] },
     ],
-    camps: { "Rohini Bugyal": ["Deoriatal", "Chopta", 0.5], Tungnath: ["Chopta", "Chandrashila", 0.8] },
+    camps: { "Rohini Bugyal": ["Deoriatal", "Chopta", 0.5, ["Rohini"]], Tungnath: ["Chopta", "Chandrashila", 0.8, ["Tungnath Temple", "Tungnath Mandir"]] },
     days: [
       { to: "Deoriatal", note: "A short, steady climb from Sari to the lake that mirrors Chaukhamba" },
       { to: "Rohini Bugyal", note: "Along a forested ridge to a quiet meadow" },
@@ -316,7 +316,7 @@ export const TREKS = {
       { name: "Ghuttu", at: [30.5289, 78.79015] },
       { name: "Panwali Kantha", at: [30.56968, 78.86745] },
     ],
-    camps: { Gairu: ["Ghuttu", "Panwali Kantha", 0.5] },
+    camps: { Gairu: ["Ghuttu", "Panwali Kantha", 0.5, ["Gairu Camp", "Garu"]] },
     days: [
       { to: "Gairu", note: "Up from Ghuttu through oak forest" },
       { to: "Panwali Kantha", note: "Onto the great meadow on the old pilgrim route to Kedarnath, the Gangotri and Kedar peaks in view" },
@@ -350,7 +350,7 @@ export const TREKS = {
       { name: "Bedni Bugyal", at: [30.20929, 79.66919] },
       { name: "Roopkund", q: "Rup Kund", at: [30.2621, 79.73172] },
     ],
-    camps: { "Patar Nachauni": ["Bedni Bugyal", "Roopkund", 0.35], Bhagwabasa: ["Bedni Bugyal", "Roopkund", 0.75] },
+    camps: { "Patar Nachauni": ["Bedni Bugyal", "Roopkund", 0.35, ["Patar Nachani", "Pathar Nachauni", "Patar Nachoni", "Pathar Nachuni"]], Bhagwabasa: ["Bedni Bugyal", "Roopkund", 0.75, ["Bhagwabas", "Bhagubasa", "Bagubasa", "Bhaguwabasa"]] },
     days: [
       { to: "Didna", note: "Down to the Neel Ganga and a steep climb through forest to Didna village" },
       { to: "Bedni Bugyal", via: ["Ali Bugyal"], note: "Out onto Ali Bugyal, one of the largest high meadows in the Himalaya, and along to Bedni" },

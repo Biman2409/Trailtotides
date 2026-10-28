@@ -2,3 +2,17 @@
 # (one slug per line, or "all"). A manual run can name its own.
 sar-pass
 bhrigu-lake
+ali-bedni-bugyal
+bali-pass
+brahmatal
+dayara-bugyal
+deoriatal-chandrashila
+gaumukh-tapovan
+kuari-pass
+valley-of-flowers
+dodital-darwa-pass
+pangarchulla-peak
+panwali-kantha
+pindari-glacier
+roopkund
+satopanth-lake
