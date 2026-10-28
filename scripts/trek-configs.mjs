@@ -244,7 +244,7 @@ export const TREKS = {
     ],
     side: [
       { name: "Valley of Flowers", q: "Valley of Flowers Entry", at: [30.70568, 79.59586] },
-      { name: "Hemkund Sahib", q: "Hemkund", at: [30.69875, 79.61847] },
+      { name: "Hemkund Sahib", q: "Hemkund", at: [30.70022, 79.61598] },
     ],
     days: [
       { to: "Ghangaria", note: "Up the Lakshman Ganga on a paved mule path, busy with pilgrims, to the only village up here" },
@@ -302,7 +302,7 @@ export const TREKS = {
       { name: "Chopta", q: "Chopta Tungnath", at: [30.47786, 79.21015] },
       // The temple, placed from ultrajourneys.org's map; OSM's Tunganath is checked within 2 km
       { name: "Tungnath", q: "Tunganath", at: [30.4887, 79.21702] },
-      { name: "Chandrashila", at: [30.48646, 79.22123] },
+      { name: "Chandrashila", at: [30.48806, 79.22139] },
     ],
     camps: { "Rohini Bugyal": ["Deoriatal", "Chopta", 0.5, ["Rohini"]] },
     days: [
