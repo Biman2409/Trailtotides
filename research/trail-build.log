@@ -155,3 +155,16 @@ Build trails run 40681718153, 2026-10-28T11:41:08Z
 [ 254s]   day  2 walk   Gulling → Khullara  3.9 km +1070 −0
 [ 254s]   day  3 walk   Khullara → Khullara  2.5 km +290 −290
 [ 254s]   day  4 walk   Khullara → Dhak  7.8 km +100 −1410
+── valley-of-flowers 12:06:05
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  87s] valley-of-flowers: 177 named places in OpenStreetMap around the trek
+[  91s]   leg Pulna → Ghangaria (7.6 km apart)
+[  93s] valley-of-flowers: 9.4 km, +1100 m, highest 3096 m, 0 km drawn straight, 278 → 107 points
+[  93s]   km     0  Pulna (2118 m, osm, 30.63576,79.57163)
+[  93s]   km   9.4  Ghangaria (3102 m, osm, 30.70145,79.5938)  7.6 km from last
+[  93s]   side trip: Valley of Flowers (3187 m, osm)
+[  93s]   side trip: Hemkund Sahib (4162 m, osm)
+[  93s]   day  1 walk   Pulna → Ghangaria  9.4 km +1100 −140
+[  93s]   day  2 walk   Ghangaria → Ghangaria  10 km +500 −500
+[  93s]   day  3 walk   Ghangaria → Ghangaria  12 km +1100 −1100
+[  93s]   day  4 walk   Ghangaria → Pulna  9.4 km +140 −1090
