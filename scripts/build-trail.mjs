@@ -190,7 +190,8 @@ async function build(slug) {
   found.clear();
   const name = (s) => (typeof s === "string" ? s : s.name);
   // One Overpass query for every named place around the trek: its centre and given coordinates
-  const pts = [trek.centre, ...trek.stops.filter((s) => s.at).map((s) => s.at)];
+  // (a stop written as a plain string has no coordinates: "Lukla".at is a string method, not a place)
+  const pts = [trek.centre, ...trek.stops.filter((s) => Array.isArray(s.at)).map((s) => s.at)];
   const lats = pts.map((p) => p[0]), lngs = pts.map((p) => p[1]);
   try {
     index = await placesNear([Math.min(...lats) - 0.15, Math.min(...lngs) - 0.15, Math.max(...lats) + 0.15, Math.max(...lngs) + 0.15]);
