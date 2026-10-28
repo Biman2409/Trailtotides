@@ -91,3 +91,19 @@ Build trails run 40681718153, 2026-10-28T11:41:08Z
 [ 245s]   day  2 walk   Bekaltal → Brahmatal  5.2 km +330 −140
 [ 245s]   day  3 walk   Brahmatal → Brahmatal  4 km +450 −450
 [ 245s]   day  4 walk   Brahmatal → Lohajung  10.8 km +140 −1020
+── dayara-bugyal 11:56:34
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] dayara-bugyal: place list unavailable (Overpass 502 ), using place search only
+[ 217s]   leg Raithal → Gui (2.8 km apart)
+[ 219s]   leg Gui → Dayara Bugyal (2.9 km apart)
+[ 220s] dayara-bugyal: 12.2 km, +1560 m, highest 3650 m, 0 km drawn straight, 562 → 155 points
+[ 220s]   km     0  Raithal (2132 m, osm, 30.81672,78.60379)
+[ 220s]   km   4.4  Gui (2961 m, osm, 30.81448,78.57426)  2.8 km from last
+[ 220s]   km  12.2  Dayara Bugyal (3503 m, osm, 30.82994,78.54964)  2.9 km from last
+[ 220s]   day  1 walk   Raithal → Gui  4.4 km +810 −0
+[ 220s]   day  2 walk   Gui → Dayara Bugyal  7.8 km +740 −190
+[ 220s]   day  3 rest   Dayara Bugyal → Dayara Bugyal
+[ 220s]   day  4 walk   Dayara Bugyal → Raithal  12.2 km +190 −1550
