@@ -34,7 +34,8 @@ jobs:
 
       - name: Summary
         if: always()
-        run: { echo '```'; cat fetch.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          { echo '```'; cat fetch.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
       # A trail build on the same branch commits too: let it finish first, then commit on top
       - name: Wait for trail builds on this branch
