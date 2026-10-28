@@ -57,3 +57,8 @@ Build trails run 40653745388, 2026-10-28T08:01:30Z
 [ 269s]   day  8 walk   Gokyo → Dole  12 km +20 −740
 [ 269s]   day  9 walk   Dole → Namche Bazaar  11.6 km +330 −940
 [ 269s]   day 10 walk   Namche Bazaar → Lukla  17.7 km +360 −930
+── annapurna-base-camp 08:07:10
+[  34s] annapurna-base-camp: place list unavailable (Overpass 400 Error : line 3: parse error: Unknown query clause Error : line 4: parse error: Unknown query clause Error : line 5: parse error: Unknown query clause Error : line 6: parse error: Unknown query clause Error : line 7: parse error: Unknown query clause Error : line 8: parse error: Unknown query clause ), using place search only
+[  51s] annapurna-base-camp: FAILED fetch failed
+[  51s] Failed: annapurna-base-camp
+annapurna-base-camp: FAILED (exit 1)
