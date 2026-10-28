@@ -54,6 +54,12 @@ export interface Trail {
 /** Where the browser loads one trail from */
 export const trailUrl = (slug: string) => `/trails/${slug}.json`;
 
+/** Kilometres walked over the itinerary, there and back where the trek returns: the trek's distance */
+export const trailWalkKm = (t: Trail) => Math.round(t.days.reduce((s, d) => s + (d.kind === "walk" ? d.km ?? 0 : 0), 0));
+
+/** Metres climbed over the itinerary's days */
+export const trailClimbM = (t: Trail) => Math.round(t.days.reduce((s, d) => s + (d.up ?? 0), 0) / 10) * 10;
+
 /** Highest named point on the way (stops carry OpenStreetMap's surveyed heights) */
 export function trailHighPoint(t: Trail): TrailStop {
   return t.stops.reduce((hi, s) => ((s.ele ?? 0) > (hi.ele ?? 0) ? s : hi), t.stops[0]);

@@ -5,7 +5,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { ArrowDown, ArrowUp, BedDouble, Footprints, Moon, Plane, Route, RotateCw } from "lucide-react";
-import { trailHighPoint, trailProfile, type Trail, type TrailDay } from "@/lib/trails/shared";
+import { trailHighPoint, trailProfile, trailWalkKm, type Trail, type TrailDay } from "@/lib/trails/shared";
 import { WeatherIcon, iconColor, desc } from "./WeatherWidget";
 
 const ORANGE = "#ff5100";
@@ -21,13 +21,12 @@ function dayTitle(d: TrailDay) {
 
 export function ItineraryPanel({ trail }: { trail: Trail }) {
   const walking = trail.days.filter((d) => d.kind === "walk");
-  const totalKm = walking.reduce((s, d) => s + (d.km ?? 0), 0);
   const rest = trail.days.filter((d) => d.kind === "rest").length;
 
   return (
     <div className="p-4 sm:p-5">
       <p className="text-[13px] mb-4" style={{ color: "var(--text-secondary)" }}>
-        <b style={{ color: "var(--text-primary)" }}>{trail.days.length} days</b> from {trail.days[0].from}: {walking.length} walking, {rest} rest {rest === 1 ? "day" : "days"} to acclimatise, about {Math.round(totalKm)} km on foot. A typical plan; operators vary it a little.
+        <b style={{ color: "var(--text-primary)" }}>{trail.days.length} days</b> from {trail.days[0].from}: {walking.length} walking, {rest} rest {rest === 1 ? "day" : "days"} to acclimatise, about {trailWalkKm(trail)} km on foot. A typical plan; operators vary it a little.
         {(trail.approxKm ?? 0) > 0 && <> About {Math.round(trail.approxKm ?? 0)} km of the path isn&apos;t on the map yet, so those days&apos; figures are estimates.</>}
       </p>
       <ol className="relative">
