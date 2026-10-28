@@ -17,3 +17,18 @@ Build trails run 40681718153, 2026-10-28T11:41:08Z
 [  65s]   day  3 walk   Min Thach → Nagaru  3.6 km +1230 −0 (approx)
 [  65s]   day  4 walk   Nagaru → Biskeri Thach  4.7 km +590 −80
 [  65s]   day  5 walk   Biskeri Thach → Barshaini  9.6 km +50 −1910
+── bhrigu-lake 11:42:15
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 240s] bhrigu-lake: 674 named places in OpenStreetMap around the trek
+[ 243s]   leg Gulaba → Rola Kholi (3.6 km apart)
+[ 282s]   ~ Gulaba → Rola Kholi: a 22.4 km detour for 3.6 km; routed over mapped paths, 0.3 of 4.5 km bridged
+[ 283s]   leg Rola Kholi → Bhrigu Lake (2.5 km apart)
+[ 285s] bhrigu-lake: 10.5 km, +1480 m, highest 4300 m, 0.3 km drawn straight, 219 → 104 points
+[ 285s]   km     0  Gulaba (2862 m, osm, 32.32231,77.20098)
+[ 285s]   km   4.5  Rola Kholi (3798 m, osm, 32.31551,77.23825)  3.6 km from last
+[ 285s]   km  10.5  Bhrigu Lake (4300 m, osm, 32.29324,77.24252)  2.5 km from last
+[ 285s]   day  1 walk   Gulaba → Rola Kholi  4.5 km +950 −0
+[ 285s]   day  2 walk   Rola Kholi → Rola Kholi  12 km +730 −730
+[ 285s]   day  3 walk   Rola Kholi → Gulaba  4.5 km +0 −940
