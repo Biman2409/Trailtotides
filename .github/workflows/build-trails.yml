@@ -58,7 +58,7 @@ jobs:
             timeout 900 node scripts/build-trail.mjs "$t" 2>&1 | tee -a $LOG
             code=${PIPESTATUS[0]}
             [ "$code" = "0" ] || { failed=$((failed + 1)); echo "$t: FAILED (exit $code)" | tee -a $LOG; }
-            git add src/lib/trails $LOG
+            git add src/lib/trails && git add -f $LOG # *.log is gitignored
             git commit -q -m "Trail rebuilt from OpenStreetMap: $t" -m "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             git pull -q --rebase origin "$GITHUB_REF_NAME" && git push -q origin HEAD:"$GITHUB_REF_NAME"
           done

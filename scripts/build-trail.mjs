@@ -23,6 +23,13 @@ import { TREKS } from "./trek-configs.mjs";
 import { placesNear, matchPlace, pathRoute } from "./osm.mjs";
 
 const UA = { "User-Agent": "TrailToTides/1.0 (hello@trailtotides.com)" };
+
+// Every log line carries the seconds since the build started, to show where the time goes
+const T0 = Date.now();
+for (const k of ["log", "warn", "error"]) {
+  const f = console[k].bind(console);
+  console[k] = (...a) => f(`[${String(Math.round((Date.now() - T0) / 1000)).padStart(4)}s]`, ...a);
+}
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Each adventure's own map point, to keep place searches inside its region
@@ -97,6 +104,7 @@ async function place(stop, trek) {
 
 async function leg(a, b) {
   const straight = dist([a.lat, a.lng], [b.lat, b.lng]);
+  console.log(`  leg ${a.name} → ${b.name} (${(straight / 1000).toFixed(1)} km apart)`);
   try {
     const url = `https://brouter.de/brouter?lonlats=${a.lng},${a.lat}|${b.lng},${b.lat}&profile=hiking-mountain&alternativeidx=0&format=geojson`;
     const res = await fetch(url, { headers: UA, signal: AbortSignal.timeout(90000) });
@@ -374,7 +382,7 @@ export function getTrail(slug: string): Trail | null {
   return TRAILS[slug] ?? null;
 }
 `;
-  await writeFile("src/lib/trails/index.ts", out.replace(/\n/g, "\r\n"));
+  await writeFile("src/lib/trails/index.ts", out);
 }
 
 const args = process.argv.slice(2);

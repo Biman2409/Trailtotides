@@ -18,13 +18,14 @@ export function dist([la1, lo1], [la2, lo2]) {
 
 async function overpass(query) {
   let last;
-  for (let attempt = 0; attempt < 6; attempt++) {
+  for (let attempt = 0; attempt < 4; attempt++) {
     const url = MIRRORS[attempt % MIRRORS.length];
     try {
-      const res = await fetch(url, { method: "POST", headers: { ...UA, "Content-Type": "application/x-www-form-urlencoded" }, body: "data=" + encodeURIComponent(query), signal: AbortSignal.timeout(180000) });
+      const res = await fetch(url, { method: "POST", headers: { ...UA, "Content-Type": "application/x-www-form-urlencoded" }, body: "data=" + encodeURIComponent(query), signal: AbortSignal.timeout(90000) });
       if (res.ok) return await res.json();
       last = new Error(`Overpass ${res.status}`);
     } catch (e) { last = e; }
+    console.warn(`  overpass: ${new URL(url).host} ${last.message}`);
     await sleep(3000 * (attempt + 1)); // busy or rate-limited: wait and try the next mirror
   }
   throw last;
