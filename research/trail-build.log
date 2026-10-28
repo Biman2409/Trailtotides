@@ -474,3 +474,17 @@ Build trails run 40693741914, 2026-10-28T13:08:43Z
 [ 281s]   ! Gulaba → Rola Kholi: a 22.4 km detour for 3.6 km; drawn straight
 [ 282s]   leg Rola Kholi → Bhrigu Lake (2.5 km apart)
 [ 285s] bhrigu-lake: KEPT the saved trail (0.3 km drawn straight) over this build's 3.6 km
+── beas-kund 14:28:23
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] beas-kund: place list unavailable (Overpass 502 ), using place search only
+[ 216s]   leg Dhundi → Beas Kund (4.0 km apart)
+[ 218s] beas-kund: 7.5 km, +1030 m, highest 3679 m, 0 km drawn straight, 298 → 72 points
+[ 218s]   km     0  Dhundi (2889 m, osm, 32.35553,77.12653)
+[ 218s]   km   7.5  Beas Kund (3678 m, osm, 32.36654,77.08556)  4.0 km from last
+[ 218s]   camp (estimated): Bakarthach (3262 m, 32.35013,77.10201)
+[ 218s]   day  1 walk   Dhundi → Bakarthach  3.8 km +640 −260 (approx)
+[ 218s]   day  2 walk   Bakarthach → Bakarthach  7.4 km +400 −400 (approx)
+[ 218s]   day  3 walk   Bakarthach → Dhundi  3.8 km +270 −640
