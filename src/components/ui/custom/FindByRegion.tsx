@@ -169,7 +169,7 @@ export default function FindByRegion() {
                           </span>
                           {/* No adventures listed yet: say so rather than showing "0 Adventures" */}
                           {region.totalCount === 0 ? (
-                            <span className="text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap" style={{ border: "1px dashed rgba(255,81,0,0.45)", color: "#ff7d47" }}>
+                            <span className="text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap" style={{ border: "1px dashed rgba(255,81,0,0.45)", color: "var(--accent-ink-soft)" }}>
                               Coming Soon
                             </span>
                           ) : (
@@ -184,7 +184,7 @@ export default function FindByRegion() {
                     {isOpen && region.totalCount === 0 && (
                       <div className="py-4">
                         <div className="rounded-xl px-4 py-4 text-center" style={{ background: "rgba(255,81,0,0.06)", border: "1px dashed rgba(255,81,0,0.35)" }}>
-                          <p className="font-semibold text-sm" style={{ color: "#ff7d47" }}>Coming Soon</p>
+                          <p className="font-semibold text-sm" style={{ color: "var(--accent-ink-soft)" }}>Coming Soon</p>
                           <p className="text-xs mt-1 leading-snug" style={{ color: "var(--text-tertiary)" }}>
                             Adventures in {region.name} are on their way.
                           </p>

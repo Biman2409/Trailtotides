@@ -21,7 +21,7 @@ const categories = [
         accentLight: "rgba(255,81,0,0.15)",
         accentBorder: "rgba(255,81,0,0.35)",
         tagBg: "rgba(255,81,0,0.18)",
-        tagText: "#ff5100",
+        tagText: "var(--accent-ink)",
 
     items: [
       { type: "Trekking" },
@@ -45,7 +45,7 @@ const categories = [
     accentLight: "rgba(255,81,0,0.15)",
     accentBorder: "rgba(255,81,0,0.35)",
     tagBg: "rgba(255,81,0,0.18)",
-    tagText: "#ff5100",
+    tagText: "var(--accent-ink)",
     items: [
       { type: "River Rafting" },
       { type: "Kayaking" },
@@ -64,7 +64,7 @@ const categories = [
     accentLight: "rgba(255,81,0,0.15)",
     accentBorder: "rgba(255,81,0,0.35)",
     tagBg: "rgba(255,81,0,0.18)",
-    tagText: "#ff5100",
+    tagText: "var(--accent-ink)",
     comingSoon: true,
     items: [],
     previewItems: [
@@ -84,7 +84,7 @@ const categories = [
       accentLight: "rgba(255,81,0,0.15)",
       accentBorder: "rgba(255,81,0,0.35)",
       tagBg: "rgba(255,81,0,0.18)",
-      tagText: "#ff5100",
+      tagText: "var(--accent-ink)",
       comingSoon: true,
       items: [],
       previewItems: [

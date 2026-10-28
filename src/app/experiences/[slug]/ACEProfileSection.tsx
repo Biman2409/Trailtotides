@@ -117,7 +117,7 @@ export default function ACEProfileSection({ ace, slug, name, bare }: Props) {
               border: readyCount === totalAxes ? "1px solid rgba(34,197,94,0.18)" : "1px solid rgba(255,81,0,0.15)",
             }}
           >
-            <p className="text-xl font-black leading-none tabular-nums" style={{ color: readyCount === totalAxes ? "#4ade80" : "#ff5100" }}>
+            <p className="text-xl font-black leading-none tabular-nums" style={{ color: readyCount === totalAxes ? "#4ade80" : "var(--accent-ink)" }}>
               {readyCount}/{totalAxes}
             </p>
             <div style={{ width: 1, height: 20, background: "rgba(var(--fg-rgb),0.07)" }} />
@@ -130,7 +130,7 @@ export default function ACEProfileSection({ ace, slug, name, bare }: Props) {
               style={{
                 background: overlapped ? "rgba(255,81,0,0.15)" : "rgba(var(--fg-rgb),0.05)",
                 border: overlapped ? "1px solid rgba(255,81,0,0.3)" : "1px solid rgba(var(--fg-rgb),0.09)",
-                color: overlapped ? "#ff7d47" : "rgba(var(--fg-rgb),0.4)",
+                color: overlapped ? "var(--accent-ink-soft)" : "rgba(var(--fg-rgb),0.4)",
               }}
             >
               {overlapped ? <Columns2 className="w-3 h-3" /> : <Layers className="w-3 h-3" />}

@@ -82,7 +82,7 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="h-screen bg-[#0a0a0a] flex overflow-hidden">
+    <div className="h-screen bg-[var(--bg-page)] flex overflow-hidden">
       {showTermsModal && (
         <TermsModal
           onAccept={() => setTermsAccepted(true)}
@@ -119,7 +119,7 @@ export default function SignUpPage() {
       </div>
 
       {/* Right panel — form */}
-      <div className="flex-1 flex flex-col justify-center px-6 py-4 lg:px-16 xl:px-24 bg-[#0a0a0a] relative overflow-y-auto">
+      <div className="flex-1 flex flex-col justify-center px-6 py-4 lg:px-16 xl:px-24 auth-themed bg-[var(--bg-page)] relative overflow-y-auto overflow-x-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
 
@@ -145,7 +145,7 @@ export default function SignUpPage() {
           </div>
 
           {message && (
-            <div className={`mb-3 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+            <div role={message.type === "error" ? "alert" : "status"} className={`mb-3 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
               message.type === "error"
                 ? "bg-red-500/10 border border-red-500/20 text-red-400"
                 : "bg-green-500/10 border border-green-500/20 text-green-400"
@@ -157,26 +157,34 @@ export default function SignUpPage() {
           <form onSubmit={handleSubmit} className="space-y-2.5">
 
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Full Name</label>
+              <label htmlFor="signup-name" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Full Name</label>
               <input
+                id="signup-name"
                 name="full_name"
                 type="text"
                 required
+                autoComplete="name"
                 placeholder="Rahul Sharma"
-                className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Username</label>
+              <label htmlFor="signup-username" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Username</label>
               <div className="relative">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20">
                   <AtSign className="w-4 h-4" />
                 </div>
                 <input
+                  id="signup-username"
                   name="username"
                   type="text"
                   required
+                  autoComplete="username"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  aria-describedby="signup-username-status"
+                  aria-invalid={usernameState === "taken" || usernameState === "invalid"}
                   value={username}
                   onChange={(e) => {
                     const val = e.target.value.toLowerCase();
@@ -184,7 +192,7 @@ export default function SignUpPage() {
                     checkUsername(val);
                   }}
                   placeholder="rahul_explorer"
-                  className={`w-full bg-white/[0.03] border rounded-2xl pl-10 pr-10 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:bg-white/[0.06] transition-all ${
+                  className={`w-full bg-white/[0.03] border rounded-2xl pl-10 pr-10 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:bg-white/[0.06] transition-all ${
                     usernameState === "available" ? "border-emerald-500/50 focus:border-emerald-500" :
                     usernameState === "taken" || usernameState === "invalid" ? "border-red-500/40 focus:border-red-500/60" :
                     "border-white/10 focus:border-[#ff5100]/50"
@@ -196,38 +204,41 @@ export default function SignUpPage() {
                   {(usernameState === "taken" || usernameState === "invalid") && <XCircle className="w-4 h-4 text-red-400" />}
                 </div>
               </div>
-              {usernameState !== "idle" && (
-                <p className={`mt-1.5 ml-1 text-[10px] font-medium transition-colors ${
-                  usernameState === "available" ? "text-emerald-500" :
-                  usernameState === "taken" ? "text-red-400" :
-                  usernameState === "invalid" ? "text-amber-400" :
-                  "text-white/25"
-                }`}>
-                  {usernameState === "checking" && "Checking availability…"}
-                  {usernameState === "available" && `@${username} is available`}
-                  {usernameState === "taken" && `@${username} is already taken`}
-                  {usernameState === "invalid" && "Username must be between 3 and 20 characters"}
-                </p>
-              )}
+              {/* Always mounted so screen readers hear each status change */}
+              <p id="signup-username-status" aria-live="polite" className={`ml-1 text-[11px] font-medium transition-colors ${usernameState === "idle" ? "" : "mt-1.5"} ${
+                usernameState === "available" ? "text-emerald-500" :
+                usernameState === "taken" ? "text-red-400" :
+                usernameState === "invalid" ? "text-amber-400" :
+                "text-white/50"
+              }`}>
+                {usernameState === "checking" && "Checking availability…"}
+                {usernameState === "available" && `@${username} is available`}
+                {usernameState === "taken" && `@${username} is already taken`}
+                {usernameState === "invalid" && "Username must be between 3 and 20 characters"}
+              </p>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Email</label>
+              <label htmlFor="signup-email" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Email</label>
               <input
+                id="signup-email"
                 name="email"
                 type="email"
                 required
+                autoComplete="email"
                 placeholder="rahul@email.com"
-                className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Phone Number</label>
+              <label htmlFor="signup-phone" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Phone Number</label>
               <div className="flex gap-2">
                 <div className="relative">
                   <select
                     name="country_code"
+                    aria-label="Country code"
+                    autoComplete="tel-country-code"
                     defaultValue="+91"
                     className="h-full bg-white/[0.03] border border-white/10 rounded-2xl pl-5 pr-10 py-2.5 text-white text-sm focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all appearance-none cursor-pointer min-w-[100px]"
                   >
@@ -235,7 +246,7 @@ export default function SignUpPage() {
                       ...countries.filter(c => c.code === "IN"),
                       ...countries.filter(c => c.code !== "IN").sort((a, b) => a.name.localeCompare(b.name))
                     ].map((country) => (
-                      <option key={`${country.code}-${country.dial_code}`} value={country.dial_code} className="bg-[#0a0a0a] text-white">
+                      <option key={`${country.code}-${country.dial_code}`} value={country.dial_code} className="bg-[var(--bg-surface)] text-[var(--text-primary)]">
                         {country.flag} {country.dial_code}
                       </option>
                     ))}
@@ -247,30 +258,36 @@ export default function SignUpPage() {
                   </div>
                 </div>
                 <input
+                  id="signup-phone"
                   name="phone"
                   type="tel"
                   required
+                  autoComplete="tel-national"
                   placeholder="9876543210"
-                  className="flex-1 bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="flex-1 min-w-0 bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Password</label>
+              <label htmlFor="signup-password" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Password</label>
               <div className="relative">
                 <input
+                  id="signup-password"
                   name="password"
                   type={showPassword ? "text" : "password"}
                   required
                   minLength={6}
+                  autoComplete="new-password"
                   placeholder="••••••••"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 pr-14 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 pr-14 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-pressed={showPassword}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-white/40 hover:text-white/70 transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -279,30 +296,27 @@ export default function SignUpPage() {
 
             {/* ── Avatar picker dropdown ────────────────────────────── */}
             <div ref={avatarDropdownRef} className="relative">
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">
-                Profile Picture <span className="normal-case tracking-normal font-normal text-white/20">(optional)</span>
-              </label>
-              {/* Trigger */}
+              <span id="signup-avatar-label" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">
+                Profile Picture <span className="normal-case tracking-normal font-normal text-white/40">(optional)</span>
+              </span>
+              {/* Trigger. The clear button sits beside it, not inside: a button can't contain a button */}
+              <div className="relative">
               <button
                 type="button"
                 onClick={() => setAvatarDropdownOpen(o => !o)}
-                className="w-full flex items-center gap-3 bg-white/[0.03] border border-white/10 rounded-2xl px-4 py-2.5 text-left transition-all focus:outline-none hover:bg-white/[0.05]"
-                style={{ borderColor: avatarDropdownOpen ? "rgba(255,81,0,0.4)" : selectedAvatarId ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.1)" }}
+                aria-labelledby="signup-avatar-label signup-avatar-value"
+                aria-expanded={avatarDropdownOpen}
+                className="w-full flex items-center gap-3 bg-white/[0.03] border border-white/10 rounded-2xl px-4 py-2.5 text-left transition-all hover:bg-white/[0.05]"
+                style={{ borderColor: avatarDropdownOpen ? "rgba(255,81,0,0.4)" : selectedAvatarId ? "rgba(255,81,0,0.3)" : "color-mix(in srgb, var(--color-white) 10%, transparent)" }}
               >
                 {selectedAvatarId !== null ? (
                   <>
                     <span className="relative w-7 h-7 rounded-lg overflow-hidden shrink-0 block" style={{ border: "1.5px solid rgba(255,81,0,0.5)" }}>
                       <Image src={AVATARS.find(a => a.id === selectedAvatarId)!.src} alt="" fill sizes="28px" className="object-cover" />
                     </span>
-                    <span className="flex-1 text-white text-sm font-medium">{AVATARS.find(a => a.id === selectedAvatarId)?.label}</span>
-                    <button
-                      type="button"
-                      onClick={e => { e.stopPropagation(); setSelectedAvatarId(null); }}
-                      className="shrink-0 w-5 h-5 rounded-md flex items-center justify-center hover:bg-white/10 transition-colors"
-                      style={{ color: "rgba(255,255,255,0.3)" }}
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
+                    <span id="signup-avatar-value" className="flex-1 text-white text-sm font-medium">{AVATARS.find(a => a.id === selectedAvatarId)?.label}</span>
+                    {/* Room for the clear button */}
+                    <span className="shrink-0 w-7" />
                   </>
                 ) : (
                   <>
@@ -311,17 +325,29 @@ export default function SignUpPage() {
                         <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
                       </svg>
                     </span>
-                    <span className="flex-1 text-white/30 text-sm">Select your avatar</span>
-                    <ChevronDown className="w-4 h-4 shrink-0 text-white/20 transition-transform duration-200" style={{ transform: avatarDropdownOpen ? "rotate(180deg)" : "none" }} />
+                    <span id="signup-avatar-value" className="flex-1 text-white/40 text-sm">Select your avatar</span>
+                    <ChevronDown className="w-4 h-4 shrink-0 text-white/30 transition-transform duration-200" style={{ transform: avatarDropdownOpen ? "rotate(180deg)" : "none" }} />
                   </>
                 )}
               </button>
+              {selectedAvatarId !== null && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedAvatarId(null)}
+                  aria-label="Remove profile picture"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-md flex items-center justify-center hover:bg-white/10 transition-colors"
+                  style={{ color: "color-mix(in srgb, var(--color-white) 40%, transparent)" }}
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+              </div>
 
               {/* Dropdown panel */}
               {avatarDropdownOpen && (
                 <div
                   className="absolute left-0 right-0 z-50 mt-1.5 rounded-2xl overflow-hidden"
-                  style={{ background: "#0e0e12", border: "1px solid rgba(255,255,255,0.09)", boxShadow: "0 16px 48px rgba(0,0,0,0.7)" }}
+                  style={{ background: "var(--bg-surface)", border: "1px solid color-mix(in srgb, var(--color-white) 9%, transparent)", boxShadow: "0 16px 48px rgba(0,0,0,0.7)" }}
                 >
                   <div className="p-3 grid grid-cols-5 gap-2">
                     {AVATARS.map(av => {
@@ -331,20 +357,21 @@ export default function SignUpPage() {
                           key={av.id}
                           type="button"
                           onClick={() => { setSelectedAvatarId(av.id); setAvatarDropdownOpen(false); }}
-                          className="flex flex-col items-center gap-1.5 group/av focus:outline-none"
+                          aria-pressed={active}
+                          className="flex flex-col items-center gap-1.5 group/av rounded-xl"
                         >
                           <span
                             className="relative w-full aspect-square rounded-xl overflow-hidden block transition-all duration-150"
                             style={{
-                              border: `1.5px solid ${active ? "rgba(255,81,0,0.8)" : "rgba(255,255,255,0.07)"}`,
+                              border: `1.5px solid ${active ? "rgba(255,81,0,0.8)" : "color-mix(in srgb, var(--color-white) 7%, transparent)"}`,
                               boxShadow: active ? "0 0 14px rgba(255,81,0,0.4)" : "none",
                               transform: active ? "scale(1.06)" : "scale(1)",
                             }}
                           >
                             <Image src={av.src} alt={av.label} fill sizes="60px" className="object-cover" />
                           </span>
-                          <span className="text-[7.5px] font-medium leading-none tracking-wide truncate w-full text-center transition-colors"
-                            style={{ color: active ? "rgba(255,81,0,0.9)" : "rgba(255,255,255,0.28)" }}>
+                          <span className="text-[10px] font-medium leading-none tracking-wide truncate w-full text-center transition-colors"
+                            style={{ color: active ? "rgba(255,81,0,0.9)" : "color-mix(in srgb, var(--color-white) 55%, transparent)" }}>
                             {av.label}
                           </span>
                         </button>
@@ -370,7 +397,7 @@ export default function SignUpPage() {
                   className="w-4 h-4 rounded-lg border-white/10 bg-white/5 text-[#ff5100] focus:ring-[#ff5100]/20 transition-all cursor-pointer accent-[#ff5100]"
                 />
               </div>
-              <label className="text-[11px] text-white/40 leading-snug font-medium">
+              <label htmlFor="terms" className="text-[11px] text-white/60 leading-snug font-medium">
                 I agree to the{" "}
                 <button
                   type="button"
@@ -393,7 +420,7 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={loading || usernameState !== "available" || !termsAccepted}
-              className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-3 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-1"
+              className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-[#fff] font-bold rounded-2xl py-3 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-1"
             >
               {loading ? "Creating account..." : "Create Account"}
             </button>

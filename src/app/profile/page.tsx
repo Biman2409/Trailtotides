@@ -139,7 +139,7 @@ export default async function ProfilePage() {
                     style={
                       profile.role === "operator"
                         ? { background: "rgba(16,185,129,0.15)", color: "#34d399", border: "1px solid rgba(16,185,129,0.25)" }
-                        : { background: "rgba(255,81,0,0.12)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }
+                        : { background: "rgba(255,81,0,0.12)", color: "var(--accent-ink-soft)", border: "1px solid rgba(255,81,0,0.2)" }
                     }
                   >
                     {profile.role}

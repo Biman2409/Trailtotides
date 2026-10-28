@@ -130,7 +130,7 @@ export default function ExploreClient() {
             <input
               value={search}
               onChange={(e) => set({ search: e.target.value })}
-              placeholder="Search a trek, place or activity"
+              placeholder="Search treks, places…"
               aria-label="Search adventures"
               className="w-full pl-10 pr-8 py-2.5 rounded-xl text-sm border border-transparent focus:border-[#ff5100]/50 transition-colors"
               style={{ background: "var(--bg-surface-2)", color: "var(--text-primary)", outline: "none" }}
@@ -179,7 +179,7 @@ export default function ExploreClient() {
             trailing={
               <button
                 onClick={() => setFiltersOpen(true)}
-                className="inline-flex items-center gap-2 h-11 px-4 rounded-xl text-sm font-medium whitespace-nowrap transition-colors"
+                className="inline-flex flex-1 sm:flex-none justify-center items-center gap-1.5 sm:gap-2 h-10 sm:h-11 px-3 sm:px-4 rounded-xl text-sm font-medium whitespace-nowrap transition-colors"
                 style={extraCount > 0
                   ? { background: "#ff5100", color: "#fff", border: "1px solid #ff5100" }
                   : { background: "var(--bg-card)", color: "var(--text-primary)", border: "1px solid var(--border-default)" }}

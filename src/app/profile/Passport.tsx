@@ -45,7 +45,7 @@ function PageFrame({ title, kicker, children, footer }: { title: string; kicker:
         <span className="text-[11px] tracking-[0.18em] uppercase" style={{ color: "var(--pp-muted)" }}>{kicker}</span>
         <span className="text-[11px] tracking-[0.18em] uppercase" style={{ color: "var(--pp-muted)" }}>Trail to Tides</span>
       </div>
-      <h3 className="mt-1 text-[22px] leading-tight !font-normal shrink-0" style={{ fontFamily: "var(--font-display), Georgia, serif", color: ORANGE }}>{title}</h3>
+      <h3 className="mt-1 text-[22px] leading-tight !font-normal shrink-0" style={{ fontFamily: "var(--font-display), Georgia, serif", color: "var(--accent-ink)" }}>{title}</h3>
       <div className="flex-1 min-h-0 mt-3 flex flex-col">{children}</div>
       {footer && <div className="shrink-0 pt-2">{footer}</div>}
     </div>
@@ -141,7 +141,7 @@ function IdPage({ data }: { data: PassportData }) {
             </>
           ) : (
             <p className="text-[13px]" style={{ color: "var(--pp-muted)" }}>
-              Take the <Link href="/ace" className="underline underline-offset-2" style={{ color: ORANGE }}>ACE™ assessment</Link> to fill this in.
+              Take the <Link href="/ace" className="underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>ACE™ assessment</Link> to fill this in.
             </p>
           )}
         </div>
@@ -243,7 +243,7 @@ function BadgesPage({ data, badges, part, parts }: { data: PassportData; badges:
             <div className="flex-1 min-w-0">
               <p className="text-[14px] truncate">{foot.name}</p>
               <p className="text-[12px] leading-snug line-clamp-2" style={{ color: "var(--pp-muted)" }}>{foot.line}</p>
-              {foot.rare && <p className="text-[12px] leading-snug" style={{ color: ORANGE }}>{foot.rare}</p>}
+              {foot.rare && <p className="text-[12px] leading-snug" style={{ color: "var(--accent-ink)" }}>{foot.rare}</p>}
             </div>
             {foot.progress && foot.progress.need > 1 && (
               <div className="shrink-0 flex flex-col items-end gap-1">
@@ -325,7 +325,7 @@ function TripPage({ entry, state }: { entry: AdventureLogEntry; state: string })
       </div>
       <p className="mt-3 text-[14px] italic leading-relaxed line-clamp-4" style={{ fontFamily: "var(--font-display), Georgia, serif" }}>&ldquo;{entry.memorableMoment}&rdquo;</p>
       <div className="flex-1" />
-      <Link href={`/experiences/${entry.slug}`} className="self-start text-[13px] underline underline-offset-2" style={{ color: ORANGE }}>Open the adventure</Link>
+      <Link href={`/experiences/${entry.slug}`} className="self-start text-[13px] underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>Open the adventure</Link>
     </PageFrame>
   );
 }
@@ -584,7 +584,7 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
         {status === "error" && (
           <div className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-3 px-8 text-center text-[14px]" style={{ background: "var(--bg-surface)", color: "var(--text-secondary)" }}>
             Couldn&apos;t load the passport.
-            <button type="button" onClick={() => setAttempt((n) => n + 1)} className="h-9 px-4 rounded-full text-[13px] font-semibold" style={{ color: ORANGE, border: `1px solid ${ORANGE}` }}>
+            <button type="button" onClick={() => setAttempt((n) => n + 1)} className="h-9 px-4 rounded-full text-[13px] font-semibold" style={{ color: "var(--accent-ink)", border: `1px solid ${ORANGE}` }}>
               Try again
             </button>
           </div>
@@ -668,7 +668,7 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
       {/* Sharing belongs to the open book — the button says which image it makes */}
       {status === "ready" && data && open && !publicUsername && (
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-          <button type="button" onClick={share} disabled={sharing} className={`${pill} hover:bg-[#ff5100]/[0.06]`} style={{ color: ORANGE, border: `1px solid ${ORANGE}` }}>
+          <button type="button" onClick={share} disabled={sharing} className={`${pill} hover:bg-[#ff5100]/[0.06]`} style={{ color: "var(--accent-ink)", border: `1px solid ${ORANGE}` }}>
             {sharing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Share2 className="w-3.5 h-3.5" />}
             {current?.section === "map" ? "Share the map" : "Share stats card"}
           </button>

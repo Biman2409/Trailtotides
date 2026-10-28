@@ -319,7 +319,7 @@ function AvatarSection() {
             type="button"
             onClick={() => setOpen(true)}
             className="text-xs font-bold px-4 py-2 rounded-xl transition-all hover:brightness-110 active:scale-95"
-            style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.18)" }}
+            style={{ background: "rgba(255,81,0,0.1)", color: "var(--accent-ink-soft)", border: "1px solid rgba(255,81,0,0.18)" }}
           >
             Change picture
           </button>

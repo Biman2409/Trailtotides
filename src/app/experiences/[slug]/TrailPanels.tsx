@@ -225,6 +225,7 @@ export function TrailWeather({ trail }: { trail: Trail }) {
   }, [trail, start, nonce, lastForecast]);
 
   const anyPast = rows?.some((r) => r.source === "last-year");
+  const anyMissing = rows?.some((r) => !r.w);
 
   return (
     <div className="p-4 sm:p-5">
@@ -239,7 +240,7 @@ export function TrailWeather({ trail }: { trail: Trail }) {
       {error ? (
         <div className="flex items-center gap-3 text-[13px]" style={{ color: "var(--text-secondary)" }}>
           Couldn&apos;t load the weather.
-          <button onClick={() => setNonce((n) => n + 1)} className="inline-flex items-center gap-1 font-semibold" style={{ color: ORANGE }}><RotateCw className="w-3.5 h-3.5" />Try again</button>
+          <button onClick={() => setNonce((n) => n + 1)} className="inline-flex items-center gap-1 font-semibold" style={{ color: "var(--accent-ink)" }}><RotateCw className="w-3.5 h-3.5" />Try again</button>
         </div>
       ) : (
         <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
@@ -259,6 +260,9 @@ export function TrailWeather({ trail }: { trail: Trail }) {
                   <span className="hidden sm:inline tabular-nums text-[12px] w-14 text-right" style={{ color: "var(--text-tertiary)" }}>{r.w.rain > 0 ? `${r.w.rain} mm` : "dry"}</span>
                   {r.source === "last-year" && <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ background: "var(--bg-surface-2)", color: "var(--text-tertiary)" }}>last yr</span>}
                 </span>
+              ) : rows ? (
+                // Loaded, but neither the forecast nor last year's record has this place and date
+                <span className="text-[12px] justify-self-end whitespace-nowrap" style={{ color: "var(--text-tertiary)" }}>No data</span>
               ) : (
                 <span className="h-4 w-24 rounded animate-pulse justify-self-end" style={{ background: "var(--bg-surface-2)" }} />
               )}
@@ -267,7 +271,7 @@ export function TrailWeather({ trail }: { trail: Trail }) {
         </div>
       )}
       <p className="text-[11.5px] mt-2.5" style={{ color: "var(--text-tertiary)" }}>
-        Forecasts from Open-Meteo, adjusted for each place&apos;s height.{anyPast ? " Days marked “last yr” are too far ahead to forecast, so they show the same dates last year as a guide." : ""} Mountain weather changes fast: check again before you set off.
+        Forecasts from Open-Meteo, adjusted for each place&apos;s height.{anyPast ? " Days marked “last yr” are too far ahead to forecast, so they show the same dates last year as a guide." : ""}{anyMissing ? " “No data” means neither a forecast nor last year's record covers that place and date." : ""} Mountain weather changes fast: check again before you set off.
       </p>
     </div>
   );

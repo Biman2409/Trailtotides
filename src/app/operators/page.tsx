@@ -143,7 +143,7 @@ export default async function OperatorsPage() {
               Operators
             </p>
             <h1 className="text-[2.6rem] sm:text-5xl lg:text-6xl leading-[1.02]" style={{ color: "var(--text-primary)", textWrap: "balance" }}>
-              The people who <span style={{ color: "#ff5100" }}>take you there</span>
+              The people who <span style={{ color: "var(--accent-ink)" }}>take you there</span>
             </h1>
             <p className="text-base sm:text-[17px] mt-5 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
               Companies running treks, rides and expeditions across India. The ones marked{" "}

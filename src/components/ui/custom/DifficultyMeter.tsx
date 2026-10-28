@@ -6,7 +6,7 @@ export const DIFFICULTY_CONFIG: Record<string, { level: number; color: string; g
   Easy:     { level: 1, color: "#10b981", glow: "#10b98155", label: "Easy" },
   Moderate: { level: 2, color: "#38bdf8", glow: "#38bdf855", label: "Moderate" },
   Hard:     { level: 3, color: "#a78bfa", glow: "#a78bfa55", label: "Hard" },
-  Advanced: { level: 4, color: "#ff5100", glow: "#ff510055", label: "Advanced" },
+  Advanced: { level: 4, color: "var(--accent-ink)", glow: "#ff510055", label: "Advanced" },
   Extreme:  { level: 5, color: "#ef4444", glow: "#ef444455", label: "Extreme" },
 };
 

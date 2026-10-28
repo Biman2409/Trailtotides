@@ -299,7 +299,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                             type="button"
                             onClick={() => { setShowCustomInput(true); setSelectedOp(null); setOpDropdownOpen(false); }}
                             className="w-full text-left px-3 py-2 text-xs flex items-center gap-1.5 transition-colors"
-                            style={{ color: "#ff7d47", borderTop: "1px solid var(--border-subtle)" }}
+                            style={{ color: "var(--accent-ink-soft)", borderTop: "1px solid var(--border-subtle)" }}
                           >
                             <Plus className="w-3 h-3" /> Other operator
                           </button>

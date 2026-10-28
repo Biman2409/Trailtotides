@@ -88,7 +88,7 @@ export default function ContactPage() {
               </motion.p>
               <motion.h1 initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE, delay: 0.05 }}
                 className="text-[2.7rem] sm:text-6xl leading-[1.02] mb-5" style={{ color: "var(--text-primary)", textWrap: "balance" }}>
-                Write to us.<br /><span style={{ color: "#ff5100" }}>We write back.</span>
+                Write to us.<br /><span style={{ color: "var(--accent-ink)" }}>We write back.</span>
               </motion.h1>
               <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
                 className="text-base sm:text-[17px] leading-relaxed max-w-md" style={{ color: "var(--text-secondary)" }}>
@@ -98,7 +98,7 @@ export default function ContactPage() {
               <motion.dl initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE, delay: 0.25 }}
                 className="mt-10 divide-y" style={{ borderTop: "1px solid var(--border-subtle)", borderBottom: "1px solid var(--border-subtle)", borderColor: "var(--border-subtle)" }}>
                 <div className="flex items-center gap-4 py-4" style={{ borderColor: "var(--border-subtle)" }}>
-                  <Mail className="w-4 h-4 shrink-0" style={{ color: "#ff5100" }} />
+                  <Mail className="w-4 h-4 shrink-0" style={{ color: "var(--accent-ink)" }} />
                   <dt className="sr-only">Email</dt>
                   <dd className="flex-1 min-w-0 flex items-center justify-between gap-3">
                     <a href={`mailto:${INBOX}`} className="text-[15px] font-semibold truncate hover:underline underline-offset-4" style={{ color: "var(--text-primary)" }}>{INBOX}</a>
@@ -110,12 +110,12 @@ export default function ContactPage() {
                   </dd>
                 </div>
                 <div className="flex items-center gap-4 py-4" style={{ borderColor: "var(--border-subtle)" }}>
-                  <Clock className="w-4 h-4 shrink-0" style={{ color: "#ff5100" }} />
+                  <Clock className="w-4 h-4 shrink-0" style={{ color: "var(--accent-ink)" }} />
                   <dt className="sr-only">Replies</dt>
                   <dd className="text-[15px]" style={{ color: "var(--text-secondary)" }}>We reply within 1–2 working days</dd>
                 </div>
                 <div className="flex items-center gap-4 py-4" style={{ borderColor: "var(--border-subtle)" }}>
-                  <MapPin className="w-4 h-4 shrink-0" style={{ color: "#ff5100" }} />
+                  <MapPin className="w-4 h-4 shrink-0" style={{ color: "var(--accent-ink)" }} />
                   <dt className="sr-only">Based in</dt>
                   <dd className="text-[15px]" style={{ color: "var(--text-secondary)" }}>Based in Mumbai, India</dd>
                 </div>

@@ -261,7 +261,7 @@ export function AvatarPickerModal({
                   <div className="flex-1 flex flex-col gap-1.5">
                     <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
                       className="text-xs font-bold px-3 py-1.5 rounded-lg self-start transition-all hover:brightness-110 disabled:opacity-50"
-                      style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.18)" }}>
+                      style={{ background: "rgba(255,81,0,0.1)", color: "var(--accent-ink-soft)", border: "1px solid rgba(255,81,0,0.18)" }}>
                       {uploading ? <Loader2 className="w-3 h-3 animate-spin inline" /> : "Change photo"}
                     </button>
                     <button type="button" onClick={onRemovePhoto} disabled={uploading}

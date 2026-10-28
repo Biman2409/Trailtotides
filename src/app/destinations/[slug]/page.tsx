@@ -130,14 +130,14 @@ export default async function DestinationPage({ params }: Props) {
             {f.count} {f.noun}
           </p>
           <h1 className="text-[2.4rem] sm:text-5xl lg:text-6xl leading-[1.04] max-w-3xl" style={{ color: "var(--text-primary)", textWrap: "balance" }}>
-            {cap(f.noun)} in <span style={{ color: ORANGE }}>{d.name}</span>
+            {cap(f.noun)} in <span style={{ color: "var(--accent-ink)" }}>{d.name}</span>
           </h1>
           <p className="text-base sm:text-[17px] mt-5 leading-relaxed max-w-2xl" style={{ color: "var(--text-secondary)" }}>
             {f.count} {f.noun} in {d.name}, from {f.minDays === f.maxDays ? `${f.minDays}` : `${f.minDays} to ${f.maxDays}`} days
             {f.byDifficulty.length > 1 ? ` and ${f.byDifficulty[0].level.toLowerCase()} to ${f.byDifficulty[f.byDifficulty.length - 1].level.toLowerCase()}` : ""}.
             {f.highest && <> The highest, {f.highest.name}, reaches {altitudeOf(f.highest)}.</>}
             {f.minPrice > 0 && <> Prices start at {inr(f.minPrice)}, run by verified operators.</>}
-            {" "}Compare them by difficulty, days and season, or <Link href="/matchmaker" className="font-semibold underline underline-offset-2" style={{ color: ORANGE }}>find the ones matched to your fitness</Link>.
+            {" "}Compare them by difficulty, days and season, or <Link href="/matchmaker" className="font-semibold underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>find the ones matched to your fitness</Link>.
           </p>
         </div>
       </section>
@@ -203,7 +203,7 @@ export default async function DestinationPage({ params }: Props) {
                 {x.name} <span style={{ color: "var(--text-tertiary)" }}>· {x.adventures.length}</span>
               </Link>
             ))}
-            <Link href="/explore" className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-semibold" style={{ color: ORANGE, border: `1px solid ${ORANGE}` }}>
+            <Link href="/explore" className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-semibold" style={{ color: "var(--accent-ink)", border: `1px solid ${ORANGE}` }}>
               Explore all <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

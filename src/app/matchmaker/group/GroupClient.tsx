@@ -315,7 +315,7 @@ function InviteView({ ctx, code, preview }: { ctx: Ctx; code: string; preview: G
             <li key={st.label} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13px] font-semibold"
               style={{ background: "var(--bg-card)", border: `1px solid ${st.done ? "rgba(16,185,129,0.35)" : "var(--border-subtle)"}`, color: st.done ? "var(--text-primary)" : "var(--text-secondary)" }}>
               <span className="w-6 h-6 rounded-full grid place-items-center text-[11px] font-bold shrink-0"
-                style={{ background: st.done ? "rgba(16,185,129,0.15)" : "rgba(255,81,0,0.12)", color: st.done ? "#10b981" : "#ff7d47" }}>
+                style={{ background: st.done ? "rgba(16,185,129,0.15)" : "rgba(255,81,0,0.12)", color: st.done ? "#10b981" : "var(--accent-ink-soft)" }}>
                 {st.done ? <Check className="w-3.5 h-3.5" /> : i + 1}
               </span>
               {st.label}
@@ -535,7 +535,7 @@ function Shell({ title, subtitle, step, children }: { title?: string; subtitle: 
               const n = i + 1, done = step > n, on = step === n;
               return (
                 <li key={label} className="rounded-xl px-3 py-2.5" style={{ background: on ? "rgba(255,81,0,0.1)" : "var(--bg-card)", border: `1px solid ${on ? "rgba(255,81,0,0.4)" : "var(--border-subtle)"}` }}>
-                  <span className="flex items-center gap-1.5 text-[11px] font-bold" style={{ color: done ? "#10b981" : on ? "#ff7d47" : "var(--text-tertiary)" }}>
+                  <span className="flex items-center gap-1.5 text-[11px] font-bold" style={{ color: done ? "#10b981" : on ? "var(--accent-ink-soft)" : "var(--text-tertiary)" }}>
                     {done ? <Check className="w-3.5 h-3.5" /> : <span className="tabular-nums">0{n}</span>}
                   </span>
                   <span className="block text-[12px] font-semibold mt-0.5 leading-tight" style={{ color: on || done ? "var(--text-primary)" : "var(--text-tertiary)" }}>{label}</span>
@@ -838,7 +838,7 @@ function GroupWishlist({ group, viewerId, members, picks }: { group: StoredGroup
                   </span>
                   <span className="min-w-0">
                     <span className="flex items-center gap-1.5 min-w-0">
-                      {top && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0" style={{ background: "rgba(255,81,0,0.14)", color: "#ff7d47" }}>Group favourite</span>}
+                      {top && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0" style={{ background: "rgba(255,81,0,0.14)", color: "var(--accent-ink-soft)" }}>Group favourite</span>}
                       <span className="text-sm font-semibold t-text truncate">{r.adventure.name}</span>
                     </span>
                     <span className="block text-[11px] mt-0.5" style={{ color: b.color }}>
@@ -968,7 +968,7 @@ function GroupNote({ row, members, pick }: { row: GroupRow; members: GroupMember
         {pick && (
           <button type="button" onClick={() => { if (!onList) pick.onPick(row.adventure.slug); }} disabled={onList}
             className="shrink-0 inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full transition-colors disabled:cursor-default"
-            style={{ background: onList ? "rgba(16,185,129,0.15)" : "rgba(255,81,0,0.12)", color: onList ? "#10b981" : "#ff7d47" }}>
+            style={{ background: onList ? "rgba(16,185,129,0.15)" : "rgba(255,81,0,0.12)", color: onList ? "#10b981" : "var(--accent-ink-soft)" }}>
             {onList ? <><Check className="w-2.5 h-2.5" /> On wishlist</> : <><Plus className="w-2.5 h-2.5" /> Wishlist</>}
           </button>
         )}

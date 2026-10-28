@@ -55,18 +55,18 @@ export default function StoryCard({ story }: { story: Story }) {
       <div className="p-4 flex flex-col flex-1">
         <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] mb-2" style={{ color: "var(--text-tertiary)" }}>
           {genre && (
-            <span className="inline-flex items-center gap-1 shrink-0" style={{ color: "#ff5100" }}>
+            <span className="inline-flex items-center gap-1 shrink-0" style={{ color: "var(--accent-ink)" }}>
               {ADVENTURE_TYPE_ICONS[genre]?.(10)}
               {genre}
             </span>
           )}
           {genre && <span className="opacity-50">·</span>}
-          <span className="inline-flex items-center gap-1 min-w-0 truncate" style={{ color: "#ff5100" }}>
+          <span className="inline-flex items-center gap-1 min-w-0 truncate" style={{ color: "var(--accent-ink)" }}>
             <MapPin className="w-2.5 h-2.5 shrink-0" />
             <span className="truncate">{story.region}</span>
           </span>
           <span className="opacity-50 shrink-0">·</span>
-          <span className="shrink-0" style={{ color: "#ff5100" }}>{story.adventureDate}</span>
+          <span className="shrink-0" style={{ color: "var(--accent-ink)" }}>{story.adventureDate}</span>
         </div>
 
         <h3

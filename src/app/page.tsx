@@ -63,7 +63,7 @@ function SeasonNote({ monthsLeft, endsIn }: { monthsLeft: number; endsIn: string
       style={{
         background: last ? "rgba(255,81,0,0.12)" : "var(--bg-card-hover)",
         border: `1px solid ${last ? "rgba(255,81,0,0.35)" : "var(--border-subtle)"}`,
-        color: last ? "#ff7d47" : "var(--text-secondary)",
+        color: last ? "var(--accent-ink-soft)" : "var(--text-secondary)",
       }}
     >
       <span className="w-1.5 h-1.5 rounded-full" style={{ background: last ? "#ff5100" : "#10b981" }} />

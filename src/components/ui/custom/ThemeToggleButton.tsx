@@ -6,7 +6,7 @@ import { Sun, Moon } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 export default function ThemeToggleButton() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme, systemTheme } = useTheme();
   // resolvedTheme is unknown to the server (it depends on localStorage/system
   // preference), so the first client render must match the server's guess —
   // otherwise React logs a hydration mismatch. Stay in the server's assumed
@@ -21,8 +21,10 @@ export default function ThemeToggleButton() {
       <TooltipTrigger asChild>
         <button
           onClick={() => {
-            if (theme === "system") setTheme("light");
-            else setTheme(isDark ? "light" : "dark");
+            // Flip what's showing. Landing back on the browser's own theme goes back to
+            // following the browser, so a later change there carries through again.
+            const next = isDark ? "light" : "dark";
+            setTheme(next === systemTheme ? "system" : next);
           }}
           className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all hover:bg-white/5"
           style={{ color: isDark ? "#818cf8" : "#ff5100" }}

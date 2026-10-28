@@ -44,7 +44,7 @@ export default function DestinationsPage() {
         <div className="relative max-w-7xl mx-auto">
           <p className="font-mono text-[11px] font-bold tracking-[0.24em] uppercase mb-4" style={{ color: "#e04800" }}>Destinations</p>
           <h1 className="text-[2.6rem] sm:text-5xl lg:text-6xl leading-[1.02] max-w-3xl" style={{ color: "var(--text-primary)", textWrap: "balance" }}>
-            Where do you want to <span style={{ color: ORANGE }}>go?</span>
+            Where do you want to <span style={{ color: "var(--accent-ink)" }}>go?</span>
           </h1>
           <p className="text-base sm:text-[17px] mt-5 leading-relaxed max-w-2xl" style={{ color: "var(--text-secondary)" }}>
             Every region we cover, with its treks and adventures compared by difficulty, days, season and price.

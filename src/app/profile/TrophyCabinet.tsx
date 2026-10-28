@@ -66,7 +66,7 @@ export default function TrophyCabinet() {
     return (
       <div className={`${card} flex flex-col items-center gap-3 text-center`} style={cardStyle}>
         <p className="text-[14px]" style={{ color: "var(--text-secondary)" }}>Couldn&apos;t load your badges.</p>
-        <button onClick={fetchAll} className="h-9 px-4 rounded-full text-[13px] font-semibold" style={{ color: ORANGE, border: `1px solid ${ORANGE}` }}>
+        <button onClick={fetchAll} className="h-9 px-4 rounded-full text-[13px] font-semibold" style={{ color: "var(--accent-ink)", border: `1px solid ${ORANGE}` }}>
           Try again
         </button>
       </div>
@@ -101,7 +101,7 @@ export default function TrophyCabinet() {
               {p.hint}{p.need > 1 && ` · ${p.have.toLocaleString("en-IN")} / ${p.need.toLocaleString("en-IN")}`}
             </p>
           )}
-          {rare && <p className="mt-1.5" style={{ color: ORANGE }}>{rare}</p>}
+          {rare && <p className="mt-1.5" style={{ color: "var(--accent-ink)" }}>{rare}</p>}
         </div>
       </div>
     );
@@ -198,7 +198,7 @@ export default function TrophyCabinet() {
         type="button"
         onClick={() => { setShowAll((v) => !v); setSelected(null); }}
         className="mt-4 h-9 px-4 rounded-full text-[13px] font-semibold transition-colors hover:bg-[#ff5100]/[0.06]"
-        style={{ color: ORANGE, border: `1px solid ${ORANGE}` }}
+        style={{ color: "var(--accent-ink)", border: `1px solid ${ORANGE}` }}
       >
         {showAll ? "Show less" : `See all ${ALL_BADGES.length} badges`}
       </button>

@@ -93,7 +93,7 @@ export default function ResultsNextSteps({
 /* ── Group Match, up front: the results' second step after your rank ─────────── */
 
 const SAMPLE_GROUP = [
-  { name: "You", color: "#ff7d47", status: "Ready", tone: "#10b981" },
+  { name: "You", color: "var(--accent-ink-soft)", status: "Ready", tone: "#10b981" },
   { name: "Aarav", color: "#60a5fa", status: "Ready", tone: "#10b981" },
   { name: "Meera", color: "#c084fc", status: "Stretch", tone: "#f59e0b" },
 ];
@@ -158,7 +158,7 @@ export function GroupMatchPromo() {
 const primaryBtn = "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors";
 
 const TONES = {
-  orange: { color: "#ff7d47", bg: "rgba(255,81,0,0.07)", border: "rgba(255,81,0,0.25)" },
+  orange: { color: "var(--accent-ink-soft)", bg: "rgba(255,81,0,0.07)", border: "rgba(255,81,0,0.25)" },
   amber: { color: "#f59e0b", bg: "rgba(245,158,11,0.07)", border: "rgba(245,158,11,0.25)" },
   green: { color: "#10b981", bg: "rgba(16,185,129,0.07)", border: "rgba(16,185,129,0.25)" },
   neutral: { color: "var(--text-secondary)", bg: "var(--bg-surface)", border: "var(--border-subtle)" },

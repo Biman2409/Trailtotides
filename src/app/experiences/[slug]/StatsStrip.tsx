@@ -65,16 +65,16 @@ export default function StatsStrip({ stats, weather: place, trail }: {
                 aria-selected={active}
                 aria-controls="at-a-glance-panel"
                 onClick={() => toggle(key)}
-                className="relative flex items-center justify-center gap-1.5 h-11 px-2 text-[12.5px] sm:text-[13px] font-semibold transition-colors"
+                className="relative flex items-center justify-center gap-1 sm:gap-1.5 h-11 px-1.5 sm:px-2 text-[12.5px] sm:text-[13px] font-semibold transition-colors"
                 style={{
-                  color: active ? "#ff5100" : "var(--text-secondary)",
+                  color: active ? "var(--accent-ink)" : "var(--text-secondary)",
                   background: active ? "rgba(255,81,0,0.06)" : "transparent",
                   borderLeft: i ? "1px solid var(--border-subtle)" : undefined,
                 }}
               >
                 <Icon className="w-4 h-4 shrink-0" />
                 <span className="truncate">{short ? <><span className="sm:hidden">{short}</span><span className="hidden sm:inline">{label}</span></> : label}</span>
-                <ChevronDown className={`w-3.5 h-3.5 shrink-0 transition-transform ${active ? "rotate-180" : ""}`} />
+                <ChevronDown className={`hidden min-[400px]:block w-3.5 h-3.5 shrink-0 transition-transform ${active ? "rotate-180" : ""}`} />
                 {active && <span className="absolute left-0 right-0 bottom-0 h-[2px]" style={{ background: "#ff5100" }} />}
               </button>
             );
