@@ -1705,7 +1705,7 @@ export const adventures: Adventure[] = [
     name: "Sar Pass Trek", tagline: "A classic Parvati Valley snow pass — Kasol's gateway to proper Himalayan trekking",
     region: "Himalayas", state: "Himachal Pradesh", type: "Trekking", difficulty: "Hard",
     duration: "3–5 days", durationDays: "5 days", durationRange: "5 Days",
-    distance: "21km", distanceRange: "21 km", altitude: "4,206m",
+    distance: "28km", distanceRange: "28 km", altitude: "4,206m",
     baseCamp: "Kasol",
     bestSeason: "May–Jun", bestMonths: ["May","Jun"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/sar-pass.jpeg",

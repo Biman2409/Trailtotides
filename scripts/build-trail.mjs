@@ -407,6 +407,13 @@ async function build(slug) {
   };
 
   await mkdir("src/lib/trails", { recursive: true });
+  // The map services fail now and then, and a leg they fail on is drawn straight: a build with
+  // more straight km than the trail already saved is worse, so the saved one is kept
+  const prev = await readFile(`src/lib/trails/${slug}.json`, "utf8").then(JSON.parse).catch(() => null);
+  if (prev && (prev.approxKm ?? 0) + 0.1 < trail.approxKm) {
+    console.log(`${slug}: KEPT the saved trail (${prev.approxKm ?? 0} km drawn straight) over this build's ${trail.approxKm} km`);
+    return;
+  }
   await writeFile(`src/lib/trails/${slug}.json`, JSON.stringify(trail));
   console.log(`${slug}: ${trail.lengthKm} km, +${trail.ascentM} m, highest ${trail.maxEleM} m, ${trail.approxKm} km drawn straight, ${full.length} → ${line.length} points`);
   stops.forEach((s, i) => {
