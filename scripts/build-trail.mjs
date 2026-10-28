@@ -12,6 +12,7 @@
 // elevation model; those stretches are counted in `approxKm`.
 // Run: node scripts/build-trail.mjs <slug> [<slug> ...]   or   all
 // The stops and days for each trek are in ./trek-configs.mjs. Rewrites src/lib/trails/index.ts.
+// Then run sync-trek-facts.mjs so the trek's duration, distance and base camp follow the itinerary.
 
 import { writeFile, readFile, readdir, mkdir } from "node:fs/promises";
 import { TREKS } from "./trek-configs.mjs";
