@@ -1,182 +1,32 @@
-Build trails run 40659812910, 2026-10-28T08:52:34Z
-── everest-base-camp 08:52:34
-[  27s] everest-base-camp: 281 named places in OpenStreetMap around the trek
-[  33s]   leg Lukla → Phakding (6.0 km apart)
-[  35s]   leg Phakding → Namche Bazaar (7.1 km apart)
-[  37s]   leg Namche Bazaar → Tengboche (6.4 km apart)
-[  38s]   leg Tengboche → Dingboche (9.1 km apart)
-[  40s]   leg Dingboche → Lobuche (6.4 km apart)
-[  41s]   leg Lobuche → Gorak Shep (4.1 km apart)
-[  43s]   leg Gorak Shep → Everest Base Camp (2.9 km apart)
-[  46s] everest-base-camp: 53.6 km, +3260 m, highest 5364 m, 0 km drawn straight, 2549 → 576 points
-[  46s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
-[  46s]   km   7.4  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
-[  46s]   km  17.7  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
-[  46s]   km  27.3  Tengboche (3867 m, osm, 27.83581,86.76461)  6.4 km from last
-[  46s]   km  37.7  Dingboche (4410 m, osm, 27.89352,86.83094)  9.1 km from last
-[  46s]   km  45.6  Lobuche (4910 m, osm, 27.9481,86.81017)  6.4 km from last
-[  46s]   km  50.1  Gorak Shep (5175 m, osm, 27.98068,86.82893)  4.1 km from last
-[  46s]   km  53.6  Everest Base Camp (5364 m, osm, 27.99966,86.84879)  2.9 km from last
-[  46s]   side trip: Kala Patthar (5645 m, osm)
-[  46s]   day  1 walk   Lukla → Phakding  7.4 km +90 −320
-[  46s]   day  2 walk   Phakding → Namche Bazaar  10.4 km +840 −70
-[  46s]   day  3 rest   Namche Bazaar → Namche Bazaar
-[  46s]   day  4 walk   Namche Bazaar → Tengboche  9.5 km +710 −280
-[  46s]   day  5 walk   Tengboche → Dingboche  10.4 km +590 −110
-[  46s]   day  6 rest   Dingboche → Dingboche
-[  46s]   day  7 walk   Dingboche → Lobuche  7.9 km +580 −0
-[  46s]   day  8 walk   Lobuche → Gorak Shep  11.5 km +390 −150
-[  46s]   day  9 walk   Gorak Shep → Pheriche  15.6 km +500 −1220 (approx)
-[  46s]   day 10 walk   Pheriche → Namche Bazaar  21 km +380 −1380
-[  46s]   day 11 walk   Namche Bazaar → Lukla  17.7 km +360 −930
-── gokyo-lakes 08:53:22
-[   0s]   overpass: overpass-api.de Overpass 502 
-[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 232s] gokyo-lakes: 471 named places in OpenStreetMap around the trek
-[ 235s]   leg Lukla → Phakding (6.0 km apart)
-[ 237s]   leg Phakding → Namche Bazaar (7.1 km apart)
-[ 239s]   leg Namche Bazaar → Dole (7.2 km apart)
-[ 241s]   leg Dole → Machhermo (4.3 km apart)
-[ 242s]   leg Machhermo → Gokyo (6.1 km apart)
-[ 244s] gokyo-lakes: 41.3 km, +2650 m, highest 4765 m, 0 km drawn straight, 2175 → 489 points
-[ 244s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
-[ 244s]   km   7.4  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
-[ 244s]   km  17.7  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
-[ 244s]   km  29.2  Dole (4050 m, osm, 27.86662,86.73088)  7.2 km from last
-[ 244s]   km  34.4  Machhermo (4386 m, osm, 27.90288,86.7156)  4.3 km from last
-[ 244s]   km  41.3  Gokyo (4750 m, osm, 27.95409,86.69459)  6.1 km from last
-[ 244s]   side trip: Gokyo Ri (5357 m, osm)
-[ 244s]   day  1 walk   Lukla → Phakding  7.4 km +90 −320
-[ 244s]   day  2 walk   Phakding → Namche Bazaar  10.4 km +840 −70
-[ 244s]   day  3 rest   Namche Bazaar → Namche Bazaar
-[ 244s]   day  4 walk   Namche Bazaar → Dole  11.5 km +940 −330
-[ 244s]   day  5 walk   Dole → Machhermo  5.2 km +380 −20
-[ 244s]   day  6 walk   Machhermo → Gokyo  6.9 km +360 −0
-[ 244s]   day  7 walk   Gokyo → Gokyo  4 km +600 −600
-[ 244s]   day  8 walk   Gokyo → Dole  12.1 km +20 −740
-[ 244s]   day  9 walk   Dole → Namche Bazaar  11.5 km +330 −950
-[ 244s]   day 10 walk   Namche Bazaar → Lukla  17.7 km +360 −930
-── annapurna-base-camp 08:57:28
-[   0s]   overpass: overpass-api.de Overpass 502 
-[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 199s]   overpass: overpass-api.de Overpass 502 
-[ 211s] annapurna-base-camp: place list unavailable (Overpass 502 ), using place search only
-[ 231s]   leg Nayapul → Ulleri (7.3 km apart)
-[ 233s]   leg Ulleri → Ghorepani (6.2 km apart)
-[ 235s]   leg Ghorepani → Poon Hill (1.1 km apart)
-[ 236s]   leg Poon Hill → Tadapani (7.4 km apart)
-[ 238s]   leg Tadapani → Chhomrong (6.1 km apart)
-[ 240s]   leg Chhomrong → Bamboo (5.2 km apart)
-[ 241s]   leg Bamboo → Deurali (6.1 km apart)
-[ 243s]   leg Deurali → Machapuchare Base Camp (3.3 km apart)
-[ 244s]   leg Machapuchare Base Camp → Annapurna Base Camp (2.9 km apart)
-[ 246s] annapurna-base-camp: 65.1 km, +5760 m, highest 4107 m, 0 km drawn straight, 4765 → 815 points
-[ 246s]   km     0  Nayapul (1013 m, osm, 28.29814,83.76791)
-[ 246s]   km  10.8  Ulleri (2005 m, osm, 28.35673,83.73538)  7.3 km from last
-[ 246s]   km  18.6  Ghorepani (2896 m, osm, 28.40249,83.69993)  6.2 km from last
-[ 246s]   km  19.9  Poon Hill (3175 m, given, 28.40004,83.68954)  1.1 km from last
-[ 246s]   km    35  Tadapani (2680 m, osm, 28.39652,83.76527)  7.4 km from last
-[ 246s]   km  44.4  Chhomrong (2160 m, osm, 28.42426,83.81853)  6.1 km from last
-[ 246s]   km  51.3  Bamboo (2310 m, osm, 28.45702,83.85693)  5.2 km from last
-[ 246s]   km  58.3  Deurali (3256 m, given, 28.49756,83.89833)  6.1 km from last
-[ 246s]   km  62.1  Machapuchare Base Camp (3700 m, osm, 28.52651,83.90756)  3.3 km from last
-[ 246s]   km  65.1  Annapurna Base Camp (4130 m, osm, 28.53076,83.87785)  2.9 km from last
-[ 246s]   day  1 walk   Nayapul → Ulleri  10.8 km +1030 −20
-[ 246s]   day  2 walk   Ulleri → Ghorepani  7.9 km +830 −0
-[ 246s]   day  3 walk   Ghorepani → Tadapani  16.4 km +1150 −1350
-[ 246s]   day  4 walk   Tadapani → Chhomrong  9.4 km +400 −1080
-[ 246s]   day  5 walk   Chhomrong → Bamboo  6.9 km +580 −270
-[ 246s]   day  6 walk   Bamboo → Deurali  7.1 km +860 −0
-[ 246s]   day  7 walk   Deurali → Annapurna Base Camp  6.8 km +920 −0
-[ 246s]   day  8 walk   Annapurna Base Camp → Bamboo  13.8 km +0 −1770
-[ 246s]   day  9 walk   Bamboo → Jhinu Danda  7.8 km +520 −580 (approx)
-── annapurna-circuit 09:01:36
-[  52s] annapurna-circuit: 366 named places in OpenStreetMap around the trek
-[  58s]   leg Dharapani → Chame (11.9 km apart)
-[  60s]   leg Chame → Upper Pisang (11.4 km apart)
-[  61s]   leg Upper Pisang → Manang (13.8 km apart)
-[  63s]   leg Manang → Yak Kharka (7.9 km apart)
-[  65s]   leg Yak Kharka → Thorong Phedi (6.0 km apart)
-[  66s]   leg Thorong Phedi → Thorong La (3.8 km apart)
-[ 119s]   ~ Thorong Phedi → Thorong La: pass1 timeout after 15 seconds ; routed over mapped paths, 0.0 of 5.1 km bridged
-[ 143s]   leg Thorong La → Muktinath (7.1 km apart)
-[ 183s]   ~ Thorong La → Muktinath: a 77.8 km detour for 7.1 km; routed over mapped paths, 0.0 of 8.6 km bridged
-[ 202s] annapurna-circuit: 76.9 km, +3950 m, highest 5415 m, 0 km drawn straight, 3236 → 737 points
-[ 202s]   km     0  Dharapani (1860 m, osm, 28.519,84.35838)
-[ 202s]   km  15.6  Chame (2670 m, osm, 28.55073,84.24235)  11.9 km from last
-[ 202s]   km  29.7  Upper Pisang (3300 m, osm, 28.61636,84.15303)  11.4 km from last
-[ 202s]   km  46.2  Manang (3551 m, osm, 28.66611,84.02312)  13.8 km from last
-[ 202s]   km  55.9  Yak Kharka (4030 m, osm, 28.72272,83.9738)  7.9 km from last
-[ 202s]   km  63.2  Thorong Phedi (4540 m, osm, 28.77678,83.97264)  6.0 km from last
-[ 202s]   km  68.4  Thorong La (5416 m, osm, 28.79353,83.93876)  3.8 km from last
-[ 202s]   km  76.9  Muktinath (3735 m, osm, 28.81692,83.87145)  7.1 km from last
-[ 202s]   day  1 walk   Dharapani → Chame  15.6 km +910 −100
-[ 202s]   day  2 walk   Chame → Upper Pisang  14.1 km +720 −100
-[ 202s]   day  3 walk   Upper Pisang → Manang  16.5 km +380 −170
-[ 202s]   day  4 rest   Manang → Manang
-[ 202s]   day  5 walk   Manang → Yak Kharka  9.7 km +500 −20
-[ 202s]   day  6 walk   Yak Kharka → Thorong Phedi  7.4 km +590 −70
-[ 202s]   day  7 walk   Thorong Phedi → Muktinath  13.7 km +840 −1630
-── khopra-danda 09:04:59
-[  34s] khopra-danda: 1303 named places in OpenStreetMap around the trek
-[  52s]   leg Nayapul → Ulleri (7.3 km apart)
-[  54s]   leg Ulleri → Ghorepani (6.2 km apart)
-[  56s]   leg Ghorepani → Swanta (3.7 km apart)
-[  58s]   leg Swanta → Khopra Danda (4.5 km apart)
-[  60s]   overpass: overpass-api.de Overpass 502 
-[ 153s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 249s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 292s]   ~ Swanta → Khopra Danda: a 15.6 km detour for 4.5 km; routed over mapped paths, 0.0 of 9.0 km bridged
-[ 311s] khopra-danda: 32.5 km, +3360 m, highest 3661 m, 0 km drawn straight, 2443 → 458 points
-[ 311s]   km     0  Nayapul (1013 m, osm, 28.29814,83.76791)
-[ 311s]   km  10.8  Ulleri (2005 m, osm, 28.35673,83.73538)  7.3 km from last
-[ 311s]   km  18.6  Ghorepani (2868 m, osm, 28.40249,83.69993)  6.2 km from last
-[ 311s]   km  23.5  Swanta (2238 m, osm, 28.43521,83.69098)  3.7 km from last
-[ 311s]   km  32.5  Khopra Danda (3639 m, osm, 28.47211,83.70863)  4.5 km from last
-[ 311s]   camp (estimated): Chistibung (2731 m, 28.45371,83.71096)
-[ 311s]   day  1 walk   Nayapul → Ulleri  10.8 km +1030 −20
-[ 311s]   day  2 walk   Ulleri → Ghorepani  7.9 km +810 −0
-[ 311s]   day  3 walk   Ghorepani → Swanta  4.9 km +100 −740
-[ 311s]   day  4 walk   Swanta → Chistibung  4.5 km +520 −20 (approx)
-[ 311s]   day  5 walk   Chistibung → Khopra Danda  4.5 km +910 −0
-[ 311s]   day  6 walk   Khopra Danda → Khopra Danda  16 km +1000 −1000
-[ 311s]   day  7 walk   Khopra Danda → Swanta  9 km +20 −1430
-[ 311s]   day  8 walk   Swanta → Nayapul  23.5 km +750 −1950
-── manaslu-circuit 09:10:11
-[  33s] manaslu-circuit: 921 named places in OpenStreetMap around the trek
-[  37s] manaslu-circuit: FAILED Jagat is 50 km from Machha Khola: give it coordinates (at)
-[  37s] Failed: manaslu-circuit
-manaslu-circuit: FAILED (exit 1)
-── kedarkantha-trek 09:10:50
-[  56s] kedarkantha-trek: 198 named places in OpenStreetMap around the trek
-[  58s]   leg Sankri → Juda Ka Talab (2.8 km apart)
-[  60s]   leg Juda Ka Talab → Kedarkantha Base (1.0 km apart)
-[  62s]   leg Kedarkantha Base → Kedarkantha (2.7 km apart)
-[  63s]   leg Kedarkantha → Hargaon (4.2 km apart)
-[  65s]   leg Hargaon → Sankri (2.2 km apart)
-[  67s] kedarkantha-trek: 18.8 km, +1850 m, highest 3794 m, 0 km drawn straight, 735 → 272 points
-[  67s]   km     0  Sankri (1899 m, osm, 31.07802,78.18411)
-[  67s]   km   4.6  Juda Ka Talab (2813 m, osm, 31.05247,78.18431)  2.8 km from last
-[  67s]   km   6.1  Kedarkantha Base (3023 m, osm, 31.04507,78.17887)  1.0 km from last
-[  67s]   km   9.4  Kedarkantha (3800 m, osm, 31.02136,78.17154)  2.7 km from last
-[  67s]   km  14.7  Hargaon (2728 m, osm, 31.05817,78.18007)  4.2 km from last
-[  67s]   km  18.8  Sankri (1899 m, osm, 31.07802,78.18411)  2.2 km from last
-[  67s]   day  1 walk   Sankri → Juda Ka Talab  4.6 km +890 −0
-[  67s]   day  2 walk   Juda Ka Talab → Kedarkantha Base  1.4 km +230 −0
-[  67s]   day  3 walk   Kedarkantha Base → Hargaon  8.6 km +720 −1050
-[  67s]   day  4 walk   Hargaon → Sankri  4.2 km +0 −790
-── har-ki-dun 09:11:58
-[  48s] har-ki-dun: 416 named places in OpenStreetMap around the trek
-[  64s]   leg Taluka → Osla (10.3 km apart)
-[  66s]   leg Osla → Har Ki Dun (9.2 km apart)
-[  67s] har-ki-dun: 22.9 km, +1540 m, highest 3514 m, 0 km drawn straight, 606 → 214 points
-[  67s]   km     0  Taluka (2097 m, osm, 31.07782,78.24579)
-[  67s]   km  11.8  Osla (2756 m, osm, 31.1189,78.34277)  10.3 km from last
-[  67s]   km  22.9  Har Ki Dun (3500 m, osm, 31.14821,78.43326)  9.2 km from last
-[  67s]   day  1 walk   Taluka → Osla  11.8 km +680 −50
-[  67s]   day  2 walk   Osla → Har Ki Dun  11.1 km +850 −90
-[  67s]   day  3 rest   Har Ki Dun → Har Ki Dun
-[  67s]   day  4 walk   Har Ki Dun → Osla  11.1 km +110 −860
-[  67s]   day  5 walk   Osla → Taluka  11.8 km +50 −690
+Build trails run 40662805752, 2026-10-28T09:16:59Z
+── annapurna-base-camp 09:16:59
+[  34s] annapurna-base-camp: 1682 named places in OpenStreetMap around the trek
+[  36s]   leg Nayapul → Ulleri (7.3 km apart)
+[  39s]   leg Ulleri → Ghorepani (6.2 km apart)
+[  40s]   leg Ghorepani → Poon Hill (1.1 km apart)
+[  42s]   leg Poon Hill → Tadapani (7.4 km apart)
+[  44s]   leg Tadapani → Chhomrong (6.1 km apart)
+[  45s]   leg Chhomrong → Bamboo (5.2 km apart)
+[  47s]   leg Bamboo → Deurali (6.1 km apart)
+[  49s]   leg Deurali → Machapuchare Base Camp (3.3 km apart)
+[  50s]   leg Machapuchare Base Camp → Annapurna Base Camp (2.9 km apart)
+[  52s] annapurna-base-camp: 65.1 km, +5760 m, highest 4107 m, 0 km drawn straight, 4765 → 815 points
+[  52s]   km     0  Nayapul (1013 m, osm, 28.29814,83.76791)
+[  52s]   km  10.8  Ulleri (2005 m, osm, 28.35673,83.73538)  7.3 km from last
+[  52s]   km  18.6  Ghorepani (2868 m, osm, 28.40249,83.69993)  6.2 km from last
+[  52s]   km  19.9  Poon Hill (3210 m, osm, 28.40004,83.68954)  1.1 km from last
+[  52s]   km    35  Tadapani (2680 m, osm, 28.39652,83.76527)  7.4 km from last
+[  52s]   km  44.4  Chhomrong (2160 m, osm, 28.42426,83.81853)  6.1 km from last
+[  52s]   km  51.3  Bamboo (2310 m, osm, 28.45702,83.85693)  5.2 km from last
+[  52s]   km  58.3  Deurali (3256 m, osm, 28.49756,83.89833)  6.1 km from last
+[  52s]   km  62.1  Machapuchare Base Camp (3700 m, osm, 28.52651,83.90756)  3.3 km from last
+[  52s]   km  65.1  Annapurna Base Camp (4130 m, osm, 28.53075,83.87784)  2.9 km from last
+[  52s]   day  1 walk   Nayapul → Ulleri  10.8 km +1030 −20
+[  52s]   day  2 walk   Ulleri → Ghorepani  7.9 km +830 −0
+[  52s]   day  3 walk   Ghorepani → Tadapani  16.4 km +1150 −1350
+[  52s]   day  4 walk   Tadapani → Chhomrong  9.4 km +400 −1080
+[  52s]   day  5 walk   Chhomrong → Bamboo  6.9 km +580 −270
+[  52s]   day  6 walk   Bamboo → Deurali  7.1 km +860 −0
+[  52s]   day  7 walk   Deurali → Annapurna Base Camp  6.8 km +920 −0
+[  52s]   day  8 walk   Annapurna Base Camp → Bamboo  13.8 km +0 −1770
+[  52s]   day  9 walk   Bamboo → Jhinu Danda  7.8 km +520 −580 (approx)
