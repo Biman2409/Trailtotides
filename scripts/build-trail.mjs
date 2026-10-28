@@ -161,6 +161,22 @@ async function build(slug) {
   for (let i = 1; i < full.length; i++) cum.push(cum[i - 1] + dist(full[i - 1], full[i]));
   stops.forEach((s, i) => { s.km = +(cum[at[i]] / 1000).toFixed(1); });
 
+  // The elevation model throws single-point spikes, hundreds of metres off, where a path runs
+  // under a cliff or along a gorge. A height more than 120 m from the median of its ±250 m of
+  // trail takes that median; stops keep the heights OpenStreetMap surveys give them
+  const pinned = new Set(at.filter((k) => stops.some((s) => s.ele != null && dist(full[k], [s.lat, s.lng]) < 30)));
+  const raw = full.map((p) => p[2]);
+  full.forEach((p, i) => {
+    if (pinned.has(i)) return;
+    const near = [];
+    for (let k = i; k >= 0 && cum[i] - cum[k] <= 250; k--) near.push(raw[k]);
+    for (let k = i + 1; k < full.length && cum[k] - cum[i] <= 250; k++) near.push(raw[k]);
+    if (near.length < 4) return;
+    near.sort((a, b) => a - b);
+    const median = near[near.length >> 1];
+    if (Math.abs(raw[i] - median) > 120) p[2] = median;
+  });
+
   // Camps the map doesn't have, placed a typical share of the way along the trail between two
   // mapped stops. Their position is an estimate, so days that reach them are marked approximate
   const estimated = new Set();
