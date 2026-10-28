@@ -87,3 +87,30 @@ Build trails run 40658568164, 2026-10-28T08:42:18Z
 [ 208s]   day  7 walk   Deurali → Annapurna Base Camp  6.8 km +920 −0
 [ 208s]   day  8 walk   Annapurna Base Camp → Bamboo  13.8 km +0 −1770
 [ 208s]   day  9 walk   Bamboo → Jhinu Danda  7.8 km +520 −580 (approx)
+── annapurna-circuit 08:47:43
+[  35s] annapurna-circuit: place list unavailable (Overpass 400 Error : line 3: parse error: Unknown query clause Error : line 4: parse error: Unknown query clause Error : line 5: parse error: Unknown query clause Error : line 6: parse error: Unknown query clause Error : line 7: parse error: Unknown query clause Error : line 8: parse error: Unknown query clause ), using place search only
+[  51s]   leg Dharapani → Chame (11.9 km apart)
+[  53s]   leg Chame → Upper Pisang (11.4 km apart)
+[  55s]   leg Upper Pisang → Manang (13.8 km apart)
+[  57s]   leg Manang → Yak Kharka (7.9 km apart)
+[  59s]   leg Yak Kharka → Thorong Phedi (6.0 km apart)
+[  61s]   leg Thorong Phedi → Thorong La (3.8 km apart)
+[  98s]   ~ Thorong Phedi → Thorong La: operation killed by thread-priority-watchdog after 3 seconds ; routed over mapped paths, 0.0 of 5.1 km bridged
+[ 123s]   leg Thorong La → Muktinath (7.1 km apart)
+[ 168s]   ~ Thorong La → Muktinath: a 77.8 km detour for 7.1 km; routed over mapped paths, 0.0 of 8.6 km bridged
+[ 206s] annapurna-circuit: 77 km, +3950 m, highest 5415 m, 0 km drawn straight, 3239 → 742 points
+[ 206s]   km     0  Dharapani (1860 m, osm, 28.519,84.35838)
+[ 206s]   km  15.6  Chame (2670 m, osm, 28.55073,84.24235)  11.9 km from last
+[ 206s]   km  29.7  Upper Pisang (3300 m, osm, 28.61636,84.15303)  11.4 km from last
+[ 206s]   km  46.2  Manang (3551 m, osm, 28.66611,84.02312)  13.8 km from last
+[ 206s]   km  55.9  Yak Kharka (4030 m, osm, 28.72272,83.9738)  7.9 km from last
+[ 206s]   km  63.2  Thorong Phedi (4540 m, osm, 28.77678,83.97264)  6.0 km from last
+[ 206s]   km  68.4  Thorong La (5397 m, given, 28.79353,83.93876)  3.8 km from last
+[ 206s]   km    77  Muktinath (3735 m, osm, 28.81666,83.87125)  7.1 km from last
+[ 206s]   day  1 walk   Dharapani → Chame  15.6 km +910 −100
+[ 206s]   day  2 walk   Chame → Upper Pisang  14.1 km +720 −100
+[ 206s]   day  3 walk   Upper Pisang → Manang  16.5 km +380 −170
+[ 206s]   day  4 rest   Manang → Manang
+[ 206s]   day  5 walk   Manang → Yak Kharka  9.7 km +500 −20
+[ 206s]   day  6 walk   Yak Kharka → Thorong Phedi  7.4 km +590 −70
+[ 206s]   day  7 walk   Thorong Phedi → Muktinath  13.7 km +840 −1650
