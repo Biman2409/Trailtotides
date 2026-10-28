@@ -1,3 +1,8 @@
 # Treks the Build trails workflow rebuilds when this file or the builder changes on a push
 # (one slug per line, or "all"). A manual run can name its own.
-all
+dodital-darwa-pass
+deoriatal-chandrashila
+gokyo-lakes
+kedarkantha-trek
+pangarchulla-peak
+beas-kund
