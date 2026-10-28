@@ -50,3 +50,25 @@ Build trails run 40676322312, 2026-10-28T10:59:32Z
 [  57s]   day  5 walk   Sundersar → Sundersar  5.3 km +260 −250
 [  57s]   day  6 walk   Sundersar → Lidderwat  18.5 km +230 −1300
 [  57s]   day  7 walk   Lidderwat → Aru  10.9 km +20 −470
+── buran-ghati 11:05:30
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 240s] buran-ghati: 1208 named places in OpenStreetMap around the trek
+[ 242s]   leg Janglik → Litham (10.2 km apart)
+[ 244s]   leg Litham → Buran Ghati (5.0 km apart)
+[ 246s]   leg Buran Ghati → Barua (9.5 km apart)
+[ 248s] buran-ghati: 28.4 km, +1780 m, highest 4577 m, 0 km drawn straight, 192 → 162 points
+[ 248s]   km     0  Janglik (2813 m, osm, 31.31716,78.00958)
+[ 248s]   km  11.9  Litham (3501 m, osm, 31.36158,78.10317)  10.2 km from last
+[ 248s]   km  17.8  Buran Ghati (4557 m, osm, 31.38742,78.14567)  5.0 km from last
+[ 248s]   km  28.4  Barua (2221 m, osm, 31.4682,78.17846)  9.5 km from last
+[ 248s]   camp (estimated): Dayara Thach (3375 m, 31.34502,78.05454)
+[ 248s]   camp (estimated): Dhunda (3920 m, 31.37124,78.1376)
+[ 248s]   camp (estimated): Munirang (3579 m, 31.41753,78.15393)
+[ 248s]   day  1 walk   Janglik → Dayara Thach  5.7 km +560 −0 (approx)
+[ 248s]   day  2 walk   Dayara Thach → Litham  6.2 km +200 −20
+[ 248s]   day  3 walk   Litham → Litham  8 km +600 −600
+[ 248s]   day  4 walk   Litham → Dhunda  3.6 km +390 −0 (approx)
+[ 248s]   day  5 walk   Dhunda → Munirang  5.8 km +620 −990 (approx)
+[ 248s]   day  6 walk   Munirang → Barua  7.1 km +0 −1390
