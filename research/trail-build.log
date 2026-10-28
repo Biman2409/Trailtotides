@@ -251,3 +251,15 @@ Build trails run 40693741914, 2026-10-28T13:08:43Z
 [ 470s]   day  4 walk   Ruinsara Tal → Odari  3.9 km +460 −60
 [ 470s]   day  5 walk   Odari → Lower Damini  6.8 km +840 −740 (approx)
 [ 470s]   day  6 walk   Lower Damini → Janki Chatti  3.7 km +0 −1510
+── dayara-bugyal 13:47:41
+[  40s] dayara-bugyal: 457 named places in OpenStreetMap around the trek
+[  41s]   leg Raithal → Gui (2.8 km apart)
+[  44s]   leg Gui → Dayara Bugyal (2.9 km apart)
+[  45s] dayara-bugyal: 12.2 km, +1560 m, highest 3650 m, 0 km drawn straight, 562 → 155 points
+[  45s]   km     0  Raithal (2132 m, osm, 30.81672,78.60379)
+[  45s]   km   4.4  Gui (2961 m, osm, 30.81448,78.57426)  2.8 km from last
+[  45s]   km  12.2  Dayara Bugyal (3503 m, osm, 30.82994,78.54964)  2.9 km from last
+[  45s]   day  1 walk   Raithal → Gui  4.4 km +810 −0
+[  45s]   day  2 walk   Gui → Dayara Bugyal  7.8 km +740 −190
+[  45s]   day  3 rest   Dayara Bugyal → Dayara Bugyal
+[  45s]   day  4 walk   Dayara Bugyal → Raithal  12.2 km +190 −1550
