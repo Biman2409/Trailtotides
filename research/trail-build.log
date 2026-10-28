@@ -263,3 +263,25 @@ Build trails run 40693741914, 2026-10-28T13:08:43Z
 [  45s]   day  2 walk   Gui → Dayara Bugyal  7.8 km +740 −190
 [  45s]   day  3 rest   Dayara Bugyal → Dayara Bugyal
 [  45s]   day  4 walk   Dayara Bugyal → Raithal  12.2 km +190 −1550
+── dodital-darwa-pass 13:48:28
+[  48s]   overpass: overpass-api.de Overpass 504 Error : runtime error: open64: 0 Success /osm3s_osm_base Dispatcher_Client::request_read_and_idx::timeout.
+[ 141s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 237s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 247s]   overpass: overpass-api.de Overpass 502 
+[ 259s] dodital-darwa-pass: place list unavailable (Overpass 502 ), using place search only
+[ 273s]   leg Sangam Chatti → Agoda (3.2 km apart)
+[ 276s]   leg Agoda → Manjhi (4.8 km apart)
+[ 277s]   leg Manjhi → Dodital (2.6 km apart)
+[ 279s]   leg Dodital → Darwa Pass (2.3 km apart)
+[ 281s] dodital-darwa-pass: 18.4 km, +2430 m, highest 3764 m, 0 km drawn straight, 419 → 140 points
+[ 281s]   km     0  Sangam Chatti (1615 m, given, 30.83588,78.45063)
+[ 281s]   km     4  Agoda (2138 m, given, 30.84636,78.48161)  3.2 km from last
+[ 281s]   km  11.6  Manjhi (2956 m, osm, 30.87492,78.51945)  4.8 km from last
+[ 281s]   km  15.7  Dodital (3071 m, osm, 30.89725,78.52606)  2.6 km from last
+[ 281s]   km  18.4  Darwa Pass (3776 m, osm, 30.91411,78.51179)  2.3 km from last
+[ 281s]   day  1 walk   Sangam Chatti → Agoda  4 km +530 −0
+[ 281s]   day  2 walk   Agoda → Manjhi  7.6 km +1030 −230
+[ 281s]   day  3 walk   Manjhi → Dodital  4.1 km +220 −80
+[ 281s]   day  4 walk   Dodital → Dodital  5.5 km +650 −650
+[ 281s]   day  5 walk   Dodital → Manjhi  4.1 km +80 −210
+[ 281s]   day  6 walk   Manjhi → Sangam Chatti  11.6 km +260 −1590
