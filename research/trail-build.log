@@ -69,3 +69,26 @@ Build trails run 40662805752, 2026-10-28T09:16:59Z
 [ 153s]   day  9 walk   Samdo → Dharmasala  7.2 km +800 −0 (approx)
 [ 153s]   day 10 walk   Dharmasala → Bimthang  11.7 km +930 −1890
 [ 153s]   day 11 walk   Bimthang → Dharapani  23.4 km +60 −1870
+── khopra-danda 09:20:28
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  81s] khopra-danda: 1298 named places in OpenStreetMap around the trek
+[  99s]   leg Nayapul → Ulleri (7.3 km apart)
+[ 101s]   leg Ulleri → Ghorepani (6.2 km apart)
+[ 103s]   leg Ghorepani → Swanta (3.7 km apart)
+[ 105s]   leg Swanta → Khopra Danda (4.5 km apart)
+[ 145s]   ~ Swanta → Khopra Danda: a 15.6 km detour for 4.5 km; routed over mapped paths, 0.0 of 9.0 km bridged
+[ 168s] khopra-danda: 32.5 km, +3360 m, highest 3661 m, 0 km drawn straight, 2443 → 458 points
+[ 168s]   km     0  Nayapul (1013 m, osm, 28.29814,83.76791)
+[ 168s]   km  10.8  Ulleri (2005 m, osm, 28.35673,83.73538)  7.3 km from last
+[ 168s]   km  18.6  Ghorepani (2868 m, osm, 28.40249,83.69993)  6.2 km from last
+[ 168s]   km  23.5  Swanta (2238 m, osm, 28.43521,83.69098)  3.7 km from last
+[ 168s]   km  32.5  Khopra Danda (3639 m, osm, 28.47211,83.70863)  4.5 km from last
+[ 168s]   camp (estimated): Chistibung (2731 m, 28.45371,83.71096)
+[ 168s]   day  1 walk   Nayapul → Ulleri  10.8 km +1030 −20
+[ 168s]   day  2 walk   Ulleri → Ghorepani  7.9 km +810 −0
+[ 168s]   day  3 walk   Ghorepani → Swanta  4.9 km +100 −740
+[ 168s]   day  4 walk   Swanta → Chistibung  4.5 km +520 −20 (approx)
+[ 168s]   day  5 walk   Chistibung → Khopra Danda  4.5 km +910 −0
+[ 168s]   day  6 walk   Khopra Danda → Khopra Danda  16 km +1000 −1000
+[ 168s]   day  7 walk   Khopra Danda → Swanta  9 km +20 −1430
+[ 168s]   day  8 walk   Swanta → Nayapul  23.5 km +750 −1950
