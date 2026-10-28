@@ -301,7 +301,7 @@ export const TREKS = {
       { name: "Chopta", q: "Chopta Tungnath", at: [30.47786, 79.21015] },
       { name: "Chandrashila", at: [30.48646, 79.22123] },
     ],
-    camps: { "Rohini Bugyal": ["Deoriatal", "Chopta", 0.5, ["Rohini"]], Tungnath: ["Chopta", "Chandrashila", 0.8, ["Tungnath Temple", "Tungnath Mandir"]] },
+    camps: { "Rohini Bugyal": ["Deoriatal", "Chopta", 0.5, ["Rohini"]], Tungnath: ["Chopta", "Chandrashila", 0.8, ["Tunganath", "Tungnath Temple", "Tungnath Mandir"]] },
     days: [
       { to: "Deoriatal", note: "A short, steady climb from Sari to the lake that mirrors Chaukhamba" },
       { to: "Rohini Bugyal", note: "Along a forested ridge to a quiet meadow" },
@@ -452,11 +452,13 @@ export const TREKS = {
     near: "Kullu, Himachal Pradesh",
     stops: [
       { name: "Kasol", at: [32.01043, 77.3166] },
+      // The village OSM lacks: a stop, so the climb goes through it and its height is its own
+      { name: "Grahan", at: [31.9713, 77.3479] },
       { name: "Sar Pass", at: [31.96368, 77.38728] },
       { name: "Biskeri Thach", q: "Biskeri", at: [31.95217, 77.40626] },
       { name: "Barshaini", at: [31.99913, 77.44969] },
     ],
-    camps: { Grahan: ["Kasol", "Sar Pass", 0.35, ["Grahan Village"]], "Min Thach": ["Kasol", "Sar Pass", 0.6, ["Mingthach", "Min Thatch", "Mangthach"]], Nagaru: ["Kasol", "Sar Pass", 0.85, ["Nagaroo", "Nagru"]] },
+    camps: { "Min Thach": ["Grahan", "Sar Pass", 0.4, ["Mingthach", "Min Thatch", "Mangthach"]], Nagaru: ["Grahan", "Sar Pass", 0.75, ["Nagaroo", "Nagru"]] },
     days: [
       { to: "Grahan", note: "Up from Kasol along the Grahan stream to a remote village" },
       { to: "Min Thach", note: "A steep climb through forest to an open shoulder" },
