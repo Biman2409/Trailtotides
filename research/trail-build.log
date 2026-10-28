@@ -144,3 +144,8 @@ Build trails run 40659812910, 2026-10-28T08:52:34Z
 [ 311s]   day  6 walk   Khopra Danda → Khopra Danda  16 km +1000 −1000
 [ 311s]   day  7 walk   Khopra Danda → Swanta  9 km +20 −1430
 [ 311s]   day  8 walk   Swanta → Nayapul  23.5 km +750 −1950
+── manaslu-circuit 09:10:11
+[  33s] manaslu-circuit: 921 named places in OpenStreetMap around the trek
+[  37s] manaslu-circuit: FAILED Jagat is 50 km from Machha Khola: give it coordinates (at)
+[  37s] Failed: manaslu-circuit
+manaslu-circuit: FAILED (exit 1)
