@@ -31,7 +31,6 @@ const guideLinks = [
   { href: "/ace", label: "How ACE works", blurb: "How we rate what an adventure asks of you", icon: Gauge },
 ];
 const popularGuides = [
-  { href: "/adventurepedia/treks", label: "Trek guides" },
   { href: "/adventurepedia/altitude-sickness", label: "Altitude sickness" },
   { href: "/adventurepedia/what-to-pack", label: "What to pack" },
   { href: "/adventurepedia/offline-maps", label: "Offline maps" },
