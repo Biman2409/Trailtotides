@@ -185,3 +185,17 @@ Build trails run 40681718153, 2026-10-28T11:41:08Z
 [  39s]   day  4 walk   Dodital → Dodital  5.5 km +650 −650
 [  39s]   day  5 walk   Dodital → Manjhi  4.1 km +80 −210
 [  39s]   day  6 walk   Manjhi → Sangam Chatti  11.6 km +260 −1590
+── pangarchulla-peak 12:08:20
+[  28s] pangarchulla-peak: 280 named places in OpenStreetMap around the trek
+[  30s]   leg Dhak → Khullara (4.9 km apart)
+[  32s]   leg Khullara → Pangarchulla (4.0 km apart)
+[  65s]   ! Khullara → Pangarchulla: nearest path is 2022 m away; drawn straight
+[  66s] pangarchulla-peak: 11.8 km, +2570 m, highest 4559 m, 4 km drawn straight, 193 → 80 points
+[  66s]   km     0  Dhak (2106 m, osm, 30.49886,79.61134)
+[  66s]   km   7.8  Khullara (3393 m, osm, 30.45968,79.58748)  4.9 km from last
+[  66s]   km  11.8  Pangarchulla (4559 m, osm, 30.42367,79.59214)  4.0 km from last
+[  66s]   camp (estimated): Gulling (2284 m, 30.4793,79.60696)
+[  66s]   day  1 walk   Dhak → Gulling  3.9 km +320 −80 (approx)
+[  66s]   day  2 walk   Gulling → Khullara  3.9 km +1070 −0
+[  66s]   day  3 walk   Khullara → Khullara  8.1 km +1170 −1170
+[  66s]   day  4 walk   Khullara → Dhak  7.8 km +100 −1410
