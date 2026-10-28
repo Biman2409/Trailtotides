@@ -450,3 +450,16 @@ Build trails run 40693741914, 2026-10-28T13:08:43Z
 [ 113s]   day  2 walk   Didna → Ali Bugyal  6.2 km +1010 −140
 [ 113s]   day  3 walk   Ali Bugyal → Bedni Bugyal  3.9 km +270 −180 (approx)
 [ 113s]   day  4 walk   Bedni Bugyal → Wan  10.6 km +280 −1270
+── brahmatal 14:21:27
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  84s] brahmatal: 440 named places in OpenStreetMap around the trek
+[ 123s]   leg Lohajung → Bekaltal (4.1 km apart)
+[ 125s]   leg Bekaltal → Brahmatal (4.0 km apart)
+[ 127s] brahmatal: 10.8 km, +1020 m, highest 3381 m, 0 km drawn straight, 631 → 122 points
+[ 127s]   km     0  Lohajung (2335 m, given, 30.1283,79.619)
+[ 127s]   km   5.6  Bekaltal (3048 m, given, 30.14259,79.5795)  4.1 km from last
+[ 127s]   km  10.8  Brahmatal (3216 m, given, 30.17779,79.58802)  4.0 km from last
+[ 127s]   day  1 walk   Lohajung → Bekaltal  5.6 km +690 −0
+[ 127s]   day  2 walk   Bekaltal → Brahmatal  5.2 km +330 −140
+[ 127s]   day  3 walk   Brahmatal → Brahmatal  4 km +450 −450
+[ 127s]   day  4 walk   Brahmatal → Lohajung  10.8 km +140 −1020
