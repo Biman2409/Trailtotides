@@ -650,3 +650,30 @@ Build trails run 40693741914, 2026-10-28T13:08:43Z
 [  40s]   day  3 walk   Markha → Hankar  11 km +270 −20
 [  40s]   day  4 walk   Hankar → Nimaling  10.8 km +780 −0
 [  40s]   day  5 walk   Nimaling → Chokdo  11.6 km +410 −1290
+── goechala 14:48:28
+[  35s] goechala: 237 named places in OpenStreetMap around the trek
+[  57s]   optional stop not in OpenStreetMap, left out: Goechala Viewpoint 1
+[  57s]   optional side trip not in OpenStreetMap, left out: Dzongri Top
+[  57s]   leg Yuksom → Sachen (5.4 km apart)
+[  59s]   leg Sachen → Tshoka (2.6 km apart)
+[  61s]   leg Tshoka → Dzongri (5.2 km apart)
+[  62s]   leg Dzongri → Thansing (5.2 km apart)
+[  64s]   leg Thansing → Lamuney (3.2 km apart)
+[  66s]   leg Lamuney → Samiti Lake (1.8 km apart)
+[  67s] goechala: 29.6 km, +3110 m, highest 4307 m, 0 km drawn straight, 908 → 357 points
+[  67s]   km     0  Yuksom (1763 m, osm, 27.36924,88.21848)
+[  67s]   km   7.6  Sachen (2206 m, osm, 27.41394,88.19731)  5.4 km from last
+[  67s]   km  11.9  Tshoka (2994 m, given, 27.4327,88.18163)  2.6 km from last
+[  67s]   km  17.9  Dzongri (3974 m, osm, 27.47537,88.16019)  5.2 km from last
+[  67s]   km  24.2  Thansing (3926 m, osm, 27.51688,88.18392)  5.2 km from last
+[  67s]   km  27.7  Lamuney (4130 m, osm, 27.5456,88.18604)  3.2 km from last
+[  67s]   km  29.6  Samiti Lake (4301 m, osm, 27.56166,88.18738)  1.8 km from last
+[  67s]   day  1 walk   Yuksom → Sachen  7.6 km +540 −90
+[  67s]   day  2 walk   Sachen → Tshoka  4.3 km +800 −60
+[  67s]   day  3 walk   Tshoka → Dzongri  6 km +1010 −20
+[  67s]   day  4 rest   Dzongri → Dzongri
+[  67s]   day  5 walk   Dzongri → Thansing  6.3 km +360 −410
+[  67s]   day  6 walk   Thansing → Lamuney  3.5 km +190 −0
+[  67s]   day  7 walk   Lamuney → Thansing  7.2 km +170 −370
+[  67s]   day  8 walk   Thansing → Tshoka  12.4 km +420 −1380
+[  67s]   day  9 walk   Tshoka → Yuksom  11.9 km +160 −1370
