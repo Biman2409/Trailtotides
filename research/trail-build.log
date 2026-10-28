@@ -36,3 +36,33 @@ Build trails run 40665916576, 2026-10-28T09:39:24Z
 [ 112s]   day  9 walk   Samdo → Dharmasala  7.2 km +800 −0 (approx)
 [ 112s]   day 10 walk   Dharmasala → Bimthang  14.4 km +470 −1420
 [ 112s]   day 11 walk   Bimthang → Dharapani  23.4 km +60 −1870
+── goechala 09:41:18
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 234s] goechala: 237 named places in OpenStreetMap around the trek
+[ 240s]   optional stop not in OpenStreetMap, left out: Goechala Viewpoint 1
+[ 240s]   optional side trip not in OpenStreetMap, left out: Dzongri Top
+[ 240s]   leg Yuksom → Sachen (5.4 km apart)
+[ 242s]   leg Sachen → Tshoka (2.6 km apart)
+[ 244s]   leg Tshoka → Dzongri (5.2 km apart)
+[ 245s]   leg Dzongri → Thansing (5.2 km apart)
+[ 247s]   leg Thansing → Lamuney (3.2 km apart)
+[ 249s]   leg Lamuney → Samiti Lake (1.8 km apart)
+[ 250s] goechala: 29.6 km, +3110 m, highest 4307 m, 0 km drawn straight, 908 → 357 points
+[ 250s]   km     0  Yuksom (1763 m, osm, 27.36924,88.21848)
+[ 250s]   km   7.6  Sachen (2206 m, osm, 27.41394,88.19731)  5.4 km from last
+[ 250s]   km  11.9  Tshoka (2994 m, given, 27.4327,88.18163)  2.6 km from last
+[ 250s]   km  17.9  Dzongri (3974 m, osm, 27.47537,88.16019)  5.2 km from last
+[ 250s]   km  24.2  Thansing (3926 m, osm, 27.51688,88.18392)  5.2 km from last
+[ 250s]   km  27.7  Lamuney (4130 m, osm, 27.5456,88.18604)  3.2 km from last
+[ 250s]   km  29.6  Samiti Lake (4301 m, osm, 27.56169,88.18724)  1.8 km from last
+[ 250s]   day  1 walk   Yuksom → Sachen  7.6 km +540 −90
+[ 250s]   day  2 walk   Sachen → Tshoka  4.3 km +800 −60
+[ 250s]   day  3 walk   Tshoka → Dzongri  6 km +1010 −20
+[ 250s]   day  4 rest   Dzongri → Dzongri
+[ 250s]   day  5 walk   Dzongri → Thansing  6.3 km +360 −410
+[ 250s]   day  6 walk   Thansing → Lamuney  3.5 km +190 −0
+[ 250s]   day  7 walk   Lamuney → Thansing  7.3 km +170 −370
+[ 250s]   day  8 walk   Thansing → Tshoka  12.4 km +420 −1380
+[ 250s]   day  9 walk   Tshoka → Yuksom  11.9 km +160 −1370
