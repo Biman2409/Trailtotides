@@ -528,7 +528,7 @@ export default async function ExperiencePage({ params }: Props) {
                     slug={adventure.slug}
                   />
 
-                  <GuidesForTrek type={adventure.type} altitudeM={altM} hasTrail={!!trail} />
+                  <GuidesForTrek slug={adventure.slug} name={adventure.name} type={adventure.type} altitudeM={altM} hasTrail={!!trail} />
                 </div>
               </AccordionSection>
 

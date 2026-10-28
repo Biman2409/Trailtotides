@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { adventures } from "@/lib/data";
 import { getPublishedStories } from "@/lib/stories";
 import { GUIDES } from "@/lib/adventurepedia";
+import { trekAdventures, trekGuideHref } from "@/lib/trekGuides";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 export interface SearchResult {
@@ -43,6 +44,17 @@ export async function GET(req: NextRequest) {
       title: g.short,
       subtitle: `Adventurepedia · ${g.title}`,
       url: `/adventurepedia/${g.slug}`,
+      type: "guide",
+    });
+  }
+
+  // Trek guides
+  for (const a of trekAdventures()) {
+    results.push({
+      id: `trek-guide-${a.slug}`,
+      title: `${a.name} guide`,
+      subtitle: `Trek guide · ${a.state} · ${a.bestSeason}`,
+      url: trekGuideHref(a.slug),
       type: "guide",
     });
   }

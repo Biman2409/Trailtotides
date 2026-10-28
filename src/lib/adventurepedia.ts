@@ -469,6 +469,7 @@ export const GUIDES: Guide[] = [
             ["Easy", "Walk 10 km comfortably, climb 20 floors of stairs without stopping"],
             ["Moderate", "Jog 5 km in about 40 minutes, or climb 40 floors with a 5 kg pack"],
             ["Hard", "Jog 5 km in about 35 minutes, and a 4 to 5 hour hill walk with a pack"],
+            ["Advanced", "Several long training days with a 10 kg pack, and earlier treks above 4,000 m"],
             ["Extreme", "Regular long training days with a heavy pack, and prior high-altitude experience"],
           ] } },
           { callout: "tip", title: "Know what a trek asks of you", text: "Every adventure on Trail to Tides has an ACE score for stamina, strength, altitude and more. Take the Matchmaker and it compares them with you: [How ACE works](/ace)." },
@@ -991,12 +992,28 @@ export function readMinutes(g: Guide) {
   return Math.max(2, Math.round(words / 200));
 }
 
-/** One searchable entry per guide section, plus one for the guide itself */
-export interface SearchEntry { slug: string; guide: string; topic: Topic; section?: string; sectionId?: string; text: string }
+/**
+ * One searchable entry per section, plus one for the guide itself. Topic guides and trek guides
+ * share the shape: `href` is the guide's page, and entries with the same href are one result.
+ */
+export interface SearchEntry {
+  href: string;
+  guide: string;
+  summary: string;
+  icon: Guide["icon"];
+  /** Trek guides have no topic; they show under "Trek guides" */
+  topic: Topic | "treks";
+  section?: string;
+  sectionId?: string;
+  text: string;
+}
 
 export function searchIndex(): SearchEntry[] {
-  return GUIDES.flatMap((g) => [
-    { slug: g.slug, guide: g.title, topic: g.topic, text: `${g.short}. ${g.summary} ${g.tldr.map(plain).join(" ")}` },
-    ...g.sections.map((s) => ({ slug: g.slug, guide: g.title, topic: g.topic, section: s.title, sectionId: s.id, text: s.blocks.map(blockText).join(" ") })),
-  ]);
+  return GUIDES.flatMap((g) => {
+    const base = { href: guideHref(g), guide: g.title, summary: g.summary, icon: g.icon, topic: g.topic };
+    return [
+      { ...base, text: `${g.short}. ${g.summary} ${g.tldr.map(plain).join(" ")}` },
+      ...g.sections.map((s) => ({ ...base, section: s.title, sectionId: s.id, text: s.blocks.map(blockText).join(" ") })),
+    ];
+  });
 }

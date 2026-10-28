@@ -24,18 +24,19 @@ const navLinks = [
   { href: "/operators", label: "Operators", icon: BadgeCheck },
 ];
 
-// "Know-how": everything to read before you go, under one menu. Adventurepedia leads.
-const knowHowLinks = [
-  { href: "/adventurepedia", label: "Adventurepedia", blurb: "Guides for planning, safety, gear and the trail", icon: Library },
+// "Guides": everything to read before you go, under one menu. Adventurepedia leads.
+const guideLinks = [
+  { href: "/adventurepedia", label: "Adventurepedia", blurb: "A guide to every trek, plus planning, safety and gear", icon: Library },
   { href: "/stories", label: "Stories", blurb: "Field reports from people who went", icon: BookOpen },
   { href: "/ace", label: "How ACE works", blurb: "How we rate what an adventure asks of you", icon: Gauge },
 ];
 const popularGuides = [
+  { href: "/adventurepedia/treks", label: "Trek guides" },
   { href: "/adventurepedia/altitude-sickness", label: "Altitude sickness" },
   { href: "/adventurepedia/what-to-pack", label: "What to pack" },
   { href: "/adventurepedia/offline-maps", label: "Offline maps" },
 ];
-const isKnowHow = (path: string) => knowHowLinks.some((l) => path === l.href || path.startsWith(`${l.href}/`));
+const isGuides = (path: string) => guideLinks.some((l) => path === l.href || path.startsWith(`${l.href}/`));
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -242,7 +243,7 @@ export default function Navbar() {
               );
             })}
 
-            <KnowHowMenu pathname={pathname} isTransparent={isTransparent} />
+            <GuidesMenu pathname={pathname} isTransparent={isTransparent} />
             </div>
 
           {/* Desktop right side */}
@@ -543,9 +544,9 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          {/* Know-how: Adventurepedia first, then Stories and ACE */}
-          <p className="pt-4 pb-1 px-3 text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent-ink)" }}>Know-how</p>
-          {knowHowLinks.map((link) => {
+          {/* Guides: Adventurepedia first, then Stories and ACE */}
+          <p className="pt-4 pb-1 px-3 text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent-ink)" }}>Guides</p>
+          {guideLinks.map((link) => {
             const on = pathname === link.href || pathname.startsWith(`${link.href}/`);
             return (
               <Link key={link.href} href={link.href}
@@ -651,12 +652,12 @@ export default function Navbar() {
   );
 }
 
-/** The desktop "Know-how" drop-down: opens on hover or click, closes on Escape, outside click or navigation */
-function KnowHowMenu({ pathname, isTransparent }: { pathname: string; isTransparent: boolean }) {
+/** The desktop "Guides" drop-down: opens on hover or click, closes on Escape, outside click or navigation */
+function GuidesMenu({ pathname, isTransparent }: { pathname: string; isTransparent: boolean }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const active = isKnowHow(pathname);
+  const active = isGuides(pathname);
 
   useEffect(() => { setOpen(false); }, [pathname]);
   useEffect(() => {
@@ -681,7 +682,7 @@ function KnowHowMenu({ pathname, isTransparent }: { pathname: string; isTranspar
     else setOpen((o) => !o);
   };
   const leave = () => { openedByHover.current = false; closeTimer.current = setTimeout(() => setOpen(false), 160); };
-  const [lead, ...rest] = knowHowLinks;
+  const [lead, ...rest] = guideLinks;
 
   return (
     <div ref={ref} className="relative" onMouseEnter={enter} onMouseLeave={leave}>
@@ -698,7 +699,7 @@ function KnowHowMenu({ pathname, isTransparent }: { pathname: string; isTranspar
         }}
       >
         {active && <Library className="w-3.5 h-3.5" />}
-        Know-how
+        Guides
         <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Clock, Search, X, CornerDownRight } from "lucide-react";
 import type { Guide, SearchEntry, Topic } from "@/lib/adventurepedia";
 import { GuideIcon, serif } from "./blocks";
@@ -55,10 +56,13 @@ function Highlight({ text, toks }: { text: string; toks: string[] }) {
   return <>{text.split(re).map((part, i) => i % 2 ? <mark key={i} className="rounded px-0.5" style={{ background: "rgba(255,81,0,0.18)", color: "inherit" }}>{part}</mark> : part)}</>;
 }
 
-export default function Library({ guides, topics, index }: {
+export interface TrekTile { slug: string; name: string; state: string; days: string; image: string }
+
+export default function Library({ guides, topics, index, treks }: {
   guides: GuideCard[];
   topics: { id: Topic; label: string; blurb: string }[];
   index: SearchEntry[];
+  treks: { count: number; featured: TrekTile[] };
 }) {
   const [q, setQ] = useState("");
   const [topic, setTopic] = useState<Topic | "all">("all");
@@ -90,32 +94,36 @@ export default function Library({ guides, topics, index }: {
   }, []);
 
   const toks = useMemo(() => tokens(q), [q]);
-  const byslug = useMemo(() => Object.fromEntries(guides.map((g) => [g.slug, g])), [guides]);
 
-  // Every word has to match somewhere in the entry. Titles count for more than body text.
   // A guide matches when every word appears somewhere in it. Its sections are ranked by how many
-  // of the words they hold, with words in titles and headings counting for more.
+  // of the words they hold, with words in titles and headings counting for more. Rare words weigh
+  // more than common ones, so "goechala permit" puts the Goechala guide above the permits guide.
   const results = useMemo(() => {
     if (!toks.length) return [];
-    const perGuide = new Map<string, { found: Set<string>; score: number; hits: { entry: SearchEntry; score: number }[] }>();
+    const hayOf = (e: SearchEntry) => `${e.guide} ${e.section ?? ""} ${e.text}`;
+    const guidesTotal = new Set(index.map((e) => e.href)).size;
+    const weight = Object.fromEntries(toks.map((t) => {
+      const df = new Set(index.filter((e) => matches(hayOf(e), t)).map((e) => e.href)).size || 1;
+      return [t, Math.log(1 + guidesTotal / df)];
+    }));
+    const perGuide = new Map<string, { first: SearchEntry; found: Set<string>; score: number; hits: { entry: SearchEntry; score: number }[] }>();
     for (const e of index) {
       if (topic !== "all" && e.topic !== topic) continue;
-      const hay = `${e.guide} ${e.section ?? ""} ${e.text}`;
-      const hit = toks.filter((t) => matches(hay, t));
+      const hit = toks.filter((t) => matches(hayOf(e), t));
       if (!hit.length) continue;
-      const score = hit.reduce((s, t) => s + (matches(e.guide, t) ? 6 : 0) + (e.section && matches(e.section, t) ? 4 : 0) + 2, 0);
-      const r = perGuide.get(e.slug) ?? { found: new Set<string>(), score: 0, hits: [] };
+      const score = hit.reduce((s, t) => s + weight[t] * ((matches(e.guide, t) ? 6 : 0) + (e.section && matches(e.section, t) ? 4 : 0) + 2), 0);
+      const r = perGuide.get(e.href) ?? { first: e, found: new Set<string>(), score: 0, hits: [] };
       hit.forEach((t) => r.found.add(t));
-      r.score += score;
+      // Best section counts most; more matching sections only nudge the guide up
+      r.score = Math.max(r.score, score) + 0.5;
       r.hits.push({ entry: e, score });
-      perGuide.set(e.slug, r);
+      perGuide.set(e.href, r);
     }
-    return [...perGuide.entries()]
-      .filter(([, r]) => r.found.size === toks.length)
-      .map(([slug, r]) => ({ guide: byslug[slug], score: r.score, hits: r.hits.filter((h) => h.entry.section).sort((a, b) => b.score - a.score).slice(0, 3) }))
-      .filter((r) => r.guide)
+    return [...perGuide.values()]
+      .filter((r) => r.found.size === toks.length)
+      .map((r) => ({ guide: r.first, score: r.score, hits: r.hits.filter((h) => h.entry.section).sort((a, b) => b.score - a.score).slice(0, 3) }))
       .sort((a, b) => b.score - a.score);
-  }, [toks, index, topic, byslug]);
+  }, [toks, index, topic]);
 
   const shown = topic === "all" ? guides : guides.filter((g) => g.topic === topic);
   const searching = toks.length > 0;
@@ -125,7 +133,7 @@ export default function Library({ guides, topics, index }: {
       {/* ── Hero with search ── */}
       <section className="relative overflow-hidden pt-8 sm:pt-12 pb-10 sm:pb-14" style={{ background: "linear-gradient(180deg, rgba(255,81,0,0.07), transparent 85%)" }}>
         <div className="max-w-6xl mx-auto px-5 sm:px-6">
-          <p className="text-[11.5px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "var(--accent-ink)" }}>Know-how</p>
+          <p className="text-[11.5px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "var(--accent-ink)" }}>Guides</p>
           <h1 className="text-[42px] sm:text-6xl t-text leading-[1.02]" style={{ ...serif, letterSpacing: "-0.025em" }}>Adventurepedia</h1>
           <p className="text-[17px] sm:text-[19px] leading-[1.55] t-text-2 mt-4 max-w-2xl">
             Everything to know before you go, and on the way. Practical, tested guides for Himalayan treks, rides and rivers.
@@ -178,6 +186,10 @@ export default function Library({ guides, topics, index }: {
               </button>
             );
           })}
+          <Link href="/adventurepedia/treks" className="shrink-0 inline-flex items-center gap-2 h-10 px-4 rounded-full text-[14px] font-semibold transition-colors"
+            style={{ color: "var(--accent-ink)", border: "1px solid rgba(255,81,0,0.35)", background: "rgba(255,81,0,0.06)" }}>
+            Trek guides<span className="text-[12px] tabular-nums" style={{ opacity: 0.7 }}>{treks.count}</span><ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
         {searching ? (
@@ -188,6 +200,24 @@ export default function Library({ guides, topics, index }: {
             <SectionHead title="Start here" blurb="The three guides every first-time Himalayan trekker should read." />
             <ul className="grid md:grid-cols-3 gap-4">
               {guides.filter((g) => g.featured).map((g) => <li key={g.slug}><FeatureCard g={g} /></li>)}
+            </ul>
+
+            {/* ── Trek guides ── */}
+            <SectionHead title="Trek guides" blurb={`A complete guide to each of our ${treks.count} treks and climbs: season, travel, day-by-day plan, permits and cost.`}
+              action={<Link href="/adventurepedia/treks" className="text-[13px] font-semibold inline-flex items-center gap-1 whitespace-nowrap" style={{ color: "var(--accent-ink)" }}>All {treks.count} <ArrowRight className="w-3.5 h-3.5" /></Link>} />
+            <ul className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              {treks.featured.map((t) => (
+                <li key={t.slug}>
+                  <Link href={`/adventurepedia/treks/${t.slug}`} className="group relative block aspect-[4/5] rounded-2xl overflow-hidden">
+                    <Image src={t.image} alt="" fill sizes="(min-width: 1024px) 270px, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <span className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.78))" }} />
+                    <span className="absolute inset-x-0 bottom-0 p-3.5">
+                      <span className="block text-[11.5px] font-semibold text-white/75">{t.state} · {t.days}</span>
+                      <span className="block text-[16px] sm:text-[17px] font-semibold text-white leading-snug mt-0.5">{t.name}</span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
             </ul>
 
             {topics.map((t) => (
@@ -270,7 +300,7 @@ function GuideRow({ g }: { g: GuideCard }) {
 
 function Results({ q, toks, results, topic, clearTopic, suggest }: {
   q: string; toks: string[]; topic: Topic | "all"; clearTopic: () => void; suggest: (s: string) => void;
-  results: { guide: GuideCard; hits: { entry: SearchEntry }[] }[];
+  results: { guide: SearchEntry; hits: { entry: SearchEntry }[] }[];
 }) {
   return (
     <div className="mt-8" aria-live="polite">
@@ -291,11 +321,11 @@ function Results({ q, toks, results, topic, clearTopic, suggest }: {
       ) : (
         <ul className="space-y-3">
           {results.map(({ guide: g, hits }) => (
-            <li key={g.slug} className="rounded-2xl overflow-hidden" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
-              <Link href={href(g.slug)} className="group flex gap-3.5 p-4">
+            <li key={g.href} className="rounded-2xl overflow-hidden" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
+              <Link href={g.href} className="group flex gap-3.5 p-4">
                 <span className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.1)" }}><GuideIcon icon={g.icon} className="w-5 h-5 text-[#ff5100]" /></span>
                 <span className="min-w-0">
-                  <span className="block text-[16px] font-semibold t-text group-hover:text-[#ff5100] transition-colors"><Highlight text={g.title} toks={toks} /></span>
+                  <span className="block text-[16px] font-semibold t-text group-hover:text-[#ff5100] transition-colors"><Highlight text={g.guide} toks={toks} /></span>
                   <span className="block text-[13.5px] t-text-2 mt-0.5 line-clamp-2">{g.summary}</span>
                 </span>
               </Link>
@@ -303,7 +333,7 @@ function Results({ q, toks, results, topic, clearTopic, suggest }: {
                 <ul style={{ borderTop: "1px solid var(--border-subtle)" }}>
                   {hits.map(({ entry }) => (
                     <li key={entry.sectionId}>
-                      <Link href={href(g.slug, entry.sectionId)} className="group flex gap-2.5 px-4 py-3 transition-colors hover:bg-[var(--bg-surface-2)]">
+                      <Link href={`${g.href}#${entry.sectionId}`} className="group flex gap-2.5 px-4 py-3 transition-colors hover:bg-[var(--bg-surface-2)]">
                         <CornerDownRight className="w-4 h-4 t-text-3 shrink-0 mt-0.5" />
                         <span className="min-w-0">
                           <span className="block text-[14px] font-semibold t-text group-hover:text-[#ff5100]"><Highlight text={entry.section!} toks={toks} /></span>
