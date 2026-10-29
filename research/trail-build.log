@@ -416,3 +416,13 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [ 415s]   day  1 walk   Gulaba → Rola Kholi  4.5 km +950 −0
 [ 415s]   day  2 walk   Rola Kholi → Rola Kholi  12 km +700 −700
 [ 415s]   day  3 walk   Rola Kholi → Gulaba  4.5 km +0 −950
+── beas-kund 18:49:31
+[  43s] beas-kund: 523 named places in OpenStreetMap around the trek
+[  44s]   leg Dhundi → Bakarthach (2.9 km apart)
+[  46s]   leg Bakarthach → Beas Kund (1.8 km apart)
+[  49s] beas-kund: 6.8 km, +990 m, highest 3609 m, 0 km off the mapped paths (drawn along the terrain), 111 → 62 points
+[  49s]   km     0  Dhundi (2889 m, osm, 32.35553,77.12653)
+[  49s]   km   6.8  Beas Kund (3609 m, osm, 32.36058,77.08136)  4.3 km from last
+[  49s]   day  1 walk   Dhundi → Bakarthach  4.5 km +700 −280
+[  49s]   day  2 walk   Bakarthach → Bakarthach  4.5 km +290 −280
+[  49s]   day  3 walk   Bakarthach → Dhundi  4.5 km +290 −710
