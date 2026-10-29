@@ -82,3 +82,15 @@ Build trails run 40908788641, 2026-10-29T16:09:44Z
 [  53s]   day  4 walk   Patar Nachauni → Bhagwabasa  3.2 km +410 −30
 [  53s]   day  5 walk   Bhagwabasa → Patar Nachauni  9.9 km +550 −920
 [  53s]   day  6 walk   Patar Nachauni → Lohajung  22.5 km +720 −2310
+── dodital-darwa-pass 16:17:28
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] dodital-darwa-pass: place list unavailable (Overpass 502 ), using place search only
+[ 222s]   leg Sangam Chatti → Agoda (3.2 km apart)
+[ 224s]   leg Agoda → Manjhi (4.8 km apart)
+[ 226s]   leg Manjhi → Dodital (2.6 km apart)
+[ 228s]   leg Dodital → Darwa Pass (2.6 km apart)
+[ 267s]   ~ Dodital → Darwa Pass: nearest path is 1666 m away; routed over mapped paths, 0.9 of 6.0 km bridged
+[ 268s] dodital-darwa-pass: KEPT the saved trail (0 km off the mapped paths) over this build's 0.9 km
