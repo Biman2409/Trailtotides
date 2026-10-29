@@ -441,6 +441,60 @@ function detectIndecision(messages: { role: string; content: string }[]): boolea
 // Check if query is about a coming-soon type (to skip keyword fallback)
 // Note: Kayaking/Diving are declared types but currently have zero live adventures,
 // so generic water/coastal phrasing needs to route here too, not just the exact type name.
+/**
+ * Keyword search answers on its own only when the question names an activity, a place or a
+ * trek: "a 5 day trek in Uttarakhand", "Hampta Pass", "bike trip in Ladakh". Vague asks and
+ * follow-ups ("something shorter") need the conversation, so they go to the AI.
+ */
+function keywordCanAnswer(query: string): boolean {
+  const { types, places } = requestLimits(query);
+  if (types.length > 0 || places.length > 0) return true;
+  const q = query.toLowerCase();
+  // A trek's name without its last word, so "hampta pass" finds "Hampta Pass Trek"
+  return adventures.some((a) => {
+    const name = a.name.toLowerCase().replace(/\s+(trek|ride|climb|expedition|circuit|trail)$/, "");
+    return name.length > 3 && q.includes(name);
+  });
+}
+
+/** The keyword answer: picks, a factual reason for each, and an honest line when nothing fits the level asked */
+function keywordAnswer(query: string, ace: ACE | null) {
+  const wanted = requestedDifficulty(query);
+  const { types, places } = requestLimits(query);
+  const what = types.length === 1 ? ({ Trekking: "treks", Motorcycling: "bike trips", Cycling: "cycling trips", "River Rafting": "rafting trips", Mountaineering: "climbs" } as Record<string, string>)[types[0]] ?? "adventures" : "adventures";
+  const where = places.length === 1 ? ` in ${places[0]}` : "";
+  let picks = pickFallback(query, ace);
+  let text = "";
+  if (wanted) {
+    const r = pickByDifficulty(query, wanted, new Set(), 3);
+    if (r.nearest && r.picks.length) {
+      picks = r.picks;
+      text = `There are no ${wanted.join(" or ").toLowerCase()} ${what}${where} on Trail to Tides yet. The closest are rated ${r.nearest}:`;
+    }
+  }
+  // A trek asked for by name leads, with the closest keyword matches after it
+  const q = query.toLowerCase();
+  const named = adventures.filter((a) => {
+    const name = a.name.toLowerCase().replace(/\s+(trek|ride|climb|expedition|circuit|trail)$/, "");
+    return name.length > 3 && q.includes(name);
+  });
+  if (!text && named.length) {
+    picks = [...named, ...picks.filter((a) => !named.includes(a))].slice(0, 3);
+    const more = picks.length - named.length;
+    text = named.length === 1
+      ? `Here's ${named[0].name}${more ? `, plus ${more} more like it` : ""}.`
+      : `Here are the ones you named${more ? `, plus ${more} more like them` : ""}.`;
+  }
+  if (!text && picks.length) {
+    text = picks.length === 1 ? `Here's the best match${where ? where : ""}: ${picks[0].name}.` : `Here are ${picks.length} ${what}${where} that fit what you asked.`;
+  }
+  return {
+    text,
+    picks,
+    recommendations: picks.map((a) => ({ slug: a.slug, name: a.name, reason: ace ? fallbackReason(a, query, ace) : factualReason(a) })),
+  };
+}
+
 function isComingSoonQuery(query: string): boolean {
   const q = query.toLowerCase();
   // Rafting is live, even when asked as "white water rafting"
@@ -491,7 +545,17 @@ export async function POST(req: NextRequest) {
       })),
     ];
 
-    // No AI configured (missing/empty GEMINI_API_KEY) — degrade to keyword search instead of crashing.
+    // Keywords first: instant and free, and right for anything that names an activity, place or
+    // trek. The AI only answers what keywords can't place: vague asks, follow-ups, open questions.
+    const firstQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
+    if (keywordCanAnswer(firstQuery) && !isComingSoonQuery(firstQuery)) {
+      const kw = keywordAnswer(firstQuery, userAce);
+      if (kw.picks.length > 0) {
+        return NextResponse.json({ text: kw.text, recommendations: kw.recommendations, cards: kw.picks, suggestAce: shouldSuggestAce });
+      }
+    }
+
+    // No AI configured (missing/empty GEMINI_API_KEY, or COMPASS_AI=off) — keyword search only
     if (!client) {
       if (process.env.COMPASS_AI !== "off") console.error("Compass.AI: GEMINI_API_KEY is not configured — using keyword search only.");
       const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
