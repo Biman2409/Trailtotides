@@ -497,3 +497,21 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [  83s]   day  4 walk   Litham → Dhunda  4.2 km +530 −0
 [  83s]   day  5 walk   Dhunda → Munirang  7.6 km +500 −1220
 [  83s]   day  6 walk   Munirang → Barua  5.2 km +0 −1130
+── kashmir-great-lakes 18:57:14
+[  37s] kashmir-great-lakes: 456 named places in OpenStreetMap around the trek
+[  76s]   ? Gadsar Pass not matched; nearby: Gadsar campsite (camp, 7.7 km), Gadsar (water, 3.4 km)
+[  77s]   leg Sonamarg → Nichnai (10.4 km apart)
+[  80s]   overpass: overpass-api.de Overpass 502 
+[ 173s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 269s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 279s]   overpass: overpass-api.de Overpass 502 
+[ 291s]   ! path search failed: Overpass 502 
+[ 291s]   ! Sonamarg → Nichnai: a 115.0 km detour for 10.4 km; drawn along the terrain
+[ 293s]   leg Nichnai → Nichnai Pass (3.1 km apart)
+[ 296s]   leg Nichnai Pass → Vishansar Lake (6.0 km apart)
+[ 299s]   leg Vishansar Lake → Gadsar Lake (6.6 km apart)
+[ 301s]   leg Gadsar Lake → Satsar (6.2 km apart)
+[ 303s]   leg Satsar → Zaj Pass (2.4 km apart)
+[ 306s]   leg Zaj Pass → Gangbal Lake (3.1 km apart)
+[ 308s]   leg Gangbal Lake → Naranag (8.9 km apart)
+[ 311s] kashmir-great-lakes: KEPT the saved trail (0.5 km off the mapped paths) over this build's 11.3 km
