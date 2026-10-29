@@ -34,7 +34,7 @@ function readPng(buf) {
     else if (kind === "IDAT") idat.push(data);
     p += 12 + len;
   }
-  const bpp = type === 6 ? 4 : type === 2 ? 3 : type === 3 ? 1 : 0;
+  const bpp = type === 6 ? 4 : type === 2 ? 3 : type === 3 || type === 0 ? 1 : type === 4 ? 2 : 0;
   if (!bpp) throw new Error(`unsupported PNG colour type ${type}`);
   const raw = inflateSync(Buffer.concat(idat)), stride = w * bpp, out = Buffer.alloc(w * h * 3);
   let prev = Buffer.alloc(stride);
@@ -48,6 +48,7 @@ function readPng(buf) {
     for (let x = 0; x < w; x++) {
       const o = (y * w + x) * 3;
       if (type === 3) { const i = line[x] * 3; out[o] = palette[i]; out[o + 1] = palette[i + 1]; out[o + 2] = palette[i + 2]; }
+      else if (type === 0 || type === 4) { out[o] = out[o + 1] = out[o + 2] = line[x * bpp]; }
       else { out[o] = line[x * bpp]; out[o + 1] = line[x * bpp + 1]; out[o + 2] = line[x * bpp + 2]; }
     }
     prev = line;
@@ -178,35 +179,32 @@ export async function terrainPath(a, b, { halfWidth = 150, step = 15, keep = 0.0
 
 // ── Satellite previews ───────────────────────────────────────────────────────
 
-const SAT_Z = 16;
-const satUrl = (x, y) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${SAT_Z}/${y}/${x}`;
+const merc = (lat, lng) => [lng * 20037508.34 / 180, Math.log(Math.tan(((90 + lat) * Math.PI) / 360)) * 6378137];
 
 /**
  * Writes a PNG of the satellite view around `line` ([lat, lng][]) with the line drawn on in
  * orange and `marks` ([lat, lng][]) as white squares. For checking a drawn path by eye; the
- * imagery is Esri's and isn't published.
+ * imagery is Esri's World Imagery (one export request) and isn't published.
  */
 export async function satellitePreview(file, line, marks = []) {
-  const xy = line.map(([la, lo]) => tileXY(la, lo, SAT_Z));
-  const pad = 0.6;
-  const x0 = Math.floor(Math.min(...xy.map((p) => p[0])) - pad), x1 = Math.floor(Math.max(...xy.map((p) => p[0])) + pad);
-  const y0 = Math.floor(Math.min(...xy.map((p) => p[1])) - pad), y1 = Math.floor(Math.max(...xy.map((p) => p[1])) + pad);
-  if ((x1 - x0 + 1) * (y1 - y0 + 1) > 64) return false; // too big to be worth a picture
-  const W = (x1 - x0 + 1) * 256, H = (y1 - y0 + 1) * 256, rgb = Buffer.alloc(W * H * 3);
-  for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++) {
-    const t = await tile(satUrl(tx, ty));
-    for (let y = 0; y < 256; y++) t.rgb.copy(rgb, ((ty - y0) * 256 + y) * W * 3 + (tx - x0) * 256 * 3, y * 256 * 3, (y + 1) * 256 * 3);
-    await sleep(150);
+  const pts = line.map(([la, lo]) => merc(la, lo));
+  let x0 = Math.min(...pts.map((p) => p[0])), x1 = Math.max(...pts.map((p) => p[0]));
+  let y0 = Math.min(...pts.map((p) => p[1])), y1 = Math.max(...pts.map((p) => p[1]));
+  const pad = Math.max(150, 0.25 * Math.max(x1 - x0, y1 - y0));
+  x0 -= pad; x1 += pad; y0 -= pad; y1 += pad;
+  const W = 900, H = Math.max(200, Math.min(1400, Math.round((W * (y1 - y0)) / (x1 - x0))));
+  const url = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=${x0},${y0},${x1},${y1}&bboxSR=3857&imageSR=3857&size=${W},${H}&format=png24&f=image`;
+  const img = await tile(url);
+  const { w, h, rgb } = img;
+  const put = (x, y, c) => { if (x >= 0 && y >= 0 && x < w && y < h) { const o = (y * w + x) * 3; rgb[o] = c[0]; rgb[o + 1] = c[1]; rgb[o + 2] = c[2]; } };
+  const px = ([mx, my]) => [Math.round(((mx - x0) / (x1 - x0)) * w), Math.round(((y1 - my) / (y1 - y0)) * h)];
+  for (let i = 1; i < pts.length; i++) {
+    const [ax, ay] = px(pts[i - 1]), [bx, by] = px(pts[i]), n = Math.max(Math.abs(bx - ax), Math.abs(by - ay), 1);
+    for (let s = 0; s <= n; s++) { const x = Math.round(ax + ((bx - ax) * s) / n), y = Math.round(ay + ((by - ay) * s) / n); put(x, y, [255, 81, 0]); put(x + 1, y, [255, 81, 0]); put(x, y + 1, [255, 81, 0]); }
   }
-  const put = (x, y, c) => { if (x >= 0 && y >= 0 && x < W && y < H) { const o = (y * W + x) * 3; rgb[o] = c[0]; rgb[o + 1] = c[1]; rgb[o + 2] = c[2]; } };
-  const px = ([fx, fy]) => [Math.round((fx - x0) * 256), Math.round((fy - y0) * 256)];
-  for (let i = 1; i < xy.length; i++) {
-    const [ax, ay] = px(xy[i - 1]), [bx, by] = px(xy[i]), n = Math.max(Math.abs(bx - ax), Math.abs(by - ay), 1);
-    for (let s = 0; s <= n; s++) { const x = Math.round(ax + ((bx - ax) * s) / n), y = Math.round(ay + ((by - ay) * s) / n); for (let d = -1; d <= 1; d++) { put(x + d, y, [255, 81, 0]); put(x, y + d, [255, 81, 0]); } }
-  }
-  for (const [la, lo] of marks) { const [x, y] = px(tileXY(la, lo, SAT_Z)); for (let d = -4; d <= 4; d++) for (const e of [-4, 4]) { put(x + d, y + e, [255, 255, 255]); put(x + e, y + d, [255, 255, 255]); } }
+  for (const [la, lo] of marks) { const [x, y] = px(merc(la, lo)); for (let d = -5; d <= 5; d++) for (const e of [-5, 5]) { put(x + d, y + e, [255, 255, 255]); put(x + e, y + d, [255, 255, 255]); } }
   await mkdir(file.slice(0, file.lastIndexOf("/")), { recursive: true });
-  await writeFile(file, writePng(W, H, rgb));
+  await writeFile(file, writePng(w, h, rgb));
   return true;
 }
 

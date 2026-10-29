@@ -199,6 +199,8 @@ async function leg(a, b) {
 // ones are saved as satellite previews for checking by eye.
 const previews = [];
 async function alongTerrain(coords) {
+  // A straight run of points (BRouter splits long path edges) is one segment for this purpose
+  coords = simplify(coords, 3);
   const out = [coords[0]];
   for (let i = 1; i < coords.length; i++) {
     const p = coords[i - 1], q = coords[i], d = dist(p, q);
@@ -208,7 +210,7 @@ async function alongTerrain(coords) {
         const path = await terrainPath([p[0], p[1]], [q[0], q[1]], { halfWidth: Math.min(long ? 0.4 * d : 0.25 * d, 800), step: d > 3000 ? 25 : 15, keep: long ? 0.0005 : 0.003 });
         if (path) {
           out.push(...path.slice(1, -1));
-          if (d > 800) previews.push({ km: d / 1000, line: [p, ...path, q] });
+          if (d > 500) previews.push({ km: d / 1000, line: [p, ...path, q] });
         }
       } catch (e) { console.warn(`  ! terrain unavailable (${e.message}): a ${(d / 1000).toFixed(1)} km segment stays straight`); }
     }
