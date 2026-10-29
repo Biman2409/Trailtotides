@@ -168,10 +168,17 @@ async function leg(a, b) {
     // BRouter gives up when one piece of path is missing; route over the mapped paths ourselves,
     // jumping only the short gaps between them, which are counted as drawn straight
     try {
-      const r = await pathRoute([a.lat, a.lng], [b.lat, b.lng]);
-      let len = 0;
-      if (r) for (let i = 1; i < r.coords.length; i++) len += dist(r.coords[i - 1], r.coords[i]);
-      if (r && len <= Math.max(3 * straight, straight + 8000) && r.bridgedM < 0.6 * len) {
+      // Short jumps between paths first; if the paths still don't join, longer ones, so a leg with
+      // one unmapped stretch (a summit off the path, a gully) is drawn straight only across that
+      let r = null, len = 0;
+      for (const opts of [{}, { bridge: 1500, reach: 3000 }]) {
+        r = await pathRoute([a.lat, a.lng], [b.lat, b.lng], opts);
+        len = 0;
+        if (r) for (let i = 1; i < r.coords.length; i++) len += dist(r.coords[i - 1], r.coords[i]);
+        if (r && len <= Math.max(3 * straight, straight + 8000) && r.bridgedM < 0.6 * len) break;
+        r = null;
+      }
+      if (r) {
         console.warn(`  ~ ${a.name} → ${b.name}: ${e.message}; routed over mapped paths, ${(r.bridgedM / 1000).toFixed(1)} of ${(len / 1000).toFixed(1)} km bridged`);
         const ele = await heights(r.coords);
         return { coords: r.coords.map((p, i) => [p[0], p[1], ele[i]]), approxKm: r.bridgedM / 1000 };
