@@ -42,3 +42,23 @@ Build trails run 40908788641, 2026-10-29T16:09:44Z
 [ 244s]   day  2 walk   Bekaltal → Brahmatal  5.1 km +340 −150
 [ 244s]   day  3 walk   Brahmatal → Brahmatal  4.1 km +510 −510
 [ 244s]   day  4 walk   Brahmatal → Lohajung  10.7 km +140 −1020
+── ali-bedni-bugyal 16:15:29
+[  41s] ali-bedni-bugyal: 370 named places in OpenStreetMap around the trek
+[  48s]   leg Lohajung → Didna (4.3 km apart)
+[  51s]   leg Didna → Ali Bugyal (3.1 km apart)
+[  52s]   leg Ali Bugyal → Bedni Top (2.5 km apart)
+[  54s]   leg Bedni Top → Bedni Bugyal (1.0 km apart)
+[  56s]   leg Bedni Bugyal → Wan (4.8 km apart)
+[  57s]   leg Ali Bugyal → Bedni Top (2.5 km apart)
+[  59s]   Ali Bugyal → Bedni Top is off the line: routed on its own, 3.9 km
+[  59s] ali-bedni-bugyal: 28.5 km, +2040 m, highest 3830 m, 0 km off the mapped paths (drawn along the terrain), 1294 → 299 points
+[  59s]   km     0  Lohajung (2335 m, given, 30.1283,79.619)
+[  59s]   km   7.8  Didna (2459 m, osm, 30.16473,79.63419)  4.3 km from last
+[  59s]   km  14.1  Ali Bugyal (3502 m, osm, 30.18229,79.65865)  3.1 km from last
+[  59s]   km    18  Bedni Top (3830 m, given, 30.20007,79.67382)  2.5 km from last
+[  59s]   km  18.5  Bedni Bugyal (3552 m, given, 30.20635,79.66694)  1.0 km from last
+[  59s]   km  28.5  Wan (2454 m, osm, 30.20504,79.61753)  4.8 km from last
+[  59s]   day  1 walk   Lohajung → Didna  7.8 km +530 −410
+[  59s]   day  2 walk   Didna → Ali Bugyal  6.4 km +1070 −20
+[  59s]   day  3 walk   Ali Bugyal → Bedni Bugyal  4.3 km +220 −220
+[  59s]   day  4 walk   Bedni Bugyal → Wan  10 km +220 −1250
