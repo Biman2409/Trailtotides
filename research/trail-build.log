@@ -245,3 +245,35 @@ Build trails run 40908788641, 2026-10-29T16:09:44Z
 [ 293s]   day  5 walk   Gadsar Lake → Satsar  14.7 km +420 −360
 [ 293s]   day  6 walk   Satsar → Gangbal Lake  7 km +450 −560
 [ 293s]   day  7 walk   Gangbal Lake → Naranag  13.1 km +90 −1380
+── everest-base-camp 16:44:34
+[  28s] everest-base-camp: 286 named places in OpenStreetMap around the trek
+[  50s]   leg Lukla → Phakding (6.0 km apart)
+[  52s]   leg Phakding → Namche Bazaar (7.1 km apart)
+[  53s]   leg Namche Bazaar → Tengboche (6.4 km apart)
+[  55s]   leg Tengboche → Dingboche (9.1 km apart)
+[  57s]   leg Dingboche → Lobuche (6.4 km apart)
+[  59s]   leg Lobuche → Gorak Shep (4.1 km apart)
+[  60s]   leg Gorak Shep → Everest Base Camp (2.9 km apart)
+[  64s]   leg Gorak Shep → Pheriche (9.7 km apart)
+[  65s]   Gorak Shep → Pheriche is off the line: routed on its own, 11.5 km
+[  65s] everest-base-camp: 53.4 km, +3250 m, highest 5645 m, 0 km off the mapped paths (drawn along the terrain), 1510 → 580 points
+[  65s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
+[  65s]   km   7.3  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
+[  65s]   km  17.6  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
+[  65s]   km  27.1  Tengboche (3867 m, osm, 27.83581,86.76461)  6.4 km from last
+[  65s]   km  37.5  Dingboche (4410 m, osm, 27.89352,86.83094)  9.1 km from last
+[  65s]   km  45.4  Lobuche (4910 m, osm, 27.9481,86.81017)  6.4 km from last
+[  65s]   km  49.9  Gorak Shep (5175 m, osm, 27.98068,86.82893)  4.1 km from last
+[  65s]   km  53.4  Everest Base Camp (5364 m, osm, 27.99966,86.84879)  2.9 km from last
+[  65s]   side trip: Kala Patthar (5645 m, osm)
+[  65s]   day  1 walk   Lukla → Phakding  7.3 km +110 −330
+[  65s]   day  2 walk   Phakding → Namche Bazaar  10.3 km +850 −90
+[  65s]   day  3 rest   Namche Bazaar → Namche Bazaar
+[  65s]   day  4 walk   Namche Bazaar → Tengboche  9.5 km +720 −290
+[  65s]   day  5 walk   Tengboche → Dingboche  10.4 km +590 −110
+[  65s]   day  6 rest   Dingboche → Dingboche
+[  65s]   day  7 walk   Dingboche → Lobuche  7.9 km +580 −0
+[  65s]   day  8 walk   Lobuche → Gorak Shep  11.5 km +380 −160
+[  65s]   day  9 walk   Gorak Shep → Pheriche  15.7 km +500 −1400
+[  65s]   day 10 walk   Pheriche → Namche Bazaar  20.9 km +400 −1400
+[  65s]   day 11 walk   Namche Bazaar → Lukla  17.6 km +370 −940
