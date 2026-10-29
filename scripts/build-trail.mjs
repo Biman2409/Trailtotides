@@ -382,6 +382,21 @@ async function build(slug) {
     const median = near[near.length >> 1];
     if (Math.abs(raw[i] - median) > 120) p[2] = median;
   });
+  // A step steeper than 1 in 1 (plus 40 m of noise) between neighbouring points is the elevation
+  // model jumping between a cliff edge and the valley floor, not the path: no trail climbs that
+  // steeply for long. The heights are limited to that slope walking forwards and backwards, and
+  // the two averaged, so a step is spread over the stretch around it
+  const limit = (order) => {
+    const h = full.map((p) => p[2]);
+    for (let n = 1; n < order.length; n++) {
+      const i = order[n], j = order[n - 1], max = 40 + dist(full[i], full[j]);
+      h[i] = Math.min(h[j] + max, Math.max(h[j] - max, h[i]));
+    }
+    return h;
+  };
+  const idx = full.map((_, i) => i);
+  const fwd = limit(idx), back = limit([...idx].reverse());
+  full.forEach((p, i) => { p[2] = Math.round((fwd[i] + back[i]) / 2); });
 
   // Camps the map doesn't have, placed a typical share of the way along the trail between two
   // mapped stops. Their position is an estimate, so days that reach them are marked approximate
