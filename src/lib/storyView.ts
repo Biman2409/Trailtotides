@@ -8,11 +8,16 @@ export const BADGE_TAGS = ["Featured", "TTT Original"];
 /** Shown when a story has no photo, so a card or hero never renders empty */
 export const FALLBACK_HERO = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=80";
 
-/** The activities a writer can pick from; each has an icon in ADVENTURE_TYPE_ICONS */
-export const STORY_ACTIVITIES = [
-  "Trekking", "Motorcycling", "Mountaineering", "Road Trip", "Cycling", "Rock Climbing", "Camping",
-  "River Rafting", "Kayaking", "Diving", "Snorkelling", "Surfing", "Paragliding", "Skiing", "Jeep Safari", "Caving",
+/** Every adventure type on the site, live and coming soon, grouped as on the home page's "Find your format".
+ *  Each has an icon in ADVENTURE_TYPE_ICONS. */
+export const STORY_ACTIVITY_GROUPS = [
+  { label: "Earth", types: ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Motorcycling", "Cycling", "Jeep Safari", "Caving", "Urban Adventure"] },
+  { label: "Water", types: ["River Rafting", "Kayaking", "Diving", "Surfing", "Snorkelling"] },
+  { label: "Snow", types: ["Skiing", "Snowboarding", "Ice Climbing", "Ice Skating"] },
+  { label: "Air", types: ["Paragliding", "Skydiving", "Hot Air Balloon", "Hang Gliding"] },
 ] as const;
+
+export const STORY_ACTIVITIES = STORY_ACTIVITY_GROUPS.flatMap((g) => g.types) as [string, ...string[]];
 
 // next/image only optimises hosts listed in next.config; a pasted URL on any other host
 // would throw, so those load as-is instead

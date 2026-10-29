@@ -6,7 +6,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getPublishedStories, getStoryBySlug } from "@/lib/stories";
 import { BADGE_TAGS, STORY_ACTIVITIES, mapStory, readMinutes, splitParagraphs, storyImage } from "@/lib/storyView";
-import { ChevronLeft, ArrowRight, Crown, MapPin, Clock } from "lucide-react";
+import { ArrowRight, Crown, MapPin, Clock, Compass, Gauge, Heart } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import ShareStoryCTA from "@/components/ui/custom/ShareStoryCTA";
 import StoryCard from "@/components/ui/custom/StoryCard";
@@ -19,6 +19,7 @@ import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import StoryShareButton from "@/components/ui/custom/StoryShareButton";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import { adventures } from "@/lib/data";
+import { matchesSearch } from "@/lib/exploreHelpers";
 
 // Suggest adventures whose place or activity type overlaps with the story.
 function getSuggestedAdventures(story: { region: string; tags: string[] }, limit = 3) {
@@ -40,6 +41,9 @@ function getSuggestedAdventures(story: { region: string; tags: string[] }, limit
   return scored.slice(0, limit).map((x) => x.adventure);
 }
 
+// The author tagline is set in the site script, like the logo tagline
+const script = { fontFamily: "var(--font-script), cursive", fontWeight: 600 } as const;
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
@@ -56,18 +60,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const s = mapStory(story);
   // Search results show about 160 characters; cut at a word, not mid-word
   const description = s.excerpt.length <= 160 ? s.excerpt : `${s.excerpt.slice(0, 157).replace(/\s+\S*$/, "")}…`;
+  const activity = s.pillTags?.[0];
+  // "The Night Photi La Tested Us: Motorcycling in Ladakh" carries the search phrase in the title
+  const title = activity && s.region ? `${s.title}: ${activity} in ${s.region}` : s.title;
   return {
-    title: s.title,
+    title,
     description,
+    keywords: seoKeywords(s, activity),
+    authors: [{ name: s.author }],
     openGraph: {
       title: `${s.title} — Trail to Tides`,
       description,
       url: `https://www.trailtotides.com/stories/${slug}`,
       images: [{ url: s.heroImage, width: 1200, height: 630, alt: s.title }],
       type: "article",
-      publishedTime: s.date,
+      // The adventure date is free text ("July 2022"); this needs a real date
+      publishedTime: story.created_at,
+      modifiedTime: story.updated_at,
       authors: [s.author],
-      tags: s.tags ?? [],
+      tags: s.tags.filter((t) => !BADGE_TAGS.includes(t)),
     },
     twitter: {
       card: "summary_large_image",
@@ -79,9 +90,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// Generate a plausible article body from the excerpt + title
-function buildBody(story: ReturnType<typeof mapStory>): string[] {
-  // Each story gets 4–6 paragraphs synthesised from its metadata
+// The full text of the stories we seeded by hand. Their database rows hold an empty
+// or cut-short body, so this copy is used whenever it is the longer one.
+function buildBody(story: ReturnType<typeof mapStory>): string[] | null {
   const openers: Record<string, string[]> = {
     "what-5000m-feels-like": [
       "The acclimatisation day at 3,800m felt like a formality. We moved slowly up the moraine, stopping every fifty steps to breathe, to look back at the valley floor where the tents looked like coloured seeds scattered by the wind.",
@@ -145,15 +156,20 @@ function buildBody(story: ReturnType<typeof mapStory>): string[] {
     ],
   };
 
-  const generic = [
-    "The approach takes longer than the map suggests — it always does, in the places worth going.",
-    "There is a particular quality of silence in wild places that is not the absence of sound but the absence of human sound. You hear wind, water, birds, your own breath. The contrast with ordinary life is violent.",
-    "Every serious adventure involves a moment where you wonder, briefly, why you came. It passes. What replaces it is harder to name — something that functions like clarity.",
-    "The people who live in and around adventure destinations are usually the most interesting part of the trip, and the least written-about. Ask questions. Accept hospitality. Don't photograph people without permission.",
-    "Coming home is strange. The ordinary world looks different for a few days — too fast, too loud, too predictable. Then it normalises, and you start planning the next one.",
-  ];
+  return openers[story.slug] ?? null;
+}
 
-  return openers[story.slug] ?? generic;
+// Search phrases a reader might type to find this story: the hashtags, plus the
+// activity and place put together the way people search ("motorcycling in ladakh")
+function seoKeywords(story: { tags: string[]; region: string }, activity?: string): string[] {
+  const place = story.region.trim();
+  const words = [
+    ...story.tags.filter((t) => !BADGE_TAGS.includes(t)),
+    ...(activity && place ? [`${activity} in ${place}`, `${place} ${activity.toLowerCase()} story`, `${activity.toLowerCase()} trip ${place}`] : []),
+    ...(place ? [`${place} travel story`, `${place} adventure`] : []),
+    "adventure travel India", "Trail to Tides stories",
+  ];
+  return [...new Set(words.map((w) => w.trim()).filter(Boolean))];
 }
 
 export default async function StoryPage({ params }: Props) {
@@ -161,12 +177,21 @@ export default async function StoryPage({ params }: Props) {
   const dbStory = await getStoryBySlug(slug);
   if (!dbStory) notFound();
   const story = mapStory(dbStory);
-  // Prefer the author's actual submitted body; only fall back to generated filler
-  // for the seed stories, whose `body` column is empty.
-  const body = story.body.trim() ? splitParagraphs(story.body) : buildBody(story);
+  // The stored body, unless the hand-written seed copy has more of the story
+  const seed = buildBody(story);
+  const body = seed && seed.join(" ").length > story.body.trim().length ? seed : splitParagraphs(story.body);
   const minutes = readMinutes([story.excerpt, ...body].join(" "));
   const hero = storyImage(story.heroImage);
   const activity = story.pillTags?.[0];
+  const keywords = seoKeywords(story, activity);
+  // Where each hashtag leads: trips of that kind, trips that match it, or more stories.
+  // A tag nothing matches stays plain text (still read by search engines), never a dead end.
+  const liveTypes = new Set(adventures.map((a) => a.type as string));
+  const tagHref = (tag: string): string | null =>
+    liveTypes.has(tag) ? `/explore?type=${encodeURIComponent(tag)}`
+    : (STORY_ACTIVITIES as readonly string[]).includes(tag) ? `/stories?activity=${encodeURIComponent(tag)}`
+    : adventures.some((a) => matchesSearch(a, tag)) ? `/explore?q=${encodeURIComponent(tag)}`
+    : null;
 
   const allStories = await getPublishedStories();
   // Same activity first, then the newest
@@ -193,13 +218,22 @@ export default async function StoryPage({ params }: Props) {
         url: "https://www.trailtotides.com/icon",
       },
     },
-    datePublished: story.date,
+    datePublished: dbStory.created_at,
+    dateModified: dbStory.updated_at,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `https://www.trailtotides.com/stories/${slug}`,
     },
     url: `https://www.trailtotides.com/stories/${slug}`,
-    keywords: (story.tags ?? []).join(", "),
+    keywords: keywords.join(", "),
+    ...(activity ? { articleSection: activity } : {}),
+    about: [
+      ...(story.region ? [{ "@type": "Place", name: story.region }] : []),
+      ...(activity ? [{ "@type": "Thing", name: activity }] : []),
+    ],
+    wordCount: [story.excerpt, ...body].join(" ").split(/\s+/).length,
+    timeRequired: `PT${minutes}M`,
+    inLanguage: "en-IN",
   };
 
   return (
@@ -244,6 +278,8 @@ export default async function StoryPage({ params }: Props) {
         </div>
       </section>
 
+      {/* Everything below the hero sits on the topographic texture used across the site */}
+      <div className="topo">
       {/* Byline bar: who wrote it, and like / share within reach */}
       <div style={{ borderBottom: "1px solid var(--border-subtle)" }}>
         <div className="max-w-3xl mx-auto px-5 lg:px-8 py-4 flex items-center gap-3">
@@ -252,7 +288,7 @@ export default async function StoryPage({ params }: Props) {
           </div>
           <div className="min-w-0 mr-auto">
             <p className="text-[15px] font-semibold truncate" style={{ color: "var(--text-primary)" }}>{story.author}</p>
-            {story.authorRole && <p className="text-[13px] truncate" style={{ color: "var(--text-tertiary)" }}>{story.authorRole}</p>}
+            {story.authorRole && <p className="text-[16px] truncate leading-tight" style={{ ...script, color: "var(--text-tertiary)" }}>{story.authorRole}</p>}
           </div>
           <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} pill muted />
           <StoryShareButton title={story.title} slug={story.slug} muted />
@@ -291,84 +327,130 @@ export default async function StoryPage({ params }: Props) {
           <div className="flex-1 min-w-0">
             <p className="text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent-ink)" }}>Written by</p>
             <p className="text-lg font-semibold mt-0.5" style={{ color: "var(--text-primary)" }}>{story.author}</p>
-            {story.authorRole && <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>{story.authorRole}</p>}
+            {story.authorRole && <p className="text-[17px] leading-snug" style={{ ...script, color: "var(--text-tertiary)" }}>{story.authorRole}</p>}
             {story.authorBio && <p className="text-[14px] mt-2.5 leading-relaxed" style={{ color: "var(--text-secondary)" }}>{story.authorBio}</p>}
           </div>
         </div>
 
-        {/* Tags: the activity links to more stories like it */}
-        <div className="flex flex-wrap gap-2 mt-8">
-          {story.tags.filter((t) => !BADGE_TAGS.includes(t)).map((tag) =>
-            (STORY_ACTIVITIES as readonly string[]).includes(tag) ? (
-              <Link key={tag} href={`/stories?activity=${encodeURIComponent(tag)}`} className="text-xs font-medium px-3 py-1.5 rounded-full transition-colors hover:text-[#ff5100]"
-                style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)" }}>
-                #{tag}
-              </Link>
-            ) : (
-              <span key={tag} className="text-xs px-3 py-1.5 rounded-full" style={{ background: "var(--bg-surface-2)", color: "var(--text-tertiary)" }}>#{tag}</span>
-            ))}
-        </div>
+        {/* Hashtags: each one is a link into trips or stories on that topic, which is
+            also how search engines find their way from this story to the rest of the site */}
+        <nav aria-label="Topics in this story" className="mt-8">
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] mb-3" style={{ color: "var(--text-tertiary)" }}>Topics in this story</p>
+          <ul className="flex flex-wrap gap-2">
+            {story.tags.filter((t) => !BADGE_TAGS.includes(t)).map((tag) => {
+              const href = tagHref(tag);
+              const chip = "inline-flex items-center text-[13px] font-medium px-3 py-1.5 rounded-full";
+              const look = { background: "var(--bg-surface-2)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)" };
+              return (
+                <li key={tag}>
+                  {href ? (
+                    <Link href={href} rel="tag" className={`${chip} transition-colors hover:text-[#ff5100] hover:border-[#ff5100]/40`} style={look}>
+                      <span style={{ color: "var(--accent-ink)" }}>#</span>{tag}
+                    </Link>
+                  ) : (
+                    <span className={chip} style={{ ...look, color: "var(--text-tertiary)" }}>#{tag}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
 
         <StoryShareBar title={story.title} slug={story.slug} />
 
         <StoryComments slug={story.slug} />
-
-        <div className="mt-10">
-          <ShareStoryCTA heading="Got a story worth telling?" subtext={["Share yours. It might be what gets the next person out the door."]} />
-        </div>
-
-        <Link href="/stories" className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold transition-colors hover:text-[#ff5100]" style={{ color: "var(--text-tertiary)" }}>
-          <ChevronLeft className="w-4 h-4" /> All stories
-        </Link>
       </article>
 
-      {/* Suggested adventures — matched to this story's region and activity */}
-      {suggestedAdventures.length > 0 && (
-        <section className="py-12 lg:py-16 px-5 lg:px-8 border-t" style={{ borderColor: "var(--border-subtle)" }}>
-          <div className="max-w-6xl mx-auto">
-            <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
-              Ready to go yourself?
-            </p>
-            <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight mb-8" style={{ color: "var(--text-primary)" }}>
-              Adventures like this one
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
-              {suggestedAdventures.map((adventure) => (
-                <AdventureCard key={adventure.id} adventure={adventure} size="default" />
-              ))}
+      {/* The turn from reading to going: trips like this one, and a reason to join */}
+      <section className="px-5 lg:px-8 pb-14 lg:pb-20">
+        <div className="max-w-6xl mx-auto rounded-3xl overflow-hidden" style={{ background: "linear-gradient(135deg, rgba(255,81,0,0.14), rgba(255,81,0,0.03) 60%), var(--bg-surface)", border: "1px solid rgba(255,81,0,0.22)" }}>
+          <div className="p-6 sm:p-10 lg:p-12">
+            <div className="grid lg:grid-cols-[1.2fr_1fr] gap-8 lg:gap-12 items-end">
+              <div>
+                <p className="text-[11.5px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "var(--accent-ink)" }}>Inspired?</p>
+                <h2 className="text-3xl sm:text-4xl lg:text-[44px] leading-[1.08]" style={{ color: "var(--text-primary)" }}>
+                  {activity && story.region ? <>Your own {activity.toLowerCase()} story starts here.</> : <>Your own story starts here.</>}
+                </h2>
+                <p className="text-[15.5px] leading-relaxed mt-4 max-w-xl" style={{ color: "var(--text-secondary)" }}>
+                  Trail to Tides is India&apos;s adventure platform. Find the trip, see if you&apos;re ready for it, and go with an operator people vouch for.
+                </p>
+              </div>
+              <ul className="space-y-3">
+                {[
+                  { icon: Compass, t: "Compare trips and verified operators", d: "Prices, dates and reviews side by side." },
+                  { icon: Gauge, t: "Know if you're ready", d: "ACE rates what each trip asks of your body." },
+                  { icon: Heart, t: "Save, plan and log", d: "Keep a wishlist and a passport of where you've been." },
+                ].map((x) => (
+                  <li key={x.t} className="flex gap-3">
+                    <span className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.14)" }}>
+                      <x.icon className="w-4 h-4" style={{ color: "var(--accent-ink)" }} />
+                    </span>
+                    <div>
+                      <p className="text-[14.5px] font-semibold" style={{ color: "var(--text-primary)" }}>{x.t}</p>
+                      <p className="text-[13px]" style={{ color: "var(--text-tertiary)" }}>{x.d}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="flex flex-wrap gap-3 mt-8">
+              <Link href={activity && liveTypes.has(activity) ? `/explore?type=${encodeURIComponent(activity)}` : "/explore"}
+                className="group inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-white text-sm font-semibold px-5 py-3 rounded-xl transition-all hover:-translate-y-0.5" style={{ boxShadow: "0 6px 18px rgba(255,81,0,0.28)" }}>
+                {activity && liveTypes.has(activity) ? `Find ${activity.toLowerCase()} trips` : "Explore adventures"}
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+              <Link href={`/auth/signup?next=${encodeURIComponent(`/stories/${story.slug}`)}`}
+                className="inline-flex items-center gap-2 text-sm font-semibold px-5 py-3 rounded-xl transition-colors hover:border-[#ff5100]/50"
+                style={{ color: "var(--text-primary)", border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}>
+                Join free
+              </Link>
+            </div>
+
+            {suggestedAdventures.length > 0 && (
+              <div className="mt-10 pt-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                <h3 className="text-[15px] font-semibold mb-5" style={{ color: "var(--text-primary)" }}>
+                  Trips like this one
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {suggestedAdventures.map((adventure) => (
+                    <AdventureCard key={adventure.id} adventure={adventure} size="default" />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* More stories */}
+      {others.length > 0 && (
+        <section className="t-bg-surface2 py-12 lg:py-20 px-5 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-end justify-between mb-8 lg:mb-10">
+              <div>
+                <p className="text-xs font-bold tracking-[0.2em] uppercase mb-3" style={{ color: "var(--accent-ink)" }}>Keep reading</p>
+                <h2 className="text-2xl lg:text-3xl" style={{ color: "var(--text-primary)" }}>More from the trails</h2>
+              </div>
+              <Link href="/stories" className="flex items-center gap-1.5 hover:text-[#ff5100] text-sm font-semibold transition-colors group" style={{ color: "var(--text-tertiary)" }}>
+                All stories <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 lg:gap-6">
+              {others.map((s) => <StoryCard key={s.id} story={s} />)}
             </div>
           </div>
         </section>
       )}
 
-      {/* More stories */}
-      <section className="t-bg-surface2 py-12 lg:py-24 px-5 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-8 lg:mb-10">
-            <div>
-              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
-                Keep Reading
-              </p>
-              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
-                More from the trails
-              </h2>
-            </div>
-            <Link
-              href="/stories"
-              className="flex items-center gap-1.5 hover:text-[#ff5100] text-xs lg:text-sm font-medium transition-colors group"
-              style={{ color: "var(--text-tertiary)" }}
-            >
-              All stories
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 lg:gap-6">
-            {others.map((s) => (
-              <StoryCard key={s.id} story={s} />
-            ))}
-          </div>
+      {/* Turn readers into writers */}
+      <section className="px-5 lg:px-8 py-12 lg:py-16">
+        <div className="max-w-3xl mx-auto">
+          <ShareStoryCTA heading="Been somewhere worth writing about?" subtext={["Your story could be the one that gets someone out the door.", "We read every submission."]} />
         </div>
       </section>
+
+      </div>
 
       <Footer />
     </div>

@@ -11,8 +11,10 @@ import { getPublishedStories } from "@/lib/stories";
 import { mapStory, storyImage } from "@/lib/storyView";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import StoriesBrowser from "./StoriesBrowser";
+import SectionTexture from "@/components/ui/custom/SectionTexture";
 
 const serif = { fontFamily: "var(--font-display), Georgia, serif", fontWeight: 600 } as const;
+const script = { fontFamily: "var(--font-script), cursive", fontWeight: 600 } as const;
 
 export const metadata: Metadata = {
   title: "Field Stories",
@@ -46,13 +48,14 @@ export default async function StoriesPage() {
   const places = new Set(stories.map((s) => s.region.trim().toLowerCase())).size;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen t-bg-page topo">
       <Navbar />
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden pt-20 lg:pt-24 pb-10 sm:pb-14" style={{ background: "linear-gradient(180deg, rgba(255,81,0,0.07), transparent 85%)" }}>
+        <SectionTexture kind="trail" color="#ff5100" at="85% 20%" opacity={0.08} />
         <Breadcrumbs items={[{ label: "Stories" }]} />
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-4 sm:pt-8 grid lg:grid-cols-[1fr_auto] gap-8 lg:items-end">
+        <div className="relative max-w-7xl mx-auto px-5 lg:px-8 pt-4 sm:pt-8 grid lg:grid-cols-[1fr_auto] gap-8 lg:items-end">
           <div>
             <p className="text-[11.5px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "var(--accent-ink)" }}>Stories</p>
             <h1 className="text-[42px] sm:text-6xl lg:text-7xl t-text leading-[1.02]" style={{ ...serif, letterSpacing: "-0.025em" }}>
@@ -190,7 +193,7 @@ function FeaturedStory({ story }: { story: ReturnType<typeof mapStory> }) {
           </div>
           <div className="min-w-0 mr-auto">
             <p className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>{story.author}</p>
-            {story.authorRole && <p className="text-[13px] truncate" style={{ color: "var(--text-tertiary)" }}>{story.authorRole}</p>}
+            {story.authorRole && <p className="text-[16px] truncate leading-tight" style={{ ...script, color: "var(--text-tertiary)" }}>{story.authorRole}</p>}
           </div>
           <div className="relative z-10 flex items-center gap-2">
             <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} pill muted />

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import SubmitClient from "./SubmitClient";
+import { adventures } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Submit Your Story",
@@ -15,5 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default function SubmitStoryPage() {
-  return <SubmitClient />;
+  // Types with trips listed today; the picker marks the rest "Soon"
+  const liveTypes = [...new Set(adventures.map((a) => a.type as string))];
+  return <SubmitClient liveTypes={liveTypes} />;
 }

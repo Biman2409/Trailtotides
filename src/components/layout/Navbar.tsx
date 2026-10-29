@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, BadgeCheck, ArrowRight, Library, Gauge } from "lucide-react";
+import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, BadgeCheck, ArrowRight, Library } from "lucide-react";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { MountainSnow } from "@/lib/localIcons";
 import Image from "next/image";
@@ -22,24 +22,16 @@ const navLinks = [
   // Same icons as the hero's Fitness match / Verified operators pop-outs
   { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark },
   { href: "/operators", label: "Operators", icon: BadgeCheck },
+  // Guides goes straight to Adventurepedia, the guides library
+  { href: "/adventurepedia", label: "Guides", icon: Library },
 ];
 
-// "Guides": everything to read before you go, under one menu. Adventurepedia leads.
-const guideLinks = [
-  { href: "/adventurepedia", label: "Adventurepedia", blurb: "A guide to every trek, plus planning, safety and gear", icon: Library },
-  { href: "/ace", label: "How ACE works", blurb: "How we rate what an adventure asks of you", icon: Gauge },
-];
-const popularGuides = [
-  { href: "/adventurepedia/altitude-sickness", label: "Altitude sickness" },
-  { href: "/adventurepedia/what-to-pack", label: "What to pack" },
-  { href: "/adventurepedia/offline-maps", label: "Offline maps" },
-];
-const isGuides = (path: string) => guideLinks.some((l) => path === l.href || path.startsWith(`${l.href}/`));
+// Active on the page itself and anything under it (/adventurepedia/altitude-sickness lights Guides)
+const isActiveLink = (path: string, href: string) => href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mobileGuidesOpen, setMobileGuidesOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null);
@@ -100,8 +92,6 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => { setMenuOpen(false); setUserMenuOpen(false); }, [pathname]);
-  // Guides starts folded each time the mobile menu opens
-  useEffect(() => { if (!menuOpen) setMobileGuidesOpen(false); }, [menuOpen]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 0);
@@ -201,7 +191,7 @@ export default function Navbar() {
           {/* Desktop nav links — centered on the page via the grid column, not just optically balanced */}
           <div className="hidden lg:flex items-center justify-self-center gap-1 p-1 rounded-full" style={{ position: "relative", background: isTransparent ? "rgba(0,0,0,0.25)" : "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive = isActiveLink(pathname, link.href);
               const Icon = link.icon;
 
               if (link.iconOnly) {
@@ -244,7 +234,6 @@ export default function Navbar() {
               );
             })}
 
-            <GuidesMenu pathname={pathname} isTransparent={isTransparent} />
             </div>
 
           {/* Desktop right side */}
@@ -537,43 +526,14 @@ export default function Navbar() {
               href={link.href}
               className="flex items-center py-3 px-3 text-base font-medium rounded-xl transition-colors"
               style={{
-                color: pathname === link.href ? "var(--text-primary)" : "var(--nav-text)",
-                background: pathname === link.href ? "var(--nav-active-bg)" : "transparent",
+                color: isActiveLink(pathname, link.href) ? "var(--text-primary)" : "var(--nav-text)",
+                background: isActiveLink(pathname, link.href) ? "var(--nav-active-bg)" : "transparent",
                 borderBottom: "1px solid var(--border-subtle)",
               }}
             >
               {link.label}
             </Link>
           ))}
-          {/* Guides: one row like the others; tap it to reveal Adventurepedia, Stories and ACE */}
-          <button
-            type="button"
-            onClick={() => setMobileGuidesOpen((o) => !o)}
-            aria-expanded={mobileGuidesOpen}
-            className="w-full flex items-center justify-between py-3 px-3 text-base font-medium rounded-xl transition-colors"
-            style={{
-              color: isGuides(pathname) ? "var(--text-primary)" : "var(--nav-text)",
-              background: isGuides(pathname) ? "var(--nav-active-bg)" : "transparent",
-              borderBottom: "1px solid var(--border-subtle)",
-            }}
-          >
-            Guides
-            <ChevronDown className={`w-4 h-4 transition-transform ${mobileGuidesOpen ? "rotate-180" : ""}`} style={{ color: "var(--text-muted)" }} />
-          </button>
-          {mobileGuidesOpen && guideLinks.map((link) => {
-            const on = pathname === link.href || pathname.startsWith(`${link.href}/`);
-            return (
-              <Link key={link.href} href={link.href}
-                className="flex items-center gap-3 py-2.5 pl-6 pr-3 rounded-xl transition-colors"
-                style={{ background: on ? "var(--nav-active-bg)" : "transparent", borderBottom: "1px solid var(--border-subtle)" }}>
-                <link.icon className="w-4 h-4 shrink-0" style={{ color: "var(--accent-ink)" }} />
-                <span className="min-w-0">
-                  <span className="block text-base font-medium" style={{ color: on ? "var(--text-primary)" : "var(--nav-text)" }}>{link.label}</span>
-                  <span className="block text-[12px] truncate" style={{ color: "var(--text-tertiary)" }}>{link.blurb}</span>
-                </span>
-              </Link>
-            );
-          })}
           {/* Mobile search */}
           <div className="flex items-center gap-2 py-2 px-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
             <button
@@ -663,95 +623,5 @@ export default function Navbar() {
 
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </nav>
-  );
-}
-
-/** The desktop "Guides" drop-down: opens on hover or click, closes on Escape, outside click or navigation */
-function GuidesMenu({ pathname, isTransparent }: { pathname: string; isTransparent: boolean }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const active = isGuides(pathname);
-
-  useEffect(() => { setOpen(false); }, [pathname]);
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false); };
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
-    document.addEventListener("mousedown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => { document.removeEventListener("mousedown", onDown); document.removeEventListener("keydown", onKey); };
-  }, [open]);
-
-  // Hover opens it, so a click that follows a hover keeps it open instead of toggling it shut
-  const openedByHover = useRef(false);
-  // A short grace period so the pointer can travel from the button into the panel
-  const enter = () => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    if (!open) openedByHover.current = true;
-    setOpen(true);
-  };
-  const click = () => {
-    if (openedByHover.current) { openedByHover.current = false; setOpen(true); }
-    else setOpen((o) => !o);
-  };
-  const leave = () => { openedByHover.current = false; closeTimer.current = setTimeout(() => setOpen(false), 160); };
-  const [lead, ...rest] = guideLinks;
-
-  return (
-    <div ref={ref} className="relative" onMouseEnter={enter} onMouseLeave={leave}>
-      <button
-        type="button"
-        onClick={click}
-        aria-expanded={open}
-        aria-haspopup="true"
-        className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200"
-        style={{
-          color: active ? "#fff" : isTransparent ? "rgba(255,255,255,0.75)" : "var(--nav-text)",
-          background: active ? "#ff5100" : open ? "var(--nav-active-bg)" : "transparent",
-          boxShadow: active ? "0 4px 14px rgba(255,81,0,0.35)" : "none",
-        }}
-      >
-        {active && <Library className="w-3.5 h-3.5" />}
-        Guides
-        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
-
-      {open && (
-        <div className="absolute right-0 top-full pt-3 z-50">
-          <div className="w-[380px] rounded-2xl shadow-2xl overflow-hidden" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}>
-            {/* Adventurepedia leads, with a few guides people open most */}
-            <Link href={lead.href} className="group block p-4 transition-colors hover:bg-[var(--bg-card-hover)]" style={{ background: "rgba(255,81,0,0.05)", borderBottom: "1px solid var(--border-subtle)" }}>
-              <span className="flex items-center gap-3">
-                <span className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "#ff5100" }}><lead.icon className="w-5 h-5 text-white" /></span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-[15px] font-semibold" style={{ color: "var(--text-primary)" }}>{lead.label}</span>
-                  <span className="block text-[12.5px]" style={{ color: "var(--text-secondary)" }}>{lead.blurb}</span>
-                </span>
-                <ArrowRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5" style={{ color: "var(--accent-ink)" }} />
-              </span>
-            </Link>
-            <div className="px-4 pt-3 pb-3.5 flex flex-wrap items-center gap-1.5" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-              <span className="text-[11px] font-semibold uppercase tracking-wider mr-1" style={{ color: "var(--text-tertiary)" }}>Popular</span>
-              {popularGuides.map((g) => (
-                <Link key={g.href} href={g.href} className="text-[12.5px] font-medium px-2.5 py-1 rounded-full transition-colors hover:border-[#ff5100]/50"
-                  style={{ color: "var(--text-primary)", border: "1px solid var(--border-subtle)", background: "var(--bg-surface-2)" }}>
-                  {g.label}
-                </Link>
-              ))}
-            </div>
-            {rest.map((l) => (
-              <Link key={l.href} href={l.href} className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[var(--bg-card-hover)]">
-                <l.icon className="w-4 h-4 shrink-0" style={{ color: "var(--accent-ink)" }} />
-                <span className="min-w-0 flex-1">
-                  <span className="block text-[14px] font-semibold" style={{ color: "var(--text-primary)" }}>{l.label}</span>
-                  <span className="block text-[12.5px]" style={{ color: "var(--text-tertiary)" }}>{l.blurb}</span>
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
   );
 }

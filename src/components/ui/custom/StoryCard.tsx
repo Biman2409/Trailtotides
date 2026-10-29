@@ -10,6 +10,8 @@ import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import { BADGE_TAGS, storyImage } from "@/lib/storyView";
 
 const serif = { fontFamily: "var(--font-display), Georgia, serif", fontWeight: 600 } as const;
+// The author tagline is set in the site script, like the logo tagline
+const script = { fontFamily: "var(--font-script), cursive", fontWeight: 600 } as const;
 
 export default function StoryCard({ story }: { story: Story }) {
   const isFeatured = story.tags.includes("Featured");
@@ -89,7 +91,7 @@ export default function StoryCard({ story }: { story: Story }) {
             </div>
             <div className="min-w-0">
               <p className="text-[13px] font-semibold truncate leading-tight" style={{ color: "var(--text-primary)" }}>{story.author}</p>
-              {story.authorRole && <p className="text-[11.5px] truncate leading-tight" style={{ color: "var(--text-tertiary)" }}>{story.authorRole}</p>}
+              {story.authorRole && <p className="text-[14px] truncate leading-tight" style={{ ...script, color: "var(--text-tertiary)" }}>{story.authorRole}</p>}
             </div>
           </div>
 

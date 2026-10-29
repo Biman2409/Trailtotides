@@ -7,6 +7,8 @@ import Footer from "@/components/layout/Footer";
 import { createClient } from "@/lib/supabase/client";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import { STORY_ACTIVITIES, readMinutes, wordCount } from "@/lib/storyView";
+import ActivityPicker from "./ActivityPicker";
+import SectionTexture from "@/components/ui/custom/SectionTexture";
 import {
   ArrowRight, ArrowLeft, CheckCircle2, Calendar, Image as ImageIcon, MapPin, X, Upload,
   PenLine, ShieldCheck, Send, Lightbulb, Loader2, Check,
@@ -53,6 +55,7 @@ function validate(f: FormData, consent: boolean): Partial<Record<Field, string>>
   if (!f.title.trim()) e.title = "Give your story a title.";
   if (!f.region.trim()) e.region = "Where did it happen?";
   if (!f.dateOfAdventure.trim()) e.dateOfAdventure = "Roughly when? A month and year is fine.";
+  if (!STORY_ACTIVITIES.includes(f.activity)) e.activity = "Pick the kind of trip. Search if you don't see it.";
   if (!f.heroImageUrl.trim()) e.heroImageUrl = "Add one photo from the trip. It leads your story.";
   else if (!isHttpsUrl(f.heroImageUrl.trim())) e.heroImageUrl = "That link doesn't look right. Use one starting with https://";
   if (!f.excerpt.trim()) e.excerpt = "Sum it up in a line or two.";
@@ -60,12 +63,14 @@ function validate(f: FormData, consent: boolean): Partial<Record<Field, string>>
   const words = wordCount(f.body);
   if (words < MIN_WORDS) e.body = `A little more, please: at least ${MIN_WORDS} words (you have ${words}).`;
   if (!f.authorName.trim()) e.authorName = "Who's telling it?";
+  if (!f.authorRole.trim()) e.authorRole = "A few words readers see under your name, like \"Weekend biker from Pune\".";
+  if (f.authorBio.trim().length < 20) e.authorBio = "Tell readers a little about yourself (a sentence or two).";
   if (!consent) e.consent = "Please confirm this before sending.";
   return e;
 }
 
 // The order fields appear in, so we can scroll to the first one with a problem
-const FIELD_ORDER: Field[] = ["title", "region", "dateOfAdventure", "heroImageUrl", "excerpt", "body", "authorName", "consent"];
+const FIELD_ORDER: Field[] = ["title", "region", "dateOfAdventure", "activity", "heroImageUrl", "excerpt", "body", "authorName", "authorRole", "authorBio", "consent"];
 
 function Label({ htmlFor, children, required, hint }: { htmlFor?: string; children: React.ReactNode; required?: boolean; hint?: React.ReactNode }) {
   return (
@@ -99,7 +104,7 @@ function Step({ n, title, sub, children }: { n: number; title: string; sub: stri
   );
 }
 
-export default function SubmitStoryPage() {
+export default function SubmitStoryPage({ liveTypes }: { liveTypes: string[] }) {
   const [form, setForm] = useState<FormData>(INITIAL);
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
@@ -221,12 +226,13 @@ export default function SubmitStoryPage() {
   const hasContent = Object.values(form).some((v) => v.trim());
 
   return (
-    <div className="min-h-screen t-bg-page">
+    <div className="min-h-screen t-bg-page topo">
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-24 lg:pt-28 pb-8 sm:pb-10 px-5 lg:px-8" style={{ background: "linear-gradient(180deg, rgba(255,81,0,0.07), transparent 85%)" }}>
-        <div className="max-w-6xl mx-auto">
+      <section className="relative overflow-hidden pt-24 lg:pt-28 pb-8 sm:pb-10 px-5 lg:px-8" style={{ background: "linear-gradient(180deg, rgba(255,81,0,0.07), transparent 85%)" }}>
+        <SectionTexture kind="trail" color="#ff5100" at="85% 20%" opacity={0.08} />
+        <div className="relative max-w-6xl mx-auto">
           <Link href="/stories" className="inline-flex items-center gap-1.5 text-[13px] font-semibold mb-5 transition-colors hover:text-[#ff5100] group" style={{ color: "var(--text-tertiary)" }}>
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
             Stories
@@ -315,25 +321,12 @@ export default function SubmitStoryPage() {
                     </div>
                   </div>
 
-                  <fieldset>
-                    <legend className="text-[13px] font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
-                      What kind of trip <span className="ml-1 text-[12px] font-normal" style={{ color: "var(--text-tertiary)" }}>optional</span>
-                    </legend>
-                    <div className="flex flex-wrap gap-2">
-                      {STORY_ACTIVITIES.map((a) => {
-                        const on = form.activity === a;
-                        return (
-                          <button key={a} type="button" aria-pressed={on} onClick={() => set("activity", on ? "" : a)}
-                            className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full text-[13px] font-medium transition-colors"
-                            style={on
-                              ? { background: "#ff5100", color: "#fff", border: "1px solid #ff5100" }
-                              : { background: "var(--bg-card)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)" }}>
-                            {ADVENTURE_TYPE_ICONS[a]?.(13)}{a}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </fieldset>
+                  <div>
+                    <Label htmlFor="f-activity" required>What kind of trip</Label>
+                    <ActivityPicker id="f-activity" value={form.activity} onChange={(v) => set("activity", v)} live={liveTypes}
+                      invalid={!!err("activity")} describedBy={err("activity") ? "e-activity" : undefined} />
+                    <FieldError id="e-activity" msg={err("activity")} />
+                  </div>
 
                   {/* Photo */}
                   <div>
@@ -411,13 +404,17 @@ export default function SubmitStoryPage() {
                       <FieldError id="e-authorName" msg={err("authorName")} />
                     </div>
                     <div>
-                      <Label htmlFor="f-authorRole">A few words about you</Label>
-                      <input id="f-authorRole" name="authorRole" maxLength={60} value={form.authorRole} onChange={onChange} placeholder="Weekend biker from Pune" className={inputClass} style={inputStyle()} />
+                      <Label htmlFor="f-authorRole" required hint={`${form.authorRole.length}/60`}>Tagline</Label>
+                      <input name="authorRole" maxLength={60} value={form.authorRole} onChange={onChange} placeholder="Weekend biker from Pune" className={inputClass} style={inputStyle(!!err("authorRole"))} {...aria("authorRole")} />
+                      <FieldError id="e-authorRole" msg={err("authorRole")} />
+                      <p className="text-[12px] mt-1.5" style={{ color: "var(--text-tertiary)" }}>Shown under your name on the story and its card.</p>
                     </div>
                   </div>
                   <div>
-                    <Label htmlFor="f-authorBio" hint={`${form.authorBio.length}/400`}>Short bio</Label>
-                    <textarea id="f-authorBio" name="authorBio" rows={3} maxLength={400} value={form.authorBio} onChange={onChange} placeholder="Where you're from, what gets you outdoors, how long you've been at it." className={`${inputClass} resize-none`} style={inputStyle()} />
+                    <Label htmlFor="f-authorBio" required hint={`${form.authorBio.length}/400`}>Short bio</Label>
+                    <textarea name="authorBio" rows={3} maxLength={400} value={form.authorBio} onChange={onChange} placeholder="Where you're from, what gets you outdoors, how long you've been at it." className={`${inputClass} resize-none`} style={inputStyle(!!err("authorBio"))} {...aria("authorBio")} />
+                    <FieldError id="e-authorBio" msg={err("authorBio")} />
+                    <p className="text-[12px] mt-1.5" style={{ color: "var(--text-tertiary)" }}>Appears in the &ldquo;Written by&rdquo; box at the end of your story.</p>
                   </div>
                 </Step>
 
@@ -476,7 +473,10 @@ export default function SubmitStoryPage() {
                       </p>
                       <p className="text-[18px] leading-snug line-clamp-2" style={{ ...serif, color: form.title ? "var(--text-primary)" : "var(--text-tertiary)" }}>{form.title || "Your title"}</p>
                       <p className="text-[13px] leading-relaxed line-clamp-3 mt-1.5" style={{ color: "var(--text-secondary)" }}>{form.excerpt || "Your hook shows here."}</p>
-                      <p className="text-[12.5px] font-semibold mt-3 pt-3" style={{ color: "var(--text-primary)", borderTop: "1px solid var(--border-subtle)" }}>{form.authorName || "Your name"}</p>
+                      <div className="mt-3 pt-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                        <p className="text-[12.5px] font-semibold truncate" style={{ color: "var(--text-primary)" }}>{form.authorName || "Your name"}</p>
+                        <p className="text-[14px] truncate leading-tight" style={{ fontFamily: "var(--font-script), cursive", fontWeight: 600, color: "var(--text-tertiary)" }}>{form.authorRole || "Your tagline"}</p>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -11,11 +11,11 @@ const storySubmitSchema = z.object({
   excerpt: z.string().trim().min(1, "Add a short hook.").max(500, "The hook is too long."),
   body: z.string().trim().min(200, "The story is too short. Tell us a bit more.").max(40000, "The story is too long for one post."),
   authorName: z.string().trim().min(1, "Add your name.").max(100),
-  authorRole: z.string().trim().max(100).optional(),
-  authorBio: z.string().trim().max(1000).optional(),
+  authorRole: z.string().trim().min(1, "Add a tagline to show under your name.").max(100),
+  authorBio: z.string().trim().min(20, "Add a short bio, a sentence or two.").max(1000),
   dateOfAdventure: z.string().trim().min(1, "Add when it happened.").max(50),
   region: z.string().trim().min(1, "Add where it happened.").max(100),
-  activity: z.enum(STORY_ACTIVITIES).optional().or(z.literal("")),
+  activity: z.enum(STORY_ACTIVITIES, { message: "Pick the kind of trip." }),
   // https only: the photo is shown on the public site
   heroImageUrl: z.string().trim().max(2000).refine((u) => {
     try { return new URL(u).protocol === "https:"; } catch { return false; }
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
     if (avatarId) authorAvatar = `/avatars/avatar-${avatarId}.png`;
 
     // AI-calculated values
-    const tagList = calcTags(title, excerpt, region, activity || undefined);
+    const tagList = calcTags(title, excerpt, region, activity);
 
     const now = new Date().toISOString();
 
@@ -96,8 +96,8 @@ export async function POST(req: NextRequest) {
       excerpt,
       body: storyBody,
       author_name: authorName,
-      author_role: authorRole || "",
-      author_bio: authorBio || "",
+      author_role: authorRole,
+      author_bio: authorBio,
       author_avatar: authorAvatar,
       hero_image: heroImageUrl,
       tags: tagList,

@@ -104,7 +104,8 @@ export default function FindYourFormat() {
       {/* Background accent glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-24 right-[8%] w-96 h-96 rounded-full opacity-[0.05] dark:opacity-[0.08] blur-[100px]" style={{ background: "#ff5100" }} />
-        <SectionTexture kind="tides" color="#3fc6bd" at="88% 18%" opacity={0.16} />
+        {/* Waves pool bottom-left; "In season" has the same texture top-right */}
+        <SectionTexture kind="tides" color="#3fc6bd" at="10% 85%" opacity={0.16} />
       </div>
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
