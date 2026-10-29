@@ -72,6 +72,7 @@ jobs:
             echo "push failed, will retry after the next trek" | tee -a $LOG
           }
           failed=0
+          export TRAIL_COUNT=$(echo $TREKS | wc -w)
           for t in $TREKS; do
             echo "── $t $(date -u +%T)" | tee -a $LOG
             timeout 900 node scripts/build-trail.mjs "$t" 2>&1 | tee -a $LOG

@@ -455,7 +455,8 @@ async function build(slug) {
   }
   await writeFile(`src/lib/trails/${slug}.json`, JSON.stringify(trail));
   // The longest stretches drawn along the terrain, on satellite imagery, for checking by eye
-  if (process.env.TRAIL_PREVIEWS) {
+  // (only for small runs: a preview is a few MB, too many to keep for a full rebuild)
+  if (process.env.TRAIL_PREVIEWS && Number(process.env.TRAIL_COUNT ?? 1) <= 4) {
     const longest = [...previews].sort((x, y) => y.km - x.km).slice(0, 4);
     for (const [n, p] of longest.entries()) {
       const file = `research/previews/${slug}-${n + 1}.png`;

@@ -174,7 +174,45 @@ export async function terrainPath(a, b, { halfWidth = 150, step = 15, keep = 0.0
     path.push([la, lo, Math.round(ele[u])]);
     if (u === start) break;
   }
-  return path.reverse();
+  return smooth(path.reverse());
+}
+
+/**
+ * The grid's route has the grid's corners: steps that double back on themselves and right-angled
+ * kinks. Points where the route turns back by more than 120° are dropped (a spike, not a
+ * switchback: real switchbacks come in runs the terrain asks for, which survive this), then the
+ * corners are rounded by two rounds of Chaikin's corner cutting. The ends stay where they are.
+ */
+function smooth(path) {
+  const k = Math.cos((path[0][0] * Math.PI) / 180);
+  const turn = (a, b, c) => {
+    const ux = (b[1] - a[1]) * k, uy = b[0] - a[0], vx = (c[1] - b[1]) * k, vy = c[0] - b[0];
+    const n = Math.hypot(ux, uy) * Math.hypot(vx, vy);
+    return n ? Math.acos(Math.max(-1, Math.min(1, (ux * vx + uy * vy) / n))) : 0;
+  };
+  let p = path;
+  for (let changed = true; changed && p.length > 2;) {
+    changed = false;
+    const q = [p[0]];
+    for (let i = 1; i < p.length - 1; i++) {
+      if (turn(q[q.length - 1], p[i], p[i + 1]) > (2 * Math.PI) / 3) { changed = true; continue; }
+      q.push(p[i]);
+    }
+    q.push(p[p.length - 1]);
+    p = q;
+  }
+  for (let round = 0; round < 2; round++) {
+    const q = [p[0]];
+    for (let i = 0; i < p.length - 1; i++) {
+      const [a, b] = [p[i], p[i + 1]];
+      const at = (t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, Math.round(a[2] + (b[2] - a[2]) * t)];
+      if (i > 0) q.push(at(0.25));
+      if (i < p.length - 2) q.push(at(0.75));
+    }
+    q.push(p[p.length - 1]);
+    p = q;
+  }
+  return p;
 }
 
 // ── Satellite previews ───────────────────────────────────────────────────────
