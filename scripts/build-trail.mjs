@@ -519,9 +519,9 @@ async function build(slug) {
   await mkdir("src/lib/trails", { recursive: true });
   // The map services fail now and then, and a leg they fail on is drawn off the mapped paths: a build with
   // more straight km than the trail already saved is worse, so the saved one is kept. Unless the stops
-  // have moved: then the saved trail goes to the wrong places, however well mapped
+  // or camps have moved: then the saved trail goes to the wrong places, however well mapped
   const prev = await readFile(`src/lib/trails/${slug}.json`, "utf8").then(JSON.parse).catch(() => null);
-  const where = (t) => [...t.stops, ...t.side].map((p) => `${p.name}@${p.lat.toFixed(4)},${p.lng.toFixed(4)}`).join("|");
+  const where = (t) => [...t.stops, ...t.side, ...t.sleepPlaces].map((p) => `${p.name}@${p.lat.toFixed(4)},${p.lng.toFixed(4)}`).join("|");
   if (prev && (prev.approxKm ?? 0) + 0.1 < trail.approxKm && where(prev) === where(trail)) {
     console.log(`${slug}: KEPT the saved trail (${prev.approxKm ?? 0} km off the mapped paths) over this build's ${trail.approxKm} km`);
     return;
