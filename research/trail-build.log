@@ -1,79 +1,31 @@
-Build trails run 40861559648, 2026-10-29T10:57:14Z
-── pangarchulla-peak 10:57:14
-[  39s] pangarchulla-peak: 216 named places in OpenStreetMap around the trek
-[  41s]   leg Dhak → Khullara (4.9 km apart)
-[  53s]   leg Khullara → Pangarchulla (4.0 km apart)
-[ 138s]   ~ Khullara → Pangarchulla: nearest path is 2022 m away; routed over mapped paths, 2.0 of 4.8 km bridged
-[ 158s]   preview: research/previews/pangarchulla-peak-1.png (2.0 km drawn along the terrain)
-[ 158s] pangarchulla-peak: 13.2 km, +2560 m, highest 4559 m, 2 km off the mapped paths (drawn along the terrain), 303 → 148 points
-[ 158s]   km     0  Dhak (2106 m, osm, 30.49886,79.61134)
-[ 158s]   km   8.1  Khullara (3393 m, osm, 30.45968,79.58748)  4.9 km from last
-[ 158s]   km  13.2  Pangarchulla (4559 m, osm, 30.42367,79.59214)  4.0 km from last
-[ 158s]   camp (estimated): Gulling (2291 m, 30.47791,79.60819)
-[ 158s]   day  1 walk   Dhak → Gulling  4.1 km +340 −110 (approx)
-[ 158s]   day  2 walk   Gulling → Khullara  4 km +1060 −0
-[ 158s]   day  3 walk   Khullara → Khullara  10.4 km +1140 −1150
-[ 158s]   day  4 walk   Khullara → Dhak  8.1 km +120 −1440
-── bali-pass 10:59:54
-[  32s] bali-pass: 327 named places in OpenStreetMap around the trek
-[  51s]   leg Taluka → Seema (10.8 km apart)
-[  54s]   leg Seema → Rainbasera (4.9 km apart)
-[  56s]   leg Rainbasera → Ruinsara Tal (6.6 km apart)
-[  57s]   leg Ruinsara Tal → Odari (2.3 km apart)
-[  59s]   leg Odari → Bali Pass (3.9 km apart)
-[  61s]   leg Bali Pass → Janki Chatti (6.3 km apart)
-[ 115s]   overpass: overpass-api.de Overpass 502 
-[ 198s]   ~ Bali Pass → Janki Chatti: a 279.2 km detour for 6.3 km; routed over mapped paths, 0.7 of 9.4 km bridged
-[ 209s]   preview: research/previews/bali-pass-1.png (0.6 km drawn along the terrain)
-[ 209s] bali-pass: 42.7 km, +2970 m, highest 4869 m, 0.7 km off the mapped paths (drawn along the terrain), 989 → 420 points
-[ 209s]   km     0  Taluka (2097 m, osm, 31.07782,78.24579)
-[ 209s]   km  12.2  Seema (2601 m, osm, 31.11703,78.34994)  10.8 km from last
-[ 209s]   km  17.9  Rainbasera (3051 m, osm, 31.11588,78.40142)  4.9 km from last
-[ 209s]   km    25  Ruinsara Tal (3601 m, osm, 31.08119,78.45786)  6.6 km from last
-[ 209s]   km  28.9  Odari (3992 m, osm, 31.06098,78.46323)  2.3 km from last
-[ 209s]   km  33.1  Bali Pass (4800 m, osm, 31.03299,78.43803)  3.9 km from last
-[ 209s]   km  42.7  Janki Chatti (2558 m, osm, 30.97645,78.43834)  6.3 km from last
-[ 209s]   camp (estimated): Lower Damini (3785 m, 31.00604,78.45465)
-[ 209s]   day  1 walk   Taluka → Seema  12.2 km +590 −80
-[ 209s]   day  2 walk   Seema → Rainbasera  5.7 km +500 −70
-[ 209s]   day  3 walk   Rainbasera → Ruinsara Tal  7.1 km +550 −0
-[ 209s]   day  4 walk   Ruinsara Tal → Odari  3.9 km +460 −60
-[ 209s]   day  5 walk   Odari → Lower Damini  8.1 km +850 −1070 (approx)
-[ 209s]   day  6 walk   Lower Damini → Janki Chatti  5.7 km +20 −1210
-── kashmir-great-lakes 11:03:26
-[   1s]   overpass: overpass-api.de Overpass 502 
-[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 236s] kashmir-great-lakes: 456 named places in OpenStreetMap around the trek
-[ 239s]   ? Gadsar Pass not matched; nearby: Gadsar campsite (camp, 7.9 km), Gadsar (water, 3.4 km)
-[ 239s]   leg Sonamarg → Nichnai (10.4 km apart)
-[ 289s]   overpass: overpass-api.de Overpass 504 Error : runtime error: open64: 0 Success /osm3s_osm_base Dispatcher_Client::request_read_and_idx::timeout.
-[ 382s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 478s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 487s]   overpass: overpass-api.de Overpass 502 
-[ 499s]   ! path search failed: Overpass 502 
-[ 499s]   ! Sonamarg → Nichnai: a 115.0 km detour for 10.4 km; drawn along the terrain
-[ 501s]   leg Nichnai → Nichnai Pass (3.1 km apart)
-[ 503s]   leg Nichnai Pass → Vishansar Lake (5.7 km apart)
-[ 505s]   leg Vishansar Lake → Gadsar Lake (6.8 km apart)
-[ 507s]   leg Gadsar Lake → Satsar (6.0 km apart)
-[ 509s]   leg Satsar → Gangbal Lake (5.4 km apart)
-[ 510s]   leg Gangbal Lake → Naranag (8.9 km apart)
-[ 513s] kashmir-great-lakes: KEPT the saved trail (0.5 km off the mapped paths) over this build's 10.4 km
-── pindari-glacier 11:12:01
-[  28s] pindari-glacier: 377 named places in OpenStreetMap around the trek
-[  30s]   leg Khati → Dwali (9.0 km apart)
-[  34s]   leg Dwali → Phurkia (4.4 km apart)
-[  36s]   leg Phurkia → Zero Point (5.6 km apart)
-[  40s]   preview: research/previews/pindari-glacier-1.png (1.0 km drawn along the terrain)
-[  45s]   preview: research/previews/pindari-glacier-2.png (0.5 km drawn along the terrain)
-[  45s] pindari-glacier: 22.1 km, +2260 m, highest 3767 m, 0 km off the mapped paths (drawn along the terrain), 551 → 212 points
-[  45s]   km     0  Khati (2220 m, osm, 30.11209,79.94006)
-[  45s]   km  10.6  Dwali (2602 m, osm, 30.17736,79.99532)  9.0 km from last
-[  45s]   km  15.5  Phurkia (3187 m, osm, 30.21645,79.99772)  4.4 km from last
-[  45s]   km  22.1  Zero Point (3767 m, osm, 30.26596,80.00519)  5.6 km from last
-[  45s]   day  1 walk   Khati → Dwali  10.6 km +730 −370
-[  45s]   day  2 walk   Dwali → Phurkia  4.9 km +770 −200
-[  45s]   day  3 walk   Phurkia → Dwali  18 km +1120 −1700
-[  45s]   day  4 walk   Dwali → Khati  10.6 km +350 −720
-Done 11:12:49, 0 failed
+Build trails run 40865579579, 2026-10-29T11:27:58Z
+── everest-base-camp 11:27:58
+[  18s] everest-base-camp: 286 named places in OpenStreetMap around the trek
+[  25s]   leg Lukla → Phakding (6.0 km apart)
+[  27s]   leg Phakding → Namche Bazaar (7.1 km apart)
+[  28s]   leg Namche Bazaar → Tengboche (6.4 km apart)
+[  30s]   leg Tengboche → Dingboche (9.1 km apart)
+[  32s]   leg Dingboche → Lobuche (6.4 km apart)
+[  34s]   leg Lobuche → Gorak Shep (4.1 km apart)
+[  35s]   leg Gorak Shep → Everest Base Camp (2.9 km apart)
+[  39s] everest-base-camp: 53.4 km, +3250 m, highest 5364 m, 0 km off the mapped paths (drawn along the terrain), 1510 → 580 points
+[  39s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
+[  39s]   km   7.3  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
+[  39s]   km  17.6  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
+[  39s]   km  27.1  Tengboche (3867 m, osm, 27.83581,86.76461)  6.4 km from last
+[  39s]   km  37.5  Dingboche (4410 m, osm, 27.89352,86.83094)  9.1 km from last
+[  39s]   km  45.4  Lobuche (4910 m, osm, 27.9481,86.81017)  6.4 km from last
+[  39s]   km  49.9  Gorak Shep (5175 m, osm, 27.98068,86.82893)  4.1 km from last
+[  39s]   km  53.4  Everest Base Camp (5364 m, osm, 27.99966,86.84879)  2.9 km from last
+[  39s]   side trip: Kala Patthar (5645 m, osm)
+[  39s]   day  1 walk   Lukla → Phakding  7.3 km +110 −330
+[  39s]   day  2 walk   Phakding → Namche Bazaar  10.3 km +850 −90
+[  39s]   day  3 rest   Namche Bazaar → Namche Bazaar
+[  39s]   day  4 walk   Namche Bazaar → Tengboche  9.5 km +720 −290
+[  39s]   day  5 walk   Tengboche → Dingboche  10.4 km +590 −110
+[  39s]   day  6 rest   Dingboche → Dingboche
+[  39s]   day  7 walk   Dingboche → Lobuche  7.9 km +580 −0
+[  39s]   day  8 walk   Lobuche → Gorak Shep  11.5 km +380 −160
+[  39s]   day  9 walk   Gorak Shep → Pheriche  15.6 km +500 −1230 (approx)
+[  39s]   day 10 walk   Pheriche → Namche Bazaar  20.9 km +400 −1400
+[  39s]   day 11 walk   Namche Bazaar → Lukla  17.6 km +370 −940
