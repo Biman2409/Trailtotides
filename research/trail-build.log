@@ -307,3 +307,9 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [ 273s]   day  2 walk   Gulling → Khullara  2.2 km +430 −0
 [ 273s]   day  3 walk   Khullara → Khullara  10 km +1150 −1140
 [ 273s]   day  4 walk   Khullara → Dhak  7.8 km +120 −1440
+── satopanth-lake 18:23:50
+[  44s] satopanth-lake: 133 named places in OpenStreetMap around the trek
+[  45s]   leg Mana → Laxmi Van (5.8 km apart)
+[  47s]   leg Laxmi Van → Chakrateertha (6.1 km apart)
+[  49s]   leg Chakrateertha → Satopanth Lake (2.7 km apart)
+[  52s] satopanth-lake: KEPT the saved trail (0 km off the mapped paths) over this build's 0.2 km
