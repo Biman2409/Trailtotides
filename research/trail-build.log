@@ -11,3 +11,31 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [  77s]   leg Gorak Shep → Pheriche (9.7 km apart)
 [  78s]   Gorak Shep → Pheriche is off the line: routed on its own, 11.5 km
 [  78s] everest-base-camp: KEPT the saved trail (0 km off the mapped paths) over this build's 0.2 km
+── gokyo-lakes 17:26:00
+[   1s]   overpass: overpass-api.de Overpass 502 
+[   7s]   overpass: overpass.kumi.systems fetch failed
+[ 103s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 146s] gokyo-lakes: 462 named places in OpenStreetMap around the trek
+[ 150s]   leg Lukla → Phakding (6.0 km apart)
+[ 152s]   leg Phakding → Namche Bazaar (7.1 km apart)
+[ 155s]   leg Namche Bazaar → Dole (7.2 km apart)
+[ 157s]   leg Dole → Machhermo (4.3 km apart)
+[ 158s]   leg Machhermo → Gokyo (6.1 km apart)
+[ 162s] gokyo-lakes: 41.2 km, +2680 m, highest 5357 m, 0.1 km off the mapped paths (drawn along the terrain), 1179 → 495 points
+[ 162s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
+[ 162s]   km   7.3  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
+[ 162s]   km  17.6  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
+[ 162s]   km  29.1  Dole (4050 m, osm, 27.86662,86.73088)  7.2 km from last
+[ 162s]   km  34.3  Machhermo (4386 m, osm, 27.90288,86.7156)  4.3 km from last
+[ 162s]   km  41.2  Gokyo (4750 m, osm, 27.95409,86.69459)  6.1 km from last
+[ 162s]   side trip: Gokyo Ri (5357 m, osm)
+[ 162s]   day  1 walk   Lukla → Phakding  7.3 km +110 −330
+[ 162s]   day  2 walk   Phakding → Namche Bazaar  10.3 km +870 −90
+[ 162s]   day  3 rest   Namche Bazaar → Namche Bazaar
+[ 162s]   day  4 walk   Namche Bazaar → Dole  11.4 km +940 −330
+[ 162s]   day  5 walk   Dole → Machhermo  5.2 km +380 −30
+[ 162s]   day  6 walk   Machhermo → Gokyo  7 km +370 −0
+[ 162s]   day  7 walk   Gokyo → Gokyo  4 km +600 −600
+[ 162s]   day  8 walk   Gokyo → Dole  12.1 km +20 −750
+[ 162s]   day  9 walk   Dole → Namche Bazaar  11.4 km +320 −940
+[ 162s]   day 10 walk   Namche Bazaar → Lukla  17.6 km +370 −950
