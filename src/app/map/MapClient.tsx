@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  SlidersHorizontal, Loader2, Compass, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen, BookmarkPlus,
+  SlidersHorizontal, Loader2, Compass, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen, BookmarkPlus, X,
 } from "lucide-react";
 import { nearFrom } from "@/lib/alerts";
 import { EMAIL_ALERTS } from "@/lib/features";
@@ -103,6 +103,8 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const [groups, setGroups] = useState<GroupSummary[]>([]);
   const [group, setGroup] = useState<{ code: string; name: string; members: GroupMember[] } | null>(null);
   const [groupLoading, setGroupLoading] = useState(false);
+  // From Group Match's "See them on the map": only what the group page suggests (ready or a stretch for all)
+  const [groupOnly, setGroupOnly] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -131,7 +133,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   }, [loggedIn]);
 
   const chooseGroup = useCallback((code: string) => {
-    if (!code) { setGroup(null); return; }
+    if (!code) { setGroup(null); setGroupOnly(false); return; }
     setGroupLoading(true);
     fetch(`/api/match-groups/${code}`)
       .then((r) => (r.ok ? r.json() : Promise.reject()))
@@ -148,8 +150,12 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   useEffect(() => {
     if (!loggedIn || groupFromLink.current) return;
     groupFromLink.current = true;
-    const code = new URLSearchParams(window.location.search).get("group");
-    if (code && /^[0-9a-f]{12}$/.test(code)) chooseGroup(code);
+    const p = new URLSearchParams(window.location.search);
+    const code = p.get("group");
+    if (code && /^[0-9a-f]{12}$/.test(code)) {
+      chooseGroup(code);
+      if (p.get("only") === "suggested") setGroupOnly(true);
+    }
   }, [loggedIn, chooseGroup]);
 
   // ── Derived ─────────────────────────────────────────────────────────────────
@@ -170,9 +176,11 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
 
   // Explore's filters, then the Near me radius (a map-only filter)
   const filtered = useMemo(() => {
-    const rows = filterAdventures(adventures, f, { score });
+    let rows = filterAdventures(adventures, f, { score });
+    // The group's suggestions: the same 55% floor as Group Match's "ready" and "stretch" lists
+    if (groupOnly && group) rows = rows.filter((a) => (fits.get(a.slug)?.score ?? 0) >= 55);
     return nearMe && radius ? rows.filter((a) => haversineKm(nearMe.lat, nearMe.lng, a.lat, a.lng) <= radius) : rows;
-  }, [f, score, nearMe, radius]);
+  }, [f, score, nearMe, radius, groupOnly, group, fits]);
 
   // Compass picks stay on the map even when a filter would hide them
   const shown = useMemo(() => {
@@ -411,6 +419,12 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
       <span><b className="text-white/85">{listed.length}</b> in view{shown.length !== adventures.length && <> · {shown.length} of {adventures.length} match</>}</span>
       {listed.length < shown.length && listed.length > 0 && (
         <button type="button" onClick={showAll} className="font-semibold text-white/60 hover:text-white underline-offset-2 hover:underline">Show all</button>
+      )}
+      {groupOnly && group && (
+        <button type="button" onClick={() => setGroupOnly(false)} title="Show every adventure, rated for the group"
+          className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-semibold text-[#ffb37a]" style={{ background: "rgba(255,81,0,0.14)" }}>
+          <Users className="w-3 h-3" />{group.name}&apos;s picks<X className="w-3 h-3" />
+        </button>
       )}
       {filtersActive && <button type="button" onClick={clearAll} className="font-semibold text-[#ff9a66] hover:underline">Clear</button>}
       {(filtersActive || nearMe) && (

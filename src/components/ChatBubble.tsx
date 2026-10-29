@@ -11,6 +11,12 @@ import { COMPASS_ASK_EVENT, COMPASS_GRADIENT, COMPASS_RING, STARTER_PROMPTS, der
 const AI_GRADIENT = COMPASS_GRADIENT;
 const AI_RING = COMPASS_RING;
 
+// What the thinking row says as the wait goes on, and when each line appears (ms)
+const WAIT_LINES = ["Thinking…", "Looking through every adventure…", "Matching them to what you asked…", "Almost there, the AI is busy right now…"];
+const WAIT_AT = [0, 3000, 8000, 15000];
+// Past this the server has already given up on the AI, so stop waiting too
+const CLIENT_TIMEOUT_MS = 45_000;
+
 function Orb({ size = 28, pulse = false }: { size?: number; pulse?: boolean }) {
   return (
     <span
@@ -29,6 +35,12 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
   const [messages, setMessages] = useState<CompassMessage[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [waitStage, setWaitStage] = useState(0);
+  useEffect(() => {
+    if (!loading) { setWaitStage(0); return; }
+    const timers = WAIT_AT.slice(1).map((ms, i) => setTimeout(() => setWaitStage(i + 1), ms));
+    return () => timers.forEach(clearTimeout);
+  }, [loading]);
   const messagesRef = useRef<CompassMessage[]>([]);
   const loadingRef = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -112,6 +124,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
       const recommendationRounds = next.filter((m) => m.role === "assistant" && (m.cards?.length ?? 0) > 0).length;
       const res = await fetch("/api/chat", {
         method: "POST",
+        signal: AbortSignal.timeout(CLIENT_TIMEOUT_MS),
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: next.map((m) => ({ role: m.role, content: m.content })),
@@ -352,7 +365,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                 {loading && (
                   <div className="flex gap-2.5 items-center">
                     <Orb size={24} pulse />
-                    <span className="flex items-center gap-1" aria-label="Compass.AI is thinking">
+                    <span className="flex items-center gap-1" aria-hidden>
                       {[0, 1, 2].map((d) => (
                         <span
                           key={d}
@@ -361,6 +374,8 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                         />
                       ))}
                     </span>
+                    {/* Answers can take 20 seconds; say what's happening so it never looks stuck */}
+                    <span className="text-[12px]" role="status" style={{ color: "var(--text-tertiary)" }}>{WAIT_LINES[waitStage]}</span>
                   </div>
                 )}
 

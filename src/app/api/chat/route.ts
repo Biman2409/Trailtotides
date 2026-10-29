@@ -8,13 +8,15 @@ import { stripEmphasis } from "@/lib/emphasis";
 
 // Gemini's free tier via its OpenAI-compatible endpoint — no billing required.
 // https://ai.google.dev/gemini-api/docs/openai
-const hasGeminiKey = !!process.env.GEMINI_API_KEY;
+// COMPASS_AI=off (in Vercel) runs Compass on the keyword engine alone: instant answers, no AI key
+const hasGeminiKey = !!process.env.GEMINI_API_KEY && process.env.COMPASS_AI !== "off";
 const client = hasGeminiKey
   ? new OpenAI({
       apiKey: process.env.GEMINI_API_KEY,
       baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
-      // A stuck model mustn't freeze the chat: give up and try the next one
-      timeout: 20_000,
+      // A stuck model mustn't freeze the chat. The models run side by side, so this is the
+      // longest anyone waits before the keyword search answers instead
+      timeout: 25_000,
       maxRetries: 0,
     })
   : null;
@@ -24,6 +26,9 @@ const client = hasGeminiKey
 // chat keeps working when they retire one, as they did gemini-2.5-flash for new keys.
 // GEMINI_MODEL (set in Vercel) swaps the first one without a code change.
 const GEMINI_MODELS = [...new Set([process.env.GEMINI_MODEL || "gemini-3.5-flash-lite", "gemini-flash-lite-latest"])];
+
+// Room for the slow free-tier models, so the platform never cuts the function off first
+export const maxDuration = 60;
 
 // ─── Dynamically derive available vs coming-soon types ────────────────────────
 
@@ -488,7 +493,7 @@ export async function POST(req: NextRequest) {
 
     // No AI configured (missing/empty GEMINI_API_KEY) — degrade to keyword search instead of crashing.
     if (!client) {
-      console.error("Compass.AI: GEMINI_API_KEY is not configured — using keyword search only.");
+      if (process.env.COMPASS_AI !== "off") console.error("Compass.AI: GEMINI_API_KEY is not configured — using keyword search only.");
       const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
 
       if (isComingSoonQuery(lastQuery)) {
@@ -517,26 +522,23 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    let rawContent = "";
-
-    // Each model in turn; any failure (free-tier limit, bad key, retired model) moves on to the
-    // next, and if every one fails the keyword search answers, so the chat never errors out
+    // Every model at once, first answer wins. The free tier takes 15–25 s per answer, so asking
+    // them one after another left people waiting 40 s for a fallback. Any failure (limit, bad
+    // key, retired model) just drops out; if all fail the keyword search answers.
     let rateLimited = false;
-    for (const model of GEMINI_MODELS) {
-      try {
-        const response = await client.chat.completions.create({
-          model,
-          messages: chatMessages,
-          temperature: 0.5,
-          max_tokens: 500,
+    const ask = (model: string) =>
+      client.chat.completions.create({ model, messages: chatMessages, temperature: 0.5, max_tokens: 500 })
+        .then((r) => {
+          const text = r.choices[0]?.message.content ?? "";
+          if (!text) throw new Error("empty reply");
+          return text;
+        })
+        .catch((apiErr: unknown) => {
+          rateLimited ||= apiErr instanceof OpenAI.APIError && apiErr.status === 429;
+          console.error(`Compass.AI: ${model} failed —`, apiErr instanceof OpenAI.APIError ? `${apiErr.status} ${apiErr.message}` : apiErr);
+          throw apiErr;
         });
-        rawContent = response.choices[0]?.message.content ?? "";
-        break;
-      } catch (apiErr: unknown) {
-        rateLimited ||= apiErr instanceof OpenAI.APIError && apiErr.status === 429;
-        console.error(`Compass.AI: ${model} failed —`, apiErr instanceof OpenAI.APIError ? `${apiErr.status} ${apiErr.message}` : apiErr);
-      }
-    }
+    const rawContent = await Promise.any(GEMINI_MODELS.map(ask)).catch(() => "");
 
     if (!rawContent) {
       const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";

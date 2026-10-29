@@ -40,6 +40,8 @@ export default function CompassBar({
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
+        // The server gives up on the AI well before this; never leave the bar spinning
+        signal: AbortSignal.timeout(45_000),
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: [{ role: "user", content: question }], recommendationRounds: 0, ace: ace ?? undefined }),
       });

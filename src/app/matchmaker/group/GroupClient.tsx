@@ -476,7 +476,7 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
           </div>
         </Panel>
 
-        <aside className="rounded-[24px] border p-5 sm:p-6 h-fit" style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}>
+        <aside id="invite" className="scroll-mt-24 rounded-[24px] border p-5 sm:p-6 h-fit" style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}>
           <h2 className="t-text text-lg font-bold">Invite friends</h2>
           <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
             {group.members.length >= MAX_GROUP
@@ -510,9 +510,11 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
         </aside>
       </div>
 
-      <GroupCapability members={members} meIndex={group.members.findIndex((m) => m.userId === viewer.id)} />
+      {/* The order a group decides in: where you are, the shortlist, ideas to add, then the detail */}
+      <GroupPlan group={group} viewerId={viewer.id} members={members} picks={picks} />
       <GroupWishlist group={group} viewerId={viewer.id} members={members} picks={picks} />
       <GroupResults members={members} code={group.code} pick={{ picked: picks.slugs, onPick: picks.add }} />
+      <GroupCapability members={members} meIndex={group.members.findIndex((m) => m.userId === viewer.id)} />
     </Shell>
   );
 }
@@ -532,7 +534,7 @@ function Shell({ title, subtitle, step, children }: { title?: string; subtitle: 
           <p className="text-sm sm:text-base mt-2 max-w-2xl" style={{ color: "var(--text-secondary)" }}>{subtitle}</p>
 
           <ol className="grid grid-cols-3 gap-2 mt-6 max-w-2xl">
-            {["Add yourself", "Invite friends", "See what you can all do"].map((label, i) => {
+            {["Add yourself", "Invite friends", "Pick a trek together"].map((label, i) => {
               const n = i + 1, done = step > n, on = step === n;
               return (
                 <li key={label} className="rounded-xl px-3 py-2.5" style={{ background: on ? "rgba(255,81,0,0.1)" : "var(--bg-card)", border: `1px solid ${on ? "rgba(255,81,0,0.4)" : "var(--border-subtle)"}` }}>
@@ -685,7 +687,7 @@ function GroupCapability({ members, meIndex }: { members: GroupMember[]; meIndex
   const names = (idx: number[]) => listNames(idx.map((i) => members[i].name));
 
   return (
-    <section className="mt-12">
+    <section id="capability" className="mt-12 scroll-mt-24">
       <h2 className="t-text text-2xl font-bold tracking-tight">Your group&apos;s capability</h2>
       <p className="text-sm mt-1 mb-6 max-w-2xl" style={{ color: "var(--text-secondary)" }}>
         A group moves at its least-ready member, so on each capability this is as far as all {members.length} of you can go together.
@@ -772,6 +774,100 @@ function useGroupPicks(code: string) {
  * Adventures the group is considering, each with everyone's vote. Sorted by how many are in,
  * then by fewest "not for me", then by how ready the whole group is for it.
  */
+/**
+ * The wishlist in the group's order of preference: most people in, then fewest "not for me",
+ * then how ready the whole group is (its least-ready member's match).
+ */
+function rankPicks(list: GroupPick[], members: GroupMember[], viewerId: string) {
+  return list.flatMap((p) => {
+    const adventure = adventures.find((a) => a.slug === p.slug);
+    if (!adventure) return [];
+    const votes = Object.entries(p.votes);
+    return [{
+      p,
+      adventure,
+      yes: votes.filter(([, v]) => v === 1).map(([u]) => u),
+      no: votes.filter(([, v]) => v === -1).map(([u]) => u),
+      mine: (p.votes[viewerId] ?? 0) as 1 | -1 | 0,
+      fit: members.length ? Math.min(...members.map((m) => matchScore(m.ace, adventure))) : 0,
+    }];
+  }).sort((a, b) => b.yes.length - a.yes.length || a.no.length - b.no.length || b.fit - a.fit);
+}
+
+/**
+ * Where the group is in deciding, and the one thing to do next: invite people, start a shortlist,
+ * get the last votes in, or go and book the trek everyone is in for.
+ */
+function GroupPlan({ group, viewerId, members, picks }: { group: StoredGroup; viewerId: string; members: GroupMember[]; picks: Picks }) {
+  const count = group.members.length;
+  const rows = rankPicks(picks.list ?? [], members, viewerId);
+  const top = rows[0];
+  const myPending = rows.filter((r) => r.mine === 0).length;
+  const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  let tone = "#ff7d47", title: string, body: string;
+  let action: ReactNode = null;
+  const btn = "inline-flex items-center gap-1.5 h-10 px-4 rounded-xl text-sm font-semibold transition-colors";
+  const primary = { background: "#ff5100", color: "#fff" };
+  const secondary = { border: "1px solid var(--border-default)", color: "var(--text-primary)" };
+
+  if (count < 2) {
+    title = "Invite your friends";
+    body = "You're the only one here. Share the invite link; each friend joins in about two minutes, and the matches appear as soon as one does.";
+    action = <button type="button" onClick={() => go("invite")} className={btn} style={primary}><Share2 className="w-4 h-4" /> Get the invite link</button>;
+  } else if (picks.list === null) {
+    title = "Loading your shortlist…";
+    body = "";
+  } else if (!top) {
+    title = "Start a shortlist";
+    body = "Search a trek you have in mind, or add one from the matches below. Then everyone votes.";
+    action = <>
+      <button type="button" onClick={() => go("wishlist")} className={btn} style={primary}><Search className="w-4 h-4" /> Search a trek</button>
+      <button type="button" onClick={() => go("matches")} className={btn} style={secondary}>See your matches</button>
+    </>;
+  } else if (top.yes.length === count) {
+    tone = "#10b981";
+    title = `Everyone's in for ${top.adventure.name}`;
+    body = top.fit >= 80 ? "And all of you are ready for it. Time to pick dates and an operator."
+      : `The least-ready of you is at ${top.fit}%, so plan some training before you go.`;
+    action = <>
+      <Link href={`/experiences/${top.adventure.slug}`} className={btn} style={primary}>Dates and operators <ArrowRight className="w-4 h-4" /></Link>
+      <button type="button" onClick={() => go("wishlist")} className={btn} style={secondary}>See who&apos;s ready</button>
+    </>;
+  } else {
+    const waiting = count - top.yes.length - top.no.length;
+    title = top.yes.length ? `${top.adventure.name} is leading` : "Your shortlist is waiting for votes";
+    body = [
+      top.yes.length ? `${top.yes.length} of ${count} in` : "",
+      waiting ? `${waiting} still to vote` : "",
+      myPending ? `you haven't voted on ${myPending === 1 ? "one trek" : `${myPending} treks`}` : "",
+    ].filter(Boolean).join(" · ") + ".";
+    action = <button type="button" onClick={() => go("wishlist")} className={btn} style={primary}><ThumbsUp className="w-4 h-4" /> {myPending ? "Vote now" : "See the shortlist"}</button>;
+  }
+
+  return (
+    <Panel className="mt-5">
+      <div className="flex flex-col md:flex-row md:items-center gap-4">
+        <div className="flex-1 min-w-0">
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: tone }}>Where your group is</p>
+          <h2 className="t-text text-xl font-bold mt-1">{title}</h2>
+          {body && <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>{body}</p>}
+        </div>
+        {action && <div className="flex flex-wrap gap-2 shrink-0">{action}</div>}
+      </div>
+      {/* Jump links: the page is long once a group gets going */}
+      {count >= 2 && (
+        <nav aria-label="On this page" className="flex flex-wrap gap-1.5 mt-4 pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+          {[["wishlist", `Wishlist${rows.length ? ` (${rows.length})` : ""}`], ["matches", "Your matches"], ["capability", "Group capability"]].map(([id, label]) => (
+            <button key={id} type="button" onClick={() => go(id)} className="text-[12px] font-semibold px-3 h-8 rounded-full transition-colors hover:bg-[var(--bg-card-hover)]"
+              style={{ border: "1px solid var(--border-subtle)", color: "var(--text-secondary)" }}>{label}</button>
+          ))}
+        </nav>
+      )}
+    </Panel>
+  );
+}
+
 function GroupWishlist({ group, viewerId, members, picks }: { group: StoredGroup; viewerId: string; members: GroupMember[]; picks: Picks }) {
   // The trek the group is checking itself against; kept in ?trek= so the comparison can be shared
   const [checking, setChecking] = useState<string | null>(null);
@@ -792,23 +888,10 @@ function GroupWishlist({ group, viewerId, members, picks }: { group: StoredGroup
   }
   const checked = checking ? adventures.find((a) => a.slug === checking) : undefined;
 
-  const rows = (picks.list ?? []).flatMap((p) => {
-    const adventure = adventures.find((a) => a.slug === p.slug);
-    if (!adventure) return [];
-    const votes = Object.entries(p.votes);
-    return [{
-      p,
-      adventure,
-      yes: votes.filter(([, v]) => v === 1).map(([u]) => u),
-      no: votes.filter(([, v]) => v === -1).map(([u]) => u),
-      mine: p.votes[viewerId] ?? 0,
-      // How ready the whole group is: its least-ready member's match
-      fit: members.length ? Math.min(...members.map((m) => matchScore(m.ace, adventure))) : 0,
-    }];
-  }).sort((a, b) => b.yes.length - a.yes.length || a.no.length - b.no.length || b.fit - a.fit);
+  const rows = rankPicks(picks.list ?? [], members, viewerId);
 
   return (
-    <section className="mt-12">
+    <section id="wishlist" className="mt-12 scroll-mt-24">
       <div className="mb-5">
         <h2 className="t-text text-2xl font-bold tracking-tight flex items-center gap-2"><Heart className="w-5 h-5 text-[#ff5100]" /> Group wishlist</h2>
         <p className="text-sm mt-1 max-w-2xl" style={{ color: "var(--text-secondary)" }}>
@@ -1095,7 +1178,7 @@ function GroupResults({ members, code, pick }: { members: GroupMember[]; code?: 
 
   if (members.length < 2) {
     return (
-      <p className="text-sm mt-10" style={{ color: "var(--text-tertiary)" }}>
+      <p id="matches" className="text-sm mt-10 scroll-mt-24" style={{ color: "var(--text-tertiary)" }}>
         Once at least two people have joined, the adventures you&apos;re all ready for appear here.
       </p>
     );
@@ -1103,7 +1186,7 @@ function GroupResults({ members, code, pick }: { members: GroupMember[]; code?: 
 
   return (
     <>
-      <section className="mt-12">
+      <section id="matches" className="mt-12 scroll-mt-24">
         <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
           <div>
             <h2 className="t-text text-2xl font-bold tracking-tight">Everyone&apos;s ready <span className="text-emerald-400 tabular-nums">({everyone.length})</span></h2>
@@ -1111,9 +1194,9 @@ function GroupResults({ members, code, pick }: { members: GroupMember[]; code?: 
           </div>
           {/* The map rates every adventure for this group, so you can see what's near and when */}
           {code && (
-            <Link href={`/map?group=${code}`} className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-semibold transition-colors hover:bg-[var(--bg-card-hover)]"
+            <Link href={`/map?group=${code}&only=suggested`} className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-semibold transition-colors hover:bg-[var(--bg-card-hover)]"
               style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
-              <MapIcon className="w-4 h-4 text-[#5fb873]" /> See them on the map
+              <MapIcon className="w-4 h-4 text-[#5fb873]" /> See these on the map
             </Link>
           )}
         </div>
