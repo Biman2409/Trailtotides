@@ -348,3 +348,17 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [ 221s]   day  2 walk   Gaurmanda → Panwali Kantha  7.1 km +820 −120
 [ 221s]   day  3 rest   Panwali Kantha → Panwali Kantha
 [ 221s]   day  4 walk   Panwali Kantha → Ghuttu  12.4 km +110 −1820
+── pindari-glacier 18:32:36
+[  42s] pindari-glacier: 367 named places in OpenStreetMap around the trek
+[  44s]   leg Khati → Dwali (9.0 km apart)
+[  48s]   leg Dwali → Phurkia (4.4 km apart)
+[  50s]   leg Phurkia → Zero Point (4.8 km apart)
+[  53s] pindari-glacier: 21.2 km, +2180 m, highest 3666 m, 0.1 km off the mapped paths (drawn along the terrain), 1147 → 209 points
+[  53s]   km     0  Khati (2220 m, osm, 30.11209,79.94006)
+[  53s]   km  10.7  Dwali (2602 m, osm, 30.17736,79.99532)  9.0 km from last
+[  53s]   km  15.6  Phurkia (3187 m, osm, 30.21645,79.99772)  4.4 km from last
+[  53s]   km  21.2  Zero Point (3655 m, given, 30.25968,79.99849)  4.8 km from last
+[  53s]   day  1 walk   Khati → Dwali  10.7 km +750 −390
+[  53s]   day  2 walk   Dwali → Phurkia  4.9 km +760 −200
+[  53s]   day  3 walk   Phurkia → Dwali  16 km +1030 −1600
+[  53s]   day  4 walk   Dwali → Khati  10.7 km +370 −740
