@@ -66,3 +66,25 @@ Build trails run 40937483557, 2026-10-29T19:09:36Z
 [ 130s]   day  7 walk   Mantalai → Pin Valley Camp  13.8 km +1150 −1020
 [ 130s]   day  8 walk   Pin Valley Camp → Tiya  14.7 km +110 −540
 [ 130s]   day  9 walk   Tiya → Mud  10.1 km +30 −150
+── sar-pass 19:16:06
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 233s] sar-pass: 554 named places in OpenStreetMap around the trek
+[ 241s]   leg Kasol → Grahan (5.3 km apart)
+[ 244s]   leg Grahan → Min Thach (2.1 km apart) along the track sar-pass
+[ 246s]   leg Min Thach → Nagaru (0.9 km apart) along the track sar-pass
+[ 246s]   leg Nagaru → Sar Pass (1.3 km apart) along the track sar-pass
+[ 246s]   leg Sar Pass → Biskeri Thach (2.0 km apart) along the track sar-pass
+[ 247s]   leg Biskeri Thach → Barshaini (6.6 km apart) along the track sar-pass
+[ 255s] sar-pass: 33.7 km, +3510 m, highest 4200 m, 0 km off the mapped paths (drawn along the terrain), 1139 → 500 points
+[ 255s]   km     0  Kasol (1565 m, osm, 32.01043,77.3166)
+[ 255s]   km   8.7  Grahan (2283 m, given, 31.9713,77.3479)  5.3 km from last
+[ 255s]   km  20.8  Sar Pass (4200 m, given, 31.96247,77.38869)  4.0 km from last
+[ 255s]   km  23.1  Biskeri Thach (4090 m, osm, 31.95217,77.40626)  2.0 km from last
+[ 255s]   km  33.7  Barshaini (2201 m, given, 31.99913,77.44969)  6.6 km from last
+[ 255s]   day  1 walk   Kasol → Grahan  8.7 km +1300 −590
+[ 255s]   day  2 walk   Grahan → Min Thach  8.9 km +1210 −300
+[ 255s]   day  3 walk   Min Thach → Nagaru  1.8 km +550 −0
+[ 255s]   day  4 walk   Nagaru → Biskeri Thach  3.8 km +390 −130
+[ 255s]   day  5 walk   Biskeri Thach → Barshaini  10.7 km +70 −1900
