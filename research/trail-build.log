@@ -374,3 +374,15 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [ 251s]   leg Patar Nachauni → Bhagwabasa (2.3 km apart)
 [ 252s]   leg Bhagwabasa → Roopkund (2.5 km apart)
 [ 255s] roopkund: KEPT the saved trail (0 km off the mapped paths) over this build's 0.6 km
+── ali-bedni-bugyal 18:37:47
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] ali-bedni-bugyal: place list unavailable (Overpass 502 ), using place search only
+[ 221s]   leg Lohajung → Didna (4.3 km apart)
+[ 224s]   leg Didna → Ali Bugyal (3.1 km apart)
+[ 226s]   leg Ali Bugyal → Bedni Top (2.5 km apart)
+[ 229s]   leg Bedni Top → Bedni Bugyal (1.0 km apart)
+[ 231s]   leg Bedni Bugyal → Wan (4.8 km apart)
+[ 234s] ali-bedni-bugyal: KEPT the saved trail (0 km off the mapped paths) over this build's 1.6 km
