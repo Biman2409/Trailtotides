@@ -212,7 +212,10 @@ export const TREKS = {
       { name: "Agoda", at: [30.84636, 78.48161] },
       { name: "Manjhi", at: [30.87492, 78.51945] },
       { name: "Dodital", q: "Dodi tal", at: [30.89725, 78.52606] },
-      { name: "Darwa Pass", at: [30.91411, 78.51179] },
+      // Where Darwa Pass treks go: the top of the ridge west of the lake (Darwa or Dayara Top), at
+      // 4,129 m on the elevation model, as published (4,131-4,150 m), by a trekker's waypoint
+      // (ultrajourneys.org). The saddle north of the lake that OSM calls the pass is 3,775 m
+      { name: "Darwa Pass", at: [30.89822, 78.49873], exact: true },
     ],
     days: [
       { to: "Agoda", note: "Up from the road through fields to Agoda village" },
@@ -365,7 +368,8 @@ export const TREKS = {
       LOHAJUNG,
       { name: "Didna", at: [30.16473, 79.63419] },
       { name: "Ali Bugyal", at: [30.18229, 79.65865] },
-      { name: "Bedni Bugyal", at: [30.20929, 79.66919] },
+      // The camp at Bedni Kund, the pond on the meadow (trekkers' waypoint, ultrajourneys.org)
+      { name: "Bedni Bugyal", at: [30.20635, 79.66694], exact: true },
       { name: "Roopkund", q: "Rup Kund", at: [30.2621, 79.73172] },
     ],
     // Both camps from trekkers' waypoints (ultrajourneys.org): the shelter at Patar Nachauni, Bhagwabasa
@@ -389,7 +393,8 @@ export const TREKS = {
       // The high point of the trek, crossed between the two meadows: 3,823 m on the elevation
       // model, as published (3,800-3,825 m)
       { name: "Bedni Top", at: [30.20007, 79.67382], exact: true },
-      { name: "Bedni Bugyal", at: [30.20929, 79.66919] },
+      // The camp at Bedni Kund, the pond on the meadow (trekkers' waypoint, ultrajourneys.org)
+      { name: "Bedni Bugyal", at: [30.20635, 79.66694], exact: true },
       { name: "Wan", at: [30.20504, 79.61753] },
     ],
     days: [
@@ -556,8 +561,9 @@ export const TREKS = {
     near: "Ganderbal, Jammu and Kashmir",
     stops: [
       { name: "Sonamarg", at: [34.30239, 75.29656] },
-      { name: "Vishansar Lake", q: "Vishansar", at: [34.38746, 75.11887] },
-      { name: "Gadsar Lake", q: "Gadsar", at: [34.4218, 75.05747] },
+      // The camps on the trail by each lake, where the route passes it, not the lakes' centres
+      { name: "Vishansar Lake", at: [34.39156, 75.12006], exact: true },
+      { name: "Gadsar Lake", at: [34.42489, 75.06104], exact: true },
       { name: "Gangbal Lake", q: "Gangbal campsite", at: [34.42556, 74.94058] },
       { name: "Naranag", at: [34.35023, 74.97212] },
     ],

@@ -421,25 +421,47 @@ async function build(slug) {
     return { km: Math.abs(cum[b] - cum[a]) / 1000, up, down };
   }
 
+  // A day that ends somewhere off the line (a descent through the next valley, as to Pheriche on
+  // the way down from Everest) is routed on its own and measured along that route
+  async function offLine(from, to) {
+    const l = await leg({ name: from.name, lat: from.lat, lng: from.lng }, to);
+    const c = await alongTerrain(l.coords);
+    const ce = c.some((p) => p[2] == null) ? await heights(c) : c.map((p) => p[2]);
+    const cc = [0];
+    for (let i = 1; i < c.length; i++) cc.push(cc[i - 1] + dist(c[i - 1], c[i]));
+    const sm = c.map((_, i) => {
+      let t = 0, n = 0;
+      for (let k = 0; k < c.length; k++) if (Math.abs(cc[k] - cc[i]) <= 150) { t += ce[k]; n++; }
+      return t / n;
+    });
+    let up = 0, down = 0, ref = sm[0];
+    for (const h of sm) { const d = h - ref; if (d >= 15) { up += d; ref = h; } else if (d <= -15) { down -= d; ref = h; } }
+    console.log(`  ${from.name} → ${to.name} is off the line: routed on its own, ${(cc[cc.length - 1] / 1000).toFixed(1)} km`);
+    return { km: cc[cc.length - 1] / 1000, up, down, approx: l.approxKm > 0.5 };
+  }
+
   const days = [];
   let here = found.get(name(trek.stops[0]));
   let hereIdx = 0;
-  (trek.days ?? []).forEach((d, n) => {
+  for (const [n, d] of (trek.days ?? []).entries()) {
     const day = n + 1;
-    if (d.rest) { days.push({ day, kind: "rest", from: here.name, to: here.name, sleepEle: here.ele, note: d.rest }); return; }
-    if (d.travel) { days.push({ day, kind: "travel", from: here.name, to: null, sleepEle: null, note: d.travel }); return; }
+    if (d.rest) { days.push({ day, kind: "rest", from: here.name, to: here.name, sleepEle: here.ele, note: d.rest }); continue; }
+    if (d.travel) { days.push({ day, kind: "travel", from: here.name, to: null, sleepEle: null, note: d.travel }); continue; }
     const vias = (d.via ?? []).filter((v) => !skipped.has(v));
     const route = [...vias, d.to].map((v) => found.get(v));
     if (route.some((p) => !p)) throw new Error(`Day ${day}: unknown place in ${JSON.stringify(d)}`);
     let km = 0, up = 0, down = 0, approx = false, idx = hereIdx;
+    let at0 = here;
     for (const p of route) {
       const B = nearestIdx(p, idx);
       // Estimated where you sleep makes the day's figures estimates; a pass placed by estimate
       // along the line only labels it, so it doesn't
-      approx ||= B.off > 300 || (estimated.has(p.name) && p === route[route.length - 1]);
-      const s = stretch(idx, B.i);
+      approx ||= estimated.has(p.name) && p === route[route.length - 1];
+      const s = B.off > 300 ? await offLine(at0, p) : stretch(idx, B.i);
+      approx ||= !!s.approx;
       km += s.km; up += s.up; down += s.down;
       idx = B.i;
+      at0 = p;
     }
     if (d.side) { km += d.side.km; up += d.side.up; down += d.side.up; }
     const to = found.get(d.to);
@@ -450,7 +472,7 @@ async function build(slug) {
     });
     here = to;
     hereIdx = idx;
-  });
+  }
   const sleepPlaces = [...new Map(days.filter((d) => d.to).map((d) => [d.to, found.get(d.to)])).values()]
     .map(({ name, lat, lng, ele }) => ({ name, lat, lng, ele }));
 
