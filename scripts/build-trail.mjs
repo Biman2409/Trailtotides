@@ -343,6 +343,13 @@ async function build(slug) {
     const chain = [stops[i], ...via[i], stops[i + 1]];
     for (let k = 0; k < chain.length - 1; k++) {
       const l = await leg(chain[k], chain[k + 1], stops[i + 1].track); // camps on a tracked leg follow the track too
+      // The router starts and ends on the nearest mapped path: a summit or camp off the paths is
+      // joined to it, so the line reaches every stop (drawn along the terrain by alongTerrain)
+      const A = chain[k], B = chain[k + 1];
+      // (the line's heights are the elevation model's, not a stop's published height)
+      if (k + i > 0 && dist(l.coords[0], [A.lat, A.lng]) > 30) { l.coords.unshift([A.lat, A.lng, (await heights([[A.lat, A.lng]]))[0]]); l.approxKm += dist(l.coords[0], l.coords[1]) / 1000; }
+      const end = l.coords[l.coords.length - 1];
+      if (dist(end, [B.lat, B.lng]) > 30) { l.approxKm += dist(end, [B.lat, B.lng]) / 1000; l.coords.push([B.lat, B.lng, (await heights([[B.lat, B.lng]]))[0]]); }
       l.coords = await alongTerrain(l.coords);
       approxKm += l.approxKm;
       full = full.concat(full.length ? l.coords.slice(1) : l.coords);
@@ -353,8 +360,8 @@ async function build(slug) {
   // The router starts and ends on the nearest mapped path, which can be a little off the village
   // point; join the ends to the first and last stop so the line meets its pins
   const first = stops[0], last = stops[stops.length - 1];
-  if (dist(full[0], [first.lat, first.lng]) > 20) { full.unshift([first.lat, first.lng, first.ele ?? full[0][2]]); at.forEach((v, i) => (at[i] = i ? v + 1 : 0)); }
-  if (dist(full[full.length - 1], [last.lat, last.lng]) > 20) { full.push([last.lat, last.lng, last.ele ?? full[full.length - 1][2]]); at[at.length - 1] = full.length - 1; }
+  if (dist(full[0], [first.lat, first.lng]) > 20) { full.unshift([first.lat, first.lng, (await heights([[first.lat, first.lng]]))[0]]); at.forEach((v, i) => (at[i] = i ? v + 1 : 0)); }
+  if (dist(full[full.length - 1], [last.lat, last.lng]) > 20) { full.push([last.lat, last.lng, (await heights([[last.lat, last.lng]]))[0]]); at[at.length - 1] = full.length - 1; }
 
   const cum = [0];
   for (let i = 1; i < full.length; i++) cum.push(cum[i - 1] + dist(full[i - 1], full[i]));
@@ -496,9 +503,11 @@ async function build(slug) {
 
   await mkdir("src/lib/trails", { recursive: true });
   // The map services fail now and then, and a leg they fail on is drawn off the mapped paths: a build with
-  // more straight km than the trail already saved is worse, so the saved one is kept
+  // more straight km than the trail already saved is worse, so the saved one is kept. Unless the stops
+  // have moved: then the saved trail goes to the wrong places, however well mapped
   const prev = await readFile(`src/lib/trails/${slug}.json`, "utf8").then(JSON.parse).catch(() => null);
-  if (prev && (prev.approxKm ?? 0) + 0.1 < trail.approxKm) {
+  const where = (t) => [...t.stops, ...t.side].map((p) => `${p.name}@${p.lat.toFixed(4)},${p.lng.toFixed(4)}`).join("|");
+  if (prev && (prev.approxKm ?? 0) + 0.1 < trail.approxKm && where(prev) === where(trail)) {
     console.log(`${slug}: KEPT the saved trail (${prev.approxKm ?? 0} km off the mapped paths) over this build's ${trail.approxKm} km`);
     return;
   }

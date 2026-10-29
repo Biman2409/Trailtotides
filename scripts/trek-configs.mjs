@@ -506,8 +506,9 @@ export const TREKS = {
       // The village OSM lacks: a stop, so the climb goes through it and its height is its own
       { name: "Grahan", at: [31.9713, 77.3479] },
       // From Grahan over the pass to Barshaini on the trail as ultrajourneys.org recorded it; the
-      // pass where it tops out, at their waypoint (4,125 m on the elevation model; published 4,200 m)
-      { name: "Sar Pass", at: [31.96247, 77.38869], exact: true, track: "sar-pass" },
+      // pass where it tops out, at their waypoint, with its published height (4,200-4,220 m; the
+      // elevation model reads 4,125 m)
+      { name: "Sar Pass", at: [31.96247, 77.38869], exact: true, ele: 4200, track: "sar-pass" },
       { name: "Biskeri Thach", q: "Biskeri", at: [31.95217, 77.40626], track: "sar-pass" },
       { name: "Barshaini", at: [31.99913, 77.44969], track: "sar-pass" },
     ],
