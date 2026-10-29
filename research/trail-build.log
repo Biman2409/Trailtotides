@@ -40,3 +40,23 @@ Build trails run 40861559648, 2026-10-29T10:57:14Z
 [ 209s]   day  4 walk   Ruinsara Tal → Odari  3.9 km +460 −60
 [ 209s]   day  5 walk   Odari → Lower Damini  8.1 km +850 −1070 (approx)
 [ 209s]   day  6 walk   Lower Damini → Janki Chatti  5.7 km +20 −1210
+── kashmir-great-lakes 11:03:26
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 236s] kashmir-great-lakes: 456 named places in OpenStreetMap around the trek
+[ 239s]   ? Gadsar Pass not matched; nearby: Gadsar campsite (camp, 7.9 km), Gadsar (water, 3.4 km)
+[ 239s]   leg Sonamarg → Nichnai (10.4 km apart)
+[ 289s]   overpass: overpass-api.de Overpass 504 Error : runtime error: open64: 0 Success /osm3s_osm_base Dispatcher_Client::request_read_and_idx::timeout.
+[ 382s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 478s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 487s]   overpass: overpass-api.de Overpass 502 
+[ 499s]   ! path search failed: Overpass 502 
+[ 499s]   ! Sonamarg → Nichnai: a 115.0 km detour for 10.4 km; drawn along the terrain
+[ 501s]   leg Nichnai → Nichnai Pass (3.1 km apart)
+[ 503s]   leg Nichnai Pass → Vishansar Lake (5.7 km apart)
+[ 505s]   leg Vishansar Lake → Gadsar Lake (6.8 km apart)
+[ 507s]   leg Gadsar Lake → Satsar (6.0 km apart)
+[ 509s]   leg Satsar → Gangbal Lake (5.4 km apart)
+[ 510s]   leg Gangbal Lake → Naranag (8.9 km apart)
+[ 513s] kashmir-great-lakes: KEPT the saved trail (0.5 km off the mapped paths) over this build's 10.4 km
