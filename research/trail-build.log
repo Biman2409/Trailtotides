@@ -21,3 +21,12 @@ Build trails run 40916688760, 2026-10-29T16:57:57Z
 [ 286s]   overpass: overpass.private.coffee The operation was aborted due to timeout
 [ 335s]   ~ Lower Damini → Janki Chatti: a 284.1 km detour for 3.0 km; routed over mapped paths, 0.8 of 4.4 km bridged
 [ 336s] bali-pass: KEPT the saved trail (0.7 km off the mapped paths) over this build's 1.2 km
+── buran-ghati 17:04:30
+[  26s] buran-ghati: 410 named places in OpenStreetMap around the trek
+[  28s]   leg Janglik → Dayara Thach (5.9 km apart)
+[  31s]   leg Dayara Thach → Litham (4.3 km apart)
+[  33s]   leg Litham → Dhunda (3.6 km apart)
+[  35s]   leg Dhunda → Buran Ghati (1.6 km apart)
+[  37s]   leg Buran Ghati → Munirang (5.2 km apart)
+[  39s]   leg Munirang → Barua (4.4 km apart)
+[  42s] buran-ghati: KEPT the saved trail (0 km off the mapped paths) over this build's 0.3 km
