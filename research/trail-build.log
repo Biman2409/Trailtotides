@@ -471,3 +471,17 @@ Build trails run 40865579579, 2026-10-29T11:27:58Z
 [  47s]   camp (estimated): Stalling (3253 m, 32.08015,77.20535)
 [  47s]   day  1 walk   Rumsu → Stalling  5 km +1180 −0 (approx)
 [  47s]   day  2 walk   Stalling → Malana  8.9 km +1210 −1820
+── kareri-lake 12:22:27
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] kareri-lake: place list unavailable (Overpass 502 ), using place search only
+[ 215s]   leg Kareri → Kareri Lake (5.2 km apart)
+[ 220s] kareri-lake: 15 km, +1660 m, highest 3095 m, 0 km off the mapped paths (drawn along the terrain), 559 → 214 points
+[ 220s]   km     0  Kareri (1769 m, osm, 32.27896,76.27862)
+[ 220s]   km    15  Kareri Lake (2937 m, osm, 32.32565,76.27389)  5.2 km from last
+[ 220s]   camp (estimated): Rioti (2230 m, 32.30911,76.3077)
+[ 220s]   day  1 walk   Kareri → Rioti  9 km +800 −350 (approx)
+[ 220s]   day  2 walk   Rioti → Kareri Lake  5.9 km +850 −120
+[ 220s]   day  3 walk   Kareri Lake → Kareri  15 km +510 −1700
