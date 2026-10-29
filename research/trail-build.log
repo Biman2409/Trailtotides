@@ -114,3 +114,19 @@ Build trails run 40916688760, 2026-10-29T16:57:57Z
 [ 264s]   day  6 walk   Khopra Danda → Khopra Danda  16 km +1000 −1000
 [ 264s]   day  7 walk   Khopra Danda → Swanta  9.3 km +0 −1410
 [ 264s]   day  8 walk   Swanta → Nayapul  23.2 km +760 −1950
+── kuari-pass 17:18:27
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 227s] kuari-pass: 210 named places in OpenStreetMap around the trek
+[ 229s]   leg Dhak → Gulling (3.5 km apart)
+[ 233s]   leg Gulling → Khullara (1.6 km apart)
+[ 238s]   leg Khullara → Kuari Pass (2.0 km apart)
+[ 258s] kuari-pass: 10.3 km, +1830 m, highest 3810 m, 0 km off the mapped paths (drawn along the terrain), 227 → 113 points
+[ 258s]   km     0  Dhak (2106 m, osm, 30.49886,79.61134)
+[ 258s]   km   7.8  Khullara (3393 m, osm, 30.45968,79.58748)  4.9 km from last
+[ 258s]   km  10.3  Kuari Pass (3810 m, given, 30.44527,79.57533)  2.0 km from last
+[ 258s]   day  1 walk   Dhak → Gulling  5.6 km +980 −110
+[ 258s]   day  2 walk   Gulling → Khullara  2.2 km +420 −0
+[ 258s]   day  3 walk   Khullara → Khullara  5.1 km +420 −420
+[ 258s]   day  4 walk   Khullara → Dhak  7.8 km +120 −1430
