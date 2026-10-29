@@ -106,3 +106,16 @@ Build trails run 40908788641, 2026-10-29T16:09:44Z
 [  47s]   day  2 walk   Ghangaria → Ghangaria  10 km +500 −500
 [  47s]   day  3 walk   Ghangaria → Ghangaria  12 km +1100 −1100
 [  47s]   day  4 walk   Ghangaria → Pulna  9.4 km +140 −1100
+── satopanth-lake 16:22:47
+[  27s] satopanth-lake: 133 named places in OpenStreetMap around the trek
+[  44s]   leg Mana → Laxmi Van (5.8 km apart)
+[  46s]   leg Laxmi Van → Chakrateertha (6.1 km apart)
+[  47s]   leg Chakrateertha → Satopanth Lake (2.7 km apart)
+[  49s] satopanth-lake: 17.7 km, +1470 m, highest 4600 m, 0 km off the mapped paths (drawn along the terrain), 773 → 192 points
+[  49s]   km     0  Mana (3179 m, osm, 30.77048,79.49594)
+[  49s]   km  17.7  Satopanth Lake (4600 m, given, 30.74352,79.357)  13.6 km from last
+[  49s]   day  1 walk   Mana → Laxmi Van  6.9 km +480 −20
+[  49s]   day  2 walk   Laxmi Van → Chakrateertha  7.5 km +520 −0
+[  49s]   day  3 walk   Chakrateertha → Satopanth Lake  3.3 km +460 −20
+[  49s]   day  4 walk   Satopanth Lake → Laxmi Van  10.8 km +20 −990
+[  49s]   day  5 walk   Laxmi Van → Mana  6.9 km +20 −480
