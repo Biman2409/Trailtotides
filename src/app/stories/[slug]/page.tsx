@@ -5,7 +5,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getPublishedStories, getStoryBySlug } from "@/lib/stories";
-import { BADGE_TAGS, STORY_ACTIVITIES, mapStory, readMinutes, splitParagraphs, storyImage } from "@/lib/storyView";
+import { mapStory, readMinutes, splitParagraphs, storyImage } from "@/lib/storyView";
 import { ArrowRight, Crown, MapPin, Clock, Compass, Gauge, Heart } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import ShareStoryCTA from "@/components/ui/custom/ShareStoryCTA";
@@ -19,7 +19,7 @@ import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import StoryShareButton from "@/components/ui/custom/StoryShareButton";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import { adventures } from "@/lib/data";
-import { matchesSearch } from "@/lib/exploreHelpers";
+import { storyTags, storyKeywords } from "@/lib/storyTags";
 
 // Suggest adventures whose place or activity type overlaps with the story.
 function getSuggestedAdventures(story: { region: string; tags: string[] }, limit = 3) {
@@ -60,13 +60,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const s = mapStory(story);
   // Search results show about 160 characters; cut at a word, not mid-word
   const description = s.excerpt.length <= 160 ? s.excerpt : `${s.excerpt.slice(0, 157).replace(/\s+\S*$/, "")}…`;
-  const activity = s.pillTags?.[0];
+  const { activity, tags, keywords } = storyContent(s);
   // "The Night Photi La Tested Us: Motorcycling in Ladakh" carries the search phrase in the title
   const title = activity && s.region ? `${s.title}: ${activity} in ${s.region}` : s.title;
   return {
     title,
     description,
-    keywords: seoKeywords(s, activity),
+    keywords,
     authors: [{ name: s.author }],
     openGraph: {
       title: `${s.title} — Trail to Tides`,
@@ -78,7 +78,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: story.created_at,
       modifiedTime: story.updated_at,
       authors: [s.author],
-      tags: s.tags.filter((t) => !BADGE_TAGS.includes(t)),
+      tags: tags.map((t) => t.label),
     },
     twitter: {
       card: "summary_large_image",
@@ -159,17 +159,14 @@ function buildBody(story: ReturnType<typeof mapStory>): string[] | null {
   return openers[story.slug] ?? null;
 }
 
-// Search phrases a reader might type to find this story: the hashtags, plus the
-// activity and place put together the way people search ("motorcycling in ladakh")
-function seoKeywords(story: { tags: string[]; region: string }, activity?: string): string[] {
-  const place = story.region.trim();
-  const words = [
-    ...story.tags.filter((t) => !BADGE_TAGS.includes(t)),
-    ...(activity && place ? [`${activity} in ${place}`, `${place} ${activity.toLowerCase()} story`, `${activity.toLowerCase()} trip ${place}`] : []),
-    ...(place ? [`${place} travel story`, `${place} adventure`] : []),
-    "adventure travel India", "Trail to Tides stories",
-  ];
-  return [...new Set(words.map((w) => w.trim()).filter(Boolean))];
+/** The full text and linked hashtags of a story; shared by the page and its metadata */
+function storyContent(story: ReturnType<typeof mapStory>) {
+  // The stored body, unless the hand-written seed copy has more of the story
+  const seed = buildBody(story);
+  const body = seed && seed.join(" ").length > story.body.trim().length ? seed : splitParagraphs(story.body);
+  const activity = story.pillTags?.[0];
+  const tags = storyTags({ tags: story.tags, region: story.region, text: [story.title, story.excerpt, ...body].join(" ") }, activity);
+  return { body, activity, tags, keywords: storyKeywords(tags, story.region, activity) };
 }
 
 export default async function StoryPage({ params }: Props) {
@@ -177,21 +174,10 @@ export default async function StoryPage({ params }: Props) {
   const dbStory = await getStoryBySlug(slug);
   if (!dbStory) notFound();
   const story = mapStory(dbStory);
-  // The stored body, unless the hand-written seed copy has more of the story
-  const seed = buildBody(story);
-  const body = seed && seed.join(" ").length > story.body.trim().length ? seed : splitParagraphs(story.body);
+  const { body, activity, tags, keywords } = storyContent(story);
   const minutes = readMinutes([story.excerpt, ...body].join(" "));
   const hero = storyImage(story.heroImage);
-  const activity = story.pillTags?.[0];
-  const keywords = seoKeywords(story, activity);
-  // Where each hashtag leads: trips of that kind, trips that match it, or more stories.
-  // A tag nothing matches stays plain text (still read by search engines), never a dead end.
   const liveTypes = new Set(adventures.map((a) => a.type as string));
-  const tagHref = (tag: string): string | null =>
-    liveTypes.has(tag) ? `/explore?type=${encodeURIComponent(tag)}`
-    : (STORY_ACTIVITIES as readonly string[]).includes(tag) ? `/stories?activity=${encodeURIComponent(tag)}`
-    : adventures.some((a) => matchesSearch(a, tag)) ? `/explore?q=${encodeURIComponent(tag)}`
-    : null;
 
   const allStories = await getPublishedStories();
   // Same activity first, then the newest
@@ -332,27 +318,19 @@ export default async function StoryPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Hashtags: each one is a link into trips or stories on that topic, which is
+        {/* Hashtags: every one links to a destination, trips, a guide or more stories, which is
             also how search engines find their way from this story to the rest of the site */}
         <nav aria-label="Topics in this story" className="mt-8">
           <p className="text-[11px] font-bold uppercase tracking-[0.16em] mb-3" style={{ color: "var(--text-tertiary)" }}>Topics in this story</p>
           <ul className="flex flex-wrap gap-2">
-            {story.tags.filter((t) => !BADGE_TAGS.includes(t)).map((tag) => {
-              const href = tagHref(tag);
-              const chip = "inline-flex items-center text-[13px] font-medium px-3 py-1.5 rounded-full";
-              const look = { background: "var(--bg-surface-2)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)" };
-              return (
-                <li key={tag}>
-                  {href ? (
-                    <Link href={href} rel="tag" className={`${chip} transition-colors hover:text-[#ff5100] hover:border-[#ff5100]/40`} style={look}>
-                      <span style={{ color: "var(--accent-ink)" }}>#</span>{tag}
-                    </Link>
-                  ) : (
-                    <span className={chip} style={{ ...look, color: "var(--text-tertiary)" }}>#{tag}</span>
-                  )}
-                </li>
-              );
-            })}
+            {tags.map((tag) => (
+              <li key={tag.href}>
+                <Link href={tag.href} rel="tag" className="inline-flex items-center text-[13px] font-medium px-3 py-1.5 rounded-full transition-colors hover:text-[#ff5100] hover:border-[#ff5100]/40"
+                  style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)" }}>
+                  <span style={{ color: "var(--accent-ink)" }}>#</span>{tag.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
 
