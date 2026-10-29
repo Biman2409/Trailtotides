@@ -15,6 +15,8 @@ import TrophyCabinet from "./TrophyCabinet";
 import ExpeditionProfile from "./ExpeditionProfile";
 import Passport from "./Passport";
 import AccountExtras from "./AccountExtras";
+import GroupMatchSection from "./GroupMatchSection";
+import { listMyGroups } from "@/lib/matchGroupsServer";
 import { getOperatorProfile, getSubmissionsForOperator } from "@/app/auth/operator-actions";
 import { adventures } from "@/lib/data";
 import DashboardClient from "@/app/auth/operator-dashboard/DashboardClient";
@@ -84,6 +86,9 @@ export default async function ProfilePage() {
       });
     }
   }
+
+  // Groups only matter to explorers; RLS returns just the ones this user belongs to
+  const groups = isOperator ? [] : await listMyGroups(supabase, user.id).catch(() => []);
 
   const displayName = profile.full_name || user.user_metadata?.company_name || "Adventurer";
   const username = user.user_metadata?.username || profile.username;
@@ -263,6 +268,12 @@ export default async function ProfilePage() {
                     <WishlistSection />
                   </div>
                 </div>
+              </div>
+
+              {/* Group Match: every group you're in, straight back to its match and wishlist */}
+              <div id="groups">
+                <SectionHead>Group Match</SectionHead>
+                <GroupMatchSection groups={groups} />
               </div>
 
               {/* Level, XP and the activity behind them */}

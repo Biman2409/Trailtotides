@@ -815,7 +815,7 @@ function GroupWishlist({ group, viewerId, members, picks }: { group: StoredGroup
           Already have a trek in mind? Search it to see how ready each of you is. Add it to the list, vote, and the one most of you are in for rises to the top.
         </p>
       </div>
-      <TrekSearch members={members} onList={picks.slugs} onPick={(slug) => check(slug)} />
+      <TrekSearch members={members} onList={picks.slugs} onPick={(slug) => check(slug)} onAdd={picks.add} />
       <ErrorLine error={picks.error} />
 
       {checked && (
@@ -882,7 +882,7 @@ function GroupWishlist({ group, viewerId, members, picks }: { group: StoredGroup
  * (its least-ready member's match), so a trek someone has already set their heart on can be
  * checked in a couple of keystrokes. Keyboard: ↑ ↓ to move, Enter to pick, Esc to close.
  */
-function TrekSearch({ members, onList, onPick }: { members: GroupMember[]; onList: Set<string>; onPick: (slug: string) => void }) {
+function TrekSearch({ members, onList, onPick, onAdd }: { members: GroupMember[]; onList: Set<string>; onPick: (slug: string) => void; onAdd: (slug: string) => void }) {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
@@ -946,7 +946,17 @@ function TrekSearch({ members, onList, onPick }: { members: GroupMember[]; onLis
                   <span className="block text-sm font-semibold t-text truncate">{a.name}</span>
                   <span className="block text-[11.5px] truncate" style={{ color: "var(--text-tertiary)" }}>{a.type} · {a.state} · {a.durationDays}</span>
                 </span>
-                {onList.has(a.slug) && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981" }}>On list</span>}
+                {onList.has(a.slug)
+                  ? <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981" }}>On list</span>
+                  : (
+                    // Straight onto the wishlist, without opening the comparison first
+                    <button type="button" aria-label={`Add ${a.name} to the group wishlist`}
+                      onClick={(e) => { e.stopPropagation(); onAdd(a.slug); }}
+                      className="inline-flex items-center gap-0.5 text-[10.5px] font-bold px-2 py-1 rounded-full shrink-0 transition-colors hover:brightness-110"
+                      style={{ background: "rgba(255,81,0,0.12)", color: "var(--accent-ink-soft)" }}>
+                      <Plus className="w-3 h-3" /> Add
+                    </button>
+                  )}
                 {members.length > 0 && <span className="text-[11px] font-semibold tabular-nums shrink-0" style={{ color: b.color }}>{members.length > 1 ? "Lowest " : ""}{fit}%</span>}
               </li>
             );
