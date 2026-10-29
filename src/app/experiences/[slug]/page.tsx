@@ -47,7 +47,6 @@ import { getSeasonUrgency } from "@/lib/seasonUrgency";
 import { parsePrice } from "@/lib/price";
 import { getNextDeparture } from "@/lib/nextDeparture";
 import SectionNav from "./SectionNav";
-import TrekGuide from "./TrekGuide";
 
 // The page's body copy is small and calm, so its secondary and tertiary tones are
 // raised (from 60% / 35% of the text colour) to keep it easy to read in both themes
@@ -436,7 +435,7 @@ export default async function ExperiencePage({ params }: Props) {
         <HeroActions adventure={adventure} />
       </section>
 
-      <SectionNav hasGuide={!!trail && trail.days?.length > 0} />
+      <SectionNav />
 
       {/* Everything below the hero sits on the same topographic texture as the home page */}
       <div className="topo">
@@ -499,13 +498,6 @@ export default async function ExperiencePage({ params }: Props) {
                 <ScreenOnly below>
                   <div className="pt-2"><NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} trail={trail} compact /></div>
                 </ScreenOnly>
-              )}
-
-              {/* The trek guide: the route summed up, then what each day of the itinerary asks of you */}
-              {trail && trail.days?.length > 0 && (
-                <AccordionSection id="guide" label="day by day" title="Trek guide" defaultOpen mobileDefaultOpen={false}>
-                  <TrekGuide trail={trail} />
-                </AccordionSection>
               )}
 
               {/* Safety & Prep — before suitability and booking, and open, so people

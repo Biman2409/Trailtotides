@@ -19,6 +19,7 @@
 // Then run sync-trek-facts.mjs so the trek's duration, distance and base camp follow the itinerary.
 
 import { writeFile, readFile, readdir, mkdir } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import { TREKS } from "./trek-configs.mjs";
 import { placesNear, matchPlace, pathRoute } from "./osm.mjs";
 import { terrainPath, satellitePreview } from "./terrain.mjs";
@@ -105,6 +106,12 @@ const taken = (lat, lng) => [...found.values()].some((p) => dist([p.lat, p.lng],
 async function place(stop, trek, prev = null) {
   const s = typeof stop === "string" ? { name: stop } : stop;
   if (found.has(s.name)) return found.get(s.name);
+  // A position checked against GPS tracks and the published height is used as it is
+  if (s.exact) {
+    const p = { name: s.name, lat: s.at[0], lng: s.at[1], ele: s.ele ?? (await heights([s.at]))[0], from: "given" };
+    found.set(s.name, p);
+    return p;
+  }
   // First the trek's own place list, which knows campsites, passes and lakes by every name they
   // carry; given coordinates must be within 2 km of the match
   for (const n of [s.name, s.q].filter(Boolean)) {
@@ -147,9 +154,27 @@ async function place(stop, trek, prev = null) {
   return p;
 }
 
-async function leg(a, b) {
+// A recorded GPS track (scripts/tracks/<file>.json, [[lat, lng], ...]) for a stretch OpenStreetMap
+// maps badly or not at all: the part of it between the two places. A place up to a kilometre off
+// the track is joined to it along the terrain (alongTerrain)
+function fromTrack(file, a, b) {
+  const pts = JSON.parse(readFileSync(new URL(`./tracks/${file}.json`, import.meta.url), "utf8"));
+  const nearest = (p) => pts.reduce((best, q, i) => (dist(q, [p.lat, p.lng]) < dist(pts[best], [p.lat, p.lng]) ? i : best), 0);
+  const i = nearest(a), j = nearest(b);
+  const part = i <= j ? pts.slice(i, j + 1) : pts.slice(j, i + 1).reverse();
+  const offA = dist(part[0], [a.lat, a.lng]), offB = dist(part[part.length - 1], [b.lat, b.lng]);
+  if (offA > 1000 || offB > 1000) throw new Error(`track ${file} passes ${Math.round(Math.max(offA, offB))} m from ${offA > offB ? a.name : b.name}`);
+  return [[a.lat, a.lng], ...part, [b.lat, b.lng]];
+}
+
+async function leg(a, b, track) {
   const straight = dist([a.lat, a.lng], [b.lat, b.lng]);
-  console.log(`  leg ${a.name} → ${b.name} (${(straight / 1000).toFixed(1)} km apart)`);
+  console.log(`  leg ${a.name} → ${b.name} (${(straight / 1000).toFixed(1)} km apart)${track ? ` along the track ${track}` : ""}`);
+  if (track) {
+    const coords = fromTrack(track, a, b);
+    const ele = await heights(coords);
+    return { coords: coords.map((p, i) => [p[0], p[1], ele[i]]), approxKm: 0 };
+  }
   try {
     const url = `https://brouter.de/brouter?lonlats=${a.lng},${a.lat}|${b.lng},${b.lat}&profile=hiking-mountain&alternativeidx=0&format=geojson`;
     const res = await fetch(url, { headers: UA, signal: AbortSignal.timeout(90000) });
@@ -260,7 +285,7 @@ async function build(slug) {
   const skipped = new Set(); // optional stops and side trips OSM doesn't have
   for (const s of trek.stops) {
     const p = await place(s, trek, stops[stops.length - 1]);
-    if (p) stops.push({ ...p });
+    if (p) stops.push({ ...p, track: s.track });
     else { skipped.add(s.name); console.log(`  optional stop not in OpenStreetMap, left out: ${s.name}`); }
   }
   // A stop far from the one before is a different place with the same name
@@ -285,7 +310,7 @@ async function build(slug) {
     return dist([p.lat, p.lng], [a.lat + t * dy, (ax + t * dx) / k]);
   };
   const via = stops.slice(0, -1).map(() => []);
-  for (const [campName, [a, b, frac, aka = []]] of Object.entries(trek.camps ?? {})) {
+  for (const [campName, [a, b, frac, aka = [], campAt]] of Object.entries(trek.camps ?? {})) {
     const ia = stops.findIndex((s) => s.name === a);
     const ib = stops.findIndex((s, i) => i > ia && s.name === b);
     if (ia < 0 || ib < 0) throw new Error(`Camp ${campName}: ${a} and ${b} must be stops in that order`);
@@ -293,15 +318,16 @@ async function build(slug) {
     const guess = [A.lat + frac * (B.lat - A.lat), A.lng + frac * (B.lng - A.lng)];
     const maxD = Math.max(2500, 0.6 * dist([A.lat, A.lng], [B.lat, B.lng]));
     // The camp's own name first, then the other names it goes by (aka)
-    const m = [campName, ...aka].map((n) => matchPlace(index, n, { near: guess, maxD, as: campName })).find(Boolean);
-    if (!m || taken(m.lat, m.lng)) {
+    // A camp OpenStreetMap doesn't have, placed from GPS tracks and trekkers' waypoints (at)
+    const m = campAt ? { lat: campAt[0], lng: campAt[1] } : [campName, ...aka].map((n) => matchPlace(index, n, { near: guess, maxD, as: campName })).find(Boolean);
+    if (!m || (!campAt && taken(m.lat, m.lng))) {
       // Names nearby that start the same way, in case OSM spells the camp differently
       const stem = campName.toLowerCase().replace(/[^a-z]/g, "").slice(0, 4);
       const near = index.filter((p) => p.names.some((n) => n.toLowerCase().replace(/[^a-z]/g, "").startsWith(stem)) && dist(guess, [p.lat, p.lng]) < 15000);
       if (near.length) console.log(`  ? ${campName} not matched; nearby: ${near.slice(0, 6).map((p) => `${p.name} (${p.kind}, ${(dist(guess, [p.lat, p.lng]) / 1000).toFixed(1)} km)`).join(", ")}`);
       continue;
     }
-    const p = { name: campName, lat: +m.lat.toFixed(5), lng: +m.lng.toFixed(5), ele: m.ele ?? (await heights([[m.lat, m.lng]]))[0], from: "osm" };
+    const p = { name: campName, lat: +m.lat.toFixed(5), lng: +m.lng.toFixed(5), ele: m.ele ?? (await heights([[m.lat, m.lng]]))[0], from: campAt ? "given" : "osm" };
     found.set(campName, p);
     let li = ia;
     for (let i = ia; i < ib; i++) if (segDist(p, stops[i], stops[i + 1]) < segDist(p, stops[li], stops[li + 1])) li = i;
@@ -316,7 +342,14 @@ async function build(slug) {
   for (let i = 0; i < stops.length - 1; i++) {
     const chain = [stops[i], ...via[i], stops[i + 1]];
     for (let k = 0; k < chain.length - 1; k++) {
-      const l = await leg(chain[k], chain[k + 1]);
+      const l = await leg(chain[k], chain[k + 1], stops[i + 1].track); // camps on a tracked leg follow the track too
+      // The router starts and ends on the nearest mapped path: a summit or camp off the paths is
+      // joined to it, so the line reaches every stop (drawn along the terrain by alongTerrain)
+      const A = chain[k], B = chain[k + 1];
+      // (the line's heights are the elevation model's, not a stop's published height)
+      if (k + i > 0 && dist(l.coords[0], [A.lat, A.lng]) > 30) { l.coords.unshift([A.lat, A.lng, (await heights([[A.lat, A.lng]]))[0]]); l.approxKm += dist(l.coords[0], l.coords[1]) / 1000; }
+      const end = l.coords[l.coords.length - 1];
+      if (dist(end, [B.lat, B.lng]) > 30) { l.approxKm += dist(end, [B.lat, B.lng]) / 1000; l.coords.push([B.lat, B.lng, (await heights([[B.lat, B.lng]]))[0]]); }
       l.coords = await alongTerrain(l.coords);
       approxKm += l.approxKm;
       full = full.concat(full.length ? l.coords.slice(1) : l.coords);
@@ -327,8 +360,8 @@ async function build(slug) {
   // The router starts and ends on the nearest mapped path, which can be a little off the village
   // point; join the ends to the first and last stop so the line meets its pins
   const first = stops[0], last = stops[stops.length - 1];
-  if (dist(full[0], [first.lat, first.lng]) > 20) { full.unshift([first.lat, first.lng, first.ele ?? full[0][2]]); at.forEach((v, i) => (at[i] = i ? v + 1 : 0)); }
-  if (dist(full[full.length - 1], [last.lat, last.lng]) > 20) { full.push([last.lat, last.lng, last.ele ?? full[full.length - 1][2]]); at[at.length - 1] = full.length - 1; }
+  if (dist(full[0], [first.lat, first.lng]) > 20) { full.unshift([first.lat, first.lng, (await heights([[first.lat, first.lng]]))[0]]); at.forEach((v, i) => (at[i] = i ? v + 1 : 0)); }
+  if (dist(full[full.length - 1], [last.lat, last.lng]) > 20) { full.push([last.lat, last.lng, (await heights([[last.lat, last.lng]]))[0]]); at[at.length - 1] = full.length - 1; }
 
   const cum = [0];
   for (let i = 1; i < full.length; i++) cum.push(cum[i - 1] + dist(full[i - 1], full[i]));
@@ -349,6 +382,21 @@ async function build(slug) {
     const median = near[near.length >> 1];
     if (Math.abs(raw[i] - median) > 120) p[2] = median;
   });
+  // A step steeper than 4 in 5 (plus 3 m of noise) between neighbouring points is the elevation
+  // model jumping between a cliff edge and the valley floor, not the path: no trail climbs that
+  // steeply for long. The heights are limited to that slope walking forwards and backwards, and
+  // the two averaged, so a step is spread over the stretch around it
+  const limit = (order) => {
+    const h = full.map((p) => p[2]);
+    for (let n = 1; n < order.length; n++) {
+      const i = order[n], j = order[n - 1], max = 3 + 0.8 * dist(full[i], full[j]);
+      h[i] = Math.min(h[j] + max, Math.max(h[j] - max, h[i]));
+    }
+    return h;
+  };
+  const idx = full.map((_, i) => i);
+  const fwd = limit(idx), back = limit([...idx].reverse());
+  full.forEach((p, i) => { p[2] = Math.round((fwd[i] + back[i]) / 2); });
 
   // Camps the map doesn't have, placed a typical share of the way along the trail between two
   // mapped stops. Their position is an estimate, so days that reach them are marked approximate
@@ -395,25 +443,47 @@ async function build(slug) {
     return { km: Math.abs(cum[b] - cum[a]) / 1000, up, down };
   }
 
+  // A day that ends somewhere off the line (a descent through the next valley, as to Pheriche on
+  // the way down from Everest) is routed on its own and measured along that route
+  async function offLine(from, to) {
+    const l = await leg({ name: from.name, lat: from.lat, lng: from.lng }, to);
+    const c = await alongTerrain(l.coords);
+    const ce = c.some((p) => p[2] == null) ? await heights(c) : c.map((p) => p[2]);
+    const cc = [0];
+    for (let i = 1; i < c.length; i++) cc.push(cc[i - 1] + dist(c[i - 1], c[i]));
+    const sm = c.map((_, i) => {
+      let t = 0, n = 0;
+      for (let k = 0; k < c.length; k++) if (Math.abs(cc[k] - cc[i]) <= 150) { t += ce[k]; n++; }
+      return t / n;
+    });
+    let up = 0, down = 0, ref = sm[0];
+    for (const h of sm) { const d = h - ref; if (d >= 15) { up += d; ref = h; } else if (d <= -15) { down -= d; ref = h; } }
+    console.log(`  ${from.name} → ${to.name} is off the line: routed on its own, ${(cc[cc.length - 1] / 1000).toFixed(1)} km`);
+    return { km: cc[cc.length - 1] / 1000, up, down, approx: l.approxKm > 0.5 };
+  }
+
   const days = [];
   let here = found.get(name(trek.stops[0]));
   let hereIdx = 0;
-  (trek.days ?? []).forEach((d, n) => {
+  for (const [n, d] of (trek.days ?? []).entries()) {
     const day = n + 1;
-    if (d.rest) { days.push({ day, kind: "rest", from: here.name, to: here.name, sleepEle: here.ele, note: d.rest }); return; }
-    if (d.travel) { days.push({ day, kind: "travel", from: here.name, to: null, sleepEle: null, note: d.travel }); return; }
+    if (d.rest) { days.push({ day, kind: "rest", from: here.name, to: here.name, sleepEle: here.ele, note: d.rest }); continue; }
+    if (d.travel) { days.push({ day, kind: "travel", from: here.name, to: null, sleepEle: null, note: d.travel }); continue; }
     const vias = (d.via ?? []).filter((v) => !skipped.has(v));
     const route = [...vias, d.to].map((v) => found.get(v));
     if (route.some((p) => !p)) throw new Error(`Day ${day}: unknown place in ${JSON.stringify(d)}`);
     let km = 0, up = 0, down = 0, approx = false, idx = hereIdx;
+    let at0 = here;
     for (const p of route) {
       const B = nearestIdx(p, idx);
       // Estimated where you sleep makes the day's figures estimates; a pass placed by estimate
       // along the line only labels it, so it doesn't
-      approx ||= B.off > 300 || (estimated.has(p.name) && p === route[route.length - 1]);
-      const s = stretch(idx, B.i);
+      approx ||= estimated.has(p.name) && p === route[route.length - 1];
+      const s = B.off > 300 ? await offLine(at0, p) : stretch(idx, B.i);
+      approx ||= !!s.approx;
       km += s.km; up += s.up; down += s.down;
       idx = B.i;
+      at0 = p;
     }
     if (d.side) { km += d.side.km; up += d.side.up; down += d.side.up; }
     const to = found.get(d.to);
@@ -424,7 +494,7 @@ async function build(slug) {
     });
     here = to;
     hereIdx = idx;
-  });
+  }
   const sleepPlaces = [...new Map(days.filter((d) => d.to).map((d) => [d.to, found.get(d.to)])).values()]
     .map(({ name, lat, lng, ele }) => ({ name, lat, lng, ele }));
 
@@ -436,7 +506,8 @@ async function build(slug) {
     builtAt: new Date().toISOString().slice(0, 10),
     lengthKm: +(cum[cum.length - 1] / 1000).toFixed(1),
     ascentM: Math.round(stretch(0, full.length - 1).up / 10) * 10, // smoothed, like the daily figures
-    maxEleM: Math.max(...full.map((p) => p[2])),
+    // A place's published height counts when the elevation model reads it lower (see trek-configs)
+    maxEleM: Math.max(...full.map((p) => p[2]), ...[...stops, ...side].map((p) => p.ele ?? 0)),
     approxKm: +approxKm.toFixed(1),
     stops: stops.map(strip),
     side: side.map(strip),
@@ -447,9 +518,14 @@ async function build(slug) {
 
   await mkdir("src/lib/trails", { recursive: true });
   // The map services fail now and then, and a leg they fail on is drawn off the mapped paths: a build with
-  // more straight km than the trail already saved is worse, so the saved one is kept
+  // more straight km than the trail already saved is worse, so the saved one is kept. Unless the stops
+  // or camps have moved: then the saved trail goes to the wrong places, however well mapped
   const prev = await readFile(`src/lib/trails/${slug}.json`, "utf8").then(JSON.parse).catch(() => null);
-  if (prev && (prev.approxKm ?? 0) + 0.1 < trail.approxKm) {
+  const where = (t) => [...t.stops, ...t.side, ...t.sleepPlaces].map((p) => `${p.name}@${p.lat.toFixed(4)},${p.lng.toFixed(4)}`).join("|");
+  // and only if it is sound itself: every stop on its line, and no cliff-edge steps in its heights
+  const sound = (t) => t.stops.every((p) => t.line.some((q) => dist(q, [p.lat, p.lng]) < 300)) &&
+    t.line.every((q, i) => !i || Math.abs(q[2] - t.line[i - 1][2]) <= Math.max(150, 1.2 * dist(q, t.line[i - 1])));
+  if (prev && (prev.approxKm ?? 0) + 0.1 < trail.approxKm && where(prev) === where(trail) && sound(prev)) {
     console.log(`${slug}: KEPT the saved trail (${prev.approxKm ?? 0} km off the mapped paths) over this build's ${trail.approxKm} km`);
     return;
   }
