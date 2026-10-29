@@ -88,3 +88,19 @@ Build trails run 40937483557, 2026-10-29T19:09:36Z
 [ 255s]   day  3 walk   Min Thach → Nagaru  1.8 km +550 −0
 [ 255s]   day  4 walk   Nagaru → Biskeri Thach  3.8 km +390 −130
 [ 255s]   day  5 walk   Biskeri Thach → Barshaini  10.7 km +70 −1900
+── satopanth-lake 19:20:23
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 222s] satopanth-lake: 133 named places in OpenStreetMap around the trek
+[ 224s]   leg Mana → Laxmi Van (5.8 km apart)
+[ 226s]   leg Laxmi Van → Chakrateertha (6.1 km apart)
+[ 228s]   leg Chakrateertha → Satopanth Lake (2.7 km apart)
+[ 231s] satopanth-lake: 17.7 km, +1210 m, highest 4600 m, 0.2 km off the mapped paths (drawn along the terrain), 773 → 192 points
+[ 231s]   km     0  Mana (3179 m, osm, 30.77048,79.49594)
+[ 231s]   km  17.7  Satopanth Lake (4600 m, given, 30.74352,79.357)  13.6 km from last
+[ 231s]   day  1 walk   Mana → Laxmi Van  6.9 km +480 −20
+[ 231s]   day  2 walk   Laxmi Van → Chakrateertha  7.5 km +520 −0
+[ 231s]   day  3 walk   Chakrateertha → Satopanth Lake  3.3 km +200 −20
+[ 231s]   day  4 walk   Satopanth Lake → Laxmi Van  10.8 km +20 −730
+[ 231s]   day  5 walk   Laxmi Van → Mana  6.9 km +20 −480
