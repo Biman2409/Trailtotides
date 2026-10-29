@@ -167,3 +167,14 @@ Build trails run 40908788641, 2026-10-29T16:09:44Z
 [  92s]   day  3 walk   Min Thach → Nagaru  1.8 km +550 −0
 [  92s]   day  4 walk   Nagaru → Biskeri Thach  3.8 km +390 −130
 [  92s]   day  5 walk   Biskeri Thach → Barshaini  10.7 km +70 −1910
+── chandrakhani-pass 16:30:57
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  89s] chandrakhani-pass: 1104 named places in OpenStreetMap around the trek
+[  91s]   leg Rumsu → Chaklani (6.1 km apart) along the track chandrakhani
+[  92s]   leg Chaklani → Chandrakhani Pass (2.0 km apart) along the track chandrakhani
+[  92s]   leg Chandrakhani Pass → Malana (2.6 km apart) along the track chandrakhani
+[  93s] chandrakhani-pass: 12.5 km, +1630 m, highest 3672 m, 0 km off the mapped paths (drawn along the terrain), 448 → 132 points
+[  93s]   km     0  Rumsu (2058 m, osm, 32.11439,77.17943)
+[  93s]   km  12.5  Malana (2647 m, osm, 32.0618,77.26002)  9.6 km from last
+[  93s]   day  1 walk   Rumsu → Chaklani  6.8 km +1360 −0
+[  93s]   day  2 walk   Chaklani → Malana  5.8 km +250 −1010
