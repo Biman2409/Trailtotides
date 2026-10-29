@@ -52,3 +52,22 @@ Build trails run 40878233394, 2026-10-29T13:01:56Z
 [  64s]   day  1 walk   Kareri → Rioti  9 km +800 −350 (approx)
 [  64s]   day  2 walk   Rioti → Kareri Lake  5.9 km +850 −120
 [  64s]   day  3 walk   Kareri Lake → Kareri  15 km +510 −1700
+── pin-parvati-pass 13:11:23
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 228s] pin-parvati-pass: 539 named places in OpenStreetMap around the trek
+[ 236s]   leg Barshaini → Kheerganga (5.8 km apart)
+[ 238s]   leg Kheerganga → Tunda Bhuj (8.1 km apart)
+[ 241s]   leg Tunda Bhuj → Thakur Kuan (5.4 km apart)
+[ 243s]   leg Thakur Kuan → Odi Thach (6.2 km apart)
+[ 244s]   leg Odi Thach → Mantalai (10.1 km apart)
+[ 247s]   leg Mantalai → Pin Parvati Pass (6.8 km apart)
+[ 253s]   overpass: overpass-api.de Overpass 502 
+[ 346s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 442s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 451s]   overpass: overpass-api.de Overpass 502 
+[ 463s]   ! path search failed: Overpass 502 
+[ 463s]   ! Mantalai → Pin Parvati Pass: operation killed by thread-priority-watchdog after 1 seconds ; drawn along the terrain
+[ 464s]   leg Pin Parvati Pass → Mud (22.4 km apart)
+[ 467s] pin-parvati-pass: KEPT the saved trail (0.2 km off the mapped paths) over this build's 6.8 km
