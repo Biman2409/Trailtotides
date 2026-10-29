@@ -39,3 +39,36 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [ 162s]   day  8 walk   Gokyo → Dole  12.1 km +20 −750
 [ 162s]   day  9 walk   Dole → Namche Bazaar  11.4 km +320 −940
 [ 162s]   day 10 walk   Namche Bazaar → Lukla  17.6 km +370 −950
+── annapurna-base-camp 17:28:43
+[  37s] annapurna-base-camp: 1681 named places in OpenStreetMap around the trek
+[ 106s]   leg Nayapul → Ulleri (7.3 km apart)
+[ 109s]   leg Ulleri → Ghorepani (6.2 km apart)
+[ 111s]   leg Ghorepani → Poon Hill (1.1 km apart)
+[ 112s]   leg Poon Hill → Tadapani (7.4 km apart)
+[ 114s]   leg Tadapani → Chhomrong (6.1 km apart)
+[ 116s]   leg Chhomrong → Bamboo (5.2 km apart)
+[ 117s]   leg Bamboo → Deurali (6.1 km apart)
+[ 119s]   leg Deurali → Machapuchare Base Camp (3.3 km apart)
+[ 121s]   leg Machapuchare Base Camp → Annapurna Base Camp (2.9 km apart)
+[ 122s]   leg Bamboo → Jhinu Danda (6.2 km apart)
+[ 125s]   Bamboo → Jhinu Danda is off the line: routed on its own, 18.3 km
+[ 125s] annapurna-base-camp: 64.4 km, +5750 m, highest 4127 m, 0 km off the mapped paths (drawn along the terrain), 2189 → 815 points
+[ 125s]   km     0  Nayapul (1013 m, osm, 28.29814,83.76791)
+[ 125s]   km  10.6  Ulleri (2005 m, osm, 28.35673,83.73538)  7.3 km from last
+[ 125s]   km  18.4  Ghorepani (2896 m, osm, 28.40249,83.69993)  6.2 km from last
+[ 125s]   km  19.7  Poon Hill (3210 m, osm, 28.40004,83.68954)  1.1 km from last
+[ 125s]   km  34.6  Tadapani (2680 m, osm, 28.39652,83.76527)  7.4 km from last
+[ 125s]   km  43.9  Chhomrong (2160 m, osm, 28.42426,83.81853)  6.1 km from last
+[ 125s]   km  50.7  Bamboo (2310 m, osm, 28.45702,83.85693)  5.2 km from last
+[ 125s]   km  57.7  Deurali (3256 m, osm, 28.49756,83.89833)  6.1 km from last
+[ 125s]   km  61.4  Machapuchare Base Camp (3700 m, osm, 28.52651,83.90756)  3.3 km from last
+[ 125s]   km  64.4  Annapurna Base Camp (4127 m, osm, 28.53076,83.87785)  2.9 km from last
+[ 125s]   day  1 walk   Nayapul → Ulleri  10.6 km +1020 −20
+[ 125s]   day  2 walk   Ulleri → Ghorepani  7.8 km +830 −0
+[ 125s]   day  3 walk   Ghorepani → Tadapani  16.2 km +1150 −1340
+[ 125s]   day  4 walk   Tadapani → Chhomrong  9.3 km +380 −1050
+[ 125s]   day  5 walk   Chhomrong → Bamboo  6.8 km +590 −290
+[ 125s]   day  6 walk   Bamboo → Deurali  7 km +860 −0
+[ 125s]   day  7 walk   Deurali → Annapurna Base Camp  6.7 km +910 −0
+[ 125s]   day  8 walk   Annapurna Base Camp → Bamboo  13.7 km +0 −1780
+[ 125s]   day  9 walk   Bamboo → Jhinu Danda  18.3 km +1020 −1620
