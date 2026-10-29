@@ -386,3 +386,16 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [ 229s]   leg Bedni Top → Bedni Bugyal (1.0 km apart)
 [ 231s]   leg Bedni Bugyal → Wan (4.8 km apart)
 [ 234s] ali-bedni-bugyal: KEPT the saved trail (0 km off the mapped paths) over this build's 1.6 km
+── brahmatal 18:41:42
+[  37s] brahmatal: 377 named places in OpenStreetMap around the trek
+[  47s]   leg Lohajung → Bekaltal (4.1 km apart)
+[  49s]   leg Bekaltal → Brahmatal (4.0 km apart)
+[  51s] brahmatal: 10.7 km, +1050 m, highest 3700 m, 0 km off the mapped paths (drawn along the terrain), 285 → 125 points
+[  51s]   km     0  Lohajung (2335 m, given, 30.1283,79.619)
+[  51s]   km   5.6  Bekaltal (3048 m, given, 30.14259,79.5795)  4.1 km from last
+[  51s]   km  10.7  Brahmatal (3216 m, given, 30.17779,79.58802)  4.0 km from last
+[  51s]   side trip: Brahmatal Top (3700 m, given)
+[  51s]   day  1 walk   Lohajung → Bekaltal  5.6 km +690 −20
+[  51s]   day  2 walk   Bekaltal → Brahmatal  5.1 km +340 −150
+[  51s]   day  3 walk   Brahmatal → Brahmatal  4.1 km +510 −510
+[  51s]   day  4 walk   Brahmatal → Lohajung  10.7 km +140 −1020
