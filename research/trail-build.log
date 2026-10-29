@@ -119,3 +119,19 @@ Build trails run 40908788641, 2026-10-29T16:09:44Z
 [  49s]   day  3 walk   Chakrateertha → Satopanth Lake  3.3 km +460 −20
 [  49s]   day  4 walk   Satopanth Lake → Laxmi Van  10.8 km +20 −990
 [  49s]   day  5 walk   Laxmi Van → Mana  6.9 km +20 −480
+── gaumukh-tapovan 16:23:39
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  84s] gaumukh-tapovan: 113 named places in OpenStreetMap around the trek
+[ 100s]   leg Gangotri → Bhojbasa (11.7 km apart)
+[ 103s]   leg Bhojbasa → Gaumukh (4.2 km apart)
+[ 104s]   leg Gaumukh → Tapovan (1.3 km apart)
+[ 106s] gaumukh-tapovan: 20.1 km, +1280 m, highest 4463 m, 0 km off the mapped paths (drawn along the terrain), 508 → 198 points
+[ 106s]   km     0  Gangotri (3300 m, osm, 30.99437,78.93987)
+[ 106s]   km  13.8  Bhojbasa (3792 m, osm, 30.95045,79.05151)  11.7 km from last
+[ 106s]   km  18.5  Gaumukh (4050 m, osm, 30.92448,79.08407)  4.2 km from last
+[ 106s]   km  20.1  Tapovan (4463 m, given, 30.91443,79.0765)  1.3 km from last
+[ 106s]   day  1 walk   Gangotri → Bhojbasa  13.8 km +790 −70
+[ 106s]   day  2 walk   Bhojbasa → Tapovan  6.3 km +500 −0
+[ 106s]   day  3 rest   Tapovan → Tapovan
+[ 106s]   day  4 walk   Tapovan → Bhojbasa  6.3 km +0 −500
+[ 106s]   day  5 walk   Bhojbasa → Gangotri  13.8 km +100 −810
