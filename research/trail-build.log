@@ -278,3 +278,16 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [  51s]   day  2 walk   Ghangaria → Ghangaria  10 km +500 −500
 [  51s]   day  3 walk   Ghangaria → Ghangaria  12 km +1100 −1100
 [  51s]   day  4 walk   Ghangaria → Pulna  9.4 km +140 −1100
+── kuari-pass 18:17:59
+[  34s] kuari-pass: 210 named places in OpenStreetMap around the trek
+[  51s]   leg Dhak → Gulling (3.5 km apart)
+[  54s]   leg Gulling → Khullara (1.6 km apart)
+[  56s]   leg Khullara → Kuari Pass (2.0 km apart)
+[  74s] kuari-pass: 10.3 km, +1830 m, highest 3810 m, 0 km off the mapped paths (drawn along the terrain), 227 → 113 points
+[  74s]   km     0  Dhak (2106 m, osm, 30.49886,79.61134)
+[  74s]   km   7.8  Khullara (3393 m, osm, 30.45968,79.58748)  4.9 km from last
+[  74s]   km  10.3  Kuari Pass (3810 m, given, 30.44527,79.57533)  2.0 km from last
+[  74s]   day  1 walk   Dhak → Gulling  5.6 km +980 −110
+[  74s]   day  2 walk   Gulling → Khullara  2.2 km +420 −0
+[  74s]   day  3 walk   Khullara → Khullara  5.1 km +420 −420
+[  74s]   day  4 walk   Khullara → Dhak  7.8 km +120 −1430
