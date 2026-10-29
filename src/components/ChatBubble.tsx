@@ -1,21 +1,37 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { X, ArrowUp, ChevronRight, RotateCcw } from "lucide-react";
+import { X, ArrowUp, ChevronRight, RotateCcw, Mountain, Bike, Sparkles, Snowflake, Gauge, Compass as CompassIcon } from "lucide-react";
 import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import Link from "next/link";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
-import { COMPASS_ASK_EVENT, COMPASS_GRADIENT, COMPASS_RING, STARTER_PROMPTS, deriveChips, type CompassMessage } from "@/lib/compass";
+import { COMPASS_ASK_EVENT, COMPASS_GRADIENT, COMPASS_RING, deriveChips, type CompassMessage } from "@/lib/compass";
+import { getACE, computeDifficulty, computeMatchScore, type ACE } from "@/lib/ace";
+import { getLowestPrice, type Adventure } from "@/lib/data";
+import { bucketFor } from "@/lib/fitness";
+import { DIFFICULTY_CONFIG } from "@/components/ui/custom/DifficultyMeter";
 
 // Compass's identity: one warm orange gradient used for the orb, the button ring and the send button.
 const AI_GRADIENT = COMPASS_GRADIENT;
 const AI_RING = COMPASS_RING;
 
-// What the thinking row says as the wait goes on, and when each line appears (ms)
+// What the thinking row says as the wait goes on, and when each line appears (ms). Most answers
+// come back at once; the later lines only show when a question needs the AI.
 const WAIT_LINES = ["Thinking…", "Looking through every adventure…", "Matching them to what you asked…", "Almost there, the AI is busy right now…"];
 const WAIT_AT = [0, 3000, 8000, 15000];
 // Past this the server has already given up on the AI, so stop waiting too
 const CLIENT_TIMEOUT_MS = 45_000;
+
+// The conversation survives moving between Home, Explore and the Map (each mounts its own chat)
+const STORE_KEY = "ttt_compass_chat";
+
+// The start screen's suggestions, each a question Compass answers well
+const PROMPTS = [
+  { icon: Mountain, text: "A beginner trek in Himachal" },
+  { icon: Bike, text: "A bike trip in Ladakh" },
+  { icon: Snowflake, text: "A snow trek in Uttarakhand" },
+  { icon: Sparkles, text: "A challenging climb in Nepal" },
+];
 
 function Orb({ size = 28, pulse = false }: { size?: number; pulse?: boolean }) {
   return (
@@ -26,6 +42,46 @@ function Orb({ size = 28, pulse = false }: { size?: number; pulse?: boolean }) {
     >
       <CompassAIMark className="text-white" style={{ width: size * 0.6, height: size * 0.6 }} strokeWidth={2.1} />
     </span>
+  );
+}
+
+/** One recommended adventure: photo, the facts that decide a trip, why it fits, and your match */
+function PickCard({ adventure, reason, ace }: { adventure: Adventure; reason?: string; ace: ACE | null }) {
+  const difficulty = computeDifficulty(getACE(adventure));
+  const color = DIFFICULTY_CONFIG[difficulty as keyof typeof DIFFICULTY_CONFIG]?.color ?? "#94a3b8";
+  const price = getLowestPrice(adventure);
+  const match = ace ? computeMatchScore(ace, getACE(adventure)) : null;
+  const b = match !== null ? bucketFor(match) : null;
+  return (
+    <Link
+      href={`/experiences/${adventure.slug}`}
+      className="group flex gap-3 p-2 rounded-2xl transition-colors hover:bg-[var(--bg-card-hover)]"
+      style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}
+    >
+      <span className="relative w-[76px] h-[76px] rounded-xl overflow-hidden shrink-0">
+        {/* eslint-disable-next-line @next/next/no-img-element -- small thumbnail, many hosts */}
+        <img src={adventure.heroImage} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        {b && (
+          <span className="absolute bottom-1 left-1 text-[10px] font-bold px-1.5 py-0.5 rounded-md text-white tabular-nums" style={{ background: "rgba(0,0,0,0.65)" }}>
+            <span style={{ color: b.color }}>●</span> {match}%
+          </span>
+        )}
+      </span>
+      <span className="flex-1 min-w-0 py-0.5">
+        <span className="flex items-start gap-1.5">
+          <span className="text-[13.5px] font-semibold leading-snug line-clamp-1 flex-1" style={{ color: "var(--text-primary)" }}>{adventure.name}</span>
+          <ChevronRight className="w-4 h-4 shrink-0 mt-0.5 opacity-40 group-hover:opacity-80 group-hover:translate-x-0.5 transition-all" style={{ color: "var(--text-secondary)" }} />
+        </span>
+        <span className="flex items-center gap-1.5 mt-1 text-[11px] flex-wrap" style={{ color: "var(--text-tertiary)" }}>
+          <span className="font-semibold px-1.5 py-px rounded-md" style={{ color, background: `${color}1f` }}>{difficulty}</span>
+          <span>{adventure.durationDays}</span>
+          <span aria-hidden>·</span>
+          <span className="truncate">{adventure.state}</span>
+          {price ? <><span aria-hidden>·</span><span>from ₹{price.toLocaleString("en-IN")}</span></> : null}
+        </span>
+        {reason && <span className="block text-[11.5px] leading-snug mt-1.5 line-clamp-2" style={{ color: "var(--text-secondary)" }}>{reason}</span>}
+      </span>
+    </Link>
   );
 }
 
@@ -51,6 +107,17 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
   const { ace } = useFitnessProfile();
   const aceRef = useRef(ace);
   aceRef.current = ace;
+
+  // Pick the conversation back up after moving to another page, and keep it as it grows
+  useEffect(() => {
+    try { const saved = sessionStorage.getItem(STORE_KEY); if (saved) setMessages(JSON.parse(saved)); } catch {}
+  }, []);
+  useEffect(() => {
+    try {
+      if (messages.length) sessionStorage.setItem(STORE_KEY, JSON.stringify(messages.slice(-20)));
+      else sessionStorage.removeItem(STORE_KEY);
+    } catch {}
+  }, [messages]);
 
   // Reveal the button on first scroll, or after a few seconds regardless.
   // Pages whose hero already has a Compass bar mark it [data-hide-compass]; there the button
@@ -181,6 +248,15 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
         @keyframes compassPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,81,0,0.35); } 50% { box-shadow: 0 0 0 10px rgba(255,81,0,0); } }
         @keyframes compassDot { 0%,80%,100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
         .compass-orb-pulse { animation: compassPulse 2.6s ease-in-out infinite; }
+        .compass-composer:focus-within { box-shadow: 0 0 0 3px rgba(255,81,0,0.16); border-color: rgba(255,81,0,0.5) !important; }
+        /* Never taller than the room between the navbar (top) and the button (bottom).
+           The start screen shrink-wraps; a conversation takes the full height to scroll in. */
+        .compass-panel { max-height: calc(100dvh - 156px - 76px); }
+        .compass-panel-tall { height: min(600px, calc(100dvh - 156px - 76px)); }
+        @media (min-width: 1024px) {
+          .compass-panel { max-height: calc(100dvh - 104px - 96px); }
+          .compass-panel-tall { height: min(600px, calc(100dvh - 104px - 96px)); }
+        }
         @media (prefers-reduced-motion: reduce) {
           .compass-ring, .compass-orb-pulse, .compass-dot { animation: none !important; }
         }
@@ -206,12 +282,16 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
             <CompassAIMark className="w-6 h-6 text-white transition-transform duration-700 group-hover:rotate-90" strokeWidth={2} />
           )}
         </span>
+        {/* A dot while a conversation is waiting to be picked back up */}
+        {!open && messages.length > 0 && (
+          <span className="absolute top-0.5 right-0.5 w-3 h-3 rounded-full border-2" style={{ background: "#ff5100", borderColor: "var(--bg-page)" }} aria-hidden />
+        )}
         {!open && (
           <span
             className="hidden lg:block absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 pointer-events-none"
             style={{ background: "var(--bg-surface)", color: "var(--text-primary)", border: "1px solid var(--border-default)" }}
           >
-            Ask Compass.AI
+            {messages.length > 0 ? "Back to your chat" : "Ask Compass.AI"}
           </span>
         )}
       </button>
@@ -221,72 +301,81 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
         <div
           role="dialog"
           aria-label="Compass.AI"
-          className="fixed z-50 inset-x-3 bottom-[156px] lg:inset-x-auto lg:right-8 lg:bottom-[104px] lg:w-[360px] flex flex-col rounded-[22px] overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out"
+          className={`compass-panel fixed z-50 inset-x-3 bottom-[156px] lg:inset-x-auto lg:right-8 lg:bottom-[104px] lg:w-[400px] flex flex-col rounded-[24px] overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out ${messages.length > 0 ? "compass-panel-tall" : ""}`}
           style={{
-            // Shrink-wrap the empty state; grow to a fixed height once there's a conversation to scroll
-            height: messages.length > 0 ? "min(520px, calc(100dvh - 190px))" : "auto",
-            maxHeight: "calc(100dvh - 190px)",
             background: "var(--bg-surface)",
             border: "1px solid var(--border-default)",
             boxShadow: "0 30px 80px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.02)",
           }}
         >
-          {/* Gradient hairline — the only colour in the chrome */}
-          <div className="h-px w-full shrink-0" style={{ background: AI_GRADIENT, opacity: 0.8 }} />
-
-          {/* Header */}
-          <div className="flex items-center gap-2.5 pl-3.5 pr-2 py-2.5 shrink-0" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-            <Orb size={26} />
-            <p className="flex-1 min-w-0 text-[14px] font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
-              Compass<span style={{ color: "#ff5100" }}>.AI</span>
-            </p>
-            {messages.length > 0 && (
+          {/* Header: who you're talking to, and whether its picks know your fitness */}
+          <div className="relative shrink-0 px-4 pt-3.5 pb-3" style={{ background: "linear-gradient(180deg, rgba(255,81,0,0.10), transparent)", borderBottom: "1px solid var(--border-subtle)" }}>
+            <div className="flex items-center gap-2.5">
+              <Orb size={32} />
+              <div className="flex-1 min-w-0">
+                <p className="text-[15px] font-bold tracking-tight leading-tight" style={{ color: "var(--text-primary)" }}>
+                  Compass<span style={{ color: "#ff5100" }}>.AI</span>
+                </p>
+                {ace ? (
+                  <p className="flex items-center gap-1 text-[11.5px] leading-tight mt-0.5" style={{ color: "#10b981" }}>
+                    <Gauge className="w-3 h-3" /> Picks matched to your fitness
+                  </p>
+                ) : (
+                  <Link href="/matchmaker?mode=quick" className="flex items-center gap-1 text-[11.5px] leading-tight mt-0.5 hover:underline" style={{ color: "var(--text-tertiary)" }}>
+                    <Gauge className="w-3 h-3" /> Take the quick match for personal picks
+                  </Link>
+                )}
+              </div>
+              {messages.length > 0 && (
+                <button
+                  onClick={reset}
+                  className="h-8 px-2.5 rounded-full flex items-center gap-1 text-[12px] font-semibold transition-colors hover:bg-[var(--bg-card-hover)]"
+                  style={{ color: "var(--text-secondary)" }}
+                  aria-label="Start a new chat"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" /> New
+                </button>
+              )}
               <button
-                onClick={reset}
-                className="w-7 h-7 rounded-full flex items-center justify-center transition-colors hover:bg-[var(--bg-card-hover)]"
+                onClick={() => setOpen(false)}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-[var(--bg-card-hover)]"
                 style={{ color: "var(--text-tertiary)" }}
-                aria-label="Start a new chat"
-                title="New chat"
+                aria-label="Close"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
+                <X className="w-4 h-4" />
               </button>
-            )}
-            <button
-              onClick={() => setOpen(false)}
-              className="w-7 h-7 rounded-full flex items-center justify-center transition-colors hover:bg-[var(--bg-card-hover)]"
-              style={{ color: "var(--text-tertiary)" }}
-              aria-label="Close"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            </div>
           </div>
 
           {/* Conversation */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-3.5 py-4 custom-scrollbar">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar" aria-live="polite">
             {messages.length === 0 ? (
               <div className="flex flex-col">
-                <div className="flex flex-col items-center text-center pt-2 pb-4">
-                  <Orb size={36} pulse />
-                  <p className="mt-3 text-base font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
-                    Where to next?
-                  </p>
-                  <p className="mt-1 text-[12.5px] leading-relaxed max-w-[240px]" style={{ color: "var(--text-secondary)" }}>
-                    Tell me how you like to travel and I&apos;ll find adventures that fit.
-                  </p>
-                </div>
-                <div className="space-y-1.5">
-                  {STARTER_PROMPTS.map((p) => (
+                <p className="text-[18px] font-bold tracking-tight leading-snug" style={{ color: "var(--text-primary)", fontFamily: "var(--font-display), Georgia, serif" }}>
+                  Where to next?
+                </p>
+                <p className="mt-1 text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                  Say where, what kind of trip and how long. I&apos;ll pick from every adventure on Trail to Tides.
+                </p>
+                <p className="mt-4 mb-2 text-[10.5px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--text-tertiary)" }}>Try asking</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {PROMPTS.map((p) => (
                     <button
-                      key={p}
-                      onClick={() => send(p)}
-                      className="group w-full flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-left text-[13px] transition-colors hover:bg-[var(--bg-card-hover)]"
-                      style={{ border: "1px solid var(--border-subtle)", color: "var(--text-secondary)" }}
+                      key={p.text}
+                      onClick={() => send(p.text)}
+                      className="group flex items-center gap-2.5 p-2.5 rounded-2xl text-left text-[12.5px] leading-snug font-medium transition-colors hover:bg-[var(--bg-card-hover)] hover:border-[#ff5100]/40"
+                      style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)" }}
                     >
-                      <span className="group-hover:text-[var(--text-primary)] transition-colors">{p}</span>
-                      <ChevronRight className="w-4 h-4 shrink-0 opacity-40 group-hover:opacity-80 group-hover:translate-x-0.5 transition-all" />
+                      <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.12)" }}>
+                        <p.icon className="w-3.5 h-3.5 text-[#ff5100]" />
+                      </span>
+                      {p.text}
                     </button>
                   ))}
                 </div>
+                <Link href="/explore" className="mt-3 inline-flex items-center gap-1 text-[12px] font-semibold self-start hover:underline" style={{ color: "var(--text-tertiary)" }}>
+                  <CompassIcon className="w-3.5 h-3.5" /> Or browse every adventure
+                </Link>
               </div>
             ) : (
               <div className="space-y-5">
@@ -294,50 +383,36 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                   msg.role === "user" ? (
                     <div key={i} className="flex justify-end">
                       <div
-                        className="max-w-[85%] px-3.5 py-2 rounded-2xl rounded-br-md text-[13px] leading-relaxed"
-                        style={{ background: "var(--bg-card-hover)", color: "var(--text-primary)", border: "1px solid var(--border-subtle)" }}
+                        className="max-w-[85%] px-3.5 py-2 rounded-2xl rounded-br-md text-[13.5px] leading-relaxed text-white"
+                        style={{ background: "#ff5100" }}
                       >
                         {msg.content}
                       </div>
                     </div>
                   ) : (
                     <div key={i} className="flex gap-2.5 animate-in fade-in slide-in-from-bottom-1 duration-300">
-                      <Orb size={24} />
-                      <div className="flex-1 min-w-0 space-y-3 pt-0.5">
+                      <Orb size={26} />
+                      <div className="flex-1 min-w-0 space-y-2.5 pt-0.5">
                         {msg.failed ? (
-                          <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                            I couldn&apos;t reach my brain just now. Give it another go?
+                          <p className="text-[13.5px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                            I couldn&apos;t get an answer just now. Try again, or name a place and a kind of trip.
                           </p>
                         ) : msg.content ? (
-                          <p className="text-[13px] leading-relaxed whitespace-pre-line" style={{ color: "var(--text-primary)" }}>
+                          <p className="text-[13.5px] leading-relaxed whitespace-pre-line" style={{ color: "var(--text-primary)" }}>
                             {msg.content}
                           </p>
                         ) : null}
 
                         {msg.cards && msg.cards.length > 0 && (
                           <div className="space-y-2">
-                            {msg.cards.map((card) => {
-                              const rec = msg.recommendations?.find((r) => r.slug === card.slug);
-                              return (
-                                <Link
-                                  key={card.slug}
-                                  href={`/experiences/${card.slug}`}
-                                  className="group flex items-center gap-3 p-1.5 rounded-xl transition-colors hover:bg-[var(--bg-card-hover)]"
-                                  style={{ border: "1px solid var(--border-subtle)" }}
-                                >
-                                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                                  <img src={card.heroImage} alt="" className="w-12 h-12 rounded-lg object-cover shrink-0" />
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-[13px] font-semibold truncate" style={{ color: "var(--text-primary)" }}>{card.name}</p>
-                                    <p className="text-[11px] truncate" style={{ color: "var(--text-tertiary)" }}>{card.state} · {card.type}</p>
-                                    {rec?.reason && (
-                                      <p className="text-[11px] leading-snug mt-1 line-clamp-2" style={{ color: "var(--text-secondary)" }}>{rec.reason}</p>
-                                    )}
-                                  </div>
-                                  <ChevronRight className="w-4 h-4 shrink-0 mr-1 opacity-40 group-hover:opacity-80 group-hover:translate-x-0.5 transition-all" style={{ color: "var(--text-secondary)" }} />
-                                </Link>
-                              );
-                            })}
+                            {msg.cards.map((card) => (
+                              <PickCard key={card.slug} adventure={card} reason={msg.recommendations?.find((r) => r.slug === card.slug)?.reason} ace={ace} />
+                            ))}
+                            {/* More of the same kind, in Explore's full list */}
+                            <Link href={`/explore?type=${encodeURIComponent(msg.cards[0].type)}`}
+                              className="inline-flex items-center gap-1 text-[12px] font-semibold hover:underline" style={{ color: "var(--accent-ink)" }}>
+                              See all {msg.cards[0].type.toLowerCase()} adventures <ChevronRight className="w-3.5 h-3.5" />
+                            </Link>
                           </div>
                         )}
 
@@ -345,14 +420,14 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                           <Link
                             href="/matchmaker"
                             className="group flex items-center gap-3 p-3 rounded-2xl transition-colors hover:bg-[var(--bg-card-hover)]"
-                            style={{ border: "1px solid var(--border-subtle)" }}
+                            style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.22)" }}
                           >
                             <span className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: AI_GRADIENT }}>
                               <MatchmakerMark className="w-4 h-4 text-white" />
                             </span>
                             <span className="flex-1 min-w-0">
-                              <span className="block text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>Try the Adventure Matchmaker</span>
-                              <span className="block text-[11px] leading-snug mt-0.5" style={{ color: "var(--text-tertiary)" }}>A few quick questions to match adventures to your fitness.</span>
+                              <span className="block text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>Not sure which? Try the Matchmaker</span>
+                              <span className="block text-[11.5px] leading-snug mt-0.5" style={{ color: "var(--text-tertiary)" }}>Two minutes of questions, then every adventure rated for you.</span>
                             </span>
                             <ChevronRight className="w-4 h-4 shrink-0 opacity-40 group-hover:opacity-80 transition-opacity" style={{ color: "var(--text-secondary)" }} />
                           </Link>
@@ -364,7 +439,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
 
                 {loading && (
                   <div className="flex gap-2.5 items-center">
-                    <Orb size={24} pulse />
+                    <Orb size={26} pulse />
                     <span className="flex items-center gap-1" aria-hidden>
                       {[0, 1, 2].map((d) => (
                         <span
@@ -374,18 +449,18 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                         />
                       ))}
                     </span>
-                    {/* Answers can take 20 seconds; say what's happening so it never looks stuck */}
+                    {/* Say what's happening so a slower AI answer never looks stuck */}
                     <span className="text-[12px]" role="status" style={{ color: "var(--text-tertiary)" }}>{WAIT_LINES[waitStage]}</span>
                   </div>
                 )}
 
                 {chips.length > 0 && (
-                  <div className="flex flex-wrap gap-2 pl-[34px] animate-in fade-in duration-300">
+                  <div className="flex flex-wrap gap-2 pl-[36px] animate-in fade-in duration-300">
                     {chips.map((c) => (
                       <button
                         key={c}
                         onClick={() => send(c)}
-                        className="px-3 py-1.5 rounded-full text-[12px] transition-colors hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)]"
+                        className="px-3 py-1.5 rounded-full text-[12px] font-medium transition-colors hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] hover:border-[#ff5100]/40"
                         style={{ border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
                       >
                         {c}
@@ -398,19 +473,19 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
           </div>
 
           {/* Composer */}
-          <div className="px-3 pt-1.5 pb-2.5 shrink-0">
+          <div className="px-3 pt-2 pb-2.5 shrink-0" style={{ borderTop: "1px solid var(--border-subtle)" }}>
             <form
               onSubmit={(e) => { e.preventDefault(); send(input); }}
-              className="compass-composer flex items-center gap-2 pl-3.5 pr-1 py-1 rounded-xl transition-shadow"
+              className="compass-composer flex items-center gap-2 pl-3.5 pr-1 py-1 rounded-2xl transition-shadow"
               style={{ background: "var(--bg-card-hover)", border: "1px solid var(--border-default)" }}
             >
               <input
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Describe the trip you have in mind…"
+                placeholder={messages.length ? "Ask a follow-up…" : "e.g. a 5-day trek in Uttarakhand"}
                 aria-label="Message Compass.AI"
-                className="flex-1 min-w-0 bg-transparent text-[13.5px] py-2 outline-none placeholder:text-[var(--text-tertiary)]"
+                className="flex-1 min-w-0 bg-transparent text-[14px] py-2 outline-none placeholder:text-[var(--text-tertiary)]"
                 // Focus is shown on the whole composer (focus-within ring), not the bare input
                 style={{ color: "var(--text-primary)", outline: "none" }}
               />
@@ -424,11 +499,10 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                 <ArrowUp className="w-4 h-4" strokeWidth={2.5} />
               </button>
             </form>
-            <p className="text-[8px] leading-none tracking-wide text-center mt-1.5 opacity-80" style={{ color: "var(--text-tertiary)" }}>
-              AI can make mistakes. Confirm details with the operator.
+            <p className="text-[10px] leading-snug text-center mt-1.5" style={{ color: "var(--text-tertiary)" }}>
+              Picks come from Trail to Tides listings. Confirm dates and prices with the operator.
             </p>
           </div>
-          <style>{`.compass-composer:focus-within { box-shadow: 0 0 0 3px rgba(255,81,0,0.16); border-color: rgba(255,81,0,0.5) !important; }`}</style>
         </div>
       )}
     </>

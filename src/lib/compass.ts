@@ -43,7 +43,9 @@ export function deriveChips(msg: CompassMessage, roundCount: number): string[] {
     const diff = computeDifficulty(getACE(cards[0]));
     if (diff === "Hard" || diff === "Advanced" || diff === "Extreme") chips.push("Something easier");
     else if (diff === "Easy" || diff === "Moderate") chips.push("Something harder");
-    chips.push(`More in ${cards[0].state}`);
+    // Trips spanning two states ("Himachal Pradesh / Ladakh") offer the shorter, more searchable one
+    const place = cards[0].state.split("/").map((s) => s.trim()).filter(Boolean).sort((a, b) => a.length - b.length)[0] ?? cards[0].state;
+    chips.push(`More in ${place}`);
     chips.push(cards.length === 1 ? "Show more options" : "Shorter trips");
   }
 
