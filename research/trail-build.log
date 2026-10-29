@@ -478,3 +478,22 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [ 138s]   leg Pin Valley Camp → Tiya (13.0 km apart) along the track pin-valley
 [ 140s]   leg Tiya → Mud (8.4 km apart)
 [ 142s] pin-parvati-pass: KEPT the saved trail (0.2 km off the mapped paths) over this build's 0.5 km
+── buran-ghati 18:55:50
+[  47s] buran-ghati: 410 named places in OpenStreetMap around the trek
+[  51s]   leg Janglik → Dayara Thach (5.9 km apart)
+[  54s]   leg Dayara Thach → Litham (4.3 km apart)
+[  72s]   leg Litham → Dhunda (3.6 km apart)
+[  75s]   leg Dhunda → Buran Ghati (1.6 km apart)
+[  77s]   leg Buran Ghati → Munirang (5.2 km apart)
+[  79s]   leg Munirang → Barua (4.4 km apart)
+[  83s] buran-ghati: 29.2 km, +1780 m, highest 4577 m, 0.3 km off the mapped paths (drawn along the terrain), 3004 → 238 points
+[  83s]   km     0  Janglik (2813 m, osm, 31.31716,78.00958)
+[  83s]   km  12.2  Litham (3501 m, osm, 31.36158,78.10317)  10.2 km from last
+[  83s]   km  18.3  Buran Ghati (4557 m, osm, 31.38742,78.14567)  5.0 km from last
+[  83s]   km  29.2  Barua (2221 m, osm, 31.4682,78.17846)  9.5 km from last
+[  83s]   day  1 walk   Janglik → Dayara Thach  6.5 km +560 −0
+[  83s]   day  2 walk   Dayara Thach → Litham  5.6 km +190 −30
+[  83s]   day  3 walk   Litham → Litham  8 km +600 −600
+[  83s]   day  4 walk   Litham → Dhunda  4.2 km +530 −0
+[  83s]   day  5 walk   Dhunda → Munirang  7.6 km +500 −1220
+[  83s]   day  6 walk   Munirang → Barua  5.2 km +0 −1130
