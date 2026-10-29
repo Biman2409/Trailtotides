@@ -465,3 +465,16 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [  74s]   day  3 walk   Min Thach → Nagaru  1.8 km +550 −0
 [  74s]   day  4 walk   Nagaru → Biskeri Thach  3.8 km +390 −130
 [  74s]   day  5 walk   Biskeri Thach → Barshaini  10.7 km +70 −1910
+── pin-parvati-pass 18:53:27
+[  43s] pin-parvati-pass: 539 named places in OpenStreetMap around the trek
+[  70s]   leg Barshaini → Kheerganga (5.8 km apart)
+[  72s]   leg Kheerganga → Tunda Bhuj (8.1 km apart)
+[  74s]   leg Tunda Bhuj → Thakur Kuan (5.4 km apart)
+[  76s]   leg Thakur Kuan → Odi Thach (6.2 km apart)
+[  78s]   leg Odi Thach → Mantalai (10.1 km apart)
+[  80s]   leg Mantalai → Pin Parvati Pass (6.8 km apart)
+[ 119s]   ~ Mantalai → Pin Parvati Pass: operation killed by thread-priority-watchdog after 2 seconds ; routed over mapped paths, 0.2 of 8.7 km bridged
+[ 136s]   leg Pin Parvati Pass → Pin Valley Camp (4.0 km apart)
+[ 138s]   leg Pin Valley Camp → Tiya (13.0 km apart) along the track pin-valley
+[ 140s]   leg Tiya → Mud (8.4 km apart)
+[ 142s] pin-parvati-pass: KEPT the saved trail (0.2 km off the mapped paths) over this build's 0.5 km
