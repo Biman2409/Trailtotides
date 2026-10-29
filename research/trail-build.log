@@ -63,3 +63,22 @@ Build trails run 40859298826, 2026-10-29T10:39:46Z
 [ 291s]   day  5 walk   Gadsar Lake → Satsar  14.7 km +420 −360
 [ 291s]   day  6 walk   Satsar → Gangbal Lake  7 km +420 −540
 [ 291s]   day  7 walk   Gangbal Lake → Naranag  13.1 km +80 −1370
+── pindari-glacier 10:51:34
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] pindari-glacier: place list unavailable (Overpass 502 ), using place search only
+[ 220s]   leg Khati → Dwali (9.0 km apart)
+[ 223s]   leg Dwali → Phurkia (4.4 km apart)
+[ 225s]   leg Phurkia → Zero Point (5.6 km apart)
+[ 247s]   ! preview failed: unsupported PNG colour type 0
+[ 247s] pindari-glacier: 22.2 km, +2270 m, highest 3767 m, 0 km off the mapped paths (drawn along the terrain), 871 → 209 points
+[ 247s]   km     0  Khati (2220 m, osm, 30.11209,79.94006)
+[ 247s]   km  10.6  Dwali (2602 m, osm, 30.17736,79.99532)  9.0 km from last
+[ 247s]   km  15.5  Phurkia (3187 m, given, 30.21645,79.99772)  4.4 km from last
+[ 247s]   km  22.2  Zero Point (3767 m, given, 30.26596,80.00519)  5.6 km from last
+[ 247s]   day  1 walk   Khati → Dwali  10.6 km +750 −390
+[ 247s]   day  2 walk   Dwali → Phurkia  4.9 km +760 −210
+[ 247s]   day  3 walk   Phurkia → Dwali  18.1 km +1120 −1680
+[ 247s]   day  4 walk   Dwali → Khati  10.6 km +340 −710
