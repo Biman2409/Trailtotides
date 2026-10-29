@@ -195,3 +195,16 @@ Build trails run 40865579579, 2026-10-29T11:27:58Z
 [  48s]   day  2 walk   Juda Ka Talab → Kedarkantha Base  1.4 km +220 −0
 [  48s]   day  3 walk   Kedarkantha Base → Hargaon  8.6 km +730 −1060
 [  48s]   day  4 walk   Hargaon → Sankri  4.2 km +0 −800
+── har-ki-dun 11:46:13
+[  32s] har-ki-dun: 194 named places in OpenStreetMap around the trek
+[  34s]   leg Taluka → Osla (10.3 km apart)
+[  36s]   leg Osla → Har Ki Dun (9.1 km apart)
+[  38s] har-ki-dun: 22.9 km, +1590 m, highest 3514 m, 0 km off the mapped paths (drawn along the terrain), 605 → 221 points
+[  38s]   km     0  Taluka (2097 m, osm, 31.07782,78.24579)
+[  38s]   km  11.8  Osla (2756 m, osm, 31.1189,78.34277)  10.3 km from last
+[  38s]   km  22.9  Har Ki Dun (3426 m, osm, 31.14813,78.43242)  9.1 km from last
+[  38s]   day  1 walk   Taluka → Osla  11.8 km +700 −80
+[  38s]   day  2 walk   Osla → Har Ki Dun  11.1 km +880 −190
+[  38s]   day  3 rest   Har Ki Dun → Har Ki Dun
+[  38s]   day  4 walk   Har Ki Dun → Osla  11.1 km +180 −860
+[  38s]   day  5 walk   Osla → Taluka  11.8 km +40 −690
