@@ -14,3 +14,29 @@ Build trails run 40861559648, 2026-10-29T10:57:14Z
 [ 158s]   day  2 walk   Gulling → Khullara  4 km +1060 −0
 [ 158s]   day  3 walk   Khullara → Khullara  10.4 km +1140 −1150
 [ 158s]   day  4 walk   Khullara → Dhak  8.1 km +120 −1440
+── bali-pass 10:59:54
+[  32s] bali-pass: 327 named places in OpenStreetMap around the trek
+[  51s]   leg Taluka → Seema (10.8 km apart)
+[  54s]   leg Seema → Rainbasera (4.9 km apart)
+[  56s]   leg Rainbasera → Ruinsara Tal (6.6 km apart)
+[  57s]   leg Ruinsara Tal → Odari (2.3 km apart)
+[  59s]   leg Odari → Bali Pass (3.9 km apart)
+[  61s]   leg Bali Pass → Janki Chatti (6.3 km apart)
+[ 115s]   overpass: overpass-api.de Overpass 502 
+[ 198s]   ~ Bali Pass → Janki Chatti: a 279.2 km detour for 6.3 km; routed over mapped paths, 0.7 of 9.4 km bridged
+[ 209s]   preview: research/previews/bali-pass-1.png (0.6 km drawn along the terrain)
+[ 209s] bali-pass: 42.7 km, +2970 m, highest 4869 m, 0.7 km off the mapped paths (drawn along the terrain), 989 → 420 points
+[ 209s]   km     0  Taluka (2097 m, osm, 31.07782,78.24579)
+[ 209s]   km  12.2  Seema (2601 m, osm, 31.11703,78.34994)  10.8 km from last
+[ 209s]   km  17.9  Rainbasera (3051 m, osm, 31.11588,78.40142)  4.9 km from last
+[ 209s]   km    25  Ruinsara Tal (3601 m, osm, 31.08119,78.45786)  6.6 km from last
+[ 209s]   km  28.9  Odari (3992 m, osm, 31.06098,78.46323)  2.3 km from last
+[ 209s]   km  33.1  Bali Pass (4800 m, osm, 31.03299,78.43803)  3.9 km from last
+[ 209s]   km  42.7  Janki Chatti (2558 m, osm, 30.97645,78.43834)  6.3 km from last
+[ 209s]   camp (estimated): Lower Damini (3785 m, 31.00604,78.45465)
+[ 209s]   day  1 walk   Taluka → Seema  12.2 km +590 −80
+[ 209s]   day  2 walk   Seema → Rainbasera  5.7 km +500 −70
+[ 209s]   day  3 walk   Rainbasera → Ruinsara Tal  7.1 km +550 −0
+[ 209s]   day  4 walk   Ruinsara Tal → Odari  3.9 km +460 −60
+[ 209s]   day  5 walk   Odari → Lower Damini  8.1 km +850 −1070 (approx)
+[ 209s]   day  6 walk   Lower Damini → Janki Chatti  5.7 km +20 −1210
