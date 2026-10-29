@@ -178,3 +178,41 @@ Build trails run 40908788641, 2026-10-29T16:09:44Z
 [  93s]   km  12.5  Malana (2647 m, osm, 32.0618,77.26002)  9.6 km from last
 [  93s]   day  1 walk   Rumsu → Chaklani  6.8 km +1360 −0
 [  93s]   day  2 walk   Chaklani → Malana  5.8 km +250 −1010
+── pin-parvati-pass 16:32:32
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] pin-parvati-pass: place list unavailable (Overpass 502 ), using place search only
+[ 231s]   leg Barshaini → Kheerganga (5.8 km apart)
+[ 233s]   leg Kheerganga → Tunda Bhuj (8.1 km apart)
+[ 234s]   leg Tunda Bhuj → Thakur Kuan (5.4 km apart)
+[ 236s]   leg Thakur Kuan → Odi Thach (6.2 km apart)
+[ 238s]   leg Odi Thach → Mantalai (10.1 km apart)
+[ 239s]   leg Mantalai → Pin Parvati Pass (6.8 km apart)
+[ 246s]   overpass: overpass-api.de Overpass 502 
+[ 339s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 415s]   ~ Mantalai → Pin Parvati Pass: operation killed by thread-priority-watchdog after 4 seconds ; routed over mapped paths, 0.2 of 8.7 km bridged
+[ 417s]   leg Pin Parvati Pass → Pin Valley Camp (4.0 km apart)
+[ 419s]   leg Pin Valley Camp → Tiya (13.0 km apart) along the track pin-valley
+[ 421s]   leg Tiya → Mud (8.4 km apart)
+[ 423s] pin-parvati-pass: 80 km, +3900 m, highest 5301 m, 0.2 km off the mapped paths (drawn along the terrain), 1976 → 750 points
+[ 423s]   km     0  Barshaini (2201 m, given, 31.99913,77.44969)
+[ 423s]   km   7.6  Kheerganga (2762 m, osm, 31.99481,77.51094)  5.8 km from last
+[ 423s]   km    17  Tunda Bhuj (3276 m, osm, 31.9711,77.59167)  8.1 km from last
+[ 423s]   km  23.1  Thakur Kuan (3507 m, osm, 31.95332,77.64521)  5.4 km from last
+[ 423s]   km  30.2  Odi Thach (3742 m, osm, 31.9269,77.70268)  6.2 km from last
+[ 423s]   km  41.6  Mantalai (4248 m, osm, 31.86779,77.78389)  10.1 km from last
+[ 423s]   km  50.1  Pin Parvati Pass (5296 m, osm, 31.8355,77.84444)  6.8 km from last
+[ 423s]   km  55.2  Pin Valley Camp (4376 m, given, 31.83555,77.88726)  4.0 km from last
+[ 423s]   km  69.9  Tiya (3950 m, given, 31.88552,78.01213)  13.0 km from last
+[ 423s]   km    80  Mud (3799 m, osm, 31.959,78.03241)  8.4 km from last
+[ 423s]   day  1 walk   Barshaini → Kheerganga  7.6 km +600 −50
+[ 423s]   day  2 walk   Kheerganga → Tunda Bhuj  9.4 km +580 −40
+[ 423s]   day  3 walk   Tunda Bhuj → Thakur Kuan  6.1 km +400 −210
+[ 423s]   day  4 walk   Thakur Kuan → Odi Thach  7.1 km +620 −350
+[ 423s]   day  5 walk   Odi Thach → Mantalai  11.4 km +410 −40
+[ 423s]   day  6 rest   Mantalai → Mantalai
+[ 423s]   day  7 walk   Mantalai → Pin Valley Camp  13.6 km +1140 −910
+[ 423s]   day  8 walk   Pin Valley Camp → Tiya  14.7 km +100 −530
+[ 423s]   day  9 walk   Tiya → Mud  10.1 km +30 −150
