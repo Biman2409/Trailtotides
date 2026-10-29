@@ -26,3 +26,19 @@ Build trails run 40908788641, 2026-10-29T16:09:44Z
 [  46s]   day  2 walk   Dwali → Phurkia  4.9 km +760 −200
 [  46s]   day  3 walk   Phurkia → Dwali  16 km +1020 −1600
 [  46s]   day  4 walk   Dwali → Khati  10.6 km +370 −740
+── brahmatal 16:11:22
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 229s] brahmatal: 377 named places in OpenStreetMap around the trek
+[ 240s]   leg Lohajung → Bekaltal (4.1 km apart)
+[ 242s]   leg Bekaltal → Brahmatal (4.0 km apart)
+[ 244s] brahmatal: 10.7 km, +1050 m, highest 3700 m, 0 km off the mapped paths (drawn along the terrain), 285 → 125 points
+[ 244s]   km     0  Lohajung (2335 m, given, 30.1283,79.619)
+[ 244s]   km   5.6  Bekaltal (3048 m, given, 30.14259,79.5795)  4.1 km from last
+[ 244s]   km  10.7  Brahmatal (3216 m, given, 30.17779,79.58802)  4.0 km from last
+[ 244s]   side trip: Brahmatal Top (3700 m, given)
+[ 244s]   day  1 walk   Lohajung → Bekaltal  5.6 km +690 −20
+[ 244s]   day  2 walk   Bekaltal → Brahmatal  5.1 km +340 −150
+[ 244s]   day  3 walk   Brahmatal → Brahmatal  4.1 km +510 −510
+[ 244s]   day  4 walk   Brahmatal → Lohajung  10.7 km +140 −1020
