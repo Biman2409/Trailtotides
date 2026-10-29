@@ -48,7 +48,7 @@ function CompareTable({ operators, computedRatings }: { operators: OperatorCardD
   const travellers = ops.map((o) => travellerRating(o, computedRatings));
   const hasTraveller = travellers.some(Boolean);
   const bestTraveller = Math.max(...travellers.map((t) => t?.avg ?? 0));
-  const best = { color: "#ff5100", fontWeight: 600 } as const;
+  const best = { color: "var(--accent-ink)", fontWeight: 600 } as const;
   const star = <Star className="w-3 h-3 text-[#ff8a4c] fill-[#ff8a4c] shrink-0" />;
 
   const rows: { label: string; cell: (op: OperatorCardData, i: number) => React.ReactNode }[] = [
@@ -203,7 +203,7 @@ function CompareDrawer({
                   </button>
                 </div>
                 <dl className={`grid grid-cols-3 ${hasTraveller ? "sm:grid-cols-6" : "sm:grid-cols-5"} gap-x-4 gap-y-3`}>
-                  <Fact label="price from"><span className="font-medium" style={isBestPrice ? { color: "#ff5100" } : undefined}>{op.priceFrom}</span></Fact>
+                  <Fact label="price from"><span className="font-medium" style={isBestPrice ? { color: "var(--accent-ink)" } : undefined}>{op.priceFrom}</span></Fact>
                   <Fact label="google">
                     {op.googleRating
                       ? <span className="inline-flex items-center gap-1"><Star className="w-3.5 h-3.5 text-[#ff8a4c] fill-[#ff8a4c]" />{op.googleRating}</span>

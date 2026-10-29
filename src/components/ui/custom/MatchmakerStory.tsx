@@ -169,7 +169,7 @@ export default function MatchmakerStory({ you, samples, group, cta }: { you: ACE
                 />
               </span>
               <span className="block mt-1.5 text-[10.5px] font-semibold truncate transition-colors group-hover:text-[var(--text-primary)]" style={{ color: on ? "var(--text-primary)" : "var(--text-tertiary)" }}>
-                <span className="tabular-nums mr-1" style={{ color: on ? "#ff5100" : undefined }}>0{i + 1}</span>{b.label}
+                <span className="tabular-nums mr-1" style={{ color: on ? "var(--accent-ink)" : undefined }}>0{i + 1}</span>{b.label}
               </span>
             </button>
           );
@@ -368,7 +368,7 @@ export default function MatchmakerStory({ you, samples, group, cta }: { you: ACE
             <span className="truncate transition-opacity duration-500" style={{ opacity: groupReady ? 1 : 0 }}>
               The least-ready member sets the pace.
             </span>
-            <Link href="/matchmaker/group" className="inline-flex items-center gap-1 font-semibold shrink-0 hover:underline" style={{ color: "#ff7d47" }}>
+            <Link href="/matchmaker/group" className="inline-flex items-center gap-1 font-semibold shrink-0 hover:underline" style={{ color: "var(--accent-ink-soft)" }}>
               Group match <ArrowRight className="w-3 h-3" />
             </Link>
           </p>

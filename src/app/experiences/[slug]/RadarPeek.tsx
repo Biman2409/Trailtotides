@@ -17,8 +17,9 @@ export default function RadarPeek({ ace, name }: { ace: ACE; name: string }) {
   return (
     <div className="ace pt-1">
       <style>{ACE_THEME_CSS}</style>
-      <AceRadar values={AXIS_KEYS.map((k) => ace[k] ?? 0)} you={you} color="var(--ace-ink)"
-        className="w-full max-w-[260px] mx-auto block" title={you ? `You against ${name}` : `${name}: capability scores`} />
+      {/* Names only: at this size the scores would be too small to read, and the open section lists them */}
+      <AceRadar values={AXIS_KEYS.map((k) => ace[k] ?? 0)} you={you} color="var(--ace-ink)" scores={false}
+        className="w-full max-w-[320px] mx-auto block" title={you ? `You against ${name}` : `${name}: capability scores`} />
       <p className="text-center text-[12px] mt-0.5" style={{ color: "var(--text-tertiary)" }}>
         {you ? "You (dashed) against this trek." : "What this trek asks of you."} Tap to see who it suits.
       </p>

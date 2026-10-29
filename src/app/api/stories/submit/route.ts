@@ -3,21 +3,28 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { saveStoryToStorage } from "@/lib/stories";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { z } from "zod";
+import { STORY_ACTIVITIES } from "@/lib/storyView";
 
+// Messages are shown to the writer as-is, so they say what to fix
 const storySubmitSchema = z.object({
-  title: z.string().trim().min(1).max(200),
-  excerpt: z.string().trim().min(1).max(500),
-  body: z.string().trim().min(1).max(20000),
-  authorName: z.string().trim().min(1).max(100),
-  authorRole: z.string().trim().max(100).optional(),
-  authorBio: z.string().trim().max(1000).optional(),
-  dateOfAdventure: z.string().trim().min(1).max(50),
-  region: z.string().trim().min(1).max(100),
-  heroImageUrl: z.string().trim().max(2000).optional(),
+  title: z.string().trim().min(1, "Add a title.").max(200, "The title is too long."),
+  excerpt: z.string().trim().min(1, "Add a short hook.").max(500, "The hook is too long."),
+  body: z.string().trim().min(200, "The story is too short. Tell us a bit more.").max(40000, "The story is too long for one post."),
+  authorName: z.string().trim().min(1, "Add your name.").max(100),
+  authorRole: z.string().trim().min(1, "Add a tagline to show under your name.").max(100),
+  authorBio: z.string().trim().min(20, "Add a short bio, a sentence or two.").max(1000),
+  dateOfAdventure: z.string().trim().min(1, "Add when it happened.").max(50),
+  region: z.string().trim().min(1, "Add where it happened.").max(100),
+  activity: z.enum(STORY_ACTIVITIES, { message: "Pick the kind of trip." }),
+  // https only: the photo is shown on the public site
+  heroImageUrl: z.string().trim().max(2000).refine((u) => {
+    try { return new URL(u).protocol === "https:"; } catch { return false; }
+  }, "The photo link must start with https://"),
 });
 
-function calcTags(title: string, excerpt: string, region: string): string[] {
-  const tags = [region];
+// The chosen activity leads, so cards and filters show it; then the place, then keywords from the text
+function calcTags(title: string, excerpt: string, region: string, activity?: string): string[] {
+  const tags = activity ? [activity, region] : [region];
   const words = (title + " " + excerpt).toLowerCase();
   const keywords = [
     "trekking", "motorcycling", "cycling", "diving", "kayaking", "skiing",
@@ -26,8 +33,9 @@ function calcTags(title: string, excerpt: string, region: string): string[] {
     "camping", "rafting", "paragliding", "high altitude", "expedition",
   ];
   for (const kw of keywords) {
-    if (words.includes(kw) && !tags.includes(kw)) {
-      tags.push(kw.charAt(0).toUpperCase() + kw.slice(1));
+    // Title case ("Rock Climbing") so it matches the activity names and their icons
+    if (words.includes(kw) && !tags.some((t) => t.toLowerCase() === kw)) {
+      tags.push(kw.replace(/\b\w/g, (c) => c.toUpperCase()));
     }
   }
   return tags.slice(0, 6);
@@ -45,7 +53,7 @@ export async function POST(req: NextRequest) {
   try {
     const parsed = storySubmitSchema.safeParse(await req.json());
     if (!parsed.success) {
-      return NextResponse.json({ error: "Missing or invalid required fields." }, { status: 400 });
+      return NextResponse.json({ error: parsed.error.issues[0]?.message || "Some fields are missing or invalid." }, { status: 400 });
     }
     const {
       title,
@@ -56,6 +64,7 @@ export async function POST(req: NextRequest) {
       authorBio,
       dateOfAdventure,
       region,
+      activity,
       heroImageUrl,
     } = parsed.data;
 
@@ -76,7 +85,7 @@ export async function POST(req: NextRequest) {
     if (avatarId) authorAvatar = `/avatars/avatar-${avatarId}.png`;
 
     // AI-calculated values
-    const tagList = calcTags(title, excerpt, region);
+    const tagList = calcTags(title, excerpt, region, activity);
 
     const now = new Date().toISOString();
 
@@ -87,10 +96,10 @@ export async function POST(req: NextRequest) {
       excerpt,
       body: storyBody,
       author_name: authorName,
-      author_role: authorRole || "",
-      author_bio: authorBio || "",
+      author_role: authorRole,
+      author_bio: authorBio,
       author_avatar: authorAvatar,
-      hero_image: heroImageUrl || "",
+      hero_image: heroImageUrl,
       tags: tagList,
       region,
       date: dateOfAdventure,

@@ -741,7 +741,7 @@ export default function PackingList({
                       onClick={() => setActiveTab(i)}
                       className="flex items-center gap-1.5 px-2.5 py-2 rounded-t-lg text-[10px] font-bold whitespace-nowrap shrink-0 transition-all"
                       style={isActive
-                        ? { color: "#ff7d47", background: "rgba(255,81,0,0.08)", borderBottom: "2px solid #ff5100" }
+                        ? { color: "var(--accent-ink-soft)", background: "rgba(255,81,0,0.08)", borderBottom: "2px solid #ff5100" }
                         : { color: "rgba(var(--fg-rgb),0.3)", background: "transparent", borderBottom: "2px solid transparent" }
                       }
                     >
@@ -769,7 +769,7 @@ export default function PackingList({
               {/* Active tab header */}
               <div className="flex items-center justify-between px-4 pt-3 pb-1">
                 <div className="flex items-center gap-2">
-                  <CatIcon className="w-3.5 h-3.5" style={{ color: catPct === 100 ? "#10b981" : "#ff7d47" }} />
+                  <CatIcon className="w-3.5 h-3.5" style={{ color: catPct === 100 ? "#10b981" : "var(--accent-ink-soft)" }} />
                   <p className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: catPct === 100 ? "#10b981" : "rgba(var(--fg-rgb),0.4)" }}>
                     {cat.name}
                   </p>
@@ -812,7 +812,7 @@ export default function PackingList({
                       {item.essential && !isDone && (
                         <span
                           className="flex-none text-[8px] font-bold px-1.5 py-0.5 rounded"
-                          style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }}
+                          style={{ background: "rgba(255,81,0,0.1)", color: "var(--accent-ink-soft)", border: "1px solid rgba(255,81,0,0.2)" }}
                         >
                           MUST
                         </span>
@@ -842,7 +842,7 @@ export default function PackingList({
                     onClick={() => addCustomItem(cat.name)}
                     disabled={!newItemText.trim()}
                     className="w-5 h-5 rounded flex items-center justify-center transition-all disabled:opacity-30"
-                    style={{ background: "rgba(255,81,0,0.15)", color: "#ff7d47" }}
+                    style={{ background: "rgba(255,81,0,0.15)", color: "var(--accent-ink-soft)" }}
                   >
                     <Plus className="w-3 h-3" />
                   </button>

@@ -246,7 +246,7 @@ function OptionBtn({
           className="w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-bold shrink-0 transition-all"
           style={{
             borderColor: selected ? "#ff5100" : "var(--border-subtle)",
-            color: selected ? "#ff5100" : "var(--text-tertiary)",
+            color: selected ? "var(--accent-ink)" : "var(--text-tertiary)",
             background: selected ? "rgba(255,81,0,0.2)" : "transparent",
           }}
         >
@@ -298,7 +298,7 @@ function IntroScreen({
             <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-3 inline-flex items-center gap-1.5"><MatchmakerMark className="w-3.5 h-3.5" />Adventure Matchmaker</p>
 
             <h1 className="t-text text-3xl sm:text-4xl font-bold tracking-tight leading-[1.08] mb-3">
-              Adventures built for <span style={{ color: "#ff5100" }}>your body</span>
+              Adventures built for <span style={{ color: "var(--accent-ink)" }}>your body</span>
             </h1>
 
             <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-secondary)" }}>
@@ -354,14 +354,14 @@ function IntroScreen({
                 className="group w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:border-[rgba(255,81,0,0.45)]"
                 style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
               >
-                <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100" }}>
+                <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.12)", color: "var(--accent-ink)" }}>
                   <BookOpen className="w-3.5 h-3.5" />
                 </span>
                 <span className="flex-1 min-w-0 text-left">
                   <span className="block text-sm font-bold">How it works</span>
                   <span className="block text-[11px]" style={{ color: "var(--text-tertiary)" }}>How we score your readiness</span>
                 </span>
-                <ArrowRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5" style={{ color: "#ff5100" }} />
+                <ArrowRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5" style={{ color: "var(--accent-ink)" }} />
               </Link>
             </div>
           </div>
@@ -394,7 +394,7 @@ function ConsentScreen({ onAccept, onBack }: { onAccept: () => void; onBack: () 
   return (
     <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
       <div className="mb-8">
-        <p className="text-[11px] font-bold uppercase tracking-[0.24em] mb-3" style={{ color: "#ff5100" }}>Before you start</p>
+        <p className="text-[11px] font-bold uppercase tracking-[0.24em] mb-3" style={{ color: "var(--accent-ink)" }}>Before you start</p>
         <h1 className="text-3xl font-bold tracking-tight mb-2" style={{ color: "var(--text-primary)" }}>Three ground rules</h1>
         <p className="text-sm leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
           A few minutes of honest answers, and every adventure gets rated for your body.
@@ -408,7 +408,7 @@ function ConsentScreen({ onAccept, onBack }: { onAccept: () => void; onBack: () 
           { icon: <Lock className="w-4 h-4" />, title: "Health questions are optional and private", body: "If you answer them, they lower the scores they affect and flag risks on adventures. Never shown to others or sold, and you can delete them in settings." },
         ].map((item, i) => (
           <li key={item.title} className="flex gap-4">
-            <span className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.1)", color: "#ff5100" }}>{item.icon}</span>
+            <span className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.1)", color: "var(--accent-ink)" }}>{item.icon}</span>
             <div>
               <p className="text-[15px] font-semibold leading-snug" style={{ color: "var(--text-primary)" }}>
                 <span className="mr-1.5 tabular-nums" style={{ color: "var(--text-muted)" }}>0{i + 1}</span>{item.title}
@@ -1506,7 +1506,7 @@ export default function MatchmakerClient() {
             <>
               <div
                 className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-                style={{ background: `${AXIS_COLORS[capQ!.axis.toLowerCase()] ?? "#ff5100"}20`, color: AXIS_COLORS[capQ!.axis.toLowerCase()] ?? "#ff5100" }}
+                style={{ background: `${AXIS_COLORS[capQ!.axis.toLowerCase()] ?? "#ff5100"}20`, color: AXIS_COLORS[capQ!.axis.toLowerCase()] ?? "var(--accent-ink)" }}
               >
                 {AXIS_ICONS[capQ!.axis.toLowerCase()]}
               </div>
@@ -1570,7 +1570,7 @@ export default function MatchmakerClient() {
             className="w-full lg:h-full text-left px-4 py-3 rounded-xl lg:rounded-2xl text-sm transition-colors"
             style={{
               border: `1px dashed ${answers[capQ.key] === NOT_SURE ? "#ff5100" : "var(--border-default)"}`,
-              color: answers[capQ.key] === NOT_SURE ? "#ff7d47" : "var(--text-tertiary)",
+              color: answers[capQ.key] === NOT_SURE ? "var(--accent-ink-soft)" : "var(--text-tertiary)",
               background: answers[capQ.key] === NOT_SURE ? "rgba(255,81,0,0.06)" : "transparent",
             }}
           >

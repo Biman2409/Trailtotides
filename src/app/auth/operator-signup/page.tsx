@@ -90,7 +90,7 @@ export default function OperatorSignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex overflow-hidden">
+    <div className="min-h-screen bg-[var(--bg-page)] flex overflow-hidden">
       {showTermsModal && (
         <TermsModal
           onAccept={() => setTermsAccepted(true)}
@@ -125,7 +125,7 @@ export default function OperatorSignupPage() {
       </div>
 
       {/* Right panel — form */}
-      <div className="flex-1 flex flex-col justify-center px-6 py-8 lg:px-16 xl:px-24 bg-[#0a0a0a] relative overflow-y-auto">
+      <div className="flex-1 flex flex-col justify-center px-6 py-8 lg:px-16 xl:px-24 auth-themed bg-[var(--bg-page)] relative overflow-y-auto overflow-x-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
 
@@ -149,7 +149,7 @@ export default function OperatorSignupPage() {
           </div>
 
           {message && (
-            <div className={`mb-4 px-4 py-3 rounded-xl text-xs font-semibold flex items-start gap-2 ${
+            <div role={message.type === "error" ? "alert" : "status"} className={`mb-4 px-4 py-3 rounded-xl text-xs font-semibold flex items-start gap-2 ${
               message.type === "error"
                 ? "bg-red-500/10 border border-red-500/20 text-red-400"
                 : "bg-green-500/10 border border-green-500/20 text-green-400"
@@ -161,56 +161,64 @@ export default function OperatorSignupPage() {
           <form onSubmit={handleSubmit} className="space-y-3">
             {/* Contact Person */}
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Contact Person</label>
+              <label htmlFor="op-contact" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Contact Person</label>
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                 <input
+                  id="op-contact"
                   name="contact_name"
+                  autoComplete="name"
                   type="text"
                   required
                   placeholder="Rajesh Kumar"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-5 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
             </div>
 
             {/* Company Name */}
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Company / Agency Name</label>
+              <label htmlFor="op-company" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Company / Agency Name</label>
               <div className="relative">
                 <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                 <input
+                  id="op-company"
                   name="company_name"
+                  autoComplete="organization"
                   type="text"
                   required
                   placeholder="Summit Adventures Pvt. Ltd."
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-5 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Business Email</label>
+              <label htmlFor="op-email" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Business Email</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                 <input
+                  id="op-email"
                   name="email"
+                  autoComplete="email"
                   type="email"
                   required
                   placeholder="info@summitadventures.com"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-5 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
             </div>
 
             {/* Phone */}
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Phone Number</label>
+              <label htmlFor="op-phone" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Phone Number</label>
               <div className="flex gap-2">
                 <div className="relative">
                   <select
                     name="country_code"
+                    aria-label="Country code"
+                    autoComplete="tel-country-code"
                     defaultValue="+91"
                     className="h-full bg-white/[0.03] border border-white/10 rounded-2xl pl-5 pr-10 py-2.5 text-white text-sm focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all appearance-none cursor-pointer min-w-[100px]"
                   >
@@ -218,7 +226,7 @@ export default function OperatorSignupPage() {
                       ...countries.filter(c => c.code === "IN"),
                       ...countries.filter(c => c.code !== "IN").sort((a, b) => a.name.localeCompare(b.name))
                     ].map((country) => (
-                      <option key={`${country.code}-${country.dial_code}`} value={country.dial_code} className="bg-[#0a0a0a] text-white">
+                      <option key={`${country.code}-${country.dial_code}`} value={country.dial_code} className="bg-[var(--bg-surface)] text-[var(--text-primary)]">
                         {country.flag} {country.dial_code}
                       </option>
                     ))}
@@ -230,45 +238,53 @@ export default function OperatorSignupPage() {
                   </div>
                 </div>
                 <input
+                  id="op-phone"
                   name="phone"
+                  autoComplete="tel-national"
                   type="tel"
                   required
                   placeholder="9876543210"
-                  className="flex-1 bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="flex-1 min-w-0 bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
             </div>
 
             {/* Website (optional) */}
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Website <span className="normal-case tracking-normal text-white/20">(optional)</span></label>
+              <label htmlFor="op-website" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Website <span className="normal-case tracking-normal text-white/20">(optional)</span></label>
               <div className="relative">
                 <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                 <input
+                  id="op-website"
                   name="website"
+                  autoComplete="url"
                   type="url"
                   placeholder="https://summitadventures.com"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-5 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Password</label>
+              <label htmlFor="op-password" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Password</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                 <input
+                  id="op-password"
                   name="password"
+                  autoComplete="new-password"
                   type={showPassword ? "text" : "password"}
                   required
                   minLength={8}
                   placeholder="Min. 8 characters"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-14 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-14 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-pressed={showPassword}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -277,13 +293,13 @@ export default function OperatorSignupPage() {
             </div>
 
             {/* ── Company Logo ──────────────────────────────────── */}
-            <div className="rounded-2xl border p-3.5" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
+            <div className="rounded-2xl border p-3.5" style={{ background: "color-mix(in srgb, var(--color-white) 2%, transparent)", borderColor: "color-mix(in srgb, var(--color-white) 7%, transparent)" }}>
               <div className="flex items-center justify-between mb-2.5">
                 <label className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">
                   Company Logo <span className="normal-case tracking-normal font-normal text-white/20">(optional)</span>
                 </label>
                 {logoPreview && (
-                  <button type="button" onClick={removeLogo} className="text-[9px] font-semibold text-white/25 hover:text-red-400 transition-colors flex items-center gap-1">
+                  <button type="button" onClick={removeLogo} className="text-[11px] font-semibold text-white/50 hover:text-red-400 transition-colors flex items-center gap-1">
                     <X className="w-3 h-3" /> Remove
                   </button>
                 )}
@@ -294,7 +310,7 @@ export default function OperatorSignupPage() {
                 <div className="flex items-center gap-4">
                   <div
                     className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 flex items-center justify-center"
-                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}
+                    style={{ background: "color-mix(in srgb, var(--color-white) 4%, transparent)", border: "1px solid color-mix(in srgb, var(--color-white) 10%, transparent)" }}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element -- local preview of a file not uploaded yet */}
                     <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain p-1" />
@@ -319,7 +335,7 @@ export default function OperatorSignupPage() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   className="w-full flex flex-col items-center justify-center gap-2 py-5 rounded-xl border border-dashed transition-all hover:border-white/20 hover:bg-white/[0.03]"
-                  style={{ borderColor: "rgba(255,255,255,0.1)" }}
+                  style={{ borderColor: "color-mix(in srgb, var(--color-white) 10%, transparent)" }}
                 >
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(255,81,0,0.1)" }}>
                     <ImageIcon className="w-4 h-4 text-[#ff5100]/60" />
@@ -361,7 +377,7 @@ export default function OperatorSignupPage() {
                   className="w-4 h-4 rounded-lg border-white/10 bg-white/5 text-[#ff5100] focus:ring-[#ff5100]/20 transition-all cursor-pointer accent-[#ff5100]"
                 />
               </div>
-              <label className="text-[11px] text-white/40 leading-snug font-medium">
+              <label htmlFor="terms" className="text-[11px] text-white/60 leading-snug font-medium">
                 I agree to the{" "}
                 <button
                   type="button"
@@ -384,7 +400,7 @@ export default function OperatorSignupPage() {
             <button
               type="submit"
               disabled={loading || logoUploading || !termsAccepted}
-              className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-3 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-1"
+              className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-[#fff] font-bold rounded-2xl py-3 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-1"
             >
               {loading || logoUploading ? "Setting up account…" : "Register as Operator"}
             </button>

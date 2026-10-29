@@ -65,7 +65,8 @@
 
 /* ── LIGHT THEME (default) ───────────────────────────────── */
 :root {
-  color-scheme: light;
+  /* "only": the light theme is designed, so browsers in forced dark mode must leave it alone */
+  color-scheme: only light;
   --radius: 0.5rem;
 
   /* Surfaces — deliberately higher contrast so sections read as distinct bands, not one flat cream wash */
@@ -79,7 +80,10 @@
   /* Text — warm charcoal with better contrast hierarchy */
   --text-primary:   #1c1814;
   --text-secondary: #5b5249;
-  --text-tertiary:  #857b70;
+  --text-tertiary:  #736a5f;
+  /* Orange used as text: the brand #ff5100 is only 2.6:1 on this page, so text takes a deeper shade */
+  --accent-ink:      #b84000;
+  --accent-ink-soft: #b84000;
   --text-muted:     #958b80; /* was #c2bcb4: 1.5:1 on the page, unreadable small print */
 
   /* Borders — warm stone, visibly distinct */
@@ -152,8 +156,11 @@
 }
 
 /* Brand orange as small text is only 2.6:1 on the light page; a deeper shade keeps it legible.
-   Buttons and fills keep the true #ff5100. */
-:root:not(.dark) .text-\[\#ff5100\] { color: #d94800; }
+   Buttons and fills keep the true #ff5100; inline styles use var(--accent-ink) instead. */
+:root:not(.dark) .text-\[\#ff5100\],
+:root:not(.dark) .text-\[\#ff7d47\],
+:root:not(.dark) .hover\:text-\[\#ff5100\]:hover,
+:root:not(.dark) .hover\:text-\[\#ff7d47\]:hover { color: var(--accent-ink); }
 
 /* ── DARK THEME ─────────────────────────────────────────── */
 .dark {
@@ -170,7 +177,9 @@
   /* Text */
   --text-primary:   #f0ede8;
   --text-secondary: rgba(240,237,232,0.6);
-  --text-tertiary:  rgba(240,237,232,0.35);
+  --text-tertiary:  rgba(240,237,232,0.45);
+  --accent-ink:      #ff5100;
+  --accent-ink-soft: #ff7d47;
   --text-muted:     rgba(240,237,232,0.2);
 
   /* Borders */
@@ -364,6 +373,14 @@ main, .page-enter {
   background: #ff510033;
   color: var(--text-primary);
 }
+
+/* ── Auth forms in light mode ────────────────────────────── */
+/* The sign-in pages are written white-on-dark (text-white/40, bg-white/[0.03]…). In light mode
+   their "white" becomes the page's ink, so every tint flips to the same tint of dark on light. */
+:root:not(.dark) .auth-themed { --color-white: var(--text-primary); }
+:root:not(.dark) .auth-themed .text-red-400 { color: #b91c1c; }
+:root:not(.dark) .auth-themed .text-green-400 { color: #15803d; }
+:root:not(.dark) .auth-themed .text-amber-400 { color: #b45309; }
 
 /* ── Focus ring ──────────────────────────────────────────── */
 :focus-visible {

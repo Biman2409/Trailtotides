@@ -50,6 +50,8 @@ export default function Footer() {
                       { label: "Map", href: "/map" },
                                             { label: "Matchmaker", href: "/matchmaker" },
                       { label: "Stories", href: "/stories" },
+                      { label: "Adventurepedia", href: "/adventurepedia" },
+                      { label: "How ACE works", href: "/ace" },
                       { label: "Operators", href: "/operators" },
                     ].map((link) => (
                       <li key={link.label}>

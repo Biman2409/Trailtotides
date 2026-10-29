@@ -67,14 +67,14 @@ export default function MobileBottomNav() {
                   <Icon
                     className="w-4 h-4 transition-all duration-200"
                     style={{
-                      color: isActive ? "#ff5100" : "var(--nav-text)",
+                      color: isActive ? "var(--accent-ink)" : "var(--nav-text)",
                     }}
                   />
                 </div>
                 <span
                   className="text-[10px] font-medium leading-tight whitespace-nowrap transition-colors duration-200"
                   style={{
-                    color: isActive ? "#ff5100" : "var(--nav-text)",
+                    color: isActive ? "var(--accent-ink)" : "var(--nav-text)",
                   }}
                 >
                   {label}

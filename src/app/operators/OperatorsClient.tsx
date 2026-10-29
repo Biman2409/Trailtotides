@@ -284,7 +284,7 @@ function OperatorCard({ op }: { op: OperatorCardData }) {
       <div className="relative flex-1 flex flex-col px-5 pb-5">
         {/* Monogram or logo, overlapping the photos */}
         <div className="relative -mt-7 mb-3 w-14 h-14 rounded-2xl overflow-hidden flex items-center justify-center text-2xl font-black shadow-md"
-          style={{ background: "var(--bg-surface)", border: "3px solid var(--bg-surface)", color: "#ff5100", fontFamily: "var(--font-display), Georgia, serif" }}>
+          style={{ background: "var(--bg-surface)", border: "3px solid var(--bg-surface)", color: "var(--accent-ink)", fontFamily: "var(--font-display), Georgia, serif" }}>
           {op.logo_url ? <Image src={op.logo_url} alt="" fill sizes="56px" className="object-contain p-1" /> : op.company_name.charAt(0).toUpperCase()}
         </div>
 

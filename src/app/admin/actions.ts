@@ -116,6 +116,10 @@ export async function updateStoryStatus(id: string, status: "approved" | "reject
       console.error("Failed to mirror story to story-data bucket:", e);
     }
   }
+  // A story taken down after approval must leave the fallback copy too
+  if (status === "rejected" && data) {
+    await supabase.storage.from("story-data").remove([`stories/${data.slug}.json`]).catch(() => {});
+  }
 
   revalidatePath("/admin");
   revalidatePath("/stories");

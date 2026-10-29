@@ -110,7 +110,7 @@ export default function StoryComments({ slug }: Props) {
         </h3>
         {comments.length > 0 && (
           <span className="text-xs px-2 py-0.5 rounded-full font-medium"
-            style={{ background: "rgba(255,81,0,0.1)", color: "#ff5100" }}>
+            style={{ background: "rgba(255,81,0,0.1)", color: "var(--accent-ink)" }}>
             {comments.length}
           </span>
         )}
@@ -148,7 +148,7 @@ export default function StoryComments({ slug }: Props) {
           <div className="flex items-center gap-2 text-xs font-medium mb-1" style={{ color: "var(--text-secondary)" }}>
             <div
               className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0"
-              style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}
+              style={{ background: "rgba(255,81,0,0.15)", color: "var(--accent-ink)" }}
             >
               {userName[0]}
             </div>
@@ -204,7 +204,7 @@ export default function StoryComments({ slug }: Props) {
               <div className="flex items-center gap-2 mb-1.5">
                 <div
                   className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0"
-                  style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}
+                  style={{ background: "rgba(255,81,0,0.15)", color: "var(--accent-ink)" }}
                 >
                   {c.name[0]}
                 </div>

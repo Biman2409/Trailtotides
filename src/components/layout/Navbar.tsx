@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, BadgeCheck, BookOpen, ArrowRight } from "lucide-react";
+import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, BadgeCheck, ArrowRight, Library } from "lucide-react";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { MountainSnow } from "@/lib/localIcons";
 import Image from "next/image";
@@ -22,8 +22,12 @@ const navLinks = [
   // Same icons as the hero's Fitness match / Verified operators pop-outs
   { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark },
   { href: "/operators", label: "Operators", icon: BadgeCheck },
-  { href: "/stories", label: "Stories", icon: BookOpen },
+  // Guides goes straight to Adventurepedia, the guides library
+  { href: "/adventurepedia", label: "Guides", icon: Library },
 ];
+
+// Active on the page itself and anything under it (/adventurepedia/altitude-sickness lights Guides)
+const isActiveLink = (path: string, href: string) => href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -187,7 +191,7 @@ export default function Navbar() {
           {/* Desktop nav links — centered on the page via the grid column, not just optically balanced */}
           <div className="hidden lg:flex items-center justify-self-center gap-1 p-1 rounded-full" style={{ position: "relative", background: isTransparent ? "rgba(0,0,0,0.25)" : "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive = isActiveLink(pathname, link.href);
               const Icon = link.icon;
 
               if (link.iconOnly) {
@@ -265,7 +269,7 @@ export default function Navbar() {
                   className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all"
                   style={{ background: "rgba(255,81,0,0.10)", border: "1px solid rgba(255,81,0,0.22)" }}
                 >
-                  <Heart className="w-4 h-4 fill-[#ff5100]" style={{ color: "#ff5100" }} />
+                  <Heart className="w-4 h-4 fill-[#ff5100]" style={{ color: "var(--accent-ink)" }} />
                   <span className="text-[#ff5100] text-sm font-semibold">Wishlist</span>
                   <span className="w-5 h-5 rounded-full bg-[#ff5100] text-white text-[11px] font-bold flex items-center justify-center leading-none">
                     {savedList.length}
@@ -280,7 +284,7 @@ export default function Navbar() {
                     {/* Header */}
                     <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
                       <div className="flex items-center gap-2">
-                        <Heart className="w-3.5 h-3.5 fill-[#ff5100]" style={{ color: "#ff5100" }} />
+                        <Heart className="w-3.5 h-3.5 fill-[#ff5100]" style={{ color: "var(--accent-ink)" }} />
                         <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
                           Saved · {savedList.length}
                         </span>
@@ -475,7 +479,7 @@ export default function Navbar() {
               </div>
             ) : (
               <>
-                <Link href="/auth/login" className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors duration-200" style={{ color: isTransparent ? "rgba(255,255,255,0.85)" : "var(--nav-text)" }}>
+                <Link href="/auth/login" className="text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors duration-200" style={{ color: isTransparent ? "rgba(255,255,255,0.85)" : "var(--nav-text)" }}>
                   Log In
                 </Link>
                 <Link
@@ -522,8 +526,8 @@ export default function Navbar() {
               href={link.href}
               className="flex items-center py-3 px-3 text-base font-medium rounded-xl transition-colors"
               style={{
-                color: pathname === link.href ? "var(--text-primary)" : "var(--nav-text)",
-                background: pathname === link.href ? "var(--nav-active-bg)" : "transparent",
+                color: isActiveLink(pathname, link.href) ? "var(--text-primary)" : "var(--nav-text)",
+                background: isActiveLink(pathname, link.href) ? "var(--nav-active-bg)" : "transparent",
                 borderBottom: "1px solid var(--border-subtle)",
               }}
             >
@@ -547,7 +551,7 @@ export default function Navbar() {
             <Link href={`/explore?saved=${savedList.map(a => a.slug).join(",")}`} onClick={() => setMenuOpen(false)}
               className="flex items-center gap-2 py-3 px-3 rounded-xl transition-colors hover:bg-[var(--bg-card-hover)]"
               style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-              <Heart className="w-4 h-4 fill-[#ff5100] shrink-0" style={{ color: "#ff5100" }} />
+              <Heart className="w-4 h-4 fill-[#ff5100] shrink-0" style={{ color: "var(--accent-ink)" }} />
               <span className="text-sm font-medium flex-1" style={{ color: "var(--text-secondary)" }}>
                 Wishlist
               </span>
@@ -563,7 +567,7 @@ export default function Navbar() {
               onClick={() => { setMenuOpen(false); openDrawer(); }}
               className="w-full flex items-center gap-2 py-3 px-3 rounded-xl transition-colors hover:bg-[var(--bg-card-hover)]"
               style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-              <GitCompareArrows className="w-4 h-4 shrink-0" style={{ color: "#ff5100" }} />
+              <GitCompareArrows className="w-4 h-4 shrink-0" style={{ color: "var(--accent-ink)" }} />
               <span className="text-sm font-medium flex-1 text-left" style={{ color: "var(--text-secondary)" }}>
                 Compare
               </span>

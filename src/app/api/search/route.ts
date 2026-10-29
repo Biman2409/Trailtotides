@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adventures } from "@/lib/data";
 import { getPublishedStories } from "@/lib/stories";
+import { GUIDES } from "@/lib/adventurepedia";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 export interface SearchResult {
@@ -8,7 +9,7 @@ export interface SearchResult {
   title: string;
   subtitle: string;
   url: string;
-  type: "adventure" | "story" | "operator";
+  type: "adventure" | "story" | "operator" | "guide";
   image?: string;
 }
 
@@ -32,6 +33,17 @@ export async function GET(req: NextRequest) {
       url: `/experiences/${a.slug}`,
       type: "adventure",
       image: a.heroImage,
+    });
+  }
+
+  // Adventurepedia guides
+  for (const g of GUIDES) {
+    results.push({
+      id: `guide-${g.slug}`,
+      title: g.short,
+      subtitle: `Adventurepedia · ${g.title}`,
+      url: `/adventurepedia/${g.slug}`,
+      type: "guide",
     });
   }
 

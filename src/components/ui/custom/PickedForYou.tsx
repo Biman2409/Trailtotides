@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
 import AdventureRail, { type RailItem } from "./AdventureRail";
+import SectionTexture from "./SectionTexture";
 import { adventures } from "@/lib/data";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -32,10 +33,14 @@ export default function PickedForYou() {
 
   if (!mode) return null;
 
+  // Orange contours pooled top-left, so it reads apart from the teal waves of "In season" right below
+  const backdrop = <SectionTexture kind="trail" color="#ff5100" at="8% 20%" opacity={0.1} />;
+
   return mode.kind === "profile" ? (
     <AdventureRail
       id="picked-for-you"
       className="t-bg-page animate-in fade-in duration-500"
+      backdrop={backdrop}
       eyebrow={<><Sparkles className="w-3.5 h-3.5" /> Picked for you</>}
       title="Your best fitness matches"
       subtitle="Ranked by how well each adventure fits your Matchmaker profile."
@@ -46,6 +51,7 @@ export default function PickedForYou() {
     <AdventureRail
       id="picked-for-you"
       className="t-bg-page animate-in fade-in duration-500"
+      backdrop={backdrop}
       eyebrow={<><Sparkles className="w-3.5 h-3.5" /> Picked for you</>}
       title="More like what you've saved"
       subtitle="Similar activities, places and difficulty to your wishlist."

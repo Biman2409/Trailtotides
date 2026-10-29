@@ -85,7 +85,7 @@ export default function ACEProfileSection() {
 
           {/* Rank */}
           <div className="flex items-center gap-3">
-            <span className="w-11 h-11 rounded-xl shrink-0 flex items-center justify-center" style={{ border: `1.5px solid ${ORANGE}`, color: ORANGE }}>{currentRank.icon}</span>
+            <span className="w-11 h-11 rounded-xl shrink-0 flex items-center justify-center" style={{ border: `1.5px solid ${ORANGE}`, color: "var(--accent-ink)" }}>{currentRank.icon}</span>
             <div className="flex-1 min-w-0">
               <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-tertiary)", ...small }}>capability rank</p>
               <p className="text-[18px] leading-tight font-semibold" style={{ color: "var(--text-primary)" }}>{currentRank.label}</p>
@@ -110,7 +110,7 @@ export default function ACEProfileSection() {
               <span className="text-[13px] tabular-nums" style={{ color: "var(--text-tertiary)" }}>{ptsNeeded} pts needed</span>
             </div>
           ) : (
-            <p className="text-[13px]" style={{ color: ORANGE }}>Top rank reached</p>
+            <p className="text-[13px]" style={{ color: "var(--accent-ink)" }}>Top rank reached</p>
           )}
 
           <RankBar totalScore={totalScore} trackH={7} showLabels showYouTag={false} />
@@ -118,7 +118,7 @@ export default function ACEProfileSection() {
           <Link
             href="/matchmaker?retake=1"
             className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-semibold w-fit transition-colors hover:bg-[#ff5100]/[0.06]"
-            style={{ color: ORANGE, border: `1px solid ${ORANGE}` }}
+            style={{ color: "var(--accent-ink)", border: `1px solid ${ORANGE}` }}
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Retake the assessment

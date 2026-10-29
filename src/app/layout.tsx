@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Sans, Fraunces, Great_Vibes, Caveat, Permanent_Marker } from "next/font/google";
 import "./globals.css";
 import CompareWrapper from "@/components/ui/custom/CompareWrapper";
@@ -147,6 +147,14 @@ export const metadata: Metadata = {
   ...(process.env.GOOGLE_SITE_VERIFICATION ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } } : {}),
 };
 
+// The browser's own toolbar matches the page in each theme
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#eae5da" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f0d0b" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -160,7 +168,10 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon" />
       </head>
         <body className={`${dmSans.variable} ${fraunces.variable} ${greatVibes.variable} ${caveat.variable} ${permanentMarker.variable} antialiased`} style={{ background: "var(--bg-page)", color: "var(--text-primary)" }}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
+        {/* enableColorScheme off: next-themes would write a plain `color-scheme: light` on <html>,
+            and browsers with forced dark mode (Edge, Chrome) then repaint the light theme.
+            globals.css sets the colour scheme for each theme instead. */}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} enableColorScheme={false} disableTransitionOnChange>
         {/* A plain tag, not next/script, so it's in the server HTML crawlers read first */}
         <script
           id="org-structured-data"

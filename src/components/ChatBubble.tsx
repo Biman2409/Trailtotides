@@ -60,6 +60,21 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
     return () => { clearTimeout(timer); window.removeEventListener("scroll", onScroll); };
   }, [alwaysVisible]);
 
+  // On phones the button would sit over whatever is being read, so it tucks away while
+  // scrolling down and comes back on any scroll up
+  const [tucked, setTucked] = useState(false);
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (Math.abs(y - lastY) < 8) return;
+      setTucked(y > lastY && y > 120);
+      lastY = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   useEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
@@ -163,7 +178,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
         onClick={() => setOpen((v) => !v)}
         className={`group fixed right-5 lg:right-8 bottom-[88px] lg:bottom-8 z-50 w-14 h-14 rounded-full transition-all duration-500 hover:scale-105 active:scale-95 ${
           visible || open ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none"
-        }`}
+        } ${tucked && !open ? "max-lg:opacity-0 max-lg:translate-y-8 max-lg:pointer-events-none" : ""}`}
         style={{ boxShadow: "0 10px 32px -6px rgba(255,81,0,0.35), 0 4px 14px rgba(0,0,0,0.25)" }}
         aria-label={open ? "Close Compass.AI" : "Ask Compass.AI"}
         aria-expanded={open}

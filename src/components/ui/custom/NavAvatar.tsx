@@ -69,7 +69,7 @@ export default function NavAvatar({ fallback, role }: { fallback: string; role?:
   if (role === "operator") {
     if (!ready) {
       return (
-        <div className="w-7 h-7 rounded-lg flex items-center justify-center font-semibold text-xs shrink-0" style={{ background: "rgba(255,81,0,0.2)", color: "#ff7d47" }}>
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center font-semibold text-xs shrink-0" style={{ background: "rgba(255,81,0,0.2)", color: "var(--accent-ink-soft)" }}>
           {fallback}
         </div>
       );
@@ -83,7 +83,7 @@ export default function NavAvatar({ fallback, role }: { fallback: string; role?:
     }
     // No logo yet — show initial letter in a square (operator style)
     return (
-      <div className="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0" style={{ background: "rgba(255,81,0,0.15)", border: "1.5px solid rgba(255,81,0,0.3)", color: "#ff7d47" }}>
+      <div className="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0" style={{ background: "rgba(255,81,0,0.15)", border: "1.5px solid rgba(255,81,0,0.3)", color: "var(--accent-ink-soft)" }}>
         {fallback}
       </div>
     );
@@ -92,7 +92,7 @@ export default function NavAvatar({ fallback, role }: { fallback: string; role?:
   // ── Explorer ───────────────────────────────────────────────────────────────
   if (!ready) {
     return (
-      <div className="w-7 h-7 rounded-full flex items-center justify-center font-semibold text-xs shrink-0" style={{ background: "rgba(255,81,0,0.2)", color: "#ff7d47" }}>
+      <div className="w-7 h-7 rounded-full flex items-center justify-center font-semibold text-xs shrink-0" style={{ background: "rgba(255,81,0,0.2)", color: "var(--accent-ink-soft)" }}>
         {fallback}
       </div>
     );

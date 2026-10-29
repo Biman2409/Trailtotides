@@ -73,7 +73,7 @@ export function FilterChip({ on, onClick, children, dot, icon }: { on: boolean; 
       aria-pressed={on}
       className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-colors"
       style={on
-        ? { background: "rgba(255,81,0,0.14)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)" }
+        ? { background: "rgba(255,81,0,0.14)", color: "var(--accent-ink-soft)", border: "1px solid rgba(255,81,0,0.4)" }
         : { background: "var(--chip-bg, transparent)", color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}
     >
       {dot && <span className="w-1.5 h-1.5 rounded-full" style={{ background: dot }} />}
@@ -201,11 +201,11 @@ export function CategoryBar({ f, set, trailing }: {
     const isOpen = open === kind;
     return (
       <button type="button" onClick={() => setOpen(isOpen ? null : kind)} aria-expanded={isOpen}
-        className="inline-flex items-center gap-2 h-11 px-4 rounded-xl text-sm font-medium transition-colors min-w-0"
+        className="inline-flex flex-1 sm:flex-none justify-center items-center gap-1.5 sm:gap-2 h-10 sm:h-11 px-3 sm:px-4 rounded-xl text-sm font-medium transition-colors min-w-0"
         style={n || isOpen
-          ? { background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)" }
+          ? { background: "rgba(255,81,0,0.1)", color: "var(--accent-ink-soft)", border: "1px solid rgba(255,81,0,0.4)" }
           : { background: "var(--bg-card)", color: "var(--text-primary)", border: "1px solid var(--border-default)" }}>
-        <span className="shrink-0">{icon}</span>
+        <span className="shrink-0 hidden sm:inline">{icon}</span>
         <span className="truncate max-w-[9rem]">{categoryLabel(kind, f)}</span>
         <ChevronDown className={`w-3.5 h-3.5 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
@@ -213,7 +213,7 @@ export function CategoryBar({ f, set, trailing }: {
   };
 
   return (
-    <div ref={wrapRef} className="relative flex items-center gap-2 flex-wrap">
+    <div ref={wrapRef} className="relative flex items-center gap-2 sm:flex-wrap">
       {btn("type", <Shapes className="w-4 h-4" />)}
       {btn("region", <MapPin className="w-4 h-4" />)}
       {trailing}
@@ -369,7 +369,7 @@ function PriceSlider({ value, onChange }: { value: number; onChange: (v: number)
     <div>
       <div className="flex items-baseline justify-between mb-2.5">
         <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Budget: starting price</p>
-        <p className="text-[13px] font-semibold tabular-nums" style={{ color: value ? "#ff7d47" : "var(--text-secondary)" }}>
+        <p className="text-[13px] font-semibold tabular-nums" style={{ color: value ? "var(--accent-ink-soft)" : "var(--text-secondary)" }}>
           {value ? `Up to ${inr(value)}` : "Any price"}
         </p>
       </div>
@@ -402,7 +402,7 @@ function Opt({ on, onClick, children, block }: { on: boolean; onClick: () => voi
       aria-pressed={on}
       className={`px-3 py-1.5 rounded-lg text-[13px] font-medium transition-colors ${block ? "w-full px-0" : ""}`}
       style={on
-        ? { background: "rgba(255,81,0,0.14)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)" }
+        ? { background: "rgba(255,81,0,0.14)", color: "var(--accent-ink-soft)", border: "1px solid rgba(255,81,0,0.4)" }
         : { background: "var(--bg-card)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)" }}
     >
       {children}

@@ -28,7 +28,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="h-screen bg-[#0a0a0a] flex overflow-hidden">
+    <div className="h-screen bg-[var(--bg-page)] flex overflow-hidden">
       {/* Left panel — image */}
       <div
         className="hidden lg:flex lg:w-1/2 relative bg-cover bg-center"
@@ -59,7 +59,7 @@ export default function ResetPasswordPage() {
       </div>
 
       {/* Right panel — form */}
-      <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-20 xl:px-32 bg-[#0a0a0a] relative">
+      <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-20 xl:px-32 auth-themed bg-[var(--bg-page)] relative">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
         
@@ -80,7 +80,7 @@ export default function ResetPasswordPage() {
           </div>
 
             {message && (
-              <div
+              <div role={message.type === "error" ? "alert" : "status"}
                 className={`mb-8 px-5 py-4 rounded-2xl text-sm font-semibold flex items-center gap-3 ${
                   message.type === "error"
                     ? "bg-red-500/10 border border-red-500/20 text-red-400"
@@ -99,20 +99,24 @@ export default function ResetPasswordPage() {
           {message?.type !== "success" && (
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">New Password</label>
+              <label htmlFor="reset-password" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-2 ml-1">New Password</label>
               <div className="relative">
                 <input
+                  id="reset-password"
                   name="password"
+                  autoComplete="new-password"
                   type={showPassword ? "text" : "password"}
                   required
                   minLength={8}
                   placeholder="••••••••"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 pr-14 text-white placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 pr-14 text-white placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-pressed={showPassword}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-white/40 hover:text-white/70 transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -122,7 +126,7 @@ export default function ResetPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#ff5100] hover:bg-[#d84315] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 mt-2"
+              className="w-full bg-[#ff5100] hover:bg-[#d84315] disabled:opacity-50 disabled:cursor-not-allowed text-[#fff] font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 mt-2"
             >
               {loading ? "Updating..." : "Update Password"}
             </button>

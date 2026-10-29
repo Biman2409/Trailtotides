@@ -56,7 +56,7 @@ export default function ExpeditionProfile() {
     return (
       <div className={`${card} flex flex-col items-center gap-3 text-center`} style={cardStyle}>
         <p className="text-[14px]" style={{ color: "var(--text-secondary)" }}>Couldn&apos;t load your level.</p>
-        <button onClick={fetchXP} className="h-9 px-4 rounded-full text-[13px] font-semibold" style={{ color: ORANGE, border: `1px solid ${ORANGE}` }}>
+        <button onClick={fetchXP} className="h-9 px-4 rounded-full text-[13px] font-semibold" style={{ color: "var(--accent-ink)", border: `1px solid ${ORANGE}` }}>
           Try again
         </button>
       </div>
@@ -68,7 +68,7 @@ export default function ExpeditionProfile() {
       {/* Level and XP */}
       <div className="flex items-center gap-3">
         <span className="w-11 h-11 rounded-xl shrink-0 flex items-center justify-center text-[18px] font-semibold tabular-nums"
-          style={{ border: `1.5px solid ${ORANGE}`, color: ORANGE }}>
+          style={{ border: `1.5px solid ${ORANGE}`, color: "var(--accent-ink)" }}>
           {tier.level}
         </span>
         <div className="flex-1 min-w-0">
@@ -96,7 +96,7 @@ export default function ExpeditionProfile() {
             aria-expanded={showLadder}
             aria-controls="level-ladder"
             className="shrink-0 inline-flex items-center gap-1 text-[13px] font-semibold"
-            style={{ color: ORANGE }}
+            style={{ color: "var(--accent-ink)" }}
           >
             All levels
             <ChevronDown className="w-3.5 h-3.5 transition-transform duration-200" style={{ transform: showLadder ? "rotate(180deg)" : "none" }} />
@@ -118,7 +118,7 @@ export default function ExpeditionProfile() {
                 <span className="w-6 h-6 rounded-lg shrink-0 flex items-center justify-center text-[12px] tabular-nums"
                   style={current
                     ? { background: ORANGE, color: "#fff" }
-                    : reached ? { border: `1px solid ${ORANGE}`, color: ORANGE } : { border: "1px dashed var(--border-default)", color: "var(--text-muted)" }}>
+                    : reached ? { border: `1px solid ${ORANGE}`, color: "var(--accent-ink)" } : { border: "1px dashed var(--border-default)", color: "var(--text-muted)" }}>
                   {t.level}
                 </span>
                 <span className="flex-1 min-w-0 text-[14px]" style={{ color: reached ? "var(--text-primary)" : "var(--text-tertiary)" }}>
