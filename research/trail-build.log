@@ -426,3 +426,13 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [  49s]   day  1 walk   Dhundi → Bakarthach  4.5 km +700 −280
 [  49s]   day  2 walk   Bakarthach → Bakarthach  4.5 km +290 −280
 [  49s]   day  3 walk   Bakarthach → Dhundi  4.5 km +290 −710
+── chandrakhani-pass 18:50:22
+[  29s] chandrakhani-pass: 1112 named places in OpenStreetMap around the trek
+[  47s]   leg Rumsu → Chaklani (6.1 km apart) along the track chandrakhani
+[  48s]   leg Chaklani → Chandrakhani Pass (2.0 km apart) along the track chandrakhani
+[  49s]   leg Chandrakhani Pass → Malana (2.6 km apart) along the track chandrakhani
+[  50s] chandrakhani-pass: 12.5 km, +1630 m, highest 3672 m, 0 km off the mapped paths (drawn along the terrain), 448 → 132 points
+[  50s]   km     0  Rumsu (2058 m, osm, 32.11439,77.17943)
+[  50s]   km  12.5  Malana (2647 m, osm, 32.0618,77.26002)  9.6 km from last
+[  50s]   day  1 walk   Rumsu → Chaklani  6.8 km +1360 −0
+[  50s]   day  2 walk   Chaklani → Malana  5.8 km +250 −1010
