@@ -90,3 +90,27 @@ Build trails run 40916688760, 2026-10-29T16:57:57Z
 [ 106s]   day  7 walk   Lamuney → Thansing  13.3 km +440 −640
 [ 106s]   day  8 walk   Thansing → Tshoka  12.3 km +410 −1360
 [ 106s]   day  9 walk   Tshoka → Yuksom  11.9 km +140 −1360
+── khopra-danda 17:14:02
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 237s] khopra-danda: 642 named places in OpenStreetMap around the trek
+[ 243s]   leg Nayapul → Ulleri (7.3 km apart)
+[ 246s]   leg Ulleri → Ghorepani (6.2 km apart)
+[ 251s]   leg Ghorepani → Swanta (3.7 km apart)
+[ 256s]   leg Swanta → Chistibung (3.2 km apart)
+[ 259s]   leg Chistibung → Khopra Danda (1.8 km apart)
+[ 264s] khopra-danda: 32.5 km, +3350 m, highest 3661 m, 0 km off the mapped paths (drawn along the terrain), 1185 → 473 points
+[ 264s]   km     0  Nayapul (1013 m, osm, 28.29814,83.76791)
+[ 264s]   km  10.6  Ulleri (2005 m, osm, 28.35673,83.73538)  7.3 km from last
+[ 264s]   km  18.4  Ghorepani (2896 m, osm, 28.40249,83.69993)  6.2 km from last
+[ 264s]   km  23.2  Swanta (2238 m, osm, 28.43521,83.69098)  3.7 km from last
+[ 264s]   km  32.5  Khopra Danda (3639 m, osm, 28.47211,83.70863)  4.5 km from last
+[ 264s]   day  1 walk   Nayapul → Ulleri  10.6 km +1020 −20
+[ 264s]   day  2 walk   Ulleri → Ghorepani  7.8 km +810 −0
+[ 264s]   day  3 walk   Ghorepani → Swanta  4.8 km +100 −740
+[ 264s]   day  4 walk   Swanta → Chistibung  5.4 km +690 −0
+[ 264s]   day  5 walk   Chistibung → Khopra Danda  3.9 km +730 −0
+[ 264s]   day  6 walk   Khopra Danda → Khopra Danda  16 km +1000 −1000
+[ 264s]   day  7 walk   Khopra Danda → Swanta  9.3 km +0 −1410
+[ 264s]   day  8 walk   Swanta → Nayapul  23.2 km +760 −1950
