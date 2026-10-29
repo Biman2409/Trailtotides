@@ -5,7 +5,12 @@
 //         find it by name. q overrides the search text. A loop lists its start again at the end.
 //         optional: true takes the stop only if the trek's OSM place list has it (by name or q),
 //         and leaves it out otherwise, with it the days' visits to it.
-// camps   camps between two stops: { name: [stopA, stopB, share, aka?] }. Looked up in
+//         exact: true uses at as it is, without looking for a mapped place near it: for a pass or
+//         summit placed from GPS tracks where OSM's point is off; ele then gives its published
+//         height where the elevation model reads it lower. track: "<file>" follows the recorded
+//         GPS track scripts/tracks/<file>.json on the leg into the stop.
+// camps   camps between two stops: { name: [stopA, stopB, share, aka?, at?] }. at places a camp
+//         OSM doesn't have from GPS tracks or trekkers' waypoints. Otherwise looked up in
 //         OpenStreetMap by name and by the other names in aka, near where they should be; one it
 //         doesn't have is put that share of the way along the trail from stop A to stop B, and
 //         days that reach it are marked approximate.
@@ -225,7 +230,9 @@ export const TREKS = {
       GANGOTRI,
       { name: "Bhojbasa", at: [30.95045, 79.05151] },
       { name: "Gaumukh", at: [30.92574, 79.08182] },
-      { name: "Tapovan", at: [30.91443, 79.0765] },
+      // The meadow where OSM and ultrajourneys.org's waypoint agree; its published height (4,463 m).
+      // The elevation model reads about 4,320 m
+      { name: "Tapovan", at: [30.91443, 79.0765], exact: true, ele: 4463 },
     ],
     days: [
       { to: "Bhojbasa", note: "Along the Bhagirathi past Chirbasa's pines, the Bhagirathi peaks ahead" },
@@ -244,7 +251,9 @@ export const TREKS = {
     ],
     side: [
       { name: "Valley of Flowers", q: "Valley of Flowers Entry", at: [30.70568, 79.59586] },
-      { name: "Hemkund Sahib", q: "Hemkund", at: [30.70022, 79.61598] },
+      // The gurdwara at the lake, where two trekkers' waypoints agree (ultrajourneys.org). Its height
+      // is the one published (4,329 m); the elevation model reads the lake shore lower, about 4,150 m
+      { name: "Hemkund Sahib", at: [30.69909, 79.61747], exact: true, ele: 4329 },
     ],
     days: [
       { to: "Ghangaria", note: "Up the Lakshman Ganga on a paved mule path, busy with pilgrims, to the only village up here" },
@@ -256,7 +265,9 @@ export const TREKS = {
 
   "kuari-pass": {
     near: "Chamoli, Uttarakhand",
-    stops: [DHAK, KHULLARA, { name: "Kuari Pass", at: [30.45112, 79.58154] }],
+    // The pass where a recorded GPS track (ultrajourneys.org, Auli to Tali) crosses the ridge: 3,818 m
+    // on the elevation model, as published (3,815 m). OSM's point is 800 m short, on the approach
+    stops: [DHAK, KHULLARA, { name: "Kuari Pass", at: [30.44527, 79.57533], exact: true }],
     camps: { Gulling: ["Dhak", "Khullara", 0.5, ["Guling", "Gulling Top"]] },
     days: [
       { to: "Gulling", note: "Drive from Joshimath to Dhak, then up past Tugasi village to a forest camp" },
@@ -282,7 +293,9 @@ export const TREKS = {
     near: "Chamoli, Uttarakhand",
     stops: [
       { name: "Mana", at: [30.77048, 79.49594] },
-      { name: "Satopanth Lake", q: "Satopanth Tal", at: [30.74352, 79.357] },
+      // The lake where OSM and ultrajourneys.org's waypoint agree; its published height (4,600 m:
+      // Wikipedia, Uttarakhand Tourism, operators). The elevation model reads about 4,340 m
+      { name: "Satopanth Lake", at: [30.74352, 79.357], exact: true, ele: 4600 },
     ],
     camps: { "Laxmi Van": ["Mana", "Satopanth Lake", 0.35, ["Laxmiban", "Lakshmi Van", "Laxmi Ban", "Lakshmiban"]], Chakrateertha: ["Mana", "Satopanth Lake", 0.75, ["Chakratirtha", "Chakra Tirth", "Chakrateerth", "Chakra Tirtha"]] },
     days: [
@@ -334,7 +347,9 @@ export const TREKS = {
       { name: "Khati", at: [30.11209, 79.94006] },
       { name: "Dwali", at: [30.17736, 79.99532] },
       { name: "Phurkia", at: [30.21645, 79.99772] },
-      { name: "Zero Point", q: "Pindari Zero Point", at: [30.26596, 80.00519] },
+      // Zero Point from ultrajourneys.org's waypoint: 3,657 m on the elevation model, as published
+      // (3,660 m). OSM's point is 800 m further up the moraine
+      { name: "Zero Point", at: [30.25968, 79.99849], exact: true },
     ],
     days: [
       { to: "Dwali", note: "From Khati, the last village, along the Pindar river through dense forest" },
@@ -353,7 +368,8 @@ export const TREKS = {
       { name: "Bedni Bugyal", at: [30.20929, 79.66919] },
       { name: "Roopkund", q: "Rup Kund", at: [30.2621, 79.73172] },
     ],
-    camps: { "Patar Nachauni": ["Bedni Bugyal", "Roopkund", 0.35, ["Patal Nachani", "Patar Nachani", "Pathar Nachauni", "Patar Nachoni", "Pathar Nachuni"]], Bhagwabasa: ["Bedni Bugyal", "Roopkund", 0.75, ["Bhagwabas", "Bhagubasa", "Bagubasa", "Bhaguwabasa"]] },
+    // Both camps from trekkers' waypoints (ultrajourneys.org): the shelter at Patar Nachauni, Bhagwabasa
+    camps: { "Patar Nachauni": ["Bedni Bugyal", "Roopkund", 0.35, ["Patal Nachani", "Patar Nachani", "Pathar Nachauni", "Patar Nachoni", "Pathar Nachuni"], [30.23664, 79.69218]], Bhagwabasa: ["Bedni Bugyal", "Roopkund", 0.75, ["Bhagwabas", "Bhagubasa", "Bagubasa", "Bhaguwabasa"], [30.24973, 79.71051]] },
     days: [
       { to: "Didna", note: "Down to the Neel Ganga and a steep climb through forest to Didna village" },
       { to: "Bedni Bugyal", via: ["Ali Bugyal"], note: "Out onto Ali Bugyal, one of the largest high meadows in the Himalaya, and along to Bedni" },
@@ -370,13 +386,16 @@ export const TREKS = {
       LOHAJUNG,
       { name: "Didna", at: [30.16473, 79.63419] },
       { name: "Ali Bugyal", at: [30.18229, 79.65865] },
+      // The high point of the trek, crossed between the two meadows: 3,823 m on the elevation
+      // model, as published (3,800-3,825 m)
+      { name: "Bedni Top", at: [30.20007, 79.67382], exact: true },
       { name: "Bedni Bugyal", at: [30.20929, 79.66919] },
       { name: "Wan", at: [30.20504, 79.61753] },
     ],
     days: [
       { to: "Didna", note: "Down to the Neel Ganga and a steep climb through forest to Didna village" },
       { to: "Ali Bugyal", note: "Up through oak forest onto the open grass of Ali Bugyal" },
-      { to: "Bedni Bugyal", note: "Along the meadow ridge with Trishul and Nanda Ghunti in front of you" },
+      { to: "Bedni Bugyal", via: ["Bedni Top"], note: "Along the meadow ridge and over Bedni Top, the highest point, with Trishul and Nanda Ghunti in front of you" },
       { to: "Wan", note: "Down through forest to Wan village and the road" },
     ],
   },
@@ -388,10 +407,13 @@ export const TREKS = {
       { name: "Bekaltal", q: "Bekal Tal", at: [30.14259, 79.5795] },
       { name: "Brahmatal", q: "Brahma Tal", at: [30.17779, 79.58802] },
     ],
+    // The summit on the ridge north of the lake, near where a recorded GPS track (ultrajourneys.org)
+    // crosses it: 3,727 m on the elevation model, as published (3,734 m)
+    side: [{ name: "Brahmatal Top", at: [30.1951, 79.5877], exact: true }],
     days: [
       { to: "Bekaltal", note: "Through oak and rhododendron forest to a lake ringed by trees" },
       { to: "Brahmatal", note: "Up onto the ridge with Trishul and Nanda Ghunti, then down to the Brahmatal lake camp" },
-      { to: "Brahmatal", side: { name: "Brahmatal Top", km: 4, up: 450 }, note: "An early climb to the top for the widest view of the trek, then back to camp" },
+      { to: "Brahmatal", side: { name: "Brahmatal Top", km: 4.1, up: 510 }, note: "An early climb to the top for the widest view of the trek, then back to camp" },
       { to: "Lohajung", note: "Down through the forest to the road" },
     ],
   },
@@ -428,11 +450,15 @@ export const TREKS = {
     near: "Kullu, Himachal Pradesh",
     stops: [
       { name: "Rumsu", at: [32.11439, 77.17943] },
-      { name: "Malana", at: [32.0618, 77.26002] },
+      // Over the pass on the trail as ultrajourneys.org recorded it (Rumsu to Malana)
+      { name: "Malana", at: [32.0618, 77.26002], track: "chandrakhani" },
     ],
-    camps: { Stalling: ["Rumsu", "Malana", 0.35, ["Staling", "Stalling Thach"]], "Chandrakhani Pass": ["Rumsu", "Malana", 0.6, ["Chanderkhani Pass", "Chandrakhani", "Chanderkhani"]] },
+    // Chaklani, the meadow camp below the pass, from ultrajourneys.org's waypoint: 3,448 m on the
+    // elevation model, as published (3,400-3,450 m). The pass where the recorded trail tops out:
+    // 3,656 m, as published (3,660 m)
+    camps: { Chaklani: ["Rumsu", "Malana", 0.45, ["Chiklani", "Chaklani Thach", "Stalling"], [32.06749, 77.21231]], "Chandrakhani Pass": ["Rumsu", "Malana", 0.6, ["Chanderkhani Pass", "Chandrakhani", "Chanderkhani"], [32.06642, 77.23323]] },
     days: [
-      { to: "Stalling", note: "Up from Rumsu, above Naggar, through deodar forest to open grass" },
+      { to: "Chaklani", note: "Up from Rumsu, above Naggar, through deodar forest to the open meadow of Chaklani below the pass" },
       { to: "Malana", via: ["Chandrakhani Pass"], note: "Over the grassy pass facing the Pir Panjal and Parvati ranges, then down to Malana, a village with its own rules: don't touch its walls or people" },
     ],
   },
@@ -441,9 +467,12 @@ export const TREKS = {
     near: "Kangra, Himachal Pradesh",
     stops: [
       { name: "Kareri", q: "Kareri village", at: [32.27896, 76.27862] },
-      { name: "Kareri Lake", at: [32.32565, 76.27389] },
+      // Up the Nyund stream on the trail as ultrajourneys.org recorded it: OSM's paths take a longer
+      // way round over the ridge to the east
+      { name: "Kareri Lake", at: [32.32565, 76.27389], track: "kareri-lake" },
     ],
-    camps: { Rioti: ["Kareri", "Kareri Lake", 0.6, ["Reoti", "Riyoti", "Rewati"]] },
+    // Rioti (Reoti) on that trail where it reaches the published 2,450 m
+    camps: { Rioti: ["Kareri", "Kareri Lake", 0.6, ["Reoti", "Riyoti", "Rewati"], [32.30175, 76.27558]] },
     days: [
       { to: "Rioti", note: "Up the Nyund stream from Kareri village, crossing it on rocks and small bridges" },
       { to: "Kareri Lake", note: "A short climb to the lake below the Dhauladhar, with a small Shiva temple" },
@@ -457,11 +486,15 @@ export const TREKS = {
       { name: "Kasol", at: [32.01043, 77.3166] },
       // The village OSM lacks: a stop, so the climb goes through it and its height is its own
       { name: "Grahan", at: [31.9713, 77.3479] },
-      { name: "Sar Pass", at: [31.96368, 77.38728] },
-      { name: "Biskeri Thach", q: "Biskeri", at: [31.95217, 77.40626] },
-      { name: "Barshaini", at: [31.99913, 77.44969] },
+      // From Grahan over the pass to Barshaini on the trail as ultrajourneys.org recorded it; the
+      // pass where it tops out, at their waypoint (4,125 m on the elevation model; published 4,200 m)
+      { name: "Sar Pass", at: [31.96247, 77.38869], exact: true, track: "sar-pass" },
+      { name: "Biskeri Thach", q: "Biskeri", at: [31.95217, 77.40626], track: "sar-pass" },
+      { name: "Barshaini", at: [31.99913, 77.44969], track: "sar-pass" },
     ],
-    camps: { "Min Thach": ["Grahan", "Sar Pass", 0.4, ["Mingthach", "Min Thatch", "Mangthach"]], Nagaru: ["Grahan", "Sar Pass", 0.75, ["Nagaroo", "Nagru"]] },
+    // On that trail: Min Thach the meadow at 3,240-3,290 m (published 3,200-3,400 m), Nagaru where
+    // it reaches the published 3,800 m
+    camps: { "Min Thach": ["Grahan", "Sar Pass", 0.4, ["Mingthach", "Min Thatch", "Mangthach"], [31.96853, 77.36943]], Nagaru: ["Grahan", "Sar Pass", 0.75, ["Nagaroo", "Nagru"], [31.97023, 77.37833]] },
     days: [
       { to: "Grahan", note: "Up from Kasol along the Grahan stream to a remote village" },
       { to: "Min Thach", note: "A steep climb through forest to an open shoulder" },
@@ -481,9 +514,12 @@ export const TREKS = {
       { name: "Odi Thach", at: [31.9269, 77.70268] },
       { name: "Mantalai", at: [31.86779, 77.78389] },
       { name: "Pin Parvati Pass", at: [31.8355, 77.84444] },
+      // The Spiti side from ultrajourneys.org's recorded trail ("Shepherd Camp to Mudh"): the
+      // shepherds' camp below the glacier where it starts, and its end above Tiya's meadows
+      { name: "Pin Valley Camp", at: [31.83555, 77.88726], exact: true },
+      { name: "Tiya", at: [31.88552, 78.01213], exact: true, track: "pin-valley" },
       { name: "Mud", at: [31.959, 78.03241] },
     ],
-    camps: { "Pin Valley Camp": ["Pin Parvati Pass", "Mud", 0.3, ["Pin Valley Base Camp"]], Tiya: ["Pin Parvati Pass", "Mud", 0.65, ["Tiya Camp", "Tia"]] },
     days: [
       { to: "Kheerganga", note: "Up the Parvati valley from Barshaini to the hot springs" },
       { to: "Tunda Bhuj", note: "Along the river through the last of the forest" },

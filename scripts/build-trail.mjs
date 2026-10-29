@@ -19,6 +19,7 @@
 // Then run sync-trek-facts.mjs so the trek's duration, distance and base camp follow the itinerary.
 
 import { writeFile, readFile, readdir, mkdir } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import { TREKS } from "./trek-configs.mjs";
 import { placesNear, matchPlace, pathRoute } from "./osm.mjs";
 import { terrainPath, satellitePreview } from "./terrain.mjs";
@@ -105,6 +106,12 @@ const taken = (lat, lng) => [...found.values()].some((p) => dist([p.lat, p.lng],
 async function place(stop, trek, prev = null) {
   const s = typeof stop === "string" ? { name: stop } : stop;
   if (found.has(s.name)) return found.get(s.name);
+  // A position checked against GPS tracks and the published height is used as it is
+  if (s.exact) {
+    const p = { name: s.name, lat: s.at[0], lng: s.at[1], ele: s.ele ?? (await heights([s.at]))[0], from: "given" };
+    found.set(s.name, p);
+    return p;
+  }
   // First the trek's own place list, which knows campsites, passes and lakes by every name they
   // carry; given coordinates must be within 2 km of the match
   for (const n of [s.name, s.q].filter(Boolean)) {
@@ -147,9 +154,27 @@ async function place(stop, trek, prev = null) {
   return p;
 }
 
-async function leg(a, b) {
+// A recorded GPS track (scripts/tracks/<file>.json, [[lat, lng], ...]) for a stretch OpenStreetMap
+// maps badly or not at all: the part of it between the two places. A place up to a kilometre off
+// the track is joined to it along the terrain (alongTerrain)
+function fromTrack(file, a, b) {
+  const pts = JSON.parse(readFileSync(new URL(`./tracks/${file}.json`, import.meta.url), "utf8"));
+  const nearest = (p) => pts.reduce((best, q, i) => (dist(q, [p.lat, p.lng]) < dist(pts[best], [p.lat, p.lng]) ? i : best), 0);
+  const i = nearest(a), j = nearest(b);
+  const part = i <= j ? pts.slice(i, j + 1) : pts.slice(j, i + 1).reverse();
+  const offA = dist(part[0], [a.lat, a.lng]), offB = dist(part[part.length - 1], [b.lat, b.lng]);
+  if (offA > 1000 || offB > 1000) throw new Error(`track ${file} passes ${Math.round(Math.max(offA, offB))} m from ${offA > offB ? a.name : b.name}`);
+  return [[a.lat, a.lng], ...part, [b.lat, b.lng]];
+}
+
+async function leg(a, b, track) {
   const straight = dist([a.lat, a.lng], [b.lat, b.lng]);
-  console.log(`  leg ${a.name} → ${b.name} (${(straight / 1000).toFixed(1)} km apart)`);
+  console.log(`  leg ${a.name} → ${b.name} (${(straight / 1000).toFixed(1)} km apart)${track ? ` along the track ${track}` : ""}`);
+  if (track) {
+    const coords = fromTrack(track, a, b);
+    const ele = await heights(coords);
+    return { coords: coords.map((p, i) => [p[0], p[1], ele[i]]), approxKm: 0 };
+  }
   try {
     const url = `https://brouter.de/brouter?lonlats=${a.lng},${a.lat}|${b.lng},${b.lat}&profile=hiking-mountain&alternativeidx=0&format=geojson`;
     const res = await fetch(url, { headers: UA, signal: AbortSignal.timeout(90000) });
@@ -260,7 +285,7 @@ async function build(slug) {
   const skipped = new Set(); // optional stops and side trips OSM doesn't have
   for (const s of trek.stops) {
     const p = await place(s, trek, stops[stops.length - 1]);
-    if (p) stops.push({ ...p });
+    if (p) stops.push({ ...p, track: s.track });
     else { skipped.add(s.name); console.log(`  optional stop not in OpenStreetMap, left out: ${s.name}`); }
   }
   // A stop far from the one before is a different place with the same name
@@ -285,7 +310,7 @@ async function build(slug) {
     return dist([p.lat, p.lng], [a.lat + t * dy, (ax + t * dx) / k]);
   };
   const via = stops.slice(0, -1).map(() => []);
-  for (const [campName, [a, b, frac, aka = []]] of Object.entries(trek.camps ?? {})) {
+  for (const [campName, [a, b, frac, aka = [], campAt]] of Object.entries(trek.camps ?? {})) {
     const ia = stops.findIndex((s) => s.name === a);
     const ib = stops.findIndex((s, i) => i > ia && s.name === b);
     if (ia < 0 || ib < 0) throw new Error(`Camp ${campName}: ${a} and ${b} must be stops in that order`);
@@ -293,15 +318,16 @@ async function build(slug) {
     const guess = [A.lat + frac * (B.lat - A.lat), A.lng + frac * (B.lng - A.lng)];
     const maxD = Math.max(2500, 0.6 * dist([A.lat, A.lng], [B.lat, B.lng]));
     // The camp's own name first, then the other names it goes by (aka)
-    const m = [campName, ...aka].map((n) => matchPlace(index, n, { near: guess, maxD, as: campName })).find(Boolean);
-    if (!m || taken(m.lat, m.lng)) {
+    // A camp OpenStreetMap doesn't have, placed from GPS tracks and trekkers' waypoints (at)
+    const m = campAt ? { lat: campAt[0], lng: campAt[1] } : [campName, ...aka].map((n) => matchPlace(index, n, { near: guess, maxD, as: campName })).find(Boolean);
+    if (!m || (!campAt && taken(m.lat, m.lng))) {
       // Names nearby that start the same way, in case OSM spells the camp differently
       const stem = campName.toLowerCase().replace(/[^a-z]/g, "").slice(0, 4);
       const near = index.filter((p) => p.names.some((n) => n.toLowerCase().replace(/[^a-z]/g, "").startsWith(stem)) && dist(guess, [p.lat, p.lng]) < 15000);
       if (near.length) console.log(`  ? ${campName} not matched; nearby: ${near.slice(0, 6).map((p) => `${p.name} (${p.kind}, ${(dist(guess, [p.lat, p.lng]) / 1000).toFixed(1)} km)`).join(", ")}`);
       continue;
     }
-    const p = { name: campName, lat: +m.lat.toFixed(5), lng: +m.lng.toFixed(5), ele: m.ele ?? (await heights([[m.lat, m.lng]]))[0], from: "osm" };
+    const p = { name: campName, lat: +m.lat.toFixed(5), lng: +m.lng.toFixed(5), ele: m.ele ?? (await heights([[m.lat, m.lng]]))[0], from: campAt ? "given" : "osm" };
     found.set(campName, p);
     let li = ia;
     for (let i = ia; i < ib; i++) if (segDist(p, stops[i], stops[i + 1]) < segDist(p, stops[li], stops[li + 1])) li = i;
@@ -316,7 +342,7 @@ async function build(slug) {
   for (let i = 0; i < stops.length - 1; i++) {
     const chain = [stops[i], ...via[i], stops[i + 1]];
     for (let k = 0; k < chain.length - 1; k++) {
-      const l = await leg(chain[k], chain[k + 1]);
+      const l = await leg(chain[k], chain[k + 1], stops[i + 1].track); // camps on a tracked leg follow the track too
       l.coords = await alongTerrain(l.coords);
       approxKm += l.approxKm;
       full = full.concat(full.length ? l.coords.slice(1) : l.coords);
@@ -436,7 +462,8 @@ async function build(slug) {
     builtAt: new Date().toISOString().slice(0, 10),
     lengthKm: +(cum[cum.length - 1] / 1000).toFixed(1),
     ascentM: Math.round(stretch(0, full.length - 1).up / 10) * 10, // smoothed, like the daily figures
-    maxEleM: Math.max(...full.map((p) => p[2])),
+    // A place's published height counts when the elevation model reads it lower (see trek-configs)
+    maxEleM: Math.max(...full.map((p) => p[2]), ...[...stops, ...side].map((p) => p.ele ?? 0)),
     approxKm: +approxKm.toFixed(1),
     stops: stops.map(strip),
     side: side.map(strip),

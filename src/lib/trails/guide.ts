@@ -96,7 +96,10 @@ export function trekGuide(trail: Trail): Guide {
     const sideHigh = (d.via ?? []).filter((v) => side.has(v)).map((v) => trail.side.find((s) => s.name === v)).filter((s) => s?.ele != null);
     let highM = heights.length ? Math.max(...heights) : null;
     let highAt: string | null = null;
-    for (const s of sideHigh) if (s && s.ele != null && (highM == null || s.ele > highM)) { highM = s.ele; highAt = s.name; }
+    // A place on the way whose published height is above the line's (a lake or meadow the
+    // elevation model reads low) is the day's high point at that height
+    const onWay = [...(d.via ?? []).filter((v) => !side.has(v)), d.to].map((n) => stopAt.find((s) => s.name === n));
+    for (const s of [...sideHigh, ...onWay]) if (s && s.ele != null && (highM == null || s.ele > highM)) { highM = s.ele; highAt = s.name; }
     if (!highAt && highM != null) {
       // Name the high point when a stop on the way stands within 30 m of it
       const named = [...(d.via ?? []), d.to].map((n) => stopAt.find((s) => s.name === n)).find((s) => s?.ele != null && Math.abs((s.ele ?? 0) - highM!) <= 30);
