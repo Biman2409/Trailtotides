@@ -349,3 +349,16 @@ Build trails run 40865579579, 2026-10-29T11:27:58Z
 [  83s]   day  2 walk   Deoriatal → Rohini Bugyal  7.9 km +480 −170 (approx)
 [  83s]   day  3 walk   Rohini Bugyal → Chopta  7.8 km +570 −350
 [  83s]   day  4 walk   Chopta → Chopta  13.4 km +990 −1000
+── panwali-kantha 12:00:41
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 179s] panwali-kantha: 551 named places in OpenStreetMap around the trek
+[ 180s]   leg Ghuttu → Panwali Kantha (8.7 km apart)
+[ 182s] panwali-kantha: 12.4 km, +1830 m, highest 3383 m, 0 km off the mapped paths (drawn along the terrain), 453 → 141 points
+[ 182s]   km     0  Ghuttu (1540 m, osm, 30.5289,78.79015)
+[ 182s]   km  12.4  Panwali Kantha (3264 m, osm, 30.56968,78.86745)  8.7 km from last
+[ 182s]   camp (estimated): Gairu (2802 m, 30.53701,78.83914)
+[ 182s]   day  1 walk   Ghuttu → Gairu  6.2 km +1250 −0 (approx)
+[ 182s]   day  2 walk   Gairu → Panwali Kantha  6.2 km +570 −120
+[ 182s]   day  3 rest   Panwali Kantha → Panwali Kantha
+[ 182s]   day  4 walk   Panwali Kantha → Ghuttu  12.4 km +110 −1820
