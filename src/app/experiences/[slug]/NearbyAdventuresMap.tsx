@@ -10,7 +10,7 @@ import { getACE, computeDifficulty } from "@/lib/ace";
 import { haversineKm } from "@/lib/geo";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import { BASE_LAYERS, LIGHT_BASE, createBaseLayer, loadLeaflet } from "@/app/map/mapShared";
-import type { Trail } from "@/lib/trails/shared";
+import { trailEnds, trailWalkKm, type Trail } from "@/lib/trails/shared";
 
 interface Props {
   current: Adventure;
@@ -295,14 +295,14 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
         <div className="px-4 py-2.5 flex items-baseline justify-between gap-2">
           <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{trail ? "trail map" : "nearby"}</p>
           <p className="text-[12.5px] tabular-nums" style={{ color: "var(--text-secondary)" }}>
-            {trail ? <>{trail.lengthKm} km · {trail.stops.length} stops</> : <>{nearby.length} adventures</>}
+            {trail ? <>{trailEnds(trail).from} → {trailEnds(trail).to} · {trailWalkKm(trail)} km</> : <>{nearby.length} adventures</>}
           </p>
         </div>
       ) : (
         <div className="px-4 pt-3 pb-2.5">
           <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{trail ? "the trail and nearby" : "nearby"}</p>
           <p className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>
-            {trail ? <>{trail.lengthKm} km from {trail.stops[0].name} · {nearby.length} adventures nearby</> : <>{nearby.length} adventures in the region</>}
+            {trail ? <>{trailEnds(trail).from} → {trailEnds(trail).to}, {trailWalkKm(trail)} km in all · {nearby.length} adventures nearby</> : <>{nearby.length} adventures in the region</>}
           </p>
         </div>
       )}

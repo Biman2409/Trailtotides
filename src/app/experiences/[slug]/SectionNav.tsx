@@ -4,17 +4,20 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 const NAV_ITEMS = [
   { id: "overview", label: "Overview" },
+  { id: "guide", label: "Guide" },
   { id: "safety", label: "Safety" },
   { id: "suitability", label: "Suitability" },
   { id: "book-this-adventure", label: "Book" },
   { id: "community", label: "Reviews" },
 ];
 
-export default function SectionNav() {
-  const [active, setActive] = useState(NAV_ITEMS[0].id);
+export default function SectionNav({ hasGuide = false }: { hasGuide?: boolean }) {
+  // The guide chapter exists only for treks with a mapped trail
+  const items = NAV_ITEMS.filter((item) => item.id !== "guide" || hasGuide);
+  const [active, setActive] = useState(items[0].id);
 
   useEffect(() => {
-    const sections = NAV_ITEMS
+    const sections = items
       .map((item) => document.getElementById(item.id))
       .filter((el): el is HTMLElement => el !== null);
     if (sections.length === 0) return;
@@ -30,7 +33,7 @@ export default function SectionNav() {
 
     sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
-  }, []);
+  }, [hasGuide]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Calm style: plain text links, the active one marked by a thin orange rule
   return (
@@ -40,7 +43,7 @@ export default function SectionNav() {
     >
       <div className="max-w-7xl mx-auto px-5 lg:px-8">
         <nav className="flex items-center gap-8">
-          {NAV_ITEMS.map(({ id, label }) => {
+          {items.map(({ id, label }) => {
             const isActive = active === id;
             return (
               <a

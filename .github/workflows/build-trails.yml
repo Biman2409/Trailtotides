@@ -1,0 +1,116 @@
+# Rebuilds the trek trails from OpenStreetMap (scripts/build-trail.mjs) on GitHub's runners, which
+# can reach Overpass, Nominatim, BRouter and Open-Meteo, then syncs each trek's duration, distance
+# and base camp (scripts/sync-trek-facts.mjs) and commits the result to the branch it ran on.
+# Runs by hand (Actions → Build trails → Run workflow, naming treks or all), or on a push to a
+# claude/ branch that changes the builder, configs or scripts/trails-to-build.txt, which lists the
+# treks a push builds.
+name: Build trails
+
+on:
+  workflow_dispatch:
+    inputs:
+      treks:
+        description: Trek slugs separated by spaces, or all
+        default: all
+  push:
+    branches: ["claude/**"]
+    paths:
+      - scripts/build-trail.mjs
+      - scripts/osm.mjs
+      - scripts/trek-configs.mjs
+      - scripts/trails-to-build.txt
+      - .github/workflows/build-trails.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-trails-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build trails
+        env:
+          TREKS: ${{ github.event.inputs.treks }}
+        # One trek at a time, at most 15 minutes each, committed as it finishes with the build log
+        # (research/trail-build.log), so progress shows on the branch and a stall loses one trek.
+        # A trek that fails keeps its previous trail.
+        run: |
+          set +e
+          git config user.name "Trail to Tides"
+          git config user.email "hello@trailtotides.com"
+          mkdir -p research
+          LOG=research/trail-build.log
+          echo "Build trails run ${{ github.run_id }}, $(date -u +%FT%TZ)" > $LOG
+          # A push builds the treks listed in scripts/trails-to-build.txt
+          [ -z "$TREKS" ] && TREKS=$(grep -v '^#' scripts/trails-to-build.txt | xargs)
+          if [ "$TREKS" = "all" ]; then
+            TREKS=$(node -e 'import("./scripts/trek-configs.mjs").then((m) => console.log(Object.keys(m.TREKS).join(" ")))')
+          fi
+          # Push this run's commits; on a conflict (another run's log or trail) this run's version
+          # wins, and a rebase that still fails is undone rather than left blocking later commits
+          sync() {
+            for i in 1 2 3; do
+              if git pull -q --rebase -X theirs origin "$GITHUB_REF_NAME"; then
+                git push -q origin HEAD:"$GITHUB_REF_NAME" && return 0
+              else
+                git rebase --abort 2>/dev/null
+              fi
+              sleep 5
+            done
+            echo "push failed, will retry after the next trek" | tee -a $LOG
+          }
+          failed=0
+          for t in $TREKS; do
+            echo "── $t $(date -u +%T)" | tee -a $LOG
+            timeout 900 node scripts/build-trail.mjs "$t" 2>&1 | tee -a $LOG
+            code=${PIPESTATUS[0]}
+            [ "$code" = "0" ] || { failed=$((failed + 1)); echo "$t: FAILED (exit $code)" | tee -a $LOG; }
+            git add src/lib/trails && git add -f $LOG # *.log is gitignored
+            git commit -q -m "Trail rebuilt from OpenStreetMap: $t" -m "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            sync
+          done
+          echo "Done $(date -u +%T), $failed failed" | tee -a $LOG
+          cp $LOG build-trails.log
+
+      - name: Sync trek facts
+        run: node scripts/sync-trek-facts.mjs
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Trails built"
+            echo '```'
+            grep -E "^[a-z0-9-]+: [0-9.]+ km|FAILED|^  [!~] |camp \(estimated\)|^Done" research/trail-build.log || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-trails-log
+          path: research/trail-build.log
+
+      - name: Commit
+        run: |
+          git config user.name "Trail to Tides"
+          git config user.email "hello@trailtotides.com"
+          git add src/lib/trails src/lib/data.ts && git add -f research/trail-build.log
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "Trek facts synced to the rebuilt itineraries" -m "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          # The branch may have moved while the build ran
+          for i in 1 2 3 4 5; do
+            git pull -q --rebase -X theirs origin "$GITHUB_REF_NAME" && git push -q origin HEAD:"$GITHUB_REF_NAME" && exit 0
+            git rebase --abort 2>/dev/null; sleep 10
+          done
+          exit 1
