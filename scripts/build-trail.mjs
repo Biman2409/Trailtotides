@@ -12,7 +12,7 @@
 // The data is OpenStreetMap's (ODbL): anything that shows it must credit OpenStreetMap.
 // Remote campsites are often missing from OpenStreetMap, so a stop can carry its own coordinates
 // (`at`), camps OSM lacks are placed along the trail (`camps`), and stretches with no mapped
-// path are drawn straight with heights from Open-Meteo's elevation model; those stretches are
+// path are drawn along the terrain (scripts/terrain.mjs); those stretches are
 // counted in `approxKm`.
 // Run: node scripts/build-trail.mjs <slug> [<slug> ...]   or   all  (or the Build trails GitHub Action)
 // The stops and days for each trek are in ./trek-configs.mjs. Rewrites src/lib/trails/index.ts.
@@ -21,6 +21,7 @@
 import { writeFile, readFile, readdir, mkdir } from "node:fs/promises";
 import { TREKS } from "./trek-configs.mjs";
 import { placesNear, matchPlace, pathRoute } from "./osm.mjs";
+import { terrainPath, satellitePreview } from "./terrain.mjs";
 
 const UA = { "User-Agent": "TrailToTides/1.0 (hello@trailtotides.com)" };
 
@@ -166,10 +167,10 @@ async function leg(a, b) {
     return { coords, approxKm: 0 };
   } catch (e) {
     // BRouter gives up when one piece of path is missing; route over the mapped paths ourselves,
-    // jumping only the short gaps between them, which are counted as drawn straight
+    // jumping only the short gaps between them, which are counted as off the mapped paths
     try {
       // Short jumps between paths first; if the paths still don't join, longer ones, so a leg with
-      // one unmapped stretch (a summit off the path, a gully) is drawn straight only across that
+      // one unmapped stretch (a summit off the path, a gully) is off the mapped paths only across that
       let r = null, len = 0;
       for (const opts of [{}, { bridge: 1500, reach: 3000 }]) {
         r = await pathRoute([a.lat, a.lng], [b.lat, b.lng], opts);
@@ -184,12 +185,36 @@ async function leg(a, b) {
         return { coords: r.coords.map((p, i) => [p[0], p[1], ele[i]]), approxKm: r.bridgedM / 1000 };
       }
     } catch (e2) { console.warn(`  ! path search failed: ${e2.message}`); }
-    console.warn(`  ! ${a.name} → ${b.name}: ${e.message}; drawn straight`);
-    const n = Math.max(2, Math.ceil(straight / 100));
-    const pts = Array.from({ length: n + 1 }, (_, i) => [a.lat + ((b.lat - a.lat) * i) / n, a.lng + ((b.lng - a.lng) * i) / n]);
-    const ele = await heights(pts);
-    return { coords: pts.map((p, i) => [p[0], p[1], ele[i]]), approxKm: straight / 1000 };
+    console.warn(`  ! ${a.name} → ${b.name}: ${e.message}; drawn along the terrain`);
+    // Only the ends: the leg is drawn along the terrain between them (see alongTerrain)
+    const ele = await heights([[a.lat, a.lng], [b.lat, b.lng]]);
+    return { coords: [[a.lat, a.lng, ele[0]], [b.lat, b.lng, ele[1]]], approxKm: straight / 1000 };
   }
+}
+
+// A line with long straight segments — a gap no mapped path fills, or a path OpenStreetMap maps
+// with few points — is drawn along the terrain instead (scripts/terrain.mjs): every segment over
+// 250 m becomes the easiest walking route between its ends. Up to a kilometre the ends are points
+// of a real path, so the route keeps close to the segment; longer gaps may wander further. Long
+// ones are saved as satellite previews for checking by eye.
+const previews = [];
+async function alongTerrain(coords) {
+  const out = [coords[0]];
+  for (let i = 1; i < coords.length; i++) {
+    const p = coords[i - 1], q = coords[i], d = dist(p, q);
+    if (d > 250) {
+      const long = d > 1000;
+      try {
+        const path = await terrainPath([p[0], p[1]], [q[0], q[1]], { halfWidth: Math.min(long ? 0.4 * d : 0.25 * d, 800), step: d > 3000 ? 25 : 15, keep: long ? 0.0005 : 0.003 });
+        if (path) {
+          out.push(...path.slice(1, -1));
+          if (d > 800) previews.push({ km: d / 1000, line: [p, ...path, q] });
+        }
+      } catch (e) { console.warn(`  ! terrain unavailable (${e.message}): a ${(d / 1000).toFixed(1)} km segment stays straight`); }
+    }
+    out.push(q);
+  }
+  return out;
 }
 
 // Douglas–Peucker on a local flat projection: keeps the shape within `tol` metres
@@ -218,6 +243,7 @@ function simplify(pts, tol) {
 async function build(slug) {
   const trek = { ...TREKS[slug], centre: TREKS[slug].centre ?? centre(slug) };
   found.clear();
+  previews.length = 0;
   const name = (s) => (typeof s === "string" ? s : s.name);
   // One Overpass query for every named place around the trek: its centre and given coordinates
   // (a stop written as a plain string has no coordinates: "Lukla".at is a string method, not a place)
@@ -289,6 +315,7 @@ async function build(slug) {
     const chain = [stops[i], ...via[i], stops[i + 1]];
     for (let k = 0; k < chain.length - 1; k++) {
       const l = await leg(chain[k], chain[k + 1]);
+      l.coords = await alongTerrain(l.coords);
       approxKm += l.approxKm;
       full = full.concat(full.length ? l.coords.slice(1) : l.coords);
     }
@@ -417,15 +444,24 @@ async function build(slug) {
   };
 
   await mkdir("src/lib/trails", { recursive: true });
-  // The map services fail now and then, and a leg they fail on is drawn straight: a build with
+  // The map services fail now and then, and a leg they fail on is drawn off the mapped paths: a build with
   // more straight km than the trail already saved is worse, so the saved one is kept
   const prev = await readFile(`src/lib/trails/${slug}.json`, "utf8").then(JSON.parse).catch(() => null);
   if (prev && (prev.approxKm ?? 0) + 0.1 < trail.approxKm) {
-    console.log(`${slug}: KEPT the saved trail (${prev.approxKm ?? 0} km drawn straight) over this build's ${trail.approxKm} km`);
+    console.log(`${slug}: KEPT the saved trail (${prev.approxKm ?? 0} km off the mapped paths) over this build's ${trail.approxKm} km`);
     return;
   }
   await writeFile(`src/lib/trails/${slug}.json`, JSON.stringify(trail));
-  console.log(`${slug}: ${trail.lengthKm} km, +${trail.ascentM} m, highest ${trail.maxEleM} m, ${trail.approxKm} km drawn straight, ${full.length} → ${line.length} points`);
+  // The longest stretches drawn along the terrain, on satellite imagery, for checking by eye
+  if (process.env.TRAIL_PREVIEWS) {
+    const longest = [...previews].sort((x, y) => y.km - x.km).slice(0, 4);
+    for (const [n, p] of longest.entries()) {
+      const file = `research/previews/${slug}-${n + 1}.png`;
+      try { if (await satellitePreview(file, p.line.map(([la, lo]) => [la, lo]), [p.line[0], p.line[p.line.length - 1]])) console.log(`  preview: ${file} (${p.km.toFixed(1)} km drawn along the terrain)`); }
+      catch (e) { console.warn(`  ! preview failed: ${e.message}`); }
+    }
+  }
+  console.log(`${slug}: ${trail.lengthKm} km, +${trail.ascentM} m, highest ${trail.maxEleM} m, ${trail.approxKm} km off the mapped paths (drawn along the terrain), ${full.length} → ${line.length} points`);
   stops.forEach((s, i) => {
     const gap = i ? (dist([stops[i - 1].lat, stops[i - 1].lng], [s.lat, s.lng]) / 1000).toFixed(1) : "";
     console.log(`  km ${String(s.km).padStart(5)}  ${s.name} (${s.ele} m, ${s.from}, ${s.lat},${s.lng})${gap ? `  ${gap} km from last` : ""}`);
