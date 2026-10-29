@@ -436,3 +436,13 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [  50s]   km  12.5  Malana (2647 m, osm, 32.0618,77.26002)  9.6 km from last
 [  50s]   day  1 walk   Rumsu → Chaklani  6.8 km +1360 −0
 [  50s]   day  2 walk   Chaklani → Malana  5.8 km +250 −1010
+── kareri-lake 18:51:15
+[  33s] kareri-lake: 1213 named places in OpenStreetMap around the trek
+[  52s]   leg Kareri → Rioti (2.6 km apart) along the track kareri-lake
+[  53s]   leg Rioti → Kareri Lake (2.7 km apart) along the track kareri-lake
+[  54s] kareri-lake: 6.6 km, +1210 m, highest 2964 m, 0 km off the mapped paths (drawn along the terrain), 316 → 74 points
+[  54s]   km     0  Kareri (1769 m, osm, 32.27896,76.27862)
+[  54s]   km   6.6  Kareri Lake (2937 m, osm, 32.32565,76.27389)  5.2 km from last
+[  54s]   day  1 walk   Kareri → Rioti  3.1 km +690 −40
+[  54s]   day  2 walk   Rioti → Kareri Lake  3.5 km +510 −0
+[  54s]   day  3 walk   Kareri Lake → Kareri  6.6 km +40 −1200
