@@ -30,3 +30,17 @@ Build trails run 40851329170, 2026-10-29T09:39:28Z
 [ 502s]   day  4 walk   Ruinsara Tal → Odari  3.9 km +460 −60
 [ 502s]   day  5 walk   Odari → Lower Damini  7.9 km +850 −1000 (approx)
 [ 502s]   day  6 walk   Lower Damini → Janki Chatti  5.6 km +0 −1240
+── pangarchulla-peak 09:47:52
+[  41s] pangarchulla-peak: 216 named places in OpenStreetMap around the trek
+[  42s]   leg Dhak → Khullara (4.9 km apart)
+[  45s]   leg Khullara → Pangarchulla (4.0 km apart)
+[ 111s]   ~ Khullara → Pangarchulla: nearest path is 2022 m away; routed over mapped paths, 2.0 of 4.8 km bridged
+[ 128s] pangarchulla-peak: 12.6 km, +2550 m, highest 4559 m, 2 km drawn straight, 302 → 103 points
+[ 128s]   km     0  Dhak (2106 m, osm, 30.49886,79.61134)
+[ 128s]   km   7.8  Khullara (3393 m, osm, 30.45968,79.58748)  4.9 km from last
+[ 128s]   km  12.6  Pangarchulla (4559 m, osm, 30.42367,79.59214)  4.0 km from last
+[ 128s]   camp (estimated): Gulling (2284 m, 30.4793,79.60696)
+[ 128s]   day  1 walk   Dhak → Gulling  3.9 km +320 −80 (approx)
+[ 128s]   day  2 walk   Gulling → Khullara  3.9 km +1100 −0
+[ 128s]   day  3 walk   Khullara → Khullara  9.6 km +1140 −1140
+[ 128s]   day  4 walk   Khullara → Dhak  7.8 km +100 −1420
