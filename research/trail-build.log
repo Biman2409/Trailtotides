@@ -19,3 +19,18 @@ Build trails run 40937483557, 2026-10-29T19:09:36Z
 [ 190s]   day  2 walk   Didna → Ali Bugyal  6.4 km +1070 −20
 [ 190s]   day  3 walk   Ali Bugyal → Bedni Bugyal  5.8 km +460 −380
 [ 190s]   day  4 walk   Bedni Bugyal → Wan  10.3 km +150 −1250
+── gaumukh-tapovan 19:12:49
+[  39s] gaumukh-tapovan: 115 named places in OpenStreetMap around the trek
+[  40s]   leg Gangotri → Bhojbasa (11.7 km apart)
+[  42s]   leg Bhojbasa → Gaumukh (4.2 km apart)
+[  60s]   leg Gaumukh → Tapovan (1.3 km apart)
+[  63s] gaumukh-tapovan: 20.4 km, +1310 m, highest 4463 m, 0.3 km off the mapped paths (drawn along the terrain), 509 → 200 points
+[  63s]   km     0  Gangotri (3300 m, osm, 30.99437,78.93987)
+[  63s]   km  13.8  Bhojbasa (3792 m, osm, 30.95045,79.05151)  11.7 km from last
+[  63s]   km  18.7  Gaumukh (4050 m, osm, 30.92448,79.08407)  4.2 km from last
+[  63s]   km  20.4  Tapovan (4463 m, given, 30.91443,79.0765)  1.3 km from last
+[  63s]   day  1 walk   Gangotri → Bhojbasa  13.8 km +820 −70
+[  63s]   day  2 walk   Bhojbasa → Tapovan  6.6 km +500 −0
+[  63s]   day  3 rest   Tapovan → Tapovan
+[  63s]   day  4 walk   Tapovan → Bhojbasa  6.6 km +0 −500
+[  63s]   day  5 walk   Bhojbasa → Gangotri  13.8 km +100 −830
