@@ -1509,7 +1509,7 @@ export const adventures: Adventure[] = [
     name: "Pangarchulla Peak Trek", tagline: "A summit climb above Auli with front-row views of Nanda Devi and the Kumaon giants",
     region: "Himalayas", state: "Uttarakhand", type: "Trekking", difficulty: "Moderate",
     duration: "3–5 days", durationDays: "4 days", durationRange: "4 Days",
-    distance: "25km", distanceRange: "25 km", altitude: "4,593m",
+    distance: "27km", distanceRange: "27 km", altitude: "4,593m",
     baseCamp: "Dhak",
     bestSeason: "Mar–Apr", bestMonths: ["Mar","Apr"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/pangarchulla-peak.jpeg",
