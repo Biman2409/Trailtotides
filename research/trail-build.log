@@ -399,3 +399,20 @@ Build trails run 40920799948, 2026-10-29T17:24:40Z
 [  51s]   day  2 walk   Bekaltal → Brahmatal  5.1 km +340 −150
 [  51s]   day  3 walk   Brahmatal → Brahmatal  4.1 km +510 −510
 [  51s]   day  4 walk   Brahmatal → Lohajung  10.7 km +140 −1020
+── bhrigu-lake 18:42:34
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 170s] bhrigu-lake: 601 named places in OpenStreetMap around the trek
+[ 173s]   leg Gulaba → Rola Kholi (3.6 km apart)
+[ 176s]   overpass: overpass-api.de Overpass 502 
+[ 269s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 365s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 410s]   ~ Gulaba → Rola Kholi: a 22.4 km detour for 3.6 km; routed over mapped paths, 0.3 of 4.5 km bridged
+[ 411s]   leg Rola Kholi → Bhrigu Lake (2.5 km apart)
+[ 415s] bhrigu-lake: 10.5 km, +1440 m, highest 4183 m, 0.4 km off the mapped paths (drawn along the terrain), 296 → 107 points
+[ 415s]   km     0  Gulaba (2862 m, osm, 32.32231,77.20098)
+[ 415s]   km   4.5  Rola Kholi (3798 m, osm, 32.31551,77.23825)  3.6 km from last
+[ 415s]   km  10.5  Bhrigu Lake (4154 m, osm, 32.29326,77.2425)  2.5 km from last
+[ 415s]   day  1 walk   Gulaba → Rola Kholi  4.5 km +950 −0
+[ 415s]   day  2 walk   Rola Kholi → Rola Kholi  12 km +700 −700
+[ 415s]   day  3 walk   Rola Kholi → Gulaba  4.5 km +0 −950
