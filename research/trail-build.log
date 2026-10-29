@@ -19,3 +19,14 @@ Build trails run 40878233394, 2026-10-29T13:01:56Z
 [  58s]   day  4 walk   Patar Nachauni → Bhagwabasa  4.2 km +410 −70
 [  58s]   day  5 walk   Bhagwabasa → Patar Nachauni  10.5 km +590 −930
 [  58s]   day  6 walk   Patar Nachauni → Lohajung  21.9 km +680 −2310
+── bhrigu-lake 13:02:56
+[  41s] bhrigu-lake: 608 named places in OpenStreetMap around the trek
+[  45s]   leg Gulaba → Rola Kholi (3.6 km apart)
+[  47s]   overpass: overpass-api.de Overpass 502 
+[ 140s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 236s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 246s]   overpass: overpass-api.de Overpass 502 
+[ 258s]   ! path search failed: Overpass 502 
+[ 258s]   ! Gulaba → Rola Kholi: a 22.4 km detour for 3.6 km; drawn along the terrain
+[ 258s]   leg Rola Kholi → Bhrigu Lake (2.5 km apart)
+[ 261s] bhrigu-lake: KEPT the saved trail (0.3 km off the mapped paths) over this build's 3.6 km
