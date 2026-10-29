@@ -177,3 +177,21 @@ Build trails run 40865579579, 2026-10-29T11:27:58Z
 [ 216s]   day  9 walk   Samdo → Dharmasala  7.1 km +800 −0 (approx)
 [ 216s]   day 10 walk   Dharmasala → Bimthang  14.2 km +490 −1450
 [ 216s]   day 11 walk   Bimthang → Dharapani  23.2 km +50 −1880
+── kedarkantha-trek 11:45:23
+[  38s] kedarkantha-trek: 197 named places in OpenStreetMap around the trek
+[  40s]   leg Sankri → Juda Ka Talab (2.8 km apart)
+[  42s]   leg Juda Ka Talab → Kedarkantha Base (1.0 km apart)
+[  43s]   leg Kedarkantha Base → Kedarkantha (2.7 km apart)
+[  45s]   leg Kedarkantha → Hargaon (4.2 km apart)
+[  47s]   leg Hargaon → Sankri (2.2 km apart)
+[  48s] kedarkantha-trek: 18.8 km, +1850 m, highest 3794 m, 0 km off the mapped paths (drawn along the terrain), 548 → 272 points
+[  48s]   km     0  Sankri (1899 m, osm, 31.07802,78.18411)
+[  48s]   km   4.6  Juda Ka Talab (2813 m, osm, 31.05249,78.1843)  2.8 km from last
+[  48s]   km   6.1  Kedarkantha Base (3023 m, osm, 31.04507,78.17887)  1.0 km from last
+[  48s]   km   9.4  Kedarkantha (3800 m, osm, 31.02136,78.17154)  2.7 km from last
+[  48s]   km  14.6  Hargaon (2728 m, osm, 31.05817,78.18007)  4.2 km from last
+[  48s]   km  18.8  Sankri (1899 m, osm, 31.07802,78.18411)  2.2 km from last
+[  48s]   day  1 walk   Sankri → Juda Ka Talab  4.6 km +890 −0
+[  48s]   day  2 walk   Juda Ka Talab → Kedarkantha Base  1.4 km +220 −0
+[  48s]   day  3 walk   Kedarkantha Base → Hargaon  8.6 km +730 −1060
+[  48s]   day  4 walk   Hargaon → Sankri  4.2 km +0 −800
