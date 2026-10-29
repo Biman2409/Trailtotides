@@ -29,3 +29,28 @@ Build trails run 40865579579, 2026-10-29T11:27:58Z
 [  39s]   day  9 walk   Gorak Shep → Pheriche  15.6 km +500 −1230 (approx)
 [  39s]   day 10 walk   Pheriche → Namche Bazaar  20.9 km +400 −1400
 [  39s]   day 11 walk   Namche Bazaar → Lukla  17.6 km +370 −940
+── gokyo-lakes 11:28:38
+[  28s] gokyo-lakes: 462 named places in OpenStreetMap around the trek
+[  32s]   leg Lukla → Phakding (6.0 km apart)
+[  35s]   leg Phakding → Namche Bazaar (7.1 km apart)
+[  36s]   leg Namche Bazaar → Dole (7.2 km apart)
+[  38s]   leg Dole → Machhermo (4.3 km apart)
+[  40s]   leg Machhermo → Gokyo (6.1 km apart)
+[  41s] gokyo-lakes: 41.1 km, +2680 m, highest 4765 m, 0 km off the mapped paths (drawn along the terrain), 1177 → 492 points
+[  41s]   km     0  Lukla (2850 m, osm, 27.68897,86.73067)
+[  41s]   km   7.3  Phakding (2610 m, osm, 27.74013,86.71269)  6.0 km from last
+[  41s]   km  17.6  Namche Bazaar (3440 m, osm, 27.80417,86.7098)  7.1 km from last
+[  41s]   km    29  Dole (4050 m, osm, 27.86662,86.73088)  7.2 km from last
+[  41s]   km  34.2  Machhermo (4386 m, osm, 27.90288,86.7156)  4.3 km from last
+[  41s]   km  41.1  Gokyo (4750 m, osm, 27.95409,86.69459)  6.1 km from last
+[  41s]   side trip: Gokyo Ri (5357 m, osm)
+[  41s]   day  1 walk   Lukla → Phakding  7.3 km +110 −330
+[  41s]   day  2 walk   Phakding → Namche Bazaar  10.3 km +850 −90
+[  41s]   day  3 rest   Namche Bazaar → Namche Bazaar
+[  41s]   day  4 walk   Namche Bazaar → Dole  11.4 km +950 −330
+[  41s]   day  5 walk   Dole → Machhermo  5.2 km +380 −30
+[  41s]   day  6 walk   Machhermo → Gokyo  7 km +370 −0
+[  41s]   day  7 walk   Gokyo → Gokyo  4 km +600 −600
+[  41s]   day  8 walk   Gokyo → Dole  12.1 km +20 −750
+[  41s]   day  9 walk   Dole → Namche Bazaar  11.4 km +320 −940
+[  41s]   day 10 walk   Namche Bazaar → Lukla  17.6 km +370 −940
