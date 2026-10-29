@@ -280,3 +280,15 @@ Build trails run 40865579579, 2026-10-29T11:27:58Z
 [  39s]   day  3 rest   Tapovan → Tapovan
 [  39s]   day  4 walk   Tapovan → Bhojbasa  6.4 km +0 −510
 [  39s]   day  5 walk   Bhojbasa → Gangotri  13.8 km +100 −810
+── valley-of-flowers 11:54:39
+[  31s] valley-of-flowers: 173 named places in OpenStreetMap around the trek
+[  49s]   leg Pulna → Ghangaria (7.6 km apart)
+[  51s] valley-of-flowers: 9.4 km, +1080 m, highest 3096 m, 0 km off the mapped paths (drawn along the terrain), 199 → 107 points
+[  51s]   km     0  Pulna (2118 m, osm, 30.63576,79.57163)
+[  51s]   km   9.4  Ghangaria (3102 m, osm, 30.70145,79.5938)  7.6 km from last
+[  51s]   side trip: Valley of Flowers (3187 m, osm)
+[  51s]   side trip: Hemkund Sahib (4202 m, osm)
+[  51s]   day  1 walk   Pulna → Ghangaria  9.4 km +1080 −130
+[  51s]   day  2 walk   Ghangaria → Ghangaria  10 km +500 −500
+[  51s]   day  3 walk   Ghangaria → Ghangaria  12 km +1100 −1100
+[  51s]   day  4 walk   Ghangaria → Pulna  9.4 km +140 −1100
