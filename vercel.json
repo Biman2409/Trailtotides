@@ -1,5 +1,10 @@
 {
   "crons": [
     { "path": "/api/cron/alerts", "schedule": "30 2 * * *" }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "claude/*": false
+    }
+  }
 }
