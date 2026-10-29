@@ -10,6 +10,9 @@ import countries from "@/lib/countries.json";
 import TermsModal from "@/components/ui/custom/TermsModal";
 import { AVATARS } from "@/lib/avatars";
 import { CheckInbox } from "@/app/auth/ResendVerification";
+import AuthContextNote from "@/app/auth/AuthContextNote";
+
+const MIN_PASSWORD = 8;
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -56,6 +59,14 @@ export default function SignUpPage() {
       setUsernameState(data.available ? "available" : "taken");
     }, 500);
   }, []);
+
+  const [password, setPassword] = useState("");
+  const blocker =
+    usernameState === "checking" ? "Checking your username…"
+    : usernameState !== "available" ? "Pick an available username to continue."
+    : password.length < MIN_PASSWORD ? `Use a password of at least ${MIN_PASSWORD} characters.`
+    : !termsAccepted ? "Accept the Terms and Privacy Policy to continue."
+    : null;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -119,11 +130,11 @@ export default function SignUpPage() {
       </div>
 
       {/* Right panel — form */}
-      <div className="flex-1 flex flex-col justify-center px-6 py-4 lg:px-16 xl:px-24 auth-themed bg-[var(--bg-page)] relative overflow-y-auto overflow-x-hidden">
+      <div className="flex-1 flex flex-col px-6 py-6 lg:px-16 xl:px-24 auth-themed bg-[var(--bg-page)] relative overflow-y-auto overflow-x-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
 
-        <div className="max-w-md w-full mx-auto relative z-10">
+        <div className="max-w-md w-full m-auto relative z-10">
           {/* Mobile logo */}
           <div className="mb-4 lg:hidden">
             <Logo size="sm" />
@@ -137,12 +148,13 @@ export default function SignUpPage() {
           {sentTo ? <CheckInbox email={sentTo} next={next} onRestart={() => setSentTo(null)} /> : <>
           <div className="mb-4">
             <h1 className="text-3xl font-black text-white mb-1 tracking-tight leading-tight">
-              Wild is calling, <span className="text-[#ff5100]">answer it.</span>
+              Create your <span className="text-[#ff5100]">free account.</span>
             </h1>
-            <p className="text-white/40 text-xs font-medium">
-              Create your explorer account. Save adventures, track wishlist &amp; book verified operators.
+            <p className="text-white/60 text-sm font-medium">
+              Save trips, see which adventures fit you, and plan with friends.
             </p>
           </div>
+          <AuthContextNote next={next} />
 
           {message && (
             <div role={message.type === "error" ? "alert" : "status"} className={`mb-3 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
@@ -264,9 +276,11 @@ export default function SignUpPage() {
                   required
                   autoComplete="tel-national"
                   placeholder="9876543210"
+                  aria-describedby="signup-phone-hint"
                   className="flex-1 min-w-0 bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
+              <p id="signup-phone-hint" className="ml-1 mt-1 text-[11px] text-white/50">For booking updates from operators. Never shown on your profile.</p>
             </div>
 
             <div>
@@ -277,8 +291,11 @@ export default function SignUpPage() {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   required
-                  minLength={6}
+                  minLength={MIN_PASSWORD}
                   autoComplete="new-password"
+                  aria-describedby="signup-password-hint"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 pr-14 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
@@ -292,6 +309,9 @@ export default function SignUpPage() {
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
+              <p id="signup-password-hint" className={`ml-1 mt-1 text-[11px] ${password.length >= MIN_PASSWORD ? "text-emerald-500" : "text-white/50"}`}>
+                {password.length >= MIN_PASSWORD ? "Good length" : `At least ${MIN_PASSWORD} characters`}
+              </p>
             </div>
 
             {/* ── Avatar picker dropdown ────────────────────────────── */}
@@ -419,11 +439,14 @@ export default function SignUpPage() {
 
             <button
               type="submit"
-              disabled={loading || usernameState !== "available" || !termsAccepted}
+              disabled={loading || blocker !== null}
+              aria-describedby={blocker ? "signup-blocker" : undefined}
               className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-[#fff] font-bold rounded-2xl py-3 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-1"
             >
-              {loading ? "Creating account..." : "Create Account"}
+              {loading ? "Creating your account…" : "Create free account"}
             </button>
+            {/* A disabled button says why, instead of leaving people guessing */}
+            {blocker && !loading && <p id="signup-blocker" className="text-center text-[11px] text-white/50">{blocker}</p>}
           </form>
 
           <p className="mt-4 text-center text-white/30 text-xs font-medium">

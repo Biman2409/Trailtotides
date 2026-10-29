@@ -3,14 +3,15 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Users, Link2, Check, X, ArrowRight, UserPlus, Share2, RefreshCw, LogOut, Lock, Crown, ChevronRight, Save, Map as MapIcon, ThumbsUp, ThumbsDown, Plus, Heart } from "lucide-react";
+import { Users, Link2, Check, X, ArrowRight, UserPlus, Share2, RefreshCw, LogOut, Lock, Crown, ChevronRight, Save, Map as MapIcon, ThumbsUp, ThumbsDown, Plus, Heart, Search } from "lucide-react";
 import Image from "next/image";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { adventures } from "@/lib/data";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
-import type { ACE } from "@/lib/ace";
+import { getACE, type ACE } from "@/lib/ace";
+import { matchesSearch } from "@/lib/exploreHelpers";
 import {
-  AXES, AXIS_LABEL, MAX_GROUP, PENDING_GROUP_KEY, bucketFor, groupFloor, groupMatches, matchScore, memberTag,
+  AXES, AXIS_LABEL, MAX_GROUP, PENDING_GROUP_KEY, bucketFor, gapsFor, groupFloor, groupMatches, matchScore, memberTag, weeksToReady,
   type GroupMember, type GroupRow,
 } from "@/lib/fitness";
 import { TIER_LIST } from "@/lib/tiers";
@@ -299,7 +300,7 @@ function InviteView({ ctx, code, preview }: { ctx: Ctx; code: string; preview: G
 
   const steps = [
     { label: `Signed in as ${ctx.viewer.name || "you"}`, done: true },
-    { label: ctx.ace ? "Your fitness profile is ready" : "Take the 2-minute fitness check", done: !!ctx.ace },
+    { label: ctx.ace ? "Your fitness profile is ready" : "Take the 2-minute quick match", done: !!ctx.ace },
     { label: "Join and see what you can all do", done: false },
   ];
   return (
@@ -410,7 +411,7 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
   };
 
   async function share() {
-    const text = `Join "${group.name}" on Trail to Tides: sign in, take the 2-minute fitness check, and we'll see which adventures we can all do together.`;
+    const text = `Join "${group.name}" on Trail to Tides: sign in, take the 2-minute quick match, and we'll see which adventures we can all do together.`;
     if (navigator.share) {
       try { await navigator.share({ title: "Group Match", text, url: inviteUrl }); return; } catch { /* dismissed — fall through to copy */ }
     }
@@ -480,7 +481,7 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
           <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
             {group.members.length >= MAX_GROUP
               ? `The group is full (${MAX_GROUP} people).`
-              : "Send this link. Each friend signs in, takes the 2-minute fitness check, and joins. They appear here as soon as they do."}
+              : "Send this link. Each friend signs in, takes the 2-minute quick match, and joins. They appear here as soon as they do."}
           </p>
           <button
             onClick={share}
@@ -598,7 +599,7 @@ function ProfileGate({ ctx, children }: { ctx: Ctx; children: ReactNode }) {
     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
       <span className="flex items-start gap-2.5 flex-1 text-sm" style={{ color: "var(--text-secondary)" }}>
         <MatchmakerMark className="w-4 h-4 mt-0.5 shrink-0 text-[#ff5100]" />
-        You need a fitness profile first. The quick match takes about two minutes, and you&apos;ll come straight back here.
+        First, the 2-minute quick match, so the group can see what you&apos;re ready for. You&apos;ll come straight back here.
       </span>
       <PrimaryButton onClick={ctx.quizThenReturn}>Take the quick match <ArrowRight className="w-4 h-4" /></PrimaryButton>
     </div>
@@ -772,8 +773,24 @@ function useGroupPicks(code: string) {
  * then by fewest "not for me", then by how ready the whole group is for it.
  */
 function GroupWishlist({ group, viewerId, members, picks }: { group: StoredGroup; viewerId: string; members: GroupMember[]; picks: Picks }) {
-  const [adding, setAdding] = useState("");
+  // The trek the group is checking itself against; kept in ?trek= so the comparison can be shared
+  const [checking, setChecking] = useState<string | null>(null);
+  const panel = useRef<HTMLDivElement>(null);
   const seat = (userId: string) => group.members.findIndex((m) => m.userId === userId);
+
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get("trek");
+    if (t && adventures.some((a) => a.slug === t)) setChecking(t);
+  }, []);
+  function check(slug: string | null, scroll = false) {
+    setChecking(slug);
+    const p = new URLSearchParams(window.location.search);
+    if (slug) p.set("trek", slug); else p.delete("trek");
+    const s = p.toString();
+    window.history.replaceState(null, "", s ? `?${s}` : window.location.pathname);
+    if (slug && scroll) setTimeout(() => panel.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+  }
+  const checked = checking ? adventures.find((a) => a.slug === checking) : undefined;
 
   const rows = (picks.list ?? []).flatMap((p) => {
     const adventure = adventures.find((a) => a.slug === p.slug);
@@ -790,36 +807,29 @@ function GroupWishlist({ group, viewerId, members, picks }: { group: StoredGroup
     }];
   }).sort((a, b) => b.yes.length - a.yes.length || a.no.length - b.no.length || b.fit - a.fit);
 
-  const options = adventures.filter((a) => !picks.slugs.has(a.slug)).sort((a, b) => a.name.localeCompare(b.name));
-  const submit = () => {
-    const a = adventures.find((x) => x.name.toLowerCase() === adding.trim().toLowerCase());
-    if (!a) return;
-    picks.add(a.slug);
-    setAdding("");
-  };
-
   return (
     <section className="mt-12">
-      <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
-        <div>
-          <h2 className="t-text text-2xl font-bold tracking-tight flex items-center gap-2"><Heart className="w-5 h-5 text-[#ff5100]" /> Group wishlist</h2>
-          <p className="text-sm mt-1 max-w-2xl" style={{ color: "var(--text-secondary)" }}>
-            Suggest adventures and vote. The one most of you are in for rises to the top.
-          </p>
-        </div>
-        <form onSubmit={(e) => { e.preventDefault(); submit(); }} className="flex items-center gap-2 w-full sm:w-auto">
-          <input list="group-pick-options" value={adding} onChange={(e) => setAdding(e.target.value)} placeholder="Suggest an adventure…" aria-label="Suggest an adventure"
-            className="flex-1 min-w-0 sm:w-64 px-3.5 py-2.5 rounded-xl text-sm" style={{ background: "var(--bg-card-hover)", border: "1px solid var(--border-default)", color: "var(--text-primary)", outline: "none" }} />
-          <datalist id="group-pick-options">{options.map((a) => <option key={a.slug} value={a.name} />)}</datalist>
-          <PrimaryButton onClick={submit}><Plus className="w-4 h-4" /> Add</PrimaryButton>
-        </form>
+      <div className="mb-5">
+        <h2 className="t-text text-2xl font-bold tracking-tight flex items-center gap-2"><Heart className="w-5 h-5 text-[#ff5100]" /> Group wishlist</h2>
+        <p className="text-sm mt-1 max-w-2xl" style={{ color: "var(--text-secondary)" }}>
+          Already have a trek in mind? Search it to see how ready each of you is. Add it to the list, vote, and the one most of you are in for rises to the top.
+        </p>
       </div>
+      <TrekSearch members={members} onList={picks.slugs} onPick={(slug) => check(slug)} />
       <ErrorLine error={picks.error} />
+
+      {checked && (
+        <div ref={panel} className="scroll-mt-24 mt-4">
+          <TrekCheck adventure={checked} members={members} onList={picks.slugs.has(checked.slug)}
+            onAdd={() => picks.add(checked.slug)} onClose={() => check(null)} />
+        </div>
+      )}
+      <div className="mt-6" />
 
       {picks.list === null ? <Skeleton /> : rows.length === 0 ? (
         <Panel>
           <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-            Nothing here yet. Suggest an adventure above, or tap <b className="t-text">+ Wishlist</b> on any match below.
+            Nothing here yet. Search a trek above, or tap <b className="t-text">+ Wishlist</b> on any match below.
           </p>
         </Panel>
       ) : (
@@ -852,7 +862,8 @@ function GroupWishlist({ group, viewerId, members, picks }: { group: StoredGroup
                     </span>
                   </span>
                 </Link>
-                <span className="flex items-center gap-1.5 shrink-0">
+                <span className="flex items-center gap-1.5 shrink-0 flex-wrap">
+                  <VoteButton on={checking === r.p.slug} onClick={() => check(checking === r.p.slug ? null : r.p.slug, true)} tone="#60a5fa"><Users className="w-3.5 h-3.5" /> Compare</VoteButton>
                   <VoteButton on={r.mine === 1} onClick={() => picks.vote(r.p.slug, r.mine === 1 ? 0 : 1)} tone="#10b981"><ThumbsUp className="w-3.5 h-3.5" /> I&apos;m in</VoteButton>
                   <VoteButton on={r.mine === -1} onClick={() => picks.vote(r.p.slug, r.mine === -1 ? 0 : -1)} tone="#f87171"><ThumbsDown className="w-3.5 h-3.5" /> Not for me</VoteButton>
                   {canRemove && <IconButton onClick={() => picks.remove(r.p.slug)} label={`Remove ${r.adventure.name}`}><X className="w-3.5 h-3.5" /></IconButton>}
@@ -863,6 +874,184 @@ function GroupWishlist({ group, viewerId, members, picks }: { group: StoredGroup
         </ul>
       )}
     </section>
+  );
+}
+
+/**
+ * Search every adventure by name, place or type. Each result shows how ready the whole group is
+ * (its least-ready member's match), so a trek someone has already set their heart on can be
+ * checked in a couple of keystrokes. Keyboard: ↑ ↓ to move, Enter to pick, Esc to close.
+ */
+function TrekSearch({ members, onList, onPick }: { members: GroupMember[]; onList: Set<string>; onPick: (slug: string) => void }) {
+  const [q, setQ] = useState("");
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const wrap = useRef<HTMLDivElement>(null);
+
+  const results = useMemo(() => {
+    const term = q.trim();
+    const found = term ? adventures.filter((a) => matchesSearch(a, term)) : adventures;
+    const lowest = (a: (typeof adventures)[number]) => (members.length ? Math.min(...members.map((m) => matchScore(m.ace, a))) : 0);
+    return found
+      .map((a) => ({ a, fit: lowest(a), nameHit: term ? a.name.toLowerCase().includes(term.toLowerCase()) : false }))
+      // Name matches first, then the ones the group is most ready for
+      .sort((x, y) => Number(y.nameHit) - Number(x.nameHit) || y.fit - x.fit)
+      .slice(0, 8);
+  }, [q, members]);
+
+  useEffect(() => { setActive(0); }, [q]);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => { if (!wrap.current?.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [open]);
+
+  function pick(slug: string) {
+    onPick(slug);
+    setQ("");
+    setOpen(false);
+  }
+  function onKey(e: React.KeyboardEvent) {
+    if (e.key === "ArrowDown") { e.preventDefault(); setOpen(true); setActive((i) => Math.min(i + 1, results.length - 1)); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); setActive((i) => Math.max(i - 1, 0)); }
+    else if (e.key === "Enter") { e.preventDefault(); if (results[active]) pick(results[active].a.slug); }
+    else if (e.key === "Escape") setOpen(false);
+  }
+
+  return (
+    <div ref={wrap} className="relative max-w-2xl">
+      <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ color: "var(--text-tertiary)" }} />
+      <input
+        role="combobox" aria-expanded={open} aria-controls="trek-search-list" aria-autocomplete="list"
+        aria-activedescendant={open && results[active] ? `trek-opt-${active}` : undefined}
+        aria-label="Search a trek to compare your group against"
+        value={q} onChange={(e) => { setQ(e.target.value); setOpen(true); }} onFocus={() => setOpen(true)} onKeyDown={onKey}
+        placeholder="Search a trek: Hampta Pass, Kedarkantha, Ladakh…" autoComplete="off"
+        className="w-full pl-10 pr-4 py-3 rounded-xl text-[15px] focus:outline-none focus:ring-2 focus:ring-[#ff5100]/20"
+        style={{ background: "var(--bg-card-hover)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+      />
+      {open && (
+        <ul id="trek-search-list" role="listbox" className="absolute z-30 left-0 right-0 mt-2 max-h-[360px] overflow-y-auto rounded-xl py-1.5 shadow-2xl"
+          style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}>
+          {results.length === 0 && <li className="px-4 py-3 text-sm" style={{ color: "var(--text-tertiary)" }}>No trek matches &ldquo;{q}&rdquo;. Try a place or a type, like &ldquo;Uttarakhand&rdquo; or &ldquo;rafting&rdquo;.</li>}
+          {results.map(({ a, fit }, i) => {
+            const b = bucketFor(fit);
+            return (
+              <li key={a.slug} id={`trek-opt-${i}`} role="option" aria-selected={i === active}
+                onMouseDown={(e) => e.preventDefault()} onClick={() => pick(a.slug)} onMouseEnter={() => setActive(i)}
+                className="flex items-center gap-3 px-3 py-2 cursor-pointer" style={{ background: i === active ? "var(--bg-card-hover)" : "transparent" }}>
+                <span className="relative w-12 h-9 rounded-lg overflow-hidden shrink-0"><Image src={a.heroImage} alt="" fill sizes="48px" className="object-cover" /></span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-semibold t-text truncate">{a.name}</span>
+                  <span className="block text-[11.5px] truncate" style={{ color: "var(--text-tertiary)" }}>{a.type} · {a.state} · {a.durationDays}</span>
+                </span>
+                {onList.has(a.slug) && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981" }}>On list</span>}
+                {members.length > 0 && <span className="text-[11px] font-semibold tabular-nums shrink-0" style={{ color: b.color }}>{members.length > 1 ? "Lowest " : ""}{fit}%</span>}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/**
+ * The group held up against one trek: what it asks on each capability against what all of you can
+ * do together, then each person's match, what they're short on and roughly how long to train.
+ */
+function TrekCheck({ adventure, members, onList, onAdd, onClose }: {
+  adventure: (typeof adventures)[number]; members: GroupMember[]; onList: boolean; onAdd: () => void; onClose: () => void;
+}) {
+  const need = getACE(adventure);
+  const { floor } = useMemo(() => groupFloor(members), [members]);
+  const rows = members.map((m, i) => {
+    const score = matchScore(m.ace, adventure);
+    const gaps = gapsFor(m.ace, adventure);
+    return { m, i, score, gaps, weeks: weeksToReady(gaps) };
+  });
+  const lowest = rows.length ? Math.min(...rows.map((r) => r.score)) : 0;
+  const notReady = rows.filter((r) => r.score < 80);
+  const longest = Math.max(0, ...rows.map((r) => r.weeks));
+  const b = bucketFor(lowest);
+  // Capabilities where the trek asks more than the whole group can give together
+  const short = AXES.filter((ax) => need[ax] > floor[ax]);
+
+  return (
+    <Panel>
+      <div className="flex items-start gap-4">
+        <span className="relative w-24 h-16 sm:w-28 sm:h-20 rounded-xl overflow-hidden shrink-0"><Image src={adventure.heroImage} alt="" fill sizes="112px" className="object-cover" /></span>
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--text-tertiary)" }}>Your group vs</p>
+          <h3 className="t-text text-xl font-bold leading-tight">{adventure.name}</h3>
+          <p className="text-[12.5px] mt-0.5" style={{ color: "var(--text-tertiary)" }}>{adventure.type} · {adventure.state} · {adventure.durationDays}</p>
+        </div>
+        <IconButton onClick={onClose} label="Close comparison"><X className="w-3.5 h-3.5" /></IconButton>
+      </div>
+
+      {/* Verdict in one line */}
+      <p className="mt-4 rounded-xl px-4 py-3 text-sm font-semibold" style={{ background: b.bg, color: b.color }}>
+        {members.length < 2
+          ? `You're at ${lowest}%. Invite friends to see how the group compares.`
+          : notReady.length === 0
+            ? `All ${members.length} of you are ready (lowest ${lowest}%).`
+            : `${listNames(notReady.map((r) => r.m.name))} ${notReady.length === 1 ? "isn't" : "aren't"} ready yet${longest ? `: about ${longest} week${longest === 1 ? "" : "s"} of training to close the gap` : ""}.`}
+      </p>
+
+      <div className="grid md:grid-cols-[240px_1fr] gap-6 mt-5">
+        <div className="flex flex-col items-center text-center">
+          <ACERadar ace={need} size={210} showLabels userAce={floor} userColor="#5fe0d4" />
+          <p className="text-[11.5px] mt-2 leading-snug" style={{ color: "var(--text-tertiary)" }}>
+            Filled: what the trek asks. <span style={{ color: "#5fe0d4" }}>Outline</span>: what all of you can do together.
+          </p>
+          {short.length > 0 && (
+            <p className="text-[12px] mt-2" style={{ color: "var(--text-secondary)" }}>
+              Short on <b className="t-text">{listNames(short.map((ax) => AXIS_LABEL[ax]))}</b>
+            </p>
+          )}
+        </div>
+
+        <ul className="flex flex-col gap-3">
+          {rows.sort((x, y) => x.score - y.score).map((r) => {
+            const rb = bucketFor(r.score);
+            const color = SEAT_COLORS[r.i % SEAT_COLORS.length];
+            return (
+              <li key={r.i} className="rounded-xl p-3" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
+                <div className="flex items-center gap-2.5">
+                  <Avatar name={r.m.name} color={color} />
+                  <span className="text-sm font-semibold t-text truncate flex-1">{r.m.name}</span>
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full" style={{ background: rb.bg, color: rb.color }}>{rb.label}</span>
+                  <span className="text-sm font-bold tabular-nums w-11 text-right" style={{ color: rb.color }}>{r.score}%</span>
+                </div>
+                <div className="h-1.5 rounded-full mt-2 overflow-hidden" style={{ background: "var(--border-subtle)" }}>
+                  <div className="h-full rounded-full" style={{ width: `${r.score}%`, background: color }} />
+                </div>
+                {r.gaps.length > 0 ? (
+                  <p className="text-[12px] mt-2" style={{ color: "var(--text-secondary)" }}>
+                    {r.score >= 80 ? "Ready, with a small gap in " : "Needs "}{r.gaps.slice(0, 3).map((g) => `${AXIS_LABEL[g.axis]} ${g.have}→${g.need}`).join(", ")}
+                    {r.score < 80 && r.weeks > 0 && <span style={{ color: "var(--text-tertiary)" }}> · ~{r.weeks} weeks</span>}
+                    {r.gaps.some((g) => g.axis === "altitude") && <span style={{ color: "var(--text-tertiary)" }}> · altitude comes from acclimatising, not training</span>}
+                  </p>
+                ) : (
+                  <p className="text-[12px] mt-2" style={{ color: "#10b981" }}>Meets everything this trek asks.</p>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2 mt-5 pt-5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+        {onList
+          ? <span className="inline-flex items-center gap-1.5 h-10 px-4 rounded-xl text-sm font-semibold" style={{ background: "rgba(16,185,129,0.12)", color: "#10b981" }}><Check className="w-4 h-4" /> On the group wishlist</span>
+          : <PrimaryButton onClick={onAdd}><Plus className="w-4 h-4" /> Add to group wishlist</PrimaryButton>}
+        <Link href={`/experiences/${adventure.slug}`} className="inline-flex items-center gap-1.5 h-10 px-4 rounded-xl text-sm font-semibold transition-colors hover:bg-[var(--bg-card-hover)]"
+          style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
+          View trek <ChevronRight className="w-4 h-4" />
+        </Link>
+      </div>
+    </Panel>
   );
 }
 

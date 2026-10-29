@@ -12,6 +12,7 @@ const FROM = process.env.EMAIL_FROM || 'Trail to Tides <hello@trailtotides.com>'
 export function verificationEmail(link: string, name: string) {
   const perks = [
     ['Adventure Matchmaker', 'Answer a few questions and see every adventure rated for your body.'],
+    ['Group Match', 'Invite friends and see which adventures your whole group is ready for.'],
     ['Adventure Map', 'See every adventure on one map, coloured by difficulty, and find what\'s near you.'],
     ['Compass.AI', 'Ask for a trip in your own words and get picks that fit.'],
   ];

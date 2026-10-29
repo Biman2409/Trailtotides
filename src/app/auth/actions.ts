@@ -30,6 +30,11 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
   const avatar_id_raw = formData.get("avatar_id");
   const avatar_id = avatar_id_raw ? Number(avatar_id_raw) : null;
 
+  // Same rule as a password reset
+  if (!password || password.length < 8) {
+    return { error: "Use a password of at least 8 characters." };
+  }
+
   // Validate username length
   if (username.length < 3 || username.length > 20) {
     return { error: "Username must be between 3 and 20 characters." };

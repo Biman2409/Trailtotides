@@ -6,11 +6,16 @@ import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import Logo from "@/components/ui/custom/Logo";
 import { ResendButton } from "@/app/auth/ResendVerification";
+import AuthContextNote, { intentFor } from "@/app/auth/AuthContextNote";
 
 function LoginForm() {
   const searchParams = useSearchParams();
   const message = searchParams.get("message");
   const errorParam = searchParams.get("error");
+  const next = searchParams.get("next");
+  const signupHref = next ? `/auth/signup?next=${encodeURIComponent(next)}` : "/auth/signup";
+  // Arriving from a group invite: a first-timer has no account yet, so sign-up gets equal billing
+  const invited = !!next?.startsWith("/matchmaker/group");
   const [showPassword, setShowPassword] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(errorParam);
@@ -47,7 +52,6 @@ function LoginForm() {
 
       // Hard reload so server and client both see the cookie. Return to ?next= if it's a
       // same-site path (e.g. Matchmaker results), otherwise the homepage.
-      const next = searchParams.get("next");
       const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
       window.location.replace(safeNext);
     } catch {
@@ -57,7 +61,7 @@ function LoginForm() {
   }
 
   return (
-    <div className="max-w-md w-full mx-auto">
+    <div className="max-w-md w-full m-auto relative z-10">
       <div className="mb-6 lg:hidden">
         <Logo size="sm" />
       </div>
@@ -68,17 +72,18 @@ function LoginForm() {
       </Link>
 
       <div className="mb-6">
-        <h1 className="text-4xl font-black text-white mb-3 tracking-tight leading-tight">
-          Wild is calling,<br />
-          <span className="text-[#ff5100]">answer it.</span>
+        <h1 className="text-4xl font-black text-white mb-2 tracking-tight leading-tight">
+          Welcome <span className="text-[#ff5100]">back.</span>
         </h1>
-        <p className="text-white/40 text-xs font-medium leading-relaxed">
-          Sign in to access your adventure profile, saved treks and much more.
+        <p className="text-white/60 text-sm font-medium leading-relaxed">
+          Log in to your saved trips, fitness profile and groups.
         </p>
       </div>
 
-      {message && !error && (
-        <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-green-500/10 border border-green-500/20 text-green-400">
+      {/* Why they're here (a group invite, a saved match…); otherwise the page's own message */}
+      <AuthContextNote next={next} />
+      {message && !error && !intentFor(next) && (
+        <div role="status" className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold text-white" style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.25)" }}>
           {message}
         </div>
       )}
@@ -146,17 +151,23 @@ function LoginForm() {
           disabled={pending}
           className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-[#fff] font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 mt-2"
         >
-          {pending ? "Signing in…" : "Sign In"}
+          {pending ? "Logging in…" : "Log in"}
         </button>
       </form>
 
-      <p className="mt-8 text-center text-white/30 text-sm font-medium">
-        New here?{" "}
-        {/* Carry ?next through signup so a new account still lands where they were going */}
-        <Link href={searchParams.get("next") ? `/auth/signup?next=${encodeURIComponent(searchParams.get("next")!)}` : "/auth/signup"} className="text-[#ff5100] hover:text-[#ff7d47] font-bold transition-colors">
-          Create account
+      {/* Carry ?next through sign-up so a new account still lands where they were going */}
+      {invited ? (
+        <Link href={signupHref} className="mt-3 block w-full text-center font-bold rounded-2xl py-4 border border-white/15 text-white hover:border-[#ff5100]/50 transition-colors">
+          First time here? Create a free account
         </Link>
-      </p>
+      ) : (
+        <p className="mt-8 text-center text-white/50 text-sm font-medium">
+          New here?{" "}
+          <Link href={signupHref} className="text-[#ff5100] hover:text-[#ff7d47] font-bold transition-colors">
+            Create a free account
+          </Link>
+        </p>
+      )}
 
       <div className="mt-4 pt-4 border-t border-white/[0.06]">
         <p className="text-center text-white/20 text-xs font-medium">
@@ -199,7 +210,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-20 xl:px-32 auth-themed bg-[var(--bg-page)] relative">
+      <div className="flex-1 flex flex-col px-6 py-12 lg:px-20 xl:px-32 auth-themed bg-[var(--bg-page)] relative overflow-y-auto overflow-x-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
         <Suspense fallback={<div className="text-white/50 text-center">Loading…</div>}>
