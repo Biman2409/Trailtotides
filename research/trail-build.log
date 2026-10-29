@@ -12,3 +12,17 @@ Build trails run 40908788641, 2026-10-29T16:09:44Z
 [  48s]   day  2 walk   Gulling → Khullara  3.8 km +1020 −0
 [  48s]   day  3 walk   Khullara → Khullara  5.1 km +420 −420
 [  48s]   day  4 walk   Khullara → Dhak  7.8 km +120 −1430
+── pindari-glacier 16:10:34
+[  38s] pindari-glacier: 377 named places in OpenStreetMap around the trek
+[  40s]   leg Khati → Dwali (9.0 km apart)
+[  43s]   leg Dwali → Phurkia (4.4 km apart)
+[  45s]   leg Phurkia → Zero Point (4.8 km apart)
+[  46s] pindari-glacier: 21.1 km, +2180 m, highest 3666 m, 0 km off the mapped paths (drawn along the terrain), 1146 → 206 points
+[  46s]   km     0  Khati (2220 m, osm, 30.11209,79.94006)
+[  46s]   km  10.6  Dwali (2602 m, osm, 30.17736,79.99532)  9.0 km from last
+[  46s]   km  15.5  Phurkia (3187 m, osm, 30.21645,79.99772)  4.4 km from last
+[  46s]   km  21.1  Zero Point (3655 m, given, 30.25968,79.99849)  4.8 km from last
+[  46s]   day  1 walk   Khati → Dwali  10.6 km +750 −390
+[  46s]   day  2 walk   Dwali → Phurkia  4.9 km +760 −200
+[  46s]   day  3 walk   Phurkia → Dwali  16 km +1020 −1600
+[  46s]   day  4 walk   Dwali → Khati  10.6 km +370 −740
