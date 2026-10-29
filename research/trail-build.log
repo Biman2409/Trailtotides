@@ -34,3 +34,35 @@ Build trails run 40937483557, 2026-10-29T19:09:36Z
 [  63s]   day  3 rest   Tapovan → Tapovan
 [  63s]   day  4 walk   Tapovan → Bhojbasa  6.6 km +0 −500
 [  63s]   day  5 walk   Bhojbasa → Gangotri  13.8 km +100 −830
+── pin-parvati-pass 19:13:54
+[  44s] pin-parvati-pass: 539 named places in OpenStreetMap around the trek
+[  70s]   leg Barshaini → Kheerganga (5.8 km apart)
+[  73s]   leg Kheerganga → Tunda Bhuj (8.1 km apart)
+[  75s]   leg Tunda Bhuj → Thakur Kuan (5.4 km apart)
+[  77s]   leg Thakur Kuan → Odi Thach (6.2 km apart)
+[  79s]   leg Odi Thach → Mantalai (10.1 km apart)
+[  81s]   leg Mantalai → Pin Parvati Pass (6.8 km apart)
+[ 122s]   ~ Mantalai → Pin Parvati Pass: a 454.5 km detour for 6.8 km; routed over mapped paths, 0.2 of 8.7 km bridged
+[ 124s]   leg Pin Parvati Pass → Pin Valley Camp (4.0 km apart)
+[ 126s]   leg Pin Valley Camp → Tiya (13.0 km apart) along the track pin-valley
+[ 128s]   leg Tiya → Mud (8.4 km apart)
+[ 130s] pin-parvati-pass: 80.5 km, +3970 m, highest 5301 m, 0.5 km off the mapped paths (drawn along the terrain), 1981 → 754 points
+[ 130s]   km     0  Barshaini (2201 m, given, 31.99913,77.44969)
+[ 130s]   km   7.6  Kheerganga (2762 m, osm, 31.99481,77.51094)  5.8 km from last
+[ 130s]   km  17.1  Tunda Bhuj (3276 m, osm, 31.9711,77.59167)  8.1 km from last
+[ 130s]   km  23.3  Thakur Kuan (3507 m, osm, 31.95332,77.64521)  5.4 km from last
+[ 130s]   km  30.3  Odi Thach (3742 m, osm, 31.9269,77.70268)  6.2 km from last
+[ 130s]   km  41.9  Mantalai (4248 m, osm, 31.86779,77.78389)  10.1 km from last
+[ 130s]   km  50.7  Pin Parvati Pass (5296 m, osm, 31.8355,77.84444)  6.8 km from last
+[ 130s]   km  55.7  Pin Valley Camp (4376 m, given, 31.83555,77.88726)  4.0 km from last
+[ 130s]   km  70.4  Tiya (3950 m, given, 31.88552,78.01213)  13.0 km from last
+[ 130s]   km  80.5  Mud (3799 m, osm, 31.959,78.03241)  8.4 km from last
+[ 130s]   day  1 walk   Barshaini → Kheerganga  7.6 km +600 −50
+[ 130s]   day  2 walk   Kheerganga → Tunda Bhuj  9.5 km +590 −40
+[ 130s]   day  3 walk   Tunda Bhuj → Thakur Kuan  6.2 km +400 −210
+[ 130s]   day  4 walk   Thakur Kuan → Odi Thach  7.1 km +580 −300
+[ 130s]   day  5 walk   Odi Thach → Mantalai  11.6 km +520 −40
+[ 130s]   day  6 rest   Mantalai → Mantalai
+[ 130s]   day  7 walk   Mantalai → Pin Valley Camp  13.8 km +1150 −1020
+[ 130s]   day  8 walk   Pin Valley Camp → Tiya  14.7 km +110 −540
+[ 130s]   day  9 walk   Tiya → Mud  10.1 km +30 −150
