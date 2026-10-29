@@ -135,3 +135,16 @@ Build trails run 40908788641, 2026-10-29T16:09:44Z
 [ 106s]   day  3 rest   Tapovan → Tapovan
 [ 106s]   day  4 walk   Tapovan → Bhojbasa  6.3 km +0 −500
 [ 106s]   day  5 walk   Bhojbasa → Gangotri  13.8 km +100 −810
+── kareri-lake 16:25:27
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 229s] kareri-lake: 1213 named places in OpenStreetMap around the trek
+[ 232s]   leg Kareri → Rioti (2.6 km apart) along the track kareri-lake
+[ 233s]   leg Rioti → Kareri Lake (2.7 km apart) along the track kareri-lake
+[ 234s] kareri-lake: 6.6 km, +1210 m, highest 2964 m, 0 km off the mapped paths (drawn along the terrain), 316 → 74 points
+[ 234s]   km     0  Kareri (1769 m, osm, 32.27896,76.27862)
+[ 234s]   km   6.6  Kareri Lake (2937 m, osm, 32.32565,76.27389)  5.2 km from last
+[ 234s]   day  1 walk   Kareri → Rioti  3.1 km +690 −40
+[ 234s]   day  2 walk   Rioti → Kareri Lake  3.5 km +510 −0
+[ 234s]   day  3 walk   Kareri Lake → Kareri  6.6 km +40 −1200
