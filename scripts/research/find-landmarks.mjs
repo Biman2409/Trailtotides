@@ -20,7 +20,7 @@ const dist = (la1, lo1, la2, lo2) => {
 async function get(url, init = {}, tries = 4) {
   for (let i = 0; i < tries; i++) {
     try {
-      const res = await fetch(url, { ...init, headers: { ...UA, ...(init.headers ?? {}) }, signal: AbortSignal.timeout(120000) });
+      const res = await fetch(url, { ...init, headers: { ...UA, ...(init.headers ?? {}) }, signal: AbortSignal.timeout(60000) });
       if (res.ok) return res;
       console.warn(`  ${res.status} from ${url.slice(0, 60)}`);
     } catch (e) { console.warn(`  ${e.message} from ${url.slice(0, 60)}`); }
@@ -31,8 +31,8 @@ async function get(url, init = {}, tries = 4) {
 
 const MIRRORS = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter", "https://overpass.private.coffee/api/interpreter"];
 async function overpass(it) {
-  const q = `[out:json][timeout:90];(node(around:${it.r},${it.lat},${it.lng})[name];way(around:${it.r},${it.lat},${it.lng})[name][~"^(natural|place|tourism|water|mountain_pass)$"~"."];);out center tags;`;
-  for (let i = 0; i < 6; i++) {
+  const q = `[out:json][timeout:50];(node(around:${it.r},${it.lat},${it.lng})[name];way(around:${it.r},${it.lat},${it.lng})[name][~"^(natural|place|tourism|water|mountain_pass)$"~"."];);out center tags;`;
+  for (let i = 0; i < 3; i++) {
     const res = await get(MIRRORS[i % MIRRORS.length], { method: "POST", body: "data=" + encodeURIComponent(q), headers: { "Content-Type": "application/x-www-form-urlencoded" } }, 1);
     if (!res) continue;
     try {
@@ -76,6 +76,7 @@ function geonames() {
 let gn = [];
 try { gn = geonames(); console.log(`GeoNames: ${gn.length} places`); } catch (e) { console.warn(`GeoNames unavailable: ${e.message}`); }
 
+mkdirSync("research", { recursive: true });
 const out = [];
 for (const it of items) {
   console.log(`${it.slug}: ${it.name}`);
@@ -86,6 +87,6 @@ for (const it of items) {
   const found = [...(osm ?? []), ...(wd ?? []), ...g].sort((a, b) => a.m - b.m);
   console.log(`  osm ${osm ? osm.length : "failed"}, wikidata ${wd ? wd.length : "failed"}, geonames ${g.length}`);
   out.push({ ...it, osmOk: !!osm, found });
+  // Saved after each place, so a run cut short keeps what it found
+  writeFileSync("research/landmarks.json", JSON.stringify(out, null, 1));
 }
-mkdirSync("research", { recursive: true });
-writeFileSync("research/landmarks.json", JSON.stringify(out, null, 1));
