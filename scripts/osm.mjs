@@ -187,17 +187,12 @@ export async function pathRoute(a, b, { bridge = 400, reach = 1500 } = {}) {
   const ids = [B], virts = [];
   for (let u = B; u !== A;) { const [p, virt] = prev.get(u); ids.push(p); virts.push(virt); u = p; }
   ids.reverse(); virts.reverse();
-  // Bridged stretches are drawn straight with a point every 100 m, so heights can be looked up
+  // Bridged stretches keep only their ends: the builder draws them along the terrain
   const coords = [pos.get(ids[0])];
   let bridgedM = 0;
   for (let i = 1; i < ids.length; i++) {
-    const p = pos.get(ids[i - 1]), q = pos.get(ids[i]);
-    if (virts[i - 1]) {
-      const d = dist(p, q), n = Math.max(1, Math.ceil(d / 100));
-      bridgedM += d;
-      for (let k = 1; k < n; k++) coords.push([p[0] + ((q[0] - p[0]) * k) / n, p[1] + ((q[1] - p[1]) * k) / n]);
-    }
-    coords.push(q);
+    if (virts[i - 1]) bridgedM += dist(pos.get(ids[i - 1]), pos.get(ids[i]));
+    coords.push(pos.get(ids[i]));
   }
   return { coords, bridgedM };
 }

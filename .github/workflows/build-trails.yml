@@ -17,6 +17,7 @@ on:
     paths:
       - scripts/build-trail.mjs
       - scripts/osm.mjs
+      - scripts/terrain.mjs
       - scripts/trek-configs.mjs
       - scripts/trails-to-build.txt
       - .github/workflows/build-trails.yml
@@ -41,6 +42,7 @@ jobs:
       - name: Build trails
         env:
           TREKS: ${{ github.event.inputs.treks }}
+          TRAIL_PREVIEWS: "1"
         # One trek at a time, at most 15 minutes each, committed as it finishes with the build log
         # (research/trail-build.log), so progress shows on the branch and a stall loses one trek.
         # A trek that fails keeps its previous trail.
@@ -70,12 +72,14 @@ jobs:
             echo "push failed, will retry after the next trek" | tee -a $LOG
           }
           failed=0
+          export TRAIL_COUNT=$(echo $TREKS | wc -w)
           for t in $TREKS; do
             echo "── $t $(date -u +%T)" | tee -a $LOG
             timeout 900 node scripts/build-trail.mjs "$t" 2>&1 | tee -a $LOG
             code=${PIPESTATUS[0]}
             [ "$code" = "0" ] || { failed=$((failed + 1)); echo "$t: FAILED (exit $code)" | tee -a $LOG; }
             git add src/lib/trails && git add -f $LOG # *.log is gitignored
+            [ -d research/previews ] && git add research/previews
             git commit -q -m "Trail rebuilt from OpenStreetMap: $t" -m "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             sync
           done
