@@ -1,7 +1,19 @@
 # Treks the Build trails workflow rebuilds when this file or the builder changes on a push
 # (one slug per line, or "all"). A manual run can name its own.
+kuari-pass
+pindari-glacier
+brahmatal
+ali-bedni-bugyal
 roopkund
-bhrigu-lake
-beas-kund
+dodital-darwa-pass
+valley-of-flowers
+satopanth-lake
+gaumukh-tapovan
 kareri-lake
+sar-pass
+chandrakhani-pass
 pin-parvati-pass
+kashmir-great-lakes
+everest-base-camp
+annapurna-base-camp
+manaslu-circuit
