@@ -382,14 +382,14 @@ async function build(slug) {
     const median = near[near.length >> 1];
     if (Math.abs(raw[i] - median) > 120) p[2] = median;
   });
-  // A step steeper than 1 in 1 (plus 40 m of noise) between neighbouring points is the elevation
+  // A step steeper than 4 in 5 (plus 3 m of noise) between neighbouring points is the elevation
   // model jumping between a cliff edge and the valley floor, not the path: no trail climbs that
   // steeply for long. The heights are limited to that slope walking forwards and backwards, and
   // the two averaged, so a step is spread over the stretch around it
   const limit = (order) => {
     const h = full.map((p) => p[2]);
     for (let n = 1; n < order.length; n++) {
-      const i = order[n], j = order[n - 1], max = 40 + dist(full[i], full[j]);
+      const i = order[n], j = order[n - 1], max = 3 + 0.8 * dist(full[i], full[j]);
       h[i] = Math.min(h[j] + max, Math.max(h[j] - max, h[i]));
     }
     return h;
@@ -522,7 +522,10 @@ async function build(slug) {
   // or camps have moved: then the saved trail goes to the wrong places, however well mapped
   const prev = await readFile(`src/lib/trails/${slug}.json`, "utf8").then(JSON.parse).catch(() => null);
   const where = (t) => [...t.stops, ...t.side, ...t.sleepPlaces].map((p) => `${p.name}@${p.lat.toFixed(4)},${p.lng.toFixed(4)}`).join("|");
-  if (prev && (prev.approxKm ?? 0) + 0.1 < trail.approxKm && where(prev) === where(trail)) {
+  // and only if it is sound itself: every stop on its line, and no cliff-edge steps in its heights
+  const sound = (t) => t.stops.every((p) => t.line.some((q) => dist(q, [p.lat, p.lng]) < 300)) &&
+    t.line.every((q, i) => !i || Math.abs(q[2] - t.line[i - 1][2]) <= Math.max(150, 1.2 * dist(q, t.line[i - 1])));
+  if (prev && (prev.approxKm ?? 0) + 0.1 < trail.approxKm && where(prev) === where(trail) && sound(prev)) {
     console.log(`${slug}: KEPT the saved trail (${prev.approxKm ?? 0} km off the mapped paths) over this build's ${trail.approxKm} km`);
     return;
   }
