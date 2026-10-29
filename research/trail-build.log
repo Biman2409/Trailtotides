@@ -148,3 +148,22 @@ Build trails run 40908788641, 2026-10-29T16:09:44Z
 [ 234s]   day  1 walk   Kareri → Rioti  3.1 km +690 −40
 [ 234s]   day  2 walk   Rioti → Kareri Lake  3.5 km +510 −0
 [ 234s]   day  3 walk   Kareri Lake → Kareri  6.6 km +40 −1200
+── sar-pass 16:29:23
+[  34s] sar-pass: 554 named places in OpenStreetMap around the trek
+[  79s]   leg Kasol → Grahan (5.3 km apart)
+[  81s]   leg Grahan → Min Thach (2.1 km apart) along the track sar-pass
+[  83s]   leg Min Thach → Nagaru (0.9 km apart) along the track sar-pass
+[  84s]   leg Nagaru → Sar Pass (1.3 km apart) along the track sar-pass
+[  84s]   leg Sar Pass → Biskeri Thach (2.0 km apart) along the track sar-pass
+[  84s]   leg Biskeri Thach → Barshaini (6.6 km apart) along the track sar-pass
+[  92s] sar-pass: 33.7 km, +3840 m, highest 4095 m, 0 km off the mapped paths (drawn along the terrain), 1139 → 500 points
+[  92s]   km     0  Kasol (1565 m, osm, 32.01043,77.3166)
+[  92s]   km   8.7  Grahan (2283 m, given, 31.9713,77.3479)  5.3 km from last
+[  92s]   km  20.8  Sar Pass (4095 m, given, 31.96247,77.38869)  4.0 km from last
+[  92s]   km  23.1  Biskeri Thach (4090 m, osm, 31.95217,77.40626)  2.0 km from last
+[  92s]   km  33.7  Barshaini (2201 m, given, 31.99913,77.44969)  6.6 km from last
+[  92s]   day  1 walk   Kasol → Grahan  8.7 km +1630 −920
+[  92s]   day  2 walk   Grahan → Min Thach  8.9 km +1210 −300
+[  92s]   day  3 walk   Min Thach → Nagaru  1.8 km +550 −0
+[  92s]   day  4 walk   Nagaru → Biskeri Thach  3.8 km +390 −130
+[  92s]   day  5 walk   Biskeri Thach → Barshaini  10.7 km +70 −1910
