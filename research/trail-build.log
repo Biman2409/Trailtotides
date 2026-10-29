@@ -94,3 +94,15 @@ Build trails run 40908788641, 2026-10-29T16:09:44Z
 [ 228s]   leg Dodital → Darwa Pass (2.6 km apart)
 [ 267s]   ~ Dodital → Darwa Pass: nearest path is 1666 m away; routed over mapped paths, 0.9 of 6.0 km bridged
 [ 268s] dodital-darwa-pass: KEPT the saved trail (0 km off the mapped paths) over this build's 0.9 km
+── valley-of-flowers 16:21:58
+[  27s] valley-of-flowers: 173 named places in OpenStreetMap around the trek
+[  45s]   leg Pulna → Ghangaria (7.6 km apart)
+[  47s] valley-of-flowers: 9.4 km, +1080 m, highest 4329 m, 0 km off the mapped paths (drawn along the terrain), 199 → 107 points
+[  47s]   km     0  Pulna (2118 m, osm, 30.63576,79.57163)
+[  47s]   km   9.4  Ghangaria (3102 m, osm, 30.70145,79.5938)  7.6 km from last
+[  47s]   side trip: Valley of Flowers (3187 m, osm)
+[  47s]   side trip: Hemkund Sahib (4329 m, given)
+[  47s]   day  1 walk   Pulna → Ghangaria  9.4 km +1080 −130
+[  47s]   day  2 walk   Ghangaria → Ghangaria  10 km +500 −500
+[  47s]   day  3 walk   Ghangaria → Ghangaria  12 km +1100 −1100
+[  47s]   day  4 walk   Ghangaria → Pulna  9.4 km +140 −1100
