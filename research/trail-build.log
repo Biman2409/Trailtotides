@@ -447,3 +447,17 @@ Build trails run 40865579579, 2026-10-29T11:27:58Z
 [ 275s]   day  1 walk   Gulaba → Rola Kholi  4.5 km +950 −0
 [ 275s]   day  2 walk   Rola Kholi → Rola Kholi  12 km +720 −730
 [ 275s]   day  3 walk   Rola Kholi → Gulaba  4.5 km +0 −950
+── beas-kund 12:18:00
+[   0s]   overpass: overpass-api.de Overpass 502 
+[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 199s]   overpass: overpass-api.de Overpass 502 
+[ 211s] beas-kund: place list unavailable (Overpass 502 ), using place search only
+[ 215s]   leg Dhundi → Beas Kund (4.0 km apart)
+[ 217s] beas-kund: 7.5 km, +1060 m, highest 3679 m, 0 km off the mapped paths (drawn along the terrain), 144 → 72 points
+[ 217s]   km     0  Dhundi (2889 m, osm, 32.35553,77.12653)
+[ 217s]   km   7.5  Beas Kund (3678 m, osm, 32.36654,77.08556)  4.0 km from last
+[ 217s]   camp (estimated): Bakarthach (3250 m, 32.35023,77.10256)
+[ 217s]   day  1 walk   Dhundi → Bakarthach  3.7 km +640 −290 (approx)
+[ 217s]   day  2 walk   Bakarthach → Bakarthach  7.5 km +420 −430 (approx)
+[ 217s]   day  3 walk   Bakarthach → Dhundi  3.7 km +290 −640
