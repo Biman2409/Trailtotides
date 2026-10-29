@@ -71,7 +71,8 @@ async function getFromStorage(): Promise<StoryDB[]> {
       const text = await data.text();
       try {
         const story = JSON.parse(text) as StoryDB;
-        stories.push(story);
+        // Pending and rejected stories can sit in the bucket too; only published ones are public
+        if (story.status === "published") stories.push(story);
       } catch {}
     }
     return stories.sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
@@ -85,8 +86,8 @@ async function getSingleFromStorage(slug: string): Promise<StoryDB | null> {
   try {
     const { data } = await admin.storage.from(STORAGE_BUCKET).download(`stories/${slug}.json`);
     if (!data) return null;
-    const text = await data.text();
-    return JSON.parse(text) as StoryDB;
+    const story = JSON.parse(await data.text()) as StoryDB;
+    return story.status === "published" ? story : null;
   } catch {
     return null;
   }

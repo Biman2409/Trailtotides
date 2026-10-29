@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, BadgeCheck, BookOpen, ArrowRight, Library, Gauge } from "lucide-react";
+import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, BadgeCheck, ArrowRight, Library, Gauge } from "lucide-react";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { MountainSnow } from "@/lib/localIcons";
 import Image from "next/image";
@@ -27,7 +27,6 @@ const navLinks = [
 // "Guides": everything to read before you go, under one menu. Adventurepedia leads.
 const guideLinks = [
   { href: "/adventurepedia", label: "Adventurepedia", blurb: "A guide to every trek, plus planning, safety and gear", icon: Library },
-  { href: "/stories", label: "Stories", blurb: "Field reports from people who went", icon: BookOpen },
   { href: "/ace", label: "How ACE works", blurb: "How we rate what an adventure asks of you", icon: Gauge },
 ];
 const popularGuides = [
@@ -40,6 +39,7 @@ const isGuides = (path: string) => guideLinks.some((l) => path === l.href || pat
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileGuidesOpen, setMobileGuidesOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null);
@@ -100,6 +100,8 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => { setMenuOpen(false); setUserMenuOpen(false); }, [pathname]);
+  // Guides starts folded each time the mobile menu opens
+  useEffect(() => { if (!menuOpen) setMobileGuidesOpen(false); }, [menuOpen]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 0);
@@ -543,13 +545,26 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          {/* Guides: Adventurepedia first, then Stories and ACE */}
-          <p className="pt-4 pb-1 px-3 text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent-ink)" }}>Guides</p>
-          {guideLinks.map((link) => {
+          {/* Guides: one row like the others; tap it to reveal Adventurepedia, Stories and ACE */}
+          <button
+            type="button"
+            onClick={() => setMobileGuidesOpen((o) => !o)}
+            aria-expanded={mobileGuidesOpen}
+            className="w-full flex items-center justify-between py-3 px-3 text-base font-medium rounded-xl transition-colors"
+            style={{
+              color: isGuides(pathname) ? "var(--text-primary)" : "var(--nav-text)",
+              background: isGuides(pathname) ? "var(--nav-active-bg)" : "transparent",
+              borderBottom: "1px solid var(--border-subtle)",
+            }}
+          >
+            Guides
+            <ChevronDown className={`w-4 h-4 transition-transform ${mobileGuidesOpen ? "rotate-180" : ""}`} style={{ color: "var(--text-muted)" }} />
+          </button>
+          {mobileGuidesOpen && guideLinks.map((link) => {
             const on = pathname === link.href || pathname.startsWith(`${link.href}/`);
             return (
               <Link key={link.href} href={link.href}
-                className="flex items-center gap-3 py-2.5 px-3 rounded-xl transition-colors"
+                className="flex items-center gap-3 py-2.5 pl-6 pr-3 rounded-xl transition-colors"
                 style={{ background: on ? "var(--nav-active-bg)" : "transparent", borderBottom: "1px solid var(--border-subtle)" }}>
                 <link.icon className="w-4 h-4 shrink-0" style={{ color: "var(--accent-ink)" }} />
                 <span className="min-w-0">

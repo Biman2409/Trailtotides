@@ -5,9 +5,8 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getPublishedStories, getStoryBySlug } from "@/lib/stories";
-import type { StoryDB } from "@/lib/stories";
-import { AVATARS } from "@/lib/avatars";
-import { ChevronLeft, ArrowRight, Crown, MapPin } from "lucide-react";
+import { BADGE_TAGS, STORY_ACTIVITIES, mapStory, readMinutes, splitParagraphs, storyImage } from "@/lib/storyView";
+import { ChevronLeft, ArrowRight, Crown, MapPin, Clock } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import ShareStoryCTA from "@/components/ui/custom/ShareStoryCTA";
 import StoryCard from "@/components/ui/custom/StoryCard";
@@ -20,8 +19,6 @@ import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import StoryShareButton from "@/components/ui/custom/StoryShareButton";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import { adventures } from "@/lib/data";
-
-const BADGE_TAGS = ["Featured", "TTT Original"];
 
 // Suggest adventures whose place or activity type overlaps with the story.
 function getSuggestedAdventures(story: { region: string; tags: string[] }, limit = 3) {
@@ -43,41 +40,6 @@ function getSuggestedAdventures(story: { region: string; tags: string[] }, limit
   return scored.slice(0, limit).map((x) => x.adventure);
 }
 
-function pickAvatar(name: string): string {
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  return AVATARS[Math.abs(hash) % AVATARS.length].src;
-}
-
-function mapStory(s: StoryDB) {
-  const tags = s.tags ?? [];
-  // Exclude the region — it's already shown via the location pin next to the pills.
-  const pillTags = tags
-    .filter(t => t !== "Featured" && t !== "TTT Original" && t.toLowerCase() !== s.region.toLowerCase())
-    .slice(0, 1);
-  return {
-    id: s.id,
-    slug: s.slug,
-    title: s.title,
-    excerpt: s.excerpt,
-    body: s.body,
-    author: s.author_name,
-    authorRole: s.author_role,
-    authorBio: s.author_bio,
-    authorAvatar: s.author_avatar || pickAvatar(s.author_name),
-    heroImage: s.hero_image,
-    tags,
-    pillTags,
-    region: s.region,
-    date: s.date,
-    adventureDate: s.date,
-    submittedBy: s.submitted_by || undefined,
-    baseLikes: s.baseLikes ?? 50,
-  };
-}
-
 interface Props {
   params: Promise<{ slug: string }>;
 }
@@ -93,7 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!story) return {};
   const s = mapStory(story);
   // Search results show about 160 characters; cut at a word, not mid-word
-  const description = s.excerpt.length <= 160 ? s.excerpt : `${s.excerpt.slice(0, 157).replace(/s+S*$/, "")}…`;
+  const description = s.excerpt.length <= 160 ? s.excerpt : `${s.excerpt.slice(0, 157).replace(/\s+\S*$/, "")}…`;
   return {
     title: s.title,
     description,
@@ -199,15 +161,18 @@ export default async function StoryPage({ params }: Props) {
   const dbStory = await getStoryBySlug(slug);
   if (!dbStory) notFound();
   const story = mapStory(dbStory);
-  // Prefer the author's actual submitted body (split on blank-line paragraph
-  // breaks); only fall back to generated filler for the seed stories, whose
-  // `body` column is empty.
-  const body = story.body?.trim()
-    ? story.body.trim().split(/\n\s*\n+/).map((p) => p.trim()).filter(Boolean)
-    : buildBody(story);
+  // Prefer the author's actual submitted body; only fall back to generated filler
+  // for the seed stories, whose `body` column is empty.
+  const body = story.body.trim() ? splitParagraphs(story.body) : buildBody(story);
+  const minutes = readMinutes([story.excerpt, ...body].join(" "));
+  const hero = storyImage(story.heroImage);
+  const activity = story.pillTags?.[0];
 
   const allStories = await getPublishedStories();
-  const others = allStories.filter((s) => s.slug !== story.slug).slice(0, 3).map(mapStory);
+  // Same activity first, then the newest
+  const others = allStories.filter((s) => s.slug !== story.slug).map(mapStory)
+    .sort((a, b) => Number(b.pillTags?.[0] === activity) - Number(a.pillTags?.[0] === activity))
+    .slice(0, 3);
   const suggestedAdventures = getSuggestedAdventures(story);
 
   const articleStructuredData = {
@@ -247,143 +212,114 @@ export default async function StoryPage({ params }: Props) {
       <ScrollToTop />
       <Navbar />
 
-      <Breadcrumbs items={[
-        { label: "Stories", href: "/stories" },
-        { label: story.title },
-      ]} />
+      {/* Hero: the photo, full bleed, with the title set over it */}
+      <section className="relative h-[62vh] md:h-[72vh] min-h-[440px] max-h-[820px] flex items-end overflow-hidden">
+        <Image src={hero.src} unoptimized={hero.unoptimized} alt="" fill priority sizes="100vw" className="photo-grade object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/30" />
 
-      {/* Hero */}
-      <section className="relative h-[55vh] md:h-[65vh] min-h-[400px] flex items-end overflow-hidden">
-          <Image
-            src={story.heroImage}
-            alt={story.title}
-            fill
-              priority
-              className="object-cover"
-              style={{ 
-                objectFit: "cover",
-                filter: "brightness(1.1) contrast(1.15) saturate(1.15)" 
-              }}
-            />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
-
-        {/* Back */}
-        <Link
-          href="/stories"
-          className="absolute top-20 right-4 lg:right-8 flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm font-medium bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          All Stories
-        </Link>
-
-        {story.tags.includes("Featured") && (
-          <div
-            className="absolute top-20 left-5 lg:left-8 z-10 flex items-center gap-1.5 pl-2 pr-3 py-1.5 rounded-full backdrop-blur-md"
-            style={{ background: "rgba(10,8,6,0.72)", border: "1px solid rgba(255,179,122,0.3)" }}
-          >
-            <Crown className="w-3 h-3" style={{ color: "#ffb37a" }} />
-            <span className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: "#ffd9b8" }}>Featured</span>
-          </div>
-        )}
-
-        <div className="relative z-10 max-w-4xl mx-auto px-5 lg:px-8 pb-8 lg:pb-14 w-full">
-          <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.12em] mb-3 text-white/70">
-            {(story.pillTags ?? story.tags.filter(t => !BADGE_TAGS.includes(t)).slice(0, 1)).map((tag) => (
-              <span key={tag} className="inline-flex items-center gap-1 shrink-0" style={{ color: "#ff5100" }}>
-                {ADVENTURE_TYPE_ICONS[tag]?.(11)}
-                {tag}
+        <div className="relative z-10 max-w-3xl mx-auto px-5 lg:px-8 pb-9 lg:pb-14 w-full">
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            {story.tags.includes("Featured") && (
+              <span className="inline-flex items-center gap-1.5 pl-2 pr-3 py-1 rounded-full backdrop-blur-md" style={{ background: "rgba(10,8,6,0.6)", border: "1px solid rgba(255,179,122,0.3)" }}>
+                <Crown className="w-3 h-3" style={{ color: "#ffb37a" }} />
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: "#ffd9b8" }}>Featured</span>
               </span>
-            ))}
-            <span className="opacity-50">·</span>
-            <span className="inline-flex items-center gap-1 shrink-0" style={{ color: "#ff5100" }}>
-              <MapPin className="w-3 h-3" />
-              {story.region}
-            </span>
-            <span className="opacity-50">·</span>
-            <span className="shrink-0" style={{ color: "#ff5100" }}>{story.adventureDate}</span>
+            )}
+            {activity && (
+              <span className="inline-flex items-center gap-1.5 pl-2 pr-3 py-1 rounded-full backdrop-blur-md text-[10.5px] font-bold uppercase tracking-[0.14em] text-white" style={{ background: "rgba(255,81,0,0.85)" }}>
+                {ADVENTURE_TYPE_ICONS[activity]?.(12)}{activity}
+              </span>
+            )}
           </div>
 
-          <h1 className="text-white text-2xl md:text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-3 max-w-3xl">
+          <h1 className="text-white text-[32px] sm:text-5xl lg:text-6xl leading-[1.08] max-w-3xl" style={{ letterSpacing: "-0.025em" }}>
             {story.title}
           </h1>
-          <div className="flex items-center gap-3 flex-wrap">
-            <div className="flex items-center gap-3">
-              <div className="relative w-9 h-9 rounded-full overflow-hidden shadow-md shadow-[#ff5100]/20 shrink-0">
-                {story.authorAvatar
-                  ? <Image src={story.authorAvatar} alt={story.author} fill sizes="36px" className="object-cover" />
-                  : <span className="w-full h-full flex items-center justify-center text-sm font-bold text-white bg-[#ff5100]/50">{story.author[0]}</span>}
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="text-white font-medium text-sm uppercase tracking-wide">{story.author}</p>
-                  </div>
-                <p className="text-white/85 text-base" style={{ fontFamily: "var(--font-script)", fontWeight: 600 }}>{story.authorRole}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 ml-auto">
-              <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} pill />
-              <StoryShareButton title={story.title} slug={story.slug} />
-            </div>
-          </div>
+
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-4 text-[13px] font-medium text-white/80">
+            <span className="inline-flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{story.region}</span>
+            {story.adventureDate && <span>{story.adventureDate}</span>}
+            <span className="inline-flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{minutes} min read</span>
+          </p>
         </div>
       </section>
 
+      {/* Byline bar: who wrote it, and like / share within reach */}
+      <div style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+        <div className="max-w-3xl mx-auto px-5 lg:px-8 py-4 flex items-center gap-3">
+          <div className="relative w-11 h-11 rounded-full overflow-hidden shrink-0" style={{ background: "var(--bg-surface-2)" }}>
+            {story.authorAvatar && <Image src={story.authorAvatar} alt="" fill sizes="44px" className="object-cover" />}
+          </div>
+          <div className="min-w-0 mr-auto">
+            <p className="text-[15px] font-semibold truncate" style={{ color: "var(--text-primary)" }}>{story.author}</p>
+            {story.authorRole && <p className="text-[13px] truncate" style={{ color: "var(--text-tertiary)" }}>{story.authorRole}</p>}
+          </div>
+          <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} pill muted />
+          <StoryShareButton title={story.title} slug={story.slug} muted />
+        </div>
+      </div>
+
       {/* Article */}
-      <article id="story-article" className="max-w-2xl mx-auto px-5 lg:px-6 py-10 lg:py-20">
+      <article id="story-article" className="max-w-2xl mx-auto px-5 lg:px-6 pt-4 pb-12 lg:pb-20">
+        <div className="-mx-5 lg:-mx-8">
+          <Breadcrumbs items={[{ label: "Stories", href: "/stories" }, { label: story.title }]} />
+        </div>
+
         {/* Lede */}
-        <p className="text-lg lg:text-2xl font-light leading-relaxed mb-8 lg:mb-10 border-l-4 border-[#ff5100] pl-5" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-[20px] lg:text-[24px] leading-[1.5] mt-6 mb-10 lg:mb-12" style={{ fontFamily: "var(--font-display), Georgia, serif", color: "var(--text-primary)" }}>
           {story.excerpt}
         </p>
 
-        {/* Body paragraphs */}
+        {/* Body: the first paragraph opens with a drop cap */}
         <div className="space-y-6">
           {body.map((para, idx) => (
-            <p key={idx} className="text-base lg:text-lg leading-[1.85] font-light" style={{ color: "var(--text-secondary)" }}>
+            <p key={idx}
+              className={`text-[17px] lg:text-[18px] leading-[1.8] ${idx === 0 ? "first-letter:float-left first-letter:text-[64px] first-letter:leading-[0.9] first-letter:mr-3 first-letter:mt-1 first-letter:font-bold first-letter:text-[#ff5100]" : ""}`}
+              style={{ color: "color-mix(in srgb, var(--text-primary) 88%, transparent)" }}>
               {para}
             </p>
           ))}
         </div>
 
+        <p className="text-center text-xl mt-12 tracking-[0.6em]" aria-hidden style={{ color: "var(--accent-ink)" }}>···</p>
+
         {/* Author card */}
-          <div className="mt-10 rounded-2xl p-6 flex items-start gap-5" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
-            <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0 shadow-inner" style={{ border: "1.5px solid rgba(255,81,0,0.25)" }}>
-              {story.authorAvatar
-                ? <Image src={story.authorAvatar} alt={story.author} fill sizes="56px" className="object-cover" />
-                : <span className="w-full h-full flex items-center justify-center text-xl font-bold text-[#ff5100] bg-[#ff5100]/20">{story.author[0]}</span>}
-            </div>
-            <div className="flex-1">
-              <div>
-                <p className="font-semibold text-base uppercase tracking-wide" style={{ color: "var(--text-primary)" }}>{story.author}</p>
-              </div>
-              <p className="text-base mt-0.5" style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-script)", fontWeight: 600 }}>{story.authorRole}</p>
-              {story.authorBio && (
-                <p className="text-sm mt-2 leading-relaxed" style={{ color: "var(--text-secondary)" }}>{story.authorBio}</p>
-              )}
-            </div>
+        <div className="mt-10 rounded-2xl p-6 flex items-start gap-4 sm:gap-5" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
+          <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0" style={{ background: "var(--bg-surface-2)", border: "1.5px solid rgba(255,81,0,0.25)" }}>
+            {story.authorAvatar && <Image src={story.authorAvatar} alt="" fill sizes="56px" className="object-cover" />}
           </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent-ink)" }}>Written by</p>
+            <p className="text-lg font-semibold mt-0.5" style={{ color: "var(--text-primary)" }}>{story.author}</p>
+            {story.authorRole && <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>{story.authorRole}</p>}
+            {story.authorBio && <p className="text-[14px] mt-2.5 leading-relaxed" style={{ color: "var(--text-secondary)" }}>{story.authorBio}</p>}
+          </div>
+        </div>
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t" style={{ borderColor: "var(--border-subtle)" }}>
-            {story.tags.filter(t => !BADGE_TAGS.includes(t)).map((tag) => (
-              <span
-                key={tag}
-                className="text-xs px-3 py-1.5 rounded-full"
-                style={{ background: "var(--bg-surface-2)", color: "var(--text-tertiary)" }}
-              >
+        {/* Tags: the activity links to more stories like it */}
+        <div className="flex flex-wrap gap-2 mt-8">
+          {story.tags.filter((t) => !BADGE_TAGS.includes(t)).map((tag) =>
+            (STORY_ACTIVITIES as readonly string[]).includes(tag) ? (
+              <Link key={tag} href={`/stories?activity=${encodeURIComponent(tag)}`} className="text-xs font-medium px-3 py-1.5 rounded-full transition-colors hover:text-[#ff5100]"
+                style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)" }}>
                 #{tag}
-              </span>
+              </Link>
+            ) : (
+              <span key={tag} className="text-xs px-3 py-1.5 rounded-full" style={{ background: "var(--bg-surface-2)", color: "var(--text-tertiary)" }}>#{tag}</span>
             ))}
-          </div>
+        </div>
 
-          <StoryShareBar title={story.title} slug={story.slug} />
+        <StoryShareBar title={story.title} slug={story.slug} />
 
-          <StoryComments slug={story.slug} />
+        <StoryComments slug={story.slug} />
 
-          {/* Share your story CTA */}
-          <div className="mt-8">
-            <ShareStoryCTA heading="Got a story worth telling?" subtext={["Share yours — it might inspire the next journey."]} size="sm" />
-          </div>
+        <div className="mt-10">
+          <ShareStoryCTA heading="Got a story worth telling?" subtext={["Share yours. It might be what gets the next person out the door."]} />
+        </div>
+
+        <Link href="/stories" className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold transition-colors hover:text-[#ff5100]" style={{ color: "var(--text-tertiary)" }}>
+          <ChevronLeft className="w-4 h-4" /> All stories
+        </Link>
       </article>
 
       {/* Suggested adventures — matched to this story's region and activity */}
