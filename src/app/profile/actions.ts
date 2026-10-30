@@ -2,6 +2,8 @@
 
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { findUserByUsername } from "@/lib/resolveUsername";
+import { USERNAME_RE, USERNAME_RULE_TEXT } from "@/lib/username";
 
 export async function updateProfile(formData: FormData) {
   const supabase = await createClient();
@@ -17,14 +19,19 @@ export async function updateProfile(formData: FormData) {
 
   // Username availability check if changed
   if (newUsername && newUsername !== (user.user_metadata?.username ?? "")) {
-    if (newUsername.length < 3 || newUsername.length > 20) {
-      throw new Error("Username must be between 3 and 20 characters.");
+    if (!USERNAME_RE.test(newUsername)) {
+      throw new Error(`${USERNAME_RULE_TEXT}.`);
     }
-    const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
-    const taken = allUsers?.users.some(
-      (u) => u.id !== user.id && (u.user_metadata?.username ?? "").toLowerCase() === newUsername
-    );
-    if (taken) throw new Error(`@${newUsername} is already taken.`);
+    // Check every page of users (not just the first 1,000), and if the lookup itself fails don't
+    // guess in either direction.
+    let match: Awaited<ReturnType<typeof findUserByUsername>>;
+    try {
+      match = await findUserByUsername(adminClient, newUsername);
+    } catch (err) {
+      console.error("profile username lookup failed:", err);
+      throw new Error("Couldn't check that username right now. Please try again.");
+    }
+    if (match && match.id !== user.id) throw new Error(`@${newUsername} is already taken.`);
   }
 
   // Update auth user (email + metadata)
