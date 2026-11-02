@@ -1,16 +1,6 @@
 # Trail quality
 
-34 trails checked: 2 need fixing, 28 worth a look, 4 clean.
-
-## annapurna-base-camp (64.4 km, 5750 m up)
-- Check · spikes: 1 step steeper than 1 in 1 (first at km 38.3)
-- **Fix** · off-line: Jhinu Danda is 1045 m from the line
-- Check · stop height: Jhinu Danda: stop at 1720 m, line at 2260 m where it passes
-- Check · days: days add up to 85.9 km but the trail is 64.4 km
-
-## manaslu-circuit (134.1 km, 6170 m up)
-- **Fix** · spikes: 4 height spikes (worst 108 m at km 27.1)
-- Check · spikes: 11 steps steeper than 1 in 1 (first at km 4.4)
+34 trails checked: 0 need fixing, 30 worth a look, 4 clean.
 
 ## kashmir-great-lakes (65.3 km, 2970 m up, 0.5 km estimated)
 - Check · straight: 3 straight segments over 500 m (787 m at km 1.1, 766 m at km 27.7, 518 m at km 43.1)
@@ -35,6 +25,11 @@
 - Check · spikes: 2 height spikes (worst 81 m at km 6.2)
 - Check · off-line: Bedni Bugyal is 544 m from the line
 - Check · published: highest point 3617 m; the trek page says 3826 m
+
+## annapurna-base-camp (88.9 km, 6440 m up, 0.3 km estimated)
+- Check · straight: 1 straight segment over 500 m (575 m at km 61.6)
+- Check · spikes: 1 step steeper than 1 in 1 (first at km 85.3)
+- Check · estimated: 0.3 km drawn along the terrain (no mapped path)
 
 ## annapurna-circuit (76.7 km, 4040 m up)
 - Check · straight: 2 straight segments over 500 m (598 m at km 35.0, 541 m at km 39.5)
@@ -97,6 +92,10 @@
 - Check · spikes: 1 height spike (worst 65 m at km 4.3)
 - Check · spikes: 2 steps steeper than 1 in 1 (first at km 0.0)
 
+## manaslu-circuit (134 km, 7160 m up)
+- Check · spikes: 1 height spike (worst 66 m at km 27.6)
+- Check · spikes: 2 steps steeper than 1 in 1 (first at km 4.4)
+
 ## sar-pass (26.7 km, 2960 m up)
 - Check · spikes: 2 height spikes (worst 92 m at km 4.0)
 - Check · spikes: 8 steps steeper than 1 in 1 (first at km 3.3)
@@ -114,8 +113,8 @@
 ## har-ki-dun (22.9 km, 1590 m up)
 - Check · straight: 1 straight segment over 500 m (594 m at km 3.8)
 
-## kareri-lake (15 km, 1660 m up)
-- Check · spikes: 2 height spikes (worst 69 m at km 11.1)
+## kareri-lake (8.5 km, 1190 m up, 0.1 km estimated)
+- Check · estimated: 0.1 km drawn along the terrain (no mapped path)
 
 ## markha-valley (65.7 km, 2130 m up)
 - Check · straight: 1 straight segment over 500 m (824 m at km 51.8)

@@ -9,6 +9,8 @@
 //         OpenStreetMap by name and by the other names in aka, near where they should be; one it
 //         doesn't have is put that share of the way along the trail from stop A to stop B, and
 //         days that reach it are marked approximate.
+// through points [lat, lng] the line is routed through, not stops: where OpenStreetMap has more
+//         than one way between two stops and the router takes the wrong one
 // near    added to place searches to pick the right one of several places with the same name
 // side    out-and-back high points off the line, as points; extra: places only the days visit
 // days    { to, via?, side?: { name, km, up }, note } walks from last night's stop;
@@ -65,6 +67,9 @@ export const TREKS = {
   "annapurna-base-camp": {
     near: "Kaski, Nepal",
     stops: ["Nayapul", "Ulleri", "Ghorepani", { name: "Poon Hill", q: "Pun Danda", at: [28.40004, 83.68954] }, "Tadapani", { name: "Chhomrong", at: [28.42426, 83.81853] }, { name: "Bamboo", at: [28.45702, 83.85693] }, { name: "Deurali", at: [28.49756, 83.89833] }, { name: "Machapuchare Base Camp", q: "Machhapuchhare Base Camp", at: [28.52651, 83.90756] }, { name: "Annapurna Base Camp", at: [28.53076, 83.87785] }, "Jhinu Danda"],
+    // Down Chhomrong's main path to Jhinu, not round by the trails west of the village. OSM's
+    // path stops ~450 m above Jhinu's own paths, so that gap is drawn along the terrain
+    through: [[28.4148, 83.8189], [28.4121, 83.8196], [28.4082, 83.8190]],
     days: [
       { to: "Ulleri", note: "Along the Bhurungdi river, then over 3,000 stone steps up to Ulleri" },
       { to: "Ghorepani", note: "Through rhododendron forest to the village under Poon Hill" },
@@ -443,6 +448,9 @@ export const TREKS = {
       { name: "Kareri Lake", at: [32.32565, 76.27389] },
     ],
     camps: { Rioti: ["Kareri", "Kareri Lake", 0.6, ["Reoti", "Riyoti", "Rewati"]] },
+    // Up the Nyund stream on OSM's Kareri–Kareri Lake Trail, not round by Raeel to the east. Its top
+    // isn't joined to the paths at the lake, so the line is routed to its last point
+    through: [[32.2980, 76.2744], [32.3106, 76.2686], [32.32502, 76.27329]],
     days: [
       { to: "Rioti", note: "Up the Nyund stream from Kareri village, crossing it on rocks and small bridges" },
       { to: "Kareri Lake", note: "A short climb to the lake below the Dhauladhar, with a small Shiva temple" },

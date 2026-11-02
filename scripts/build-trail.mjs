@@ -5,7 +5,7 @@
 //   line    the walking path between them, routed along OSM's paths by BRouter (hiking profile)
 //           through every camp and pass OSM has; where BRouter can't connect two points, over the
 //           mapped paths near them with only the gaps between paths bridged. Thinned to ~10 m
-//           accuracy so pages load it quickly. Its heights are Copernicus 90 m, from Open-Meteo
+//           accuracy so pages load it quickly. Its heights are Copernicus 90 m (scripts/copernicus.mjs)
 //   side    side trips that aren't on the way (summit viewpoints), as points only
 //   days    the day-by-day itinerary: where each day walks from and to, distance, metres up and
 //           down (measured along the line), and where you sleep
@@ -15,6 +15,8 @@
 // path are drawn along the terrain (scripts/terrain.mjs); those stretches are
 // counted in `approxKm`.
 // Run: node scripts/build-trail.mjs <slug> [<slug> ...]   or   all  (or the Build trails GitHub Action)
+// --force saves the build even with more km off the mapped paths than the saved trail: for a
+// change that trades a mapped wrong way for a short unmapped gap on the right one
 // The stops and days for each trek are in ./trek-configs.mjs. Rewrites src/lib/trails/index.ts.
 // Then run sync-trek-facts.mjs so the trek's duration, distance and base camp follow the itinerary.
 
@@ -22,6 +24,7 @@ import { writeFile, readFile, readdir, mkdir } from "node:fs/promises";
 import { TREKS } from "./trek-configs.mjs";
 import { placesNear, matchPlace, pathRoute } from "./osm.mjs";
 import { terrainPath, satellitePreview } from "./terrain.mjs";
+import { copernicusHeights } from "./copernicus.mjs";
 
 const UA = { "User-Agent": "TrailToTides/1.0 (hello@trailtotides.com)" };
 
@@ -70,33 +73,8 @@ function dist([la1, lo1], [la2, lo2]) {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
-// Heights from Open-Meteo's elevation model, 100 points a request. `strict`: Open-Meteo or nothing
-async function heights(pts, { strict = false } = {}) {
-  const out = [];
-  for (let i = 0; i < pts.length; i += 100) {
-    const part = pts.slice(i, i + 100).map(([la, lo]) => [+la.toFixed(5), +lo.toFixed(5)]);
-    out.push(...(await heightsOf(part, strict)));
-  }
-  return out;
-}
-
-// Heights from Open-Meteo (Copernicus 90 m), else from OpenTopoData (SRTM 90 m)
-async function heightsOf(part, strict) {
-  try {
-    const url = `https://api.open-meteo.com/v1/elevation?latitude=${part.map((p) => p[0]).join(",")}&longitude=${part.map((p) => p[1]).join(",")}`;
-    const j = await request(url, { headers: {} });
-    if (!Array.isArray(j.elevation)) throw new Error(`Open-Meteo: ${j.reason ?? "no heights"}`);
-    await sleep(300); // Open-Meteo's free tier limits requests a minute
-    return j.elevation.map((e) => Math.round(e));
-  } catch (e) {
-    if (strict) throw new Error(`line heights: Open-Meteo failed (${e.message})`);
-    console.warn(`  heights: Open-Meteo failed (${e.message}), trying OpenTopoData`);
-    const url = `https://api.opentopodata.org/v1/srtm90m?locations=${part.map((p) => p.join(",")).join("|")}`;
-    const j = await request(url, { headers: {} });
-    await sleep(1100); // OpenTopoData allows one request a second
-    return j.results.map((r) => Math.round(r.elevation ?? 0));
-  }
-}
+// Heights from the Copernicus 90 m elevation model (scripts/copernicus.mjs)
+const heights = (pts) => copernicusHeights(pts);
 
 const found = new Map();
 // Every named place OpenStreetMap has around the trek being built (see placesNear)
@@ -308,6 +286,13 @@ async function build(slug) {
     for (let i = ia; i < ib; i++) if (segDist(p, stops[i], stops[i + 1]) < segDist(p, stops[li], stops[li + 1])) li = i;
     via[li].push(p);
   }
+  // Points the line must pass through, to keep it on the trail people walk where OSM has another
+  for (const [lat, lng] of trek.through ?? []) {
+    const p = { name: `${lat},${lng}`, lat, lng };
+    let li = 0;
+    for (let i = 0; i < stops.length - 1; i++) if (segDist(p, stops[i], stops[i + 1]) < segDist(p, stops[li], stops[li + 1])) li = i;
+    via[li].push(p);
+  }
   via.forEach((v, i) => v.sort((p, q) => dist([stops[i].lat, stops[i].lng], [p.lat, p.lng]) - dist([stops[i].lat, stops[i].lng], [q.lat, q.lng])));
 
   // The line, leg by leg; each stop's position on it is where its leg starts or ends
@@ -331,10 +316,9 @@ async function build(slug) {
   if (dist(full[0], [first.lat, first.lng]) > 20) { full.unshift([first.lat, first.lng, first.ele ?? full[0][2]]); at.forEach((v, i) => (at[i] = i ? v + 1 : 0)); }
   if (dist(full[full.length - 1], [last.lat, last.lng]) > 20) { full.push([last.lat, last.lng, last.ele ?? full[full.length - 1][2]]); at[at.length - 1] = full.length - 1; }
 
-  // Every height on the line from one model, Copernicus (Open-Meteo). BRouter's and the terrain
-  // tiles' heights are SRTM, which in Himalayan gorges dips or jumps hundreds of metres where the
-  // path runs level, so OpenTopoData's SRTM is no stand-in: the build fails and the saved trail stays
-  const lineEle = await heights(full, { strict: true });
+  // Every height on the line from one model, Copernicus. BRouter's and the terrain tiles' heights
+  // are SRTM, which in Himalayan gorges dips or jumps hundreds of metres where the path runs level
+  const lineEle = await heights(full);
   full.forEach((p, i) => { p[2] = lineEle[i]; });
 
   const cum = [0];
@@ -457,7 +441,7 @@ async function build(slug) {
   // The map services fail now and then, and a leg they fail on is drawn off the mapped paths: a build with
   // more straight km than the trail already saved is worse, so the saved one is kept
   const prev = await readFile(`src/lib/trails/${slug}.json`, "utf8").then(JSON.parse).catch(() => null);
-  if (prev && (prev.approxKm ?? 0) + 0.1 < trail.approxKm) {
+  if (prev && !FORCE && (prev.approxKm ?? 0) + 0.1 < trail.approxKm) {
     console.log(`${slug}: KEPT the saved trail (${prev.approxKm ?? 0} km off the mapped paths) over this build's ${trail.approxKm} km`);
     return;
   }
@@ -511,7 +495,8 @@ export function getTrail(slug: string): Trail | null {
   await writeFile("src/lib/trails/index.ts", out);
 }
 
-const args = process.argv.slice(2);
+const FORCE = process.argv.includes("--force");
+const args = process.argv.slice(2).filter((a) => a !== "--force");
 const slugs = args[0] === "all" ? Object.keys(TREKS) : args;
 if (!slugs.length || slugs.some((s) => !TREKS[s])) {
   console.error(`Usage: node scripts/build-trail.mjs <slug> [<slug> ...] | all\nKnown: ${Object.keys(TREKS).join(", ")}`);
