@@ -160,7 +160,7 @@ export default function MatchmakerStory({ you, samples, group, cta }: { you: ACE
         {BEATS.map((b, i) => {
           const on = beat === i;
           return (
-            <button key={b.label} type="button" role="tab" aria-selected={on} onClick={() => { setBeat(i); setSub(0); }} className="text-left min-w-0 group">
+            <button key={b.label} type="button" role="tab" aria-selected={on} onClick={() => { setBeat(i); setSub(0); }} className="text-left min-w-0 group py-2.5 -my-2.5">
               <span className="block h-[3px] rounded-full overflow-hidden" style={{ background: "var(--border-subtle)" }}>
                 <span
                   key={on ? `${beat}-${running}` : `off-${i}`}
@@ -368,7 +368,7 @@ export default function MatchmakerStory({ you, samples, group, cta }: { you: ACE
             <span className="truncate transition-opacity duration-500" style={{ opacity: groupReady ? 1 : 0 }}>
               The least-ready member sets the pace.
             </span>
-            <Link href="/matchmaker/group" className="inline-flex items-center gap-1 font-semibold shrink-0 hover:underline" style={{ color: "var(--accent-ink-soft)" }}>
+            <Link href="/matchmaker/group" className="inline-flex items-center gap-1 py-3 -my-3 font-semibold shrink-0 hover:underline" style={{ color: "var(--accent-ink-soft)" }}>
               Group match <ArrowRight className="w-3 h-3" />
             </Link>
           </p>

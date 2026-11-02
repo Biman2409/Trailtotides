@@ -108,7 +108,8 @@ function DefaultCTA() {
 
   return (
     <Band>
-      <div className="grid lg:grid-cols-[1fr_310px] xl:grid-cols-[1fr_320px] gap-4 lg:gap-12 items-center">
+      {/* Text and sample sit together as a centred pair, lined up with the map section above */}
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,520px)_400px] lg:justify-center gap-4 lg:gap-16 items-center">
         {/* Left: promise and action */}
         <div className="min-w-0">
           <Eyebrow />
@@ -116,19 +117,20 @@ function DefaultCTA() {
             Adventures built for <span className="text-[#ff5100]">your body</span>
           </h2>
           <p className="text-sm leading-relaxed max-w-xl" style={{ color: "var(--text-secondary)" }}>
-            Answer a few questions and every adventure gets rated for you: ready, a stretch, or not yet.
+            Answer a few questions, about 2 minutes, and every adventure gets rated for you: ready, a stretch, or not yet.
           </p>
+          {/* Desktop only: below lg the sample sits right under it with its own "Start" */}
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
             <Link
               href="/matchmaker"
-              className="group inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors"
+              className="group hidden lg:inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors"
               style={{ boxShadow: "0 6px 20px rgba(255,81,0,0.25)" }}
             >
               Take the assessment
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
             {/* The full explanation lives on /ace */}
-            <Link href="/ace" className="text-[13px] font-medium underline underline-offset-2 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+            <Link href="/ace" className="py-3 -my-3 text-[13px] font-medium underline underline-offset-2 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
               How it works
             </Link>
           </div>
@@ -151,7 +153,8 @@ function DefaultCTA() {
 /* ── Returning visitors: their profile at a glance (the adventure list lives in "Picked for you") ── */
 
 function ProfileSummary({ profile, ace, stale }: { profile: StoredProfile; ace: ACE; stale: boolean }) {
-  const totalScore = Object.values(profile.ace).reduce((a: number, b) => a + (b as number), 0);
+  // Rank, counts and radar all use the trip-adjusted profile, so logging a trip moves them together
+  const totalScore = Object.values(ace).reduce((a: number, b) => a + (b as number), 0);
   const rankIndex = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
   const tier = RANKS[rankIndex] ?? RANKS[1];
   const nextRank = RANKS[rankIndex + 1] ?? null;
@@ -231,7 +234,7 @@ function ProfileSummary({ profile, ace, stale }: { profile: StoredProfile; ace: 
 
         <div className="rounded-2xl p-4 flex flex-col items-center" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", boxShadow: "0 20px 50px rgba(var(--shadow-color), 0.18)" }}>
           <p className="self-start text-[10px] font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "var(--text-tertiary)" }}>Your capabilities</p>
-          <ACERadar ace={profile.ace} size={260} showLabels />
+          <ACERadar ace={ace} size={260} showLabels labelSize={11} />
         </div>
       </div>
     </Band>

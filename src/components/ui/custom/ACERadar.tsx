@@ -12,6 +12,8 @@ interface Props {
   userAce?: ACE;
   userColor?: string;
   highlightAxis?: AceAxis | null;
+  /** Axis label size in px, for when the chart is shown small on a phone (the score is a little smaller) */
+  labelSize?: number;
 }
 
 const AXIS_ORDER: AceAxis[] = [
@@ -60,7 +62,7 @@ function hexToRgb(hex: string) {
   return `${r},${g},${b}`;
 }
 
-export default function ACERadar({ ace, size = 220, showLabels = true, userAce, userColor = "#38bdf8", highlightAxis = null }: Props) {
+export default function ACERadar({ ace, size = 220, showLabels = true, userAce, userColor = "#38bdf8", highlightAxis = null, labelSize }: Props) {
   const { resolvedTheme } = useTheme();
   // Unique per instance, so two radars on one page don't share gradients
   const uid = useId().replace(/:/g, "");
@@ -259,7 +261,7 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
                 textAnchor={anchor}
                 dominantBaseline="central"
                 fill={active ? color : labelInactive}
-                fontSize={isHighlighted ? (size < 180 ? "8" : "9.5") : size < 180 ? "7" : "8.5"}
+                fontSize={labelSize ?? (isHighlighted ? (size < 180 ? "8" : "9.5") : size < 180 ? "7" : "8.5")}
                 fontWeight="800"
                 letterSpacing="0.05em"
                 fontFamily="system-ui, sans-serif"
@@ -270,10 +272,10 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
               {/* score */}
               <text
                 x={x.toFixed(2)}
-                y={(y + (size < 180 ? 8 : 10)).toFixed(2)}
+                y={(y + (labelSize ? labelSize * 1.1 : size < 180 ? 8 : 10)).toFixed(2)}
                 textAnchor={anchor}
                 fill={active ? `rgba(${hexToRgb(color)},0.65)` : scoreInactive}
-                fontSize={size < 180 ? "6.5" : "7.5"}
+                fontSize={labelSize ? labelSize * 0.85 : size < 180 ? "6.5" : "7.5"}
                 fontWeight="600"
                 fontFamily="system-ui, sans-serif"
               >
