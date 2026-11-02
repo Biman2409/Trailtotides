@@ -1,109 +1,61 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
 import { Wind, Mountain, Waves, Snowflake } from "@/lib/localIcons";
 import { adventures } from "@/lib/data";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import CardFooterLink from "./CardFooterLink";
 import SectionTexture from "./SectionTexture";
 
-const categories = [
-    {
-      id: "earth",
-      label: "Earth",
-      icon: <Mountain className="w-6 h-6 text-[#ff5100]" />,
-      subtitle: "Push your limits and own every inch of wild terrain",
-      image: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/element-earth.jpeg",
-        accent: "#ff5100",
-        accentLight: "rgba(255,81,0,0.15)",
-        accentBorder: "rgba(255,81,0,0.35)",
-        tagBg: "rgba(255,81,0,0.18)",
-        tagText: "var(--accent-ink)",
+// A server component: the counts are worked out here, so the adventure data stays off the client.
+// Compact on purpose — a slim photo, then the activity types as links — so it doesn't read as a
+// twin of the tall photo cards in "Discover by region" right below it.
 
-    items: [
-      { type: "Trekking" },
-      { type: "Motorcycling" },
-      { type: "Cycling" },
-      { type: "Mountaineering" },
-      { type: "Rock Climbing" },
-      { type: "Scrambling" },
-      { type: "Jeep Safari" },
-      { type: "Caving" },
-      { type: "Urban Adventure" },
-    ],
+const ACCENT = "#ff5100";
+
+const categories = [
+  {
+    id: "earth",
+    label: "Earth",
+    icon: <Mountain className="w-5 h-5 text-[#ff5100]" />,
+    subtitle: "Push your limits and own every inch of wild terrain",
+    image: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/element-earth.jpeg",
+    types: ["Trekking", "Motorcycling", "Cycling", "Mountaineering", "Rock Climbing", "Scrambling", "Jeep Safari", "Caving", "Urban Adventure"],
   },
   {
     id: "water",
     label: "Water",
-    icon: <Waves className="w-6 h-6 text-[#ff5100]" />,
+    icon: <Waves className="w-5 h-5 text-[#ff5100]" />,
     subtitle: "Ride the currents and dive into the deep unknown",
     image: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/element-water.jpeg",
-    accent: "#ff5100",
-    accentLight: "rgba(255,81,0,0.15)",
-    accentBorder: "rgba(255,81,0,0.35)",
-    tagBg: "rgba(255,81,0,0.18)",
-    tagText: "var(--accent-ink)",
-    items: [
-      { type: "River Rafting" },
-      { type: "Kayaking" },
-      { type: "Diving" },
-      { type: "Surfing" },
-      { type: "Snorkelling" },
-    ],
+    types: ["River Rafting", "Kayaking", "Diving", "Surfing", "Snorkelling"],
   },
   {
     id: "snow",
     label: "Snow",
-    icon: <Snowflake className="w-6 h-6 text-[#ff5100]" />,
+    icon: <Snowflake className="w-5 h-5 text-[#ff5100]" />,
     subtitle: "Shred fresh powder and carve perfect lines all season",
     image: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/element-snow.jpeg",
-    accent: "#ff5100",
-    accentLight: "rgba(255,81,0,0.15)",
-    accentBorder: "rgba(255,81,0,0.35)",
-    tagBg: "rgba(255,81,0,0.18)",
-    tagText: "var(--accent-ink)",
-    comingSoon: true,
-    items: [],
-    previewItems: [
-      { type: "Skiing" },
-      { type: "Snowboarding" },
-      { type: "Ice Climbing" },
-      { type: "Ice Skating" },
-    ],
+    types: ["Skiing", "Snowboarding", "Ice Climbing", "Ice Skating"],
   },
-    {
-      id: "air",
-      label: "Air",
-      icon: <Wind className="w-6 h-6 text-[#ff5100]" />,
-      subtitle: "Soar above the clouds and see the world differently",
-      image: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/element-air.jpeg",
-      accent: "#ff5100",
-      accentLight: "rgba(255,81,0,0.15)",
-      accentBorder: "rgba(255,81,0,0.35)",
-      tagBg: "rgba(255,81,0,0.18)",
-      tagText: "var(--accent-ink)",
-      comingSoon: true,
-      items: [],
-      previewItems: [
-        { type: "Paragliding" },
-        { type: "Skydiving" },
-        { type: "Hot Air Balloon" },
-        { type: "Hang Gliding" },
-      ],
-    },
+  {
+    id: "air",
+    label: "Air",
+    icon: <Wind className="w-5 h-5 text-[#ff5100]" />,
+    subtitle: "Soar above the clouds and see the world differently",
+    image: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/element-air.jpeg",
+    types: ["Paragliding", "Skydiving", "Hot Air Balloon", "Hang Gliding"],
+  },
 ];
 
-export default function FindYourFormat() {
-  const [openId, setOpenId] = useState<string | null>(null);
+const countOf = (type: string) => adventures.filter((a) => a.type === type).length;
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
-    return (
-      <section id="styles" className="relative py-6 lg:py-10 px-5 lg:px-8 t-bg-page overflow-hidden">
+export default function FindYourFormat() {
+  return (
+    <section id="styles" className="relative py-6 lg:py-10 px-5 lg:px-8 t-bg-page overflow-hidden">
       {/* Background accent glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-24 right-[8%] w-96 h-96 rounded-full opacity-[0.05] dark:opacity-[0.08] blur-[100px]" style={{ background: "#ff5100" }} />
+        <div className="absolute -top-24 right-[8%] w-96 h-96 rounded-full opacity-[0.05] dark:opacity-[0.08] blur-[100px]" style={{ background: ACCENT }} />
         {/* Waves pool bottom-left; "In season" has the same texture top-right */}
         <SectionTexture kind="tides" color="#3fc6bd" at="10% 85%" opacity={0.16} />
       </div>
@@ -116,218 +68,95 @@ export default function FindYourFormat() {
           <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight">
             Adventure Lives in Every Element
           </h2>
-          
         </div>
 
-        {/* Cards grid */}
         {/* Phones swipe sideways through the cards, like the rows above */}
-        <div className="flex items-start sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
+        <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
           {categories.map((cat) => {
-            const isOpen = openId === cat.id;
-            const countByType = Object.fromEntries(
-              cat.items.map(({ type }) => [type, adventures.filter((a) => a.type === type).length])
-            );
-            const totalCount = Object.values(countByType).reduce((s, n) => s + n, 0);
+            const live = cat.types.map((type) => ({ type, count: countOf(type) })).filter((t) => t.count > 0);
+            const soon = cat.types.filter((type) => !live.some((t) => t.type === type));
+            const total = live.reduce((s, t) => s + t.count, 0);
 
             return (
-              <div
+              <article
                 key={cat.id}
                 className="snap-start shrink-0 w-[78vw] sm:w-auto rounded-2xl overflow-hidden flex flex-col"
                 style={{
                   background: "var(--bg-surface)",
-                  border: `1px solid ${isOpen ? cat.accentBorder : "var(--border-subtle)"}`,
-                  transition: "border-color 0.3s ease",
-                  boxShadow: isOpen
-                    ? `0 0 0 1px ${cat.accentBorder}, 0 20px 48px rgba(var(--shadow-color),0.35)`
-                    : "0 4px 16px rgba(var(--shadow-color),0.2)",
+                  border: "1px solid var(--border-subtle)",
+                  boxShadow: "0 4px 16px rgba(var(--shadow-color),0.2)",
                 }}
               >
-                {/* Image header */}
-                <button
-                  onClick={() => setOpenId(isOpen ? null : cat.id)}
-                    className="relative w-full overflow-hidden cursor-pointer group text-left"
-                    style={{ aspectRatio: "16/9" }}
-                  aria-expanded={isOpen}
-                >
-                    <Image
-                      src={cat.image}
-                      alt={cat.label}
-                      fill
-                      quality={75}
-                      className="photo-grade object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
-                  {/* Accent tint on hover */}
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ background: `${cat.accent}22` }}
+                {/* Slim photo with the name on it; the dark base keeps the white title legible while it loads */}
+                <div className="relative aspect-[16/7] overflow-hidden bg-[#2a2420]">
+                  <Image
+                    src={cat.image}
+                    alt=""
+                    fill
+                    quality={75}
+                    sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 25vw"
+                    className="photo-grade object-cover"
                   />
-
-                    {/* Content over image */}
-                    <div className="absolute inset-0 p-5 flex flex-col justify-between">
-                      {/* Top row — tap cue only */}
-                      <div className="flex items-start justify-end">
-                        <span
-                          className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                          style={{
-                            background: isOpen ? cat.accent : "rgba(255,255,255,0.12)",
-                            color: "white",
-                            backdropFilter: "blur(6px)",
-                            transition: "background 0.25s",
-                          }}
-                        >
-                          {isOpen ? "Close" : "Explore"}
-                        </span>
-                      </div>
-
-                        {/* Bottom row */}
-                        <div>
-                          <div className="flex items-center gap-2.5">
-                            <span className="transition-colors duration-300">
-                              {cat.icon}
-                            </span>
-                            <h3 className="text-white font-bold text-2xl leading-tight tracking-tight">
-                              {cat.label}
-                            </h3>
-                          </div>
-                          <p className="text-white/60 text-xs mt-1.5 leading-relaxed line-clamp-2">{cat.subtitle}</p>
-                        </div>
-
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/5" />
+                  <div className="absolute inset-x-0 bottom-0 p-4">
+                    <div className="flex items-center gap-2">
+                      {cat.icon}
+                      <h3 className="text-white font-bold text-xl leading-tight tracking-tight">{cat.label}</h3>
                     </div>
-                </button>
+                    <p className="text-white/70 text-xs mt-1 leading-snug line-clamp-1">{cat.subtitle}</p>
+                  </div>
+                </div>
 
-                {/* Body — collapsed state: show count pill */}
-                <div
-                  className="px-5 transition-all duration-300 ease-in-out overflow-hidden"
-                  style={{
-                    maxHeight: isOpen ? "700px" : "56px",
-                  }}
-                >
-                  {/* Always-visible collapsed summary */}
-                    {!isOpen && (
-                      <div className="py-3.5 flex items-center justify-between">
-                        <span className="t-text-3 text-xs">
-                          {cat.comingSoon
-                            ? `${cat.previewItems?.length ?? 0} types`
-                            : `${cat.items.length} types`}
-                        </span>
-                        {!cat.comingSoon && (
-                          <span
-                            className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                            style={{ background: cat.tagBg, color: cat.tagText }}
-                          >
-                            {totalCount > 0 ? `${totalCount} Adventures` : "Coming Soon"}
-                          </span>
-                        )}
-                        {cat.comingSoon && (
-                          <span
-                            className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                            style={{ background: cat.tagBg, color: cat.tagText }}
-                          >
-                            Coming Soon
-                          </span>
-                        )}
-                      </div>
-                    )}
+                <div className="p-4 flex-1 flex flex-col gap-3">
+                  {live.length > 0 ? (
+                    <>
+                      <p className="t-text-3 text-xs">
+                        {plural(live.length, "type")} · {plural(total, "adventure")}
+                      </p>
+                      {/* Each type that has something listed, straight to its results */}
+                      <ul className="flex flex-wrap gap-1.5">
+                        {live.map(({ type, count }) => (
+                          <li key={type}>
+                            <Link
+                              href={`/explore?type=${encodeURIComponent(type)}`}
+                              className="group inline-flex items-center gap-1.5 h-9 pl-2.5 pr-1.5 rounded-full text-[13px] font-medium transition-colors hover:bg-[rgba(255,81,0,0.12)]"
+                              style={{ color: "var(--text-secondary)", boxShadow: "inset 0 0 0 1px var(--border-default)" }}
+                            >
+                              <span className="shrink-0 group-hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+                                {ADVENTURE_TYPE_ICONS[type as keyof typeof ADVENTURE_TYPE_ICONS]?.(13)}
+                              </span>
+                              {type}
+                              <span className="text-[11px] font-semibold tabular-nums px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.18)", color: "var(--accent-ink)" }}>
+                                {count}
+                              </span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <p className="text-xs font-semibold self-start px-2.5 py-1 rounded-full" style={{ background: "rgba(255,81,0,0.18)", color: "var(--accent-ink)" }}>
+                      Coming soon
+                    </p>
+                  )}
 
-                  {/* Expanded items */}
-                  {isOpen && (
-                    <div className="py-4">
-                        {cat.comingSoon ? (
-                          <>
-                            <div className="flex flex-col gap-1 mb-4 opacity-40 pointer-events-none select-none">
-                                {cat.previewItems?.map(({ type }) => (
-                                  <div
-                                    key={type}
-                                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl"
-                                  >
-                                    <span className="flex-shrink-0" style={{ color: "var(--text-tertiary)" }}>
-                                      {ADVENTURE_TYPE_ICONS[type]?.(13)}
-                                    </span>
-                                    <span className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>{type}</span>
-                                  </div>
-                                ))}
-                            </div>
-                          <div
-                            className="rounded-xl px-4 py-3 text-center"
-                            style={{
-                              background: cat.accentLight,
-                              border: `1px solid ${cat.accentBorder}`,
-                            }}
-                          >
-                            <p className="font-semibold text-sm" style={{ color: cat.tagText }}>
-                              Coming Soon
-                            </p>
-                            <p className="text-xs mt-0.5 leading-snug" style={{ color: "var(--text-tertiary)" }}>
-                              {cat.label} adventures launching soon
-                            </p>
-                          </div>
-                        </>
-                      ) : (
-                          <>
-                            <div className="flex flex-col gap-0.5">
-                                {cat.items.map(({ type }) => countByType[type] === 0 ? (
-                                  // Nothing listed yet: say so rather than linking to an empty page
-                                  <div key={type} className="flex items-center justify-between px-3 py-2.5 rounded-xl">
-                                    <div className="flex items-center gap-2.5 opacity-60">
-                                      <span className="flex-shrink-0" style={{ color: "var(--text-tertiary)" }}>
-                                        {ADVENTURE_TYPE_ICONS[type]?.(13)}
-                                      </span>
-                                      <span className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>{type}</span>
-                                    </div>
-                                    <span
-                                      className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
-                                      style={{ border: `1px dashed ${cat.accentBorder}`, color: "var(--text-tertiary)" }}
-                                    >
-                                      Coming soon
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <Link
-                                    key={type}
-                                    href={`/explore?type=${encodeURIComponent(type)}`}
-                                    className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150"
-                                    onMouseEnter={(e) => {
-                                      (e.currentTarget as HTMLElement).style.background =
-                                        cat.accentLight;
-                                    }}
-                                    onMouseLeave={(e) => {
-                                      (e.currentTarget as HTMLElement).style.background = "transparent";
-                                    }}
-                                  >
-                                    <div className="flex items-center gap-2.5">
-                                      <span className="group-hover/row:text-[#ff5100] transition-colors duration-150 flex-shrink-0" style={{ color: "var(--text-tertiary)" }}>
-                                        {ADVENTURE_TYPE_ICONS[type]?.(13)}
-                                      </span>
-                                      <span className="group-hover/row:text-[var(--text-primary)] text-sm font-medium transition-colors duration-150" style={{ color: "var(--text-secondary)" }}>
-                                        {type}
-                                      </span>
-                                    </div>
-                                  <div className="flex items-center gap-2">
-                                  <span
-                                    className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                                    style={{ background: cat.tagBg, color: cat.tagText }}
-                                  >
-                                    {countByType[type]}
-                                  </span>
-                                  <ArrowRight
-                                    className="w-3 h-3 opacity-0 group-hover/row:opacity-100 -translate-x-1 group-hover/row:translate-x-0 transition-all duration-150"
-                                    style={{ color: cat.tagText }}
-                                  />
-                                </div>
-                              </Link>
-                            ))}
-                          </div>
+                  {soon.length > 0 && (
+                    <p className="text-xs leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+                      {live.length > 0 ? "Coming soon: " : ""}{soon.join(", ")}
+                    </p>
+                  )}
 
-                          {/* View all link */}
-                          <CardFooterLink href={`/explore?category=${cat.id}`} label={`View all ${cat.label} adventures`} accentColor={cat.accent} />
-                        </>
-                      )}
+                  {live.length > 0 && (
+                    <div className="mt-auto">
+                      <CardFooterLink
+                        href={`/explore?type=${live.map((t) => encodeURIComponent(t.type)).join(",")}`}
+                        label={`View all ${cat.label} adventures`}
+                        accentColor={ACCENT}
+                      />
                     </div>
                   )}
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
