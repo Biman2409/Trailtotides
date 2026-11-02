@@ -3,15 +3,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, ArrowUp, ArrowUpRight, BadgeCheck, GitCompare, LocateFixed, Map as MapIcon, MapPin, MousePointer2, Shapes } from "lucide-react";
+import { ArrowRight, ArrowUp, ArrowUpRight, BadgeCheck, Download, GitCompare, LocateFixed, Map as MapIcon, MapPin, MousePointer2, Shapes, WifiOff } from "lucide-react";
 import { INDIA_PATH, PROJ } from "@/lib/passportVisuals";
 import { DEMO_SPOTS, type DemoGenre } from "@/lib/mapDemoSpots";
 import { CompassAIMark } from "@/components/ui/custom/BrandMarks";
 
-// A small, live preview of /map for the home page, acting out what the real map does:
-// ask Compass.AI and its picks light up, pins coloured by difficulty, rings for how ready you
-// are, what's near you, a pin's card with its trail, and adding it to compare. A pointer acts
-// the tour out; any click hands over the controls.
+// A small, live preview of /map for the home page, acting out what the real map does: pins
+// coloured by difficulty, ask Compass.AI and its picks light up with rings for how ready you
+// are, what's near you, a pin's card with its trail and compare, and the trail's GPX to follow
+// offline. A pointer acts the tour out; any click hands over the controls.
 //
 // Rendering is split for smoothness: the map itself is drawn once and moved as a single
 // GPU layer, while the dots, rings and pulses are painted on a canvas every frame.
@@ -109,14 +109,17 @@ const ARRIVE = 900; // the pointer's travel time before it "clicks"
 const TYPE_MS = 32; // per character of the Compass prompt
 const BEATS = [
   { caption: "Every pin, coloured by difficulty", ms: 3400 },
-  { caption: "Ask Compass.AI", ms: 5600 },
-  { caption: "Light up your matches", ms: 3400 },
+  { caption: "Ask Compass.AI, see your matches", ms: 7000 },
   { caption: "Near you", ms: 3400 },
-  { caption: "Tap a pin: trail, fit and price", ms: 4800 },
-  { caption: "Add it to compare", ms: 2800 },
+  { caption: "Tap a pin, add it to compare", ms: 5600 },
+  { caption: "Get the GPX, follow it offline", ms: 5000 },
   // The tour ends on the way in: the pointer taps the demo's own "Open map" button
   { caption: "Open the map", ms: 2800 },
 ];
+// Within the Compass beat: the prompt types out and the map frames the picks, then the rings come on
+const MATCH_AT = 3600;
+// Within the pin beat: the card opens, then the pointer moves on to compare
+const COMPARE_AT = 2700;
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const easeOutBack = (t: number) => { const c = 1.7; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
@@ -155,6 +158,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
   const [typing, setTyping] = useState(false);
   const [matches, setMatches] = useState(false);
   const [compared, setCompared] = useState<string | null>(null);
+  const [offline, setOffline] = useState(false); // the GPX is saved and the trail is being followed
   const [target, setTarget] = useState<Camera>(HOME);
   const [cam, setCam] = useState<Camera>(HOME); // the settled camera; flights never re-render
   const [flying, setFlying] = useState(false);
@@ -175,6 +179,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
   const matchRef = useRef<HTMLButtonElement>(null);
   const nearRef = useRef<HTMLButtonElement>(null);
   const compareRef = useRef<HTMLButtonElement>(null);
+  const gpxRef = useRef<HTMLAnchorElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
   const typeTimer = useRef<ReturnType<typeof setInterval>>(undefined);
   const sendTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -401,33 +406,37 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
   useEffect(() => {
     if (!touring || !onScreen) return;
     const press = (pt: { x: number; y: number } | null) => pt && setCursor((c) => ({ ...pt, click: (c?.click ?? 0) + 1 }));
-    let act: ReturnType<typeof setTimeout> | undefined;
+    const acts: ReturnType<typeof setTimeout>[] = [];
+    const at = (ms: number, fn: () => void) => acts.push(setTimeout(fn, ms));
     if (step === 0) {
       stopTyping();
       setGenre(null); setMode({ kind: "all" }); setTarget(HOME); setSelected(null); setCtaHot(false);
-      setAsked(""); setMatches(false); setCompared(null);
+      setAsked(""); setMatches(false); setCompared(null); setOffline(false);
       setCursor((c) => c ?? (() => { const r = rootRef.current?.getBoundingClientRect(); return r ? { x: r.width * 0.84, y: r.height * 0.8, click: 0 } : null; })());
     } else if (step === 1) {
+      // Ask, then light up how ready you are for what came back
       press(elPoint(askRef.current));
-      act = setTimeout(() => ask(), ARRIVE);
+      at(ARRIVE, () => ask());
+      at(MATCH_AT, () => press(elPoint(matchRef.current)));
+      at(MATCH_AT + ARRIVE, () => setMatches(true));
     } else if (step === 2) {
-      press(elPoint(matchRef.current));
-      act = setTimeout(() => setMatches(true), ARRIVE);
-    } else if (step === 3) {
       press(elPoint(nearRef.current));
-      act = setTimeout(() => { setAsked(""); setGenre(null); setMode({ kind: "near" }); setTarget(NEAR); }, ARRIVE);
-    } else if (step === 4) {
+      at(ARRIVE, () => { setAsked(""); setGenre(null); setMode({ kind: "near" }); setTarget(NEAR); });
+    } else if (step === 3) {
+      // Open the pin, then add it to compare
       press(pinPoint(tourPin, NEAR));
-      act = setTimeout(() => setSelected(tourPin.slug), ARRIVE);
+      at(ARRIVE, () => setSelected(tourPin.slug));
+      at(COMPARE_AT, () => press(elPoint(compareRef.current)));
+      at(COMPARE_AT + ARRIVE, () => setCompared(tourPin.slug));
+    } else if (step === 4) {
+      press(elPoint(gpxRef.current));
+      at(ARRIVE, () => setOffline(true));
     } else if (step === 5) {
-      press(elPoint(compareRef.current));
-      act = setTimeout(() => setCompared(tourPin.slug), ARRIVE);
-    } else if (step === 6) {
       press(elPoint(ctaRef.current));
-      act = setTimeout(() => setCtaHot(true), ARRIVE);
+      at(ARRIVE, () => setCtaHot(true));
     }
     const t = setTimeout(() => setStep((s) => (s + 1) % BEATS.length), BEATS[step].ms + (step === 0 && !revealed ? SWEEP_MS : 0));
-    return () => { clearTimeout(t); clearTimeout(act); };
+    return () => { clearTimeout(t); acts.forEach(clearTimeout); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, touring, onScreen]);
 
@@ -435,7 +444,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
   const replay = () => {
     stopTyping();
     setStep(0); setGenre(null); setMode({ kind: "all" }); setTarget(HOME); setSelected(null); setCursor(null);
-    setAsked(""); setMatches(false); setCompared(null); setTouring(true);
+    setAsked(""); setMatches(false); setCompared(null); setOffline(false); setTouring(true);
   };
 
   // Hit-test the canvas: the nearest visible pin within reach of the pointer
@@ -455,6 +464,8 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
   };
 
   const sel = selected ? pins.find((p) => p.slug === selected) ?? null : null;
+  const hasTrail = !!sel && sel.slug === tour.slug && tour.route.length > 1;
+  const routePts = tour.route.map(([x, y]) => `${x},${y}`).join(" ");
   const selPos = sel && !flying ? screenPct(sel.x, sel.y, cam) : null;
   const zoomed = target.scale > 1;
 
@@ -572,12 +583,16 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
             </span>
           )}
 
-          {/* Status */}
+          {/* Status; once something is in compare, the compare tray takes its place (up here, clear of the card) */}
           <div className="absolute left-2 top-2 right-16 pointer-events-none">
-            <span key={status} className="md-badge inline-flex items-center gap-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full max-w-full" style={{ background: "rgba(0,0,0,0.55)", color: "#fff", backdropFilter: "blur(6px)" }}>
+            {compared ? (
+              <span key="compare" className="md-badge inline-flex items-center gap-1.5 text-[10px] font-semibold pl-2 pr-2.5 py-1 rounded-full" style={{ background: "rgba(255,81,0,0.92)", color: "#fff" }}>
+                <GitCompare className="w-3 h-3" />1 in compare · add 2 more
+              </span>
+            ) : <span key={status} className="md-badge inline-flex items-center gap-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full max-w-full" style={{ background: "rgba(0,0,0,0.55)", color: "#fff", backdropFilter: "blur(6px)" }}>
               <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: statusColor, boxShadow: `0 0 6px ${statusColor}` }} />
               <span className="truncate">{status}</span>
-            </span>
+            </span>}
           </div>
           <button
             type="button"
@@ -600,14 +615,9 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
             </span>
           </div>
 
-          {/* Key: what the colours mean (difficulty), or the rings when they're on; the compare
-              tray takes the spot once something's added */}
+          {/* Key: what the colours mean (difficulty), or the rings when they're on */}
           <div className="absolute left-2 right-10 bottom-2 pointer-events-none">
-            {compared ? (
-              <span className="md-badge inline-flex items-center gap-1.5 text-[10px] font-semibold pl-2 pr-2.5 py-1 rounded-full" style={{ background: "rgba(255,81,0,0.92)", color: "#fff" }}>
-                <GitCompare className="w-3 h-3" />1 in compare · add 2 more
-              </span>
-            ) : (
+            {(
               <span className="inline-flex items-center gap-1.5 text-[9px] font-semibold px-2 py-1 rounded-full" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.7)" }}>
                 {matches ? (
                   (["ready", "stretch", "not-yet"] as MapDemoFit[]).map((f) => (
@@ -646,7 +656,11 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                 <Image src={sel.image} alt="" fill sizes="204px" className="object-cover transition-transform duration-700 group-hover:scale-105" />
                 <span className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(11,14,13,0.95), transparent 70%)" }} />
                 <span className="absolute left-2.5 bottom-1.5 right-2.5 text-[12.5px] font-semibold text-white leading-snug truncate">{sel.name}</span>
-                {mode.kind === "near" && (
+                {offline && hasTrail ? (
+                  <span key="off" className="md-badge absolute right-2 top-2 inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.92)", color: "#03140d" }}>
+                    <WifiOff className="w-2.5 h-2.5" />No signal · GPS on
+                  </span>
+                ) : mode.kind === "near" && (
                   <span className="absolute right-2 top-2 text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(96,165,250,0.9)", color: "#06121f" }}>
                     {Math.round(sel.km)} km away
                   </span>
@@ -662,10 +676,16 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                   )}
                 </span>
                 {/* The trail and its climb, for the trek the tour opens */}
-                {sel.slug === tour.slug && tour.route.length > 1 && (
+                {hasTrail && (
                   <span className="flex items-center gap-2 mt-2">
                     <svg viewBox="-0.08 -0.08 1.16 1.16" className="w-9 h-9 shrink-0 rounded-md" style={{ background: "rgba(255,255,255,0.04)" }} aria-hidden>
-                      <polyline points={tour.route.map(([x, y]) => `${x},${y}`).join(" ")} fill="none" stroke={AI_COLOR} strokeWidth={0.06} strokeLinejoin="round" strokeLinecap="round" pathLength={1} className="md-draw" />
+                      <polyline points={routePts} fill="none" stroke={AI_COLOR} strokeWidth={0.06} strokeLinejoin="round" strokeLinecap="round" pathLength={1} className="md-draw" />
+                      {/* Offline: your GPS position walking the trail */}
+                      {offline && (
+                        <circle r={0.07} fill="#60a5fa" stroke="#fff" strokeWidth={0.025}>
+                          <animateMotion dur="4s" repeatCount="indefinite" path={`M${routePts.replaceAll(" ", " L")}`} />
+                        </circle>
+                      )}
                     </svg>
                     <span className="flex-1 min-w-0">
                       <svg viewBox="0 0 100 24" preserveAspectRatio="none" className="block w-full h-5" aria-hidden>
@@ -677,6 +697,24 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                       </svg>
                       <span className="block text-[9.5px] text-white/50 mt-0.5 tabular-nums">{tour.lengthKm} km · up to {tour.maxEleM.toLocaleString("en-IN")} m</span>
                     </span>
+                  </span>
+                )}
+                {/* The trail file, for following it with no signal */}
+                {hasTrail && (
+                  <span className="flex items-center justify-between gap-2 mt-1.5">
+                    <a
+                      ref={gpxRef}
+                      href={`/experiences/${sel.slug}/trail.gpx`}
+                      download
+                      onClick={() => { takeOver(); setOffline(true); }}
+                      className="md-hit inline-flex items-center gap-1 text-[10px] font-semibold px-2 h-6 rounded-full transition-colors"
+                      style={offline ? { background: "rgba(16,185,129,0.18)", color: "#34d399" } : { background: "rgba(255,255,255,0.08)", color: "#fff" }}
+                    >
+                      <Download className="w-3 h-3" />{offline ? "GPX saved" : "GPX"}
+                    </a>
+                    <Link href="/adventurepedia/offline-maps" className="text-[9.5px] text-white/50 hover:text-white truncate">
+                      {offline ? "Works with no signal" : "Follow it offline"}
+                    </Link>
                   </span>
                 )}
                 <span className="flex items-center justify-between gap-2 mt-2">
