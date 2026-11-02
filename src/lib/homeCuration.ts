@@ -12,6 +12,10 @@ const level = (a: Adventure) => LEVEL[computeDifficulty(getACE(a))] ?? 3;
 const isDomestic = (a: Adventure) => !/nepal|bhutan/i.test(a.state);
 const isBookable = (a: Adventure) => (a.operators?.length ?? 0) > 0;
 
+/** A moderately fit first-timer — lands adventures in all three buckets. The Matchmaker preview
+ *  and the map preview both rate adventures for it. */
+export const SAMPLE_ACE: ACE = { stamina: 3, power: 2, strength: 2, agility: 3, water: 1, altitude: 2, focus: 3, nerve: 2 };
+
 /** Current month index in India, so the "in season" row flips at IST midnight, not UTC. */
 export function currentMonthIndexIST(now = new Date()): number {
   return Number(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata", month: "numeric" })) - 1;

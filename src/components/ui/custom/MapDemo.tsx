@@ -3,17 +3,21 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, LocateFixed, Map as MapIcon, MousePointer2 } from "lucide-react";
+import { ArrowRight, ArrowUp, ArrowUpRight, BadgeCheck, GitCompare, LocateFixed, Map as MapIcon, MapPin, MousePointer2, Shapes } from "lucide-react";
 import { INDIA_PATH, PROJ } from "@/lib/passportVisuals";
 import { DEMO_SPOTS, type DemoGenre } from "@/lib/mapDemoSpots";
+import { CompassAIMark } from "@/components/ui/custom/BrandMarks";
 
-// A small, live preview of /map for the home page, built around why people open a map:
-// to see everything across India, narrow it to what they love, look at one region, or
-// find what's near them. A pointer acts the tour out; any click hands over the controls.
+// A small, live preview of /map for the home page, acting out what the real map does:
+// ask Compass.AI and its picks light up, pins coloured by difficulty, rings for how ready you
+// are, what's near you, a pin's card with its trail, and adding it to compare. A pointer acts
+// the tour out; any click hands over the controls.
 //
 // Rendering is split for smoothness: the map itself is drawn once and moved as a single
-// GPU layer, while the dots, range ring and pulses are painted on a canvas every frame.
+// GPU layer, while the dots, rings and pulses are painted on a canvas every frame.
 // Nothing re-renders in React while the camera flies.
+
+export type MapDemoFit = "ready" | "stretch" | "not-yet";
 
 export type MapDemoPin = {
   slug: string;
@@ -25,22 +29,38 @@ export type MapDemoPin = {
   durationDays: string;
   state: string;
   image: string;
+  price: number | null;
+  verified: number;
+  /** How ready the example profile is for it (the same one the Matchmaker preview uses) */
+  fit: MapDemoFit;
 };
 
-// real: a listing on the site. Sample spots (not real) are drawn faint and can't be tapped, so the
-// preview shows where the map is heading without passing them off as bookable adventures
-type Pin = { slug: string; name: string; genre: DemoGenre; x: number; y: number; lat: number; lng: number; image: string; meta: string; href: string; km: number; real: boolean };
+/** What the tour acts out with real listings: a Compass.AI prompt and its picks, and the pin it opens */
+export type MapDemoTour = {
+  prompt: string;
+  picks: string[];
+  slug: string;
+  /** The trail's shape, fitted into a unit box (x, y from 0 to 1) */
+  route: [number, number][];
+  /** Elevations along the trail, evenly spaced */
+  profile: number[];
+  lengthKm: number;
+  maxEleM: number;
+};
 
-const GENRES: { id: DemoGenre; color: string }[] = [
-  { id: "Trekking", color: "#ff7d47" },
-  { id: "Water", color: "#5fe0d4" },
-  { id: "Air", color: "#ffc46b" },
-  { id: "Snow", color: "#cfe6ff" },
-  { id: "Road", color: "#a78bfa" },
-  { id: "Rock", color: "#f472b6" },
-];
-const COLOR = Object.fromEntries(GENRES.map((g) => [g.id, g.color])) as Record<DemoGenre, string>;
+type Pin = {
+  slug: string; name: string; genre: DemoGenre; difficulty: string; x: number; y: number; lat: number; lng: number;
+  image: string; meta: string; href: string; km: number; price: number | null; verified: number; fit: MapDemoFit | null;
+};
 
+// Pins are coloured by difficulty, as on the real map and the cards
+const DIFFS = ["Easy", "Moderate", "Hard", "Advanced", "Extreme"] as const;
+const DIFF_COLOR: Record<string, string> = { Easy: "#10b981", Moderate: "#38bdf8", Hard: "#a78bfa", Advanced: "#ff7a2f", Extreme: "#ef4444" };
+const FIT_COLOR: Record<MapDemoFit, string> = { ready: "#10b981", stretch: "#f59e0b", "not-yet": "#f43f5e" };
+const FIT_LABEL: Record<MapDemoFit, string> = { ready: "Ready for you", stretch: "A stretch", "not-yet": "Not yet" };
+const AI_COLOR = "#ffb37a";
+
+const GENRES: DemoGenre[] = ["Trekking", "Water", "Air", "Snow", "Road", "Rock"];
 const GENRE_OF: Record<string, DemoGenre> = {
   Trekking: "Trekking", Mountaineering: "Trekking", Scrambling: "Trekking",
   Diving: "Water", Kayaking: "Water", "River Rafting": "Water",
@@ -50,12 +70,14 @@ const GENRE_OF: Record<string, DemoGenre> = {
   "Rock Climbing": "Rock", Caving: "Rock",
 };
 
-// Sample spots borrow the genre photos from "Adventure Lives in Every Element"
+// Sample spots borrow the genre photos from "Adventure Lives in Every Element", and get a
+// steady made-up difficulty from their name so they colour like the rest
 const ELEMENT = (name: string) => `https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/element-${name}.jpeg`;
 const GENRE_IMAGE: Record<DemoGenre, string> = {
   Trekking: ELEMENT("earth"), Road: ELEMENT("earth"), Rock: ELEMENT("earth"),
   Water: ELEMENT("water"), Air: ELEMENT("air"), Snow: ELEMENT("snow"),
 };
+const sampleDifficulty = (name: string) => DIFFS[[...name].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % 4];
 
 const W = PROJ.W, H = PROJ.H;
 const toXY = (lng: number, lat: number) => ({
@@ -80,15 +102,18 @@ const NEAR_KM = 300;
 const NEAR_R = (NEAR_KM / 111) * PROJ.scale; // radius in map units
 const NEAR: Camera = { ...ME_XY, scale: 3 };
 
-type Mode = { kind: "all" } | { kind: "region"; label: string } | { kind: "near" };
+type Mode = { kind: "all" } | { kind: "picks" } | { kind: "region"; label: string } | { kind: "near" };
 
 const SWEEP_MS = 1500;
+const ARRIVE = 900; // the pointer's travel time before it "clicks"
+const TYPE_MS = 32; // per character of the Compass prompt
 const BEATS = [
-  { caption: "All of India", ms: 3400 },
-  { caption: "Pick a type", ms: 3000 },
-  { caption: "Zoom to a region", ms: 3200 },
-  { caption: "Near you", ms: 3600 },
-  { caption: "Tap a pin", ms: 4400 },
+  { caption: "Every pin, coloured by difficulty", ms: 3400 },
+  { caption: "Ask Compass.AI", ms: 5600 },
+  { caption: "Light up your matches", ms: 3400 },
+  { caption: "Near you", ms: 3400 },
+  { caption: "Tap a pin: trail, fit and price", ms: 4800 },
+  { caption: "Add it to compare", ms: 2800 },
   // The tour ends on the way in: the pointer taps the demo's own "Open map" button
   { caption: "Open the map", ms: 2800 },
 ];
@@ -96,24 +121,40 @@ const BEATS = [
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const easeOutBack = (t: number) => { const c = 1.7; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
 /** `cta` is the way into the real thing — it lives inside the demo, and the tour ends by tapping it */
-export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: { href: string; label: string } }) {
+export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[]; tour: MapDemoTour; cta: { href: string; label: string } }) {
   const pins: Pin[] = useMemo(() => [
     ...real.filter((p) => GENRE_OF[p.type]).map((p) => ({
-      slug: p.slug, name: p.name, genre: GENRE_OF[p.type], ...toXY(p.lng, p.lat), lat: p.lat, lng: p.lng,
-      image: p.image, meta: `${p.durationDays} · ${p.difficulty}`, href: `/experiences/${p.slug}`, km: kmBetween(ME, p), real: true,
+      slug: p.slug, name: p.name, genre: GENRE_OF[p.type], difficulty: p.difficulty, ...toXY(p.lng, p.lat), lat: p.lat, lng: p.lng,
+      image: p.image, meta: `${p.durationDays} · ${p.difficulty}`, href: `/experiences/${p.slug}`, km: kmBetween(ME, p),
+      price: p.price, verified: p.verified, fit: p.fit,
     })),
     ...DEMO_SPOTS.map(([genre, name, lat, lng]) => ({
-      slug: `spot-${name.toLowerCase().replace(/[^a-z]+/g, "-")}`, name, genre, ...toXY(lng, lat), lat, lng,
-      image: GENRE_IMAGE[genre], meta: `${genre} · coming soon`, href: `/explore?q=${encodeURIComponent(name)}`, km: kmBetween(ME, { lat, lng }), real: false,
+      slug: `spot-${name.toLowerCase().replace(/[^a-z]+/g, "-")}`, name, genre, difficulty: sampleDifficulty(name), ...toXY(lng, lat), lat, lng,
+      image: GENRE_IMAGE[genre], meta: `${genre} · sample spot`, href: `/explore?q=${encodeURIComponent(name)}`, km: kmBetween(ME, { lat, lng }),
+      price: null, verified: 0, fit: null,
     })),
   ], [real]);
 
-  // Genres with at least one real listing; the rest are only sample spots so far
-  const liveGenres = useMemo(() => new Set(pins.filter((p) => p.real).map((p) => p.genre)), [pins]);
+  const picks = useMemo(() => new Set(tour.picks), [tour.picks]);
+  // The camera that frames Compass's picks
+  const picksCam = useMemo<Camera>(() => {
+    const ps = pins.filter((p) => picks.has(p.slug));
+    if (!ps.length) return HOME;
+    const xs = ps.map((p) => p.x), ys = ps.map((p) => p.y);
+    const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+    const scale = Math.max(1, Math.min(5, W / (x1 - x0 + 70), H / (y1 - y0 + 70)));
+    return { x: (x0 + x1) / 2, y: (y0 + y1) / 2, scale };
+  }, [pins, picks]);
+
   const [genre, setGenre] = useState<DemoGenre | null>(null);
   const [mode, setMode] = useState<Mode>({ kind: "all" });
+  const [asked, setAsked] = useState("");       // the Compass prompt as typed so far
+  const [typing, setTyping] = useState(false);
+  const [matches, setMatches] = useState(false);
+  const [compared, setCompared] = useState<string | null>(null);
   const [target, setTarget] = useState<Camera>(HOME);
   const [cam, setCam] = useState<Camera>(HOME); // the settled camera; flights never re-render
   const [flying, setFlying] = useState(false);
@@ -130,10 +171,13 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
   const boxRef = useRef<HTMLDivElement>(null);
   const baseRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const hudRef = useRef<HTMLSpanElement>(null);
-  const locateRef = useRef<HTMLButtonElement>(null);
+  const askRef = useRef<HTMLButtonElement>(null);
+  const matchRef = useRef<HTMLButtonElement>(null);
+  const nearRef = useRef<HTMLButtonElement>(null);
+  const compareRef = useRef<HTMLButtonElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
-  const chipRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const typeTimer = useRef<ReturnType<typeof setInterval>>(undefined);
+  const sendTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Everything the frame loop reads lives in refs
   const live = useRef({
@@ -141,14 +185,16 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
     flight: null as null | { from: Camera; to: Camera; start: number; ms: number; dist: number },
     genre: null as DemoGenre | null,
     mode: { kind: "all" } as Mode,
+    matches: false,
     selected: null as string | null,
     revealAt: 0,
     ringAt: 0,
     w: 0, h: 0,
-    anim: new Map<string, { a: number; k: number }>(),
+    anim: new Map<string, { a: number; k: number; r: number }>(),
   });
   live.current.genre = genre;
   live.current.selected = selected;
+  live.current.matches = matches;
   if (live.current.mode !== mode) {
     if (mode.kind === "near" && live.current.mode.kind !== "near") live.current.ringAt = performance.now();
     live.current.mode = mode;
@@ -164,6 +210,9 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  const stopTyping = () => { clearInterval(typeTimer.current); clearTimeout(sendTimer.current); setTyping(false); };
+  useEffect(() => () => { clearInterval(typeTimer.current); clearTimeout(sendTimer.current); }, []);
 
   // Start a flight whenever the target changes
   useEffect(() => {
@@ -221,10 +270,6 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
       }
       const c = L.cam, u = w / W;
       base.style.transform = `translate3d(${w / 2}px, ${h / 2}px, 0) scale(${c.scale}) translate3d(${-c.x * u}px, ${-c.y * u}px, 0)`;
-      if (hudRef.current) {
-        const lat = PROJ.maxLat - (c.y - PROJ.offY) / PROJ.scale, lng = (c.x - PROJ.offX) / PROJ.scale + PROJ.minLng;
-        hudRef.current.textContent = `${lat.toFixed(2)}°N ${lng.toFixed(2)}°E · ${c.scale.toFixed(1)}×`;
-      }
       const sx = (x: number) => (x - c.x) * c.scale * u + w / 2;
       const sy = (y: number) => (y - c.y) * c.scale * u + h / 2;
 
@@ -248,35 +293,44 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
       }
 
       // Pins
+      const asking = L.mode.kind === "picks";
       const ease = 1 - Math.exp(-dt / 140); // smooth every state change toward its target
       let selPin: Pin | null = null;
       for (const p of pins) {
         const x = sx(p.x), y = sy(p.y);
         if (x < -20 || y < -20 || x > w + 20 || y > h + 20) continue;
-        const shown = (!L.genre || p.genre === L.genre) && (!near || p.km <= NEAR_KM);
+        const picked = asking && picks.has(p.slug);
+        const shown = (!L.genre || p.genre === L.genre) && (!near || p.km <= NEAR_KM) && (!asking || picked);
         const on = L.selected === p.slug;
         let st = L.anim.get(p.slug);
-        if (!st) { st = { a: 1, k: 1 }; L.anim.set(p.slug, st); }
+        if (!st) { st = { a: 1, k: 1, r: 0 }; L.anim.set(p.slug, st); }
         st.a += ((shown ? 1 : 0.12) - st.a) * ease;
-        st.k += ((on ? 1.9 : shown ? (L.genre || near ? 1.15 : 1) : 0.55) - st.k) * ease;
+        st.k += ((on ? 1.9 : picked ? 1.6 : shown ? (L.genre || near ? 1.15 : 1) : 0.55) - st.k) * ease;
+        st.r += ((L.matches && p.fit && shown ? 1 : 0) - st.r) * ease;
         // Pop in as the scan line passes
         const pt = L.revealAt ? Math.min(1, Math.max(0, (now - L.revealAt - (p.x / W) * SWEEP_MS) / 650)) : 0;
         if (pt <= 0) continue;
         const pop = easeOutBack(pt);
-        const col = COLOR[p.genre];
-        ctx.fillStyle = col;
-        if (!p.real) {
-          // Sample spot: a faint dot, no halo or outline
-          ctx.globalAlpha = st.a * Math.min(1, pt * 2) * 0.3;
-          ctx.beginPath(); ctx.arc(x, y, 1.9 * st.k * pop, 0, Math.PI * 2); ctx.fill();
-          continue;
+        const alpha = st.a * Math.min(1, pt * 2);
+        const col = DIFF_COLOR[p.difficulty] ?? "#94a3b8";
+        // Compass's picks glow in its colour
+        if (picked) {
+          ctx.globalAlpha = alpha * (0.28 + 0.12 * Math.sin(now / 300));
+          ctx.fillStyle = AI_COLOR;
+          ctx.beginPath(); ctx.arc(x, y, 11 * st.k * pop, 0, Math.PI * 2); ctx.fill();
         }
-        ctx.globalAlpha = st.a * Math.min(1, pt * 2);
-        ctx.globalAlpha *= 0.16;
+        ctx.fillStyle = col;
+        ctx.globalAlpha = alpha * 0.16;
         ctx.beginPath(); ctx.arc(x, y, 7.5 * st.k * pop, 0, Math.PI * 2); ctx.fill();
-        ctx.globalAlpha = st.a * Math.min(1, pt * 2);
+        ctx.globalAlpha = alpha;
         ctx.beginPath(); ctx.arc(x, y, 2.7 * st.k * pop, 0, Math.PI * 2); ctx.fill();
         ctx.lineWidth = 1; ctx.strokeStyle = "#0b1211"; ctx.stroke();
+        // Fit ring: how ready the example profile is for it
+        if (st.r > 0.02 && p.fit) {
+          ctx.globalAlpha = alpha * st.r;
+          ctx.strokeStyle = FIT_COLOR[p.fit]; ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.arc(x, y, (4.4 + 1.6 * st.r) * st.k * pop, 0, Math.PI * 2); ctx.stroke();
+        }
         if (on) selPin = p;
       }
       ctx.globalAlpha = 1;
@@ -284,7 +338,7 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
       // Selected pin pulse
       if (selPin) {
         const x = sx(selPin.x), y = sy(selPin.y), t = (now % 1600) / 1600;
-        ctx.strokeStyle = COLOR[selPin.genre]; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.9 * (1 - t);
+        ctx.strokeStyle = DIFF_COLOR[selPin.difficulty] ?? "#fff"; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.9 * (1 - t);
         ctx.beginPath(); ctx.arc(x, y, 6 + t * 14, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1;
       }
 
@@ -301,7 +355,7 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
     };
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
-  }, [onScreen, pins]);
+  }, [onScreen, pins, picks]);
 
   // Geometry helpers for the tour pointer and the card
   const screenPct = (x: number, y: number, c: Camera) => ({
@@ -323,29 +377,52 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
     return relToRoot(b.left + (s.left / 100) * b.width, b.top + (s.top / 100) * b.height);
   };
 
-  // The tour taps the nearest real listing (not a sample spot), so it opens a page that exists
-  const tourPin = useMemo(() => [...pins].sort((a, b) => a.km - b.km).find((p) => p.km > 20 && p.href.startsWith("/experiences/")) ?? pins[0], [pins]);
+  // The tour opens the trek whose trail it has (a real listing near "you"), else the nearest real one
+  const tourPin = useMemo(
+    () => pins.find((p) => p.slug === tour.slug) ?? [...pins].sort((a, b) => a.km - b.km).find((p) => p.km > 20 && p.href.startsWith("/experiences/")) ?? pins[0],
+    [pins, tour.slug],
+  );
+
+  // Ask Compass.AI: the prompt types itself out, then the picks light up and the map frames them
+  const ask = (instant = false) => {
+    stopTyping();
+    setSelected(null); setGenre(null);
+    const done = () => { setTyping(false); setAsked(tour.prompt); setMode({ kind: "picks" }); setTarget(picksCam); };
+    if (instant) return done();
+    setTyping(true); setAsked("");
+    let n = 0;
+    typeTimer.current = setInterval(() => {
+      n++;
+      setAsked(tour.prompt.slice(0, n));
+      if (n >= tour.prompt.length) { clearInterval(typeTimer.current); sendTimer.current = setTimeout(done, 350); }
+    }, TYPE_MS);
+  };
 
   useEffect(() => {
     if (!touring || !onScreen) return;
-    const ARRIVE = 900;
     const press = (pt: { x: number; y: number } | null) => pt && setCursor((c) => ({ ...pt, click: (c?.click ?? 0) + 1 }));
     let act: ReturnType<typeof setTimeout> | undefined;
     if (step === 0) {
+      stopTyping();
       setGenre(null); setMode({ kind: "all" }); setTarget(HOME); setSelected(null); setCtaHot(false);
+      setAsked(""); setMatches(false); setCompared(null);
       setCursor((c) => c ?? (() => { const r = rootRef.current?.getBoundingClientRect(); return r ? { x: r.width * 0.84, y: r.height * 0.8, click: 0 } : null; })());
     } else if (step === 1) {
-      press(elPoint(chipRefs.current.Trekking));
-      act = setTimeout(() => setGenre("Trekking"), ARRIVE);
+      press(elPoint(askRef.current));
+      act = setTimeout(() => ask(), ARRIVE);
     } else if (step === 2) {
-      setMode({ kind: "region", label: "Himalayas" }); setTarget(HIMALAYAS);
+      press(elPoint(matchRef.current));
+      act = setTimeout(() => setMatches(true), ARRIVE);
     } else if (step === 3) {
-      press(elPoint(locateRef.current));
-      act = setTimeout(() => { setGenre(null); setMode({ kind: "near" }); setTarget(NEAR); }, ARRIVE);
+      press(elPoint(nearRef.current));
+      act = setTimeout(() => { setAsked(""); setGenre(null); setMode({ kind: "near" }); setTarget(NEAR); }, ARRIVE);
     } else if (step === 4) {
       press(pinPoint(tourPin, NEAR));
       act = setTimeout(() => setSelected(tourPin.slug), ARRIVE);
     } else if (step === 5) {
+      press(elPoint(compareRef.current));
+      act = setTimeout(() => setCompared(tourPin.slug), ARRIVE);
+    } else if (step === 6) {
       press(elPoint(ctaRef.current));
       act = setTimeout(() => setCtaHot(true), ARRIVE);
     }
@@ -354,8 +431,12 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, touring, onScreen]);
 
-  const takeOver = () => { if (touring) { setTouring(false); setCursor(null); setCtaHot(false); } };
-  const replay = () => { setStep(0); setGenre(null); setMode({ kind: "all" }); setTarget(HOME); setSelected(null); setCursor(null); setTouring(true); };
+  const takeOver = () => { if (touring) { stopTyping(); setTouring(false); setCursor(null); setCtaHot(false); } };
+  const replay = () => {
+    stopTyping();
+    setStep(0); setGenre(null); setMode({ kind: "all" }); setTarget(HOME); setSelected(null); setCursor(null);
+    setAsked(""); setMatches(false); setCompared(null); setTouring(true);
+  };
 
   // Hit-test the canvas: the nearest visible pin within reach of the pointer
   const pinAt = (clientX: number, clientY: number) => {
@@ -364,7 +445,7 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
     const c = live.current.cam, u = b.width / W;
     let best: Pin | null = null, bd = 12 * 12;
     for (const p of pins) {
-      const shown = p.real && (!genre || p.genre === genre) && (mode.kind !== "near" || p.km <= NEAR_KM);
+      const shown = (!genre || p.genre === genre) && (mode.kind !== "near" || p.km <= NEAR_KM) && (mode.kind !== "picks" || picks.has(p.slug));
       if (!shown) continue;
       const x = (p.x - c.x) * c.scale * u + b.width / 2 + b.left, y = (p.y - c.y) * c.scale * u + b.height / 2 + b.top;
       const d = (x - clientX) ** 2 + (y - clientY) ** 2;
@@ -382,40 +463,55 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
     setSelected(p.slug);
     if (target.scale < 2) setTarget({ x: p.x, y: p.y, scale: 2.6 });
   };
-  const pickGenre = (g: DemoGenre | null) => { takeOver(); setGenre(g); setSelected(null); };
-  const locate = () => { takeOver(); setGenre(null); setSelected(null); setMode({ kind: "near" }); setTarget(NEAR); };
-  const zoomOut = () => { takeOver(); setSelected(null); setMode({ kind: "all" }); setTarget(HOME); };
+  // Type steps through the kinds, as the real map's Type menu filters them
+  const cycleType = () => {
+    takeOver(); setSelected(null);
+    setGenre((g) => (g === null ? GENRES[0] : GENRES.indexOf(g) === GENRES.length - 1 ? null : GENRES[GENRES.indexOf(g) + 1]));
+  };
+  const region = () => {
+    takeOver(); setSelected(null); setAsked("");
+    if (mode.kind === "region") { setMode({ kind: "all" }); setTarget(HOME); } else { setMode({ kind: "region", label: "Himalayas" }); setTarget(HIMALAYAS); }
+  };
+  const locate = () => { takeOver(); setAsked(""); setGenre(null); setSelected(null); setMode({ kind: "near" }); setTarget(NEAR); };
+  const zoomOut = () => { takeOver(); setSelected(null); setAsked(""); setMode({ kind: "all" }); setTarget(HOME); };
+  const askNow = () => { takeOver(); ask(true); };
 
   const status =
     mode.kind === "near" ? `Within ${NEAR_KM} km of ${ME.name}`
+    : mode.kind === "picks" ? `Compass.AI · ${tour.picks.length} picks`
     : mode.kind === "region" ? `${genre ?? "Everything"} · ${mode.label}`
     : genre ?? "All of India";
-  const statusColor = mode.kind === "near" ? "#60a5fa" : genre ? COLOR[genre] : "#7edc96";
+  const statusColor = mode.kind === "near" ? "#60a5fa" : mode.kind === "picks" ? AI_COLOR : "#7edc96";
 
   return (
     <div ref={rootRef} className="relative w-full min-w-0 max-w-[320px] sm:max-w-[360px] lg:max-w-[400px] mx-auto lg:mr-0 select-none">
       <div className="md-shell rounded-[22px] p-3">
-        {/* Genre chips */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar mb-2.5 -mx-0.5 px-0.5">
-          <button type="button" onClick={() => pickGenre(null)} className="md-chip md-hit shrink-0" data-on={!genre || undefined} style={{ "--c": "#ffffff" } as React.CSSProperties}>
-            All
+        {/* Compass.AI, as on the map: describe a trip and the picks light up */}
+        <button ref={askRef} type="button" onClick={askNow} className="md-ask w-full flex items-center gap-2 h-10 pl-3 pr-1.5 rounded-xl text-left mb-2" data-on={mode.kind === "picks" || typing || undefined}>
+          <CompassAIMark className="w-3.5 h-3.5 shrink-0" style={{ color: AI_COLOR }} strokeWidth={2} />
+          <span className={`flex-1 min-w-0 truncate text-[12px] ${asked ? "text-white" : "text-white/45"}`}>
+            {asked || "Describe your trip — Compass.AI picks"}
+            {typing && <span className="md-caret" aria-hidden />}
+          </span>
+          <span className="w-7 h-7 rounded-full grid place-items-center shrink-0" style={{ background: "linear-gradient(135deg,#ff5100,#ff7d47,#ffb37a)" }}>
+            <ArrowUp className="w-3.5 h-3.5 text-white" strokeWidth={2.5} />
+          </span>
+        </button>
+
+        {/* The dock: Type, Region and Near me, plus the fit rings; sized to their labels, and they always fit */}
+        <div className="flex gap-1.5 mb-2.5">
+          <button type="button" onClick={cycleType} className="md-chip md-hit flex-auto inline-flex items-center justify-center gap-1 min-w-0" data-on={genre || undefined} style={{ "--c": "#ff7d47" } as React.CSSProperties}>
+            <Shapes className="w-3 h-3 shrink-0" /><span className="truncate">{genre ?? "Type"}</span>
           </button>
-          {GENRES.map(({ id, color }) => (
-            <button
-              key={id}
-              ref={(el) => { chipRefs.current[id] = el; }}
-              type="button"
-              onClick={() => pickGenre(genre === id ? null : id)}
-              disabled={!liveGenres.has(id)}
-              title={liveGenres.has(id) ? undefined : `${id}: coming soon`}
-              className="md-chip md-hit shrink-0 inline-flex items-center gap-1.5"
-              data-on={genre === id || undefined}
-              style={{ "--c": color } as React.CSSProperties}
-            >
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: color, boxShadow: `0 0 6px ${color}` }} />
-              {id}
-            </button>
-          ))}
+          <button type="button" onClick={region} className="md-chip md-hit flex-auto inline-flex items-center justify-center gap-1 min-w-0" data-on={mode.kind === "region" || undefined} style={{ "--c": "#7edc96" } as React.CSSProperties}>
+            <MapPin className="w-3 h-3 shrink-0" /><span className="truncate">{mode.kind === "region" ? mode.label : "Region"}</span>
+          </button>
+          <button ref={nearRef} type="button" onClick={locate} className="md-chip md-hit flex-auto inline-flex items-center justify-center gap-1 min-w-0" data-on={mode.kind === "near" || undefined} style={{ "--c": "#60a5fa" } as React.CSSProperties}>
+            <LocateFixed className="w-3 h-3 shrink-0" /><span className="truncate">Near me</span>
+          </button>
+          <button ref={matchRef} type="button" onClick={() => { takeOver(); setMatches((m) => !m); }} className="md-chip md-hit flex-auto inline-flex items-center justify-center gap-1 min-w-0" data-on={matches || undefined} style={{ "--c": "#10b981" } as React.CSSProperties}>
+            <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ boxShadow: "inset 0 0 0 1.5px #10b981" }} /><span className="truncate">Matches</span>
+          </button>
         </div>
 
         {/* Map */}
@@ -463,7 +559,7 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
             </svg>
           </div>
 
-          {/* Dots, ring and pulses */}
+          {/* Dots, rings and pulses */}
           <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden />
 
           {/* Scan line on first view */}
@@ -494,81 +590,122 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
           </button>
 
           {/* Region name, set large and faint along the bottom */}
-          <div className="absolute inset-x-0 bottom-9 text-center pointer-events-none">
+          <div className="absolute inset-x-0 bottom-10 text-center pointer-events-none">
             <span
               key={mode.kind === "region" ? mode.label : mode.kind}
               className="md-region inline-block text-[22px] font-black uppercase tracking-[0.28em]"
-              style={{ opacity: !flying && mode.kind !== "all" && !sel ? undefined : 0 }}
+              style={{ opacity: !flying && (mode.kind === "region" || mode.kind === "near") && !sel ? undefined : 0 }}
             >
               {mode.kind === "region" ? mode.label : mode.kind === "near" ? "Near you" : ""}
             </span>
           </div>
 
-          <button
-            ref={locateRef}
-            type="button"
-            onClick={(e) => { e.stopPropagation(); locate(); }}
-            aria-label="Show adventures near me"
-            className="md-locate md-hit absolute right-2 bottom-11 w-8 h-8 rounded-full grid place-items-center"
-            data-on={mode.kind === "near" || undefined}
-          >
-            <LocateFixed className="w-4 h-4" strokeWidth={2.2} />
-          </button>
-
-          <span ref={hudRef} className="absolute left-2 bottom-2 pointer-events-none font-mono text-[9px] tracking-wide px-1.5 py-0.5 rounded-md tabular-nums" style={{ background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.6)" }} />
+          {/* Key: what the colours mean (difficulty), or the rings when they're on; the compare
+              tray takes the spot once something's added */}
+          <div className="absolute left-2 right-10 bottom-2 pointer-events-none">
+            {compared ? (
+              <span className="md-badge inline-flex items-center gap-1.5 text-[10px] font-semibold pl-2 pr-2.5 py-1 rounded-full" style={{ background: "rgba(255,81,0,0.92)", color: "#fff" }}>
+                <GitCompare className="w-3 h-3" />1 in compare · add 2 more
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 text-[9px] font-semibold px-2 py-1 rounded-full" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.7)" }}>
+                {matches ? (
+                  (["ready", "stretch", "not-yet"] as MapDemoFit[]).map((f) => (
+                    <span key={f} className="inline-flex items-center gap-1">
+                      <i className="w-2 h-2 rounded-full" style={{ boxShadow: `inset 0 0 0 1.5px ${FIT_COLOR[f]}` }} />{f === "ready" ? "Ready" : f === "stretch" ? "Stretch" : "Not yet"}
+                    </span>
+                  ))
+                ) : (
+                  <>Easy{DIFFS.map((d) => <i key={d} className="w-1.5 h-1.5 rounded-full" style={{ background: DIFF_COLOR[d] }} />)}Extreme</>
+                )}
+              </span>
+            )}
+          </div>
           <svg className="absolute right-2 bottom-2 w-7 h-7 pointer-events-none" viewBox="0 0 32 32" aria-hidden>
             <circle cx="16" cy="16" r="14.5" fill="rgba(0,0,0,0.5)" stroke="rgba(255,255,255,0.18)" />
             <path d="M16 5 L19 16 L16 14.5 L13 16 Z" fill="#ff7d47" />
             <path d="M16 27 L19 16 L16 17.5 L13 16 Z" fill="rgba(255,255,255,0.5)" />
           </svg>
 
-          {/* Pin card */}
+          {/* Pin card: the trail, how ready you are, verified operators and price, then compare */}
           {sel && selPos && (
-            <Link
+            <div
               key={sel.slug}
-              href={sel.href}
               onClick={(e) => e.stopPropagation()}
-              className="md-card group absolute z-10 w-[178px] rounded-xl overflow-hidden text-left"
+              className="md-card absolute z-10 w-[204px] rounded-xl overflow-hidden text-left"
               style={{
-                left: `clamp(6px, calc(${selPos.left}% - 89px), calc(100% - 184px))`,
+                left: `clamp(6px, calc(${selPos.left}% - 102px), calc(100% - 210px))`,
                 top: selPos.top > 50 ? undefined : `calc(${selPos.top}% + 16px)`,
                 bottom: selPos.top > 50 ? `calc(${100 - selPos.top}% + 16px)` : undefined,
-                background: "rgba(11,14,13,0.94)",
-                border: `1px solid ${COLOR[sel.genre]}66`,
-                boxShadow: `0 14px 36px rgba(0,0,0,0.55), 0 0 26px ${COLOR[sel.genre]}33`,
+                background: "rgba(11,14,13,0.95)",
+                border: `1px solid ${DIFF_COLOR[sel.difficulty] ?? "#fff"}66`,
+                boxShadow: `0 14px 36px rgba(0,0,0,0.55), 0 0 26px ${DIFF_COLOR[sel.difficulty] ?? "#fff"}33`,
               }}
             >
-              <span className="relative block h-[72px]">
-                <Image src={sel.image} alt="" fill sizes="178px" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <Link href={sel.href} className="group relative block h-[64px]">
+                <Image src={sel.image} alt="" fill sizes="204px" className="object-cover transition-transform duration-700 group-hover:scale-105" />
                 <span className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(11,14,13,0.95), transparent 70%)" }} />
-                <span className="absolute left-2.5 bottom-1.5 flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.14em]" style={{ color: COLOR[sel.genre] }}>
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: COLOR[sel.genre] }} />
-                  {sel.genre}
-                </span>
+                <span className="absolute left-2.5 bottom-1.5 right-2.5 text-[12.5px] font-semibold text-white leading-snug truncate">{sel.name}</span>
                 {mode.kind === "near" && (
                   <span className="absolute right-2 top-2 text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(96,165,250,0.9)", color: "#06121f" }}>
                     {Math.round(sel.km)} km away
                   </span>
                 )}
-              </span>
-              <span className="block px-2.5 pb-2.5 pt-1">
-                <span className="block text-[12.5px] font-semibold text-white leading-snug truncate">{sel.name}</span>
-                <span className="flex items-center justify-between gap-2 mt-1">
-                  <span className="text-[10px] text-white/55 truncate">{sel.meta}</span>
-                  <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold shrink-0" style={{ color: COLOR[sel.genre] }}>
-                    View <ArrowUpRight className="w-3 h-3" />
+              </Link>
+              <span className="block px-2.5 pb-2.5 pt-1.5">
+                <span className="flex items-center justify-between gap-2 text-[10px]">
+                  <span className="text-white/60 truncate">{sel.meta}</span>
+                  {sel.fit && (
+                    <span className="inline-flex items-center gap-1 font-semibold shrink-0" style={{ color: FIT_COLOR[sel.fit] }}>
+                      <i className="w-1.5 h-1.5 rounded-full" style={{ background: FIT_COLOR[sel.fit] }} />{FIT_LABEL[sel.fit]}
+                    </span>
+                  )}
+                </span>
+                {/* The trail and its climb, for the trek the tour opens */}
+                {sel.slug === tour.slug && tour.route.length > 1 && (
+                  <span className="flex items-center gap-2 mt-2">
+                    <svg viewBox="-0.08 -0.08 1.16 1.16" className="w-9 h-9 shrink-0 rounded-md" style={{ background: "rgba(255,255,255,0.04)" }} aria-hidden>
+                      <polyline points={tour.route.map(([x, y]) => `${x},${y}`).join(" ")} fill="none" stroke={AI_COLOR} strokeWidth={0.06} strokeLinejoin="round" strokeLinecap="round" pathLength={1} className="md-draw" />
+                    </svg>
+                    <span className="flex-1 min-w-0">
+                      <svg viewBox="0 0 100 24" preserveAspectRatio="none" className="block w-full h-5" aria-hidden>
+                        {(() => {
+                          const lo = Math.min(...tour.profile), hi = Math.max(...tour.profile), n = Math.max(1, tour.profile.length - 1);
+                          const pts = tour.profile.map((e, i) => `${(i / n) * 100},${22 - ((e - lo) / Math.max(1, hi - lo)) * 20}`).join(" ");
+                          return <><polygon points={`0,24 ${pts} 100,24`} fill="rgba(255,179,122,0.18)" /><polyline points={pts} fill="none" stroke={AI_COLOR} strokeWidth={1.2} vectorEffect="non-scaling-stroke" /></>;
+                        })()}
+                      </svg>
+                      <span className="block text-[9.5px] text-white/50 mt-0.5 tabular-nums">{tour.lengthKm} km · up to {tour.maxEleM.toLocaleString("en-IN")} m</span>
+                    </span>
+                  </span>
+                )}
+                <span className="flex items-center justify-between gap-2 mt-2">
+                  {sel.price ? (
+                    <span className="min-w-0 text-[10px] text-white/60 whitespace-nowrap" title="Lowest price from a verified operator">
+                      <b className="text-white text-[12px]">{inr(sel.price)}</b>
+                      {sel.verified > 0 && <span className="inline-flex items-center gap-0.5 ml-1"><BadgeCheck className="w-3 h-3 text-emerald-400" />{sel.verified}</span>}
+                    </span>
+                  ) : <span className="text-[10px] text-white/45">Sample spot</span>}
+                  <span className="flex items-center gap-1 shrink-0">
+                    <button
+                      ref={compareRef}
+                      type="button"
+                      onClick={() => { takeOver(); setCompared((c) => (c === sel.slug ? null : sel.slug)); }}
+                      aria-label={compared === sel.slug ? "Remove from compare" : "Add to compare"}
+                      className="md-hit w-6 h-6 rounded-full grid place-items-center transition-colors"
+                      style={compared === sel.slug ? { background: "#ff5100", color: "#fff" } : { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.75)" }}
+                    >
+                      <GitCompare className="w-3 h-3" />
+                    </button>
+                    <Link href={sel.href} className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-2 h-6 rounded-full" style={{ background: "rgba(255,255,255,0.08)", color: "#fff" }}>
+                      View <ArrowUpRight className="w-3 h-3" />
+                    </Link>
                   </span>
                 </span>
               </span>
-            </Link>
+            </div>
           )}
         </div>
-
-        {/* Key for the faint dots */}
-        <p className="flex items-center gap-1.5 mt-2 px-0.5 text-[10px] text-white/45">
-          <span className="w-1.5 h-1.5 rounded-full bg-white/30 shrink-0" aria-hidden />
-          Faint dots: places coming soon
-        </p>
 
         {/* Tour caption, progress, and the way into the real map */}
         <div className="flex items-center gap-3 mt-2.5 px-0.5">
@@ -612,11 +749,15 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
         .md-shell { background: linear-gradient(165deg, #121a18 0%, #0b100f 100%);
                     border: 1px solid rgba(255,255,255,0.07);
                     box-shadow: 0 30px 70px rgba(0,0,0,0.35), 0 0 0 1px rgba(126,220,150,0.04), inset 0 1px 0 rgba(255,255,255,0.05); }
-        .md-chip { padding: 6px 11px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap;
+        .md-ask { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); transition: border-color .35s, box-shadow .35s; }
+        .md-ask:hover { border-color: rgba(255,179,122,0.4); }
+        .md-ask[data-on] { border-color: rgba(255,179,122,0.6); box-shadow: 0 0 18px rgba(255,125,71,0.25); }
+        .md-caret { display: inline-block; width: 1.5px; height: 12px; margin-left: 1px; vertical-align: -2px; background: ${AI_COLOR}; animation: mdBlink 0.9s steps(1) infinite; }
+        @keyframes mdBlink { 50% { opacity: 0; } }
+        .md-chip { padding: 6px 6px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap;
                    color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
                    transition: color .35s, background .35s, border-color .35s, box-shadow .35s; }
-        .md-chip:hover:not(:disabled) { color: #fff; }
-        .md-chip:disabled { opacity: 0.4; cursor: default; }
+        .md-chip:hover { color: #fff; }
         /* Small controls get a finger-sized hit area without growing */
         .md-hit:not(.absolute) { position: relative; }
         .md-hit::after { content: ""; position: absolute; inset: -9px -3px; }
@@ -636,10 +777,8 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
         .md-region { color: rgba(255,255,255,0.16); text-shadow: 0 0 30px rgba(0,0,0,0.4); transition: opacity .5s ease;
                      animation: mdRegion 0.9s cubic-bezier(0.22,1,0.36,1) both; }
         @keyframes mdRegion { from { letter-spacing: 0.6em; opacity: 0; } to { letter-spacing: 0.28em; } }
-        .md-locate { color: rgba(255,255,255,0.75); background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15);
-                     backdrop-filter: blur(6px); transition: color .3s, background .3s, box-shadow .3s; }
-        .md-locate:hover { color: #fff; }
-        .md-locate[data-on] { color: #06121f; background: #60a5fa; box-shadow: 0 0 18px rgba(96,165,250,0.6); }
+        .md-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: mdDraw 1.4s 0.2s cubic-bezier(0.6,0,0.2,1) forwards; }
+        @keyframes mdDraw { to { stroke-dashoffset: 0; } }
         .md-cta { color: #07160b; background: #5fb873; transition: background .3s, box-shadow .3s, transform .3s; }
         .md-cta:hover { background: #7fd692; }
         .md-cta[data-hot] { background: #7fd692; animation: mdCtaPulse 1.4s ease-out infinite; }
@@ -653,7 +792,8 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
         @keyframes mdRipple { from { transform: scale(0.3); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
         @media (prefers-reduced-motion: reduce) {
           .md-cursor { transition-duration: 0.01ms; }
-          .md-ripple, .md-sea, .md-scan, .md-region, .md-cta[data-hot] { animation: none; }
+          .md-ripple, .md-sea, .md-scan, .md-region, .md-cta[data-hot], .md-caret { animation: none; }
+          .md-draw { animation: none; stroke-dashoffset: 0; }
         }
       `}</style>
     </div>

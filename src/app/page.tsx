@@ -39,11 +39,14 @@ import StoryCard from "@/components/ui/custom/StoryCard";
 import FindByRegion from "@/components/ui/custom/FindByRegion";
 import AdventureRail from "@/components/ui/custom/AdventureRail";
 import PickedForYou from "@/components/ui/custom/PickedForYou";
-import MapDemo, { type MapDemoPin } from "@/components/ui/custom/MapDemo";
+import MapDemo, { type MapDemoPin, type MapDemoTour } from "@/components/ui/custom/MapDemo";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
-import { adventures, stories } from "@/lib/data";
-import { computeDifficulty, getACE } from "@/lib/ace";
-import { pickEditorsMix, inSeasonNow, currentMonthIndexIST, MONTHS, MONTH_NAMES } from "@/lib/homeCuration";
+import { adventures, stories, getLowestPrice } from "@/lib/data";
+import { computeDifficulty, computeMatchScore, getACE } from "@/lib/ace";
+import { bucketFor } from "@/lib/fitness";
+import { getTrail } from "@/lib/trails";
+import { trailProfile } from "@/lib/trails/shared";
+import { pickEditorsMix, inSeasonNow, currentMonthIndexIST, MONTHS, MONTH_NAMES, SAMPLE_ACE } from "@/lib/homeCuration";
 
 // Re-render every 6 hours so "In season now" follows the calendar.
 export const revalidate = 21600;
@@ -53,7 +56,39 @@ const editorPickCount = adventures.filter((a) => a.editorChoice).length;
 const featuredStories = stories.slice(0, 3);
 // Only what the map preview draws, so the full adventure records stay off the client
 // Difficulty is the rating the site shows everywhere, not the raw data field (they differ for many)
-const mapPins: MapDemoPin[] = adventures.map((a) => ({ slug: a.slug, name: a.name, type: a.type, lat: a.lat, lng: a.lng, difficulty: computeDifficulty(getACE(a)), durationDays: a.durationDays, state: a.state, image: a.heroImage }));
+// Fit is for the same example profile the Matchmaker preview shows
+const mapPins: MapDemoPin[] = adventures.map((a) => {
+  const verified = a.operators.filter((o) => o.verified);
+  return {
+    slug: a.slug, name: a.name, type: a.type, lat: a.lat, lng: a.lng, difficulty: computeDifficulty(getACE(a)),
+    durationDays: a.durationDays, state: a.state, image: a.heroImage,
+    price: getLowestPrice({ operators: verified.length ? verified : a.operators }), verified: verified.length,
+    fit: bucketFor(computeMatchScore(SAMPLE_ACE, getACE(a))).key,
+  };
+});
+const mapTour = buildMapTour();
+
+/** What the map preview's tour acts out, all from real listings: a Compass.AI prompt and the
+ *  treks that answer it, and a trek near Delhi whose trail the pin card shows */
+function buildMapTour(): MapDemoTour {
+  const prompt = "A 5-day trek in Uttarakhand";
+  const picks = adventures.filter((a) => a.type === "Trekking" && a.state.includes("Uttarakhand") && a.durationDays === "5 days").map((a) => a.slug);
+  const slug = "kedarkantha-trek";
+  const trail = getTrail(slug);
+  if (!trail) return { prompt, picks, slug, route: [], profile: [], lengthKm: 0, maxEleM: 0 };
+  // The trail's shape in a unit box (east-west squeezed by latitude, so it isn't stretched)
+  const k = Math.cos((trail.line[0][0] * Math.PI) / 180);
+  const xs = trail.line.map((q) => q[1] * k), ys = trail.line.map((q) => -q[0]);
+  const [x0, y0] = [Math.min(...xs), Math.min(...ys)];
+  const span = Math.max(Math.max(...xs) - x0, Math.max(...ys) - y0) || 1;
+  const every = Math.max(1, Math.floor(trail.line.length / 60));
+  const route = trail.line
+    .filter((_, i) => i % every === 0 || i === trail.line.length - 1)
+    .map((q) => [+((q[1] * k - x0) / span).toFixed(3), +((-q[0] - y0) / span).toFixed(3)] as [number, number]);
+  const prof = trailProfile(trail);
+  const profile = Array.from({ length: 40 }, (_, i) => Math.round(prof[Math.round((i / 39) * (prof.length - 1))].ele));
+  return { prompt, picks, slug, route, profile, lengthKm: trail.lengthKm, maxEleM: trail.maxEleM };
+}
 
 function SeasonNote({ monthsLeft, endsIn }: { monthsLeft: number; endsIn: string }) {
   const last = monthsLeft === 1;
@@ -250,7 +285,7 @@ export default function HomePage() {
                   India&apos;s Adventures, <span className="text-[#5fb873]">Mapped</span>
                 </h2>
                 <p className="text-sm leading-relaxed w-full max-w-lg" style={{ color: "var(--text-secondary)" }}>
-                  {adventures.length} adventures on one map, with more of India on the way. Filter, zoom in, tap a pin.
+                  Every trail, summit and coast on one map. Filter, zoom in, tap a pin.
                 </p>
                 {/* Desktop only: below lg the demo sits right under it with its own "Open map" */}
                 <Link
@@ -264,7 +299,7 @@ export default function HomePage() {
             </FadeUp>
             {/* The demo keeps its own button too: its tour ends by tapping it */}
             <div className="min-w-0">
-              <MapDemo pins={mapPins} cta={{ href: "/map", label: "Open map" }} />
+              <MapDemo pins={mapPins} tour={mapTour} cta={{ href: "/map", label: "Open map" }} />
             </div>
           </div>
         </section>

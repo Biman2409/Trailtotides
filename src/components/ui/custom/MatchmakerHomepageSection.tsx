@@ -6,6 +6,7 @@ import { adventures } from "@/lib/data";
 import { type StoredProfile } from "@/lib/matchmaker";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
 import { getACE, computeMatchScore, type ACE } from "@/lib/ace";
+import { SAMPLE_ACE } from "@/lib/homeCuration";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import RankBar from "@/components/ui/custom/RankBar";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
@@ -72,8 +73,6 @@ export default function MatchmakerHomepageSection() {
 
 /* ── First-time visitors: what you get, how long it takes, one clear action ── */
 
-// A moderately fit first-timer — lands adventures in all three buckets.
-const SAMPLE_ACE = { stamina: 3, power: 2, strength: 2, agility: 3, water: 1, altitude: 2, focus: 3, nerve: 2 };
 
 // A sample group on the trek the example profile is ready for: one friend fitter, one less so,
 // so the preview shows the group being held to its least-ready member.
