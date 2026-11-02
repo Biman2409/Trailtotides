@@ -48,11 +48,14 @@ export interface SeasonPick {
   monthsLeft: number;
   /** Last month of the current window, e.g. "Nov". */
   endsIn: Month;
+  /** The current window, e.g. "Sep–Nov" ("All year" when it never closes). */
+  window: string;
 }
 
 /**
- * Adventures in their best season this month. Windows closing soonest come first (that's the
- * urgency worth surfacing), then bookable ones (with operators), then easier before harder.
+ * Adventures in their best season this month. Ones in their last month alternate with ones
+ * still in season for a while, so the row isn't a wall of "last month" badges: the urgency
+ * leads, the variety follows. Within each group: closing soonest, domestic, bookable, easier.
  */
 export function inSeasonNow(all: Adventure[], monthIdx: number): { picks: SeasonPick[]; total: number } {
   const month = MONTHS[monthIdx];
@@ -60,7 +63,12 @@ export function inSeasonNow(all: Adventure[], monthIdx: number): { picks: Season
   const picks = live.map((a) => {
     let monthsLeft = 0;
     while (monthsLeft < 12 && a.bestMonths.includes(MONTHS[(monthIdx + monthsLeft) % 12])) monthsLeft++;
-    return { adventure: a, monthsLeft, endsIn: MONTHS[(monthIdx + monthsLeft - 1) % 12] };
+    let monthsIn = 0;
+    while (monthsIn < 12 && a.bestMonths.includes(MONTHS[(monthIdx - monthsIn - 1 + 12) % 12])) monthsIn++;
+    const endsIn = MONTHS[(monthIdx + monthsLeft - 1) % 12];
+    const startsIn = MONTHS[(monthIdx - monthsIn + 12) % 12];
+    const window = monthsLeft >= 12 ? "All year" : startsIn === endsIn ? endsIn : `${startsIn}–${endsIn}`;
+    return { adventure: a, monthsLeft, endsIn, window };
   });
   picks.sort((x, y) =>
     x.monthsLeft - y.monthsLeft ||
@@ -68,7 +76,14 @@ export function inSeasonNow(all: Adventure[], monthIdx: number): { picks: Season
     Number(isBookable(y.adventure)) - Number(isBookable(x.adventure)) ||
     level(x.adventure) - level(y.adventure)
   );
-  return { picks, total: live.length };
+  const closing = picks.filter((x) => x.monthsLeft === 1);
+  const lasting = picks.filter((x) => x.monthsLeft > 1);
+  const mixed: SeasonPick[] = [];
+  while (closing.length || lasting.length) {
+    if (closing.length) mixed.push(closing.shift()!);
+    if (lasting.length) mixed.push(lasting.shift()!);
+  }
+  return { picks: mixed, total: live.length };
 }
 
 /** Best fitness matches for a Matchmaker profile; in-season ones break ties. */

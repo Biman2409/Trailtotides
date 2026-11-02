@@ -75,6 +75,7 @@ function SeasonNote({ monthsLeft, endsIn }: { monthsLeft: number; endsIn: string
 export default function HomePage() {
   const monthIdx = currentMonthIndexIST();
   const season = inSeasonNow(adventures, monthIdx);
+  const closing = season.picks.filter((p) => p.monthsLeft === 1).length;
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
@@ -154,11 +155,12 @@ export default function HomePage() {
           backdrop={<SectionTexture kind="tides" color="#3fc6bd" at="90% 15%" opacity={0.12} />}
           eyebrow={<><span className="relative flex w-2 h-2"><span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-60 animate-ping" /><span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-400" /></span> In season now</>}
           title={`Best in ${MONTH_NAMES[monthIdx]}`}
-          subtitle={`${season.total} adventures are in their prime window right now. Closing soonest first.`}
+          subtitle={`${season.total} adventures are in their prime window right now${closing ? `, ${closing} of them in their last month` : ""}.`}
           action={{ href: `/explore?month=${MONTHS[monthIdx]}`, label: `See all ${season.total}` }}
           items={season.picks.slice(0, 8).map((p) => ({
             adventure: p.adventure,
             note: <SeasonNote monthsLeft={p.monthsLeft} endsIn={p.endsIn} />,
+            season: p.window,
           }))}
         />
 

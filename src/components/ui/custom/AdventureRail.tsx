@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import AdventureCard from "./AdventureCard";
@@ -10,6 +10,8 @@ export interface RailItem {
   adventure: Adventure;
   /** Short note shown above the card (replaces the Editor's Choice slot). */
   note?: ReactNode;
+  /** Season window for the photo pill (e.g. "Sep–Nov"), in place of the live "In season" label */
+  season?: string;
 }
 
 interface AdventureRailProps {
@@ -28,6 +30,19 @@ interface AdventureRailProps {
 export default function AdventureRail({ id, eyebrow, title, subtitle, action, items, className = "", backdrop }: AdventureRailProps) {
   const scroller = useRef<HTMLDivElement>(null);
   const hasNotes = items.some((i) => i.note);
+  // Which ways the row can still scroll, so an arrow with nowhere to go fades out
+  const [ends, setEnds] = useState({ start: true, end: false });
+
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+    const update = () => setEnds({ start: el.scrollLeft < 4, end: el.scrollLeft + el.clientWidth > el.scrollWidth - 4 });
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => { el.removeEventListener("scroll", update); ro.disconnect(); };
+  }, []);
 
   function scrollBy(dir: 1 | -1) {
     const el = scroller.current;
@@ -60,16 +75,18 @@ export default function AdventureRail({ id, eyebrow, title, subtitle, action, it
               <>
                 <button
                   onClick={() => scrollBy(-1)}
+                  disabled={ends.start}
                   aria-label="Scroll left"
-                  className="hidden lg:flex w-9 h-9 rounded-full items-center justify-center transition-colors hover:bg-[var(--bg-card-hover)]"
+                  className="hidden lg:flex w-9 h-9 rounded-full items-center justify-center transition hover:bg-[var(--bg-card-hover)] disabled:opacity-30 disabled:pointer-events-none"
                   style={{ border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => scrollBy(1)}
+                  disabled={ends.end}
                   aria-label="Scroll right"
-                  className="hidden lg:flex w-9 h-9 rounded-full items-center justify-center transition-colors hover:bg-[var(--bg-card-hover)]"
+                  className="hidden lg:flex w-9 h-9 rounded-full items-center justify-center transition hover:bg-[var(--bg-card-hover)] disabled:opacity-30 disabled:pointer-events-none"
                   style={{ border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
                 >
                   <ChevronRight className="w-4 h-4" />
@@ -85,9 +102,9 @@ export default function AdventureRail({ id, eyebrow, title, subtitle, action, it
         ref={scroller}
         className="relative flex gap-4 lg:gap-5 overflow-x-auto snap-x snap-mandatory no-scrollbar px-5 lg:px-[max(2rem,calc((100vw-80rem)/2+2rem))] pb-2 scroll-px-5 lg:scroll-px-[max(2rem,calc((100vw-80rem)/2+2rem))]"
       >
-        {items.map(({ adventure, note }) => (
+        {items.map(({ adventure, note, season }) => (
           <div key={adventure.id} className="snap-start shrink-0 w-[78vw] sm:w-[320px] lg:w-[340px]">
-            <AdventureCard adventure={adventure} badge={hasNotes ? (note ?? null) : false} />
+            <AdventureCard adventure={adventure} badge={hasNotes ? (note ?? null) : false} season={season} />
           </div>
         ))}
       </div>

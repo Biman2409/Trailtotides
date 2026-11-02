@@ -30,7 +30,13 @@ interface AdventureCardProps {
   fill?: boolean;
   /** Load the photo up front: for the cards that show above the fold (the page's LCP) */
   priority?: boolean;
+  /** Season window for the photo pill (e.g. "Sep–Nov"), in place of the live "In season" label:
+   *  for rows that are already about the season */
+  season?: string;
 }
+
+// Save and compare are 28px; this widens what a finger can hit (to 38×44) without changing the look
+const HIT_AREA = "relative after:absolute after:-inset-y-2 after:-inset-x-[5px] after:content-['']";
 
 const MONTHS: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -51,7 +57,7 @@ const CATEGORY_CLASS: Partial<Record<Adventure["type"], string>> = {
   Caving: "cat-forest", "Urban Adventure": "cat-forest",
 };
 
-export default function AdventureCard({ adventure, size = "default", fromPage, badge, fill = false, priority = false }: AdventureCardProps) {
+export default function AdventureCard({ adventure, size = "default", fromPage, badge, fill = false, priority = false, season }: AdventureCardProps) {
   const isLarge = size === "large";
   const difficulty = computeDifficulty(getACE(adventure));
   const stat = keyStat(adventure);
@@ -146,14 +152,19 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
         {/* Top-left: difficulty, then how long and when, as matching pills in one row. The row
             stops short of save and compare (right-[84px]); on the narrowest cards the season
             text shortens with an ellipsis rather than running under the buttons. */}
-        <div className="absolute z-20 top-3 left-3 right-[84px] flex items-center gap-1.5 min-w-0">
+        <div className="absolute z-20 top-3 left-3 right-[92px] flex items-center gap-1.5 min-w-0">
           <DifficultyMeter difficulty={difficulty} className="shrink-0" />
           <span
             className="inline-flex items-center gap-1 px-2 h-5 min-w-0 rounded-full text-[10px] font-bold tracking-tight leading-none text-white/85 backdrop-blur-md whitespace-nowrap"
             style={{ background: "rgba(10,8,6,0.6)", border: "1px solid rgba(255,255,255,0.08)" }}
           >
             <span className="shrink-0">{adventure.durationDays}</span>
-            {(isSeasonActive || isSeasonUpcoming || seasonLabel) && (
+            {season ? (
+              <>
+                <span className="w-1.5 h-1.5 ml-0.5 rounded-full shrink-0 bg-emerald-400" />
+                <span className="truncate">{season}</span>
+              </>
+            ) : (isSeasonActive || isSeasonUpcoming || seasonLabel) && (
               <>
                 <span className={`w-1.5 h-1.5 ml-0.5 rounded-full shrink-0 ${isSeasonActive ? "bg-emerald-400" : isSeasonUpcoming ? "bg-amber-400" : "bg-white/40"}`} />
                 <span className="truncate">{isSeasonActive ? "In season" : isSeasonUpcoming ? "Next month" : seasonLabel}</span>
@@ -163,15 +174,15 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
         </div>
 
         {/* Top-right: save and compare, as twin round buttons */}
-        <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5">
-          <SaveButton slug={adventure.slug} variant="card" />
+        <div className="absolute top-3 right-3 z-20 flex items-center gap-2.5">
+          <SaveButton slug={adventure.slug} variant="card" className={HIT_AREA} />
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 onClick={handleCompare}
                 disabled={!inCompare && isFull}
                 aria-label={inCompare ? "Remove from compare" : "Add to compare"}
-                className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed"
+                className={`${HIT_AREA} w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed`}
                 style={inCompare
                   ? { background: "rgba(255,81,0,0.9)", color: "#fff", boxShadow: "0 0 0 1px rgba(255,81,0,0.5), 0 0 10px rgba(255,81,0,0.3)" }
                   : { background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.7)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
@@ -209,8 +220,9 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
           <p className="flex items-center gap-1.5 min-w-0 text-[10px] font-semibold uppercase tracking-[0.14em] leading-none" style={{ color: "var(--text-tertiary)" }}>
             <span className="shrink-0" style={{ color: "var(--cat)" }}>{ADVENTURE_TYPE_ICONS[adventure.type]?.(12)}</span>
             <span className="truncate">{adventure.state}</span>
-            <span style={{ color: "var(--text-muted)" }}>·</span>
-            <span className="shrink-0">{adventure.type}</span>
+            {/* Phones drop the type when there's a key number, so the state isn't cut short; the icon still names it */}
+            <span className={stat ? "hidden sm:inline" : undefined} style={{ color: "var(--text-muted)" }}>·</span>
+            <span className={`shrink-0${stat ? " hidden sm:inline" : ""}`}>{adventure.type}</span>
             {stat && (
               <>
                 <span style={{ color: "var(--text-muted)" }}>·</span>

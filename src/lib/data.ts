@@ -1789,7 +1789,7 @@ export const adventures: Adventure[] = [
     duration: "Weekend", durationDays: "1 day", durationRange: "3–6 Hours",
     distance: "16km", distanceRange: "16–36 km", altitude: "380m", rapidGrade: "Grade II–IV",
     baseCamp: "Rishikesh", startingPoint: "Shivpuri (16 km) or Kaudiyala (36 km), with pickup from Rishikesh",
-    bestSeason: "Mar–May, Oct–Nov", bestMonths: ["Mar","Apr","May","Oct","Nov"],
+    bestSeason: "Sep–Jun", bestMonths: ["Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun"],
     // Hero: Chandan Chaurasia on Unsplash (Trishuli River, Nepal), graded to match the other heroes.
     // Gallery adds two Unsplash shots on the Ganga at Rishikesh.
     heroImage: "/adventures/rishikesh-rafting-hero.jpg",
