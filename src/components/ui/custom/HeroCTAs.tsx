@@ -103,7 +103,7 @@ export default function HeroCTAs() {
   return (
     <div ref={rootRef} className="w-full">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center lg:justify-start gap-3 sm:gap-5 w-full">
-        <div className="relative isolate flex-1 sm:flex-none sm:w-[420px] min-w-0">
+        <div className="relative isolate flex-1 sm:flex-none sm:w-[420px] lg:flex-1 lg:w-auto lg:max-w-[520px] min-w-0">
         {/* Soft orange glow pooled behind the bar */}
         <span
           aria-hidden
@@ -147,7 +147,7 @@ export default function HeroCTAs() {
               aria-label="Describe the adventure you want — Compass.AI will suggest some"
               aria-describedby="hero-compass-hint"
               enterKeyHint="send"
-              className="flex-1 min-w-0 bg-transparent text-[13px] sm:text-[15px] py-1 sm:py-1.5 truncate placeholder:text-white/75 focus:placeholder:text-transparent"
+              className="flex-1 min-w-0 bg-transparent text-base sm:text-[15px] py-1 sm:py-1.5 truncate placeholder:text-white/75 focus:placeholder:text-transparent"
               // Focus is shown by the bar's gradient ring, not the global input outline
               style={{ color: "#fff", caretColor: "#ff5100", outline: "none" }}
             />
@@ -176,7 +176,7 @@ export default function HeroCTAs() {
         <Link
           href="/explore"
           onClick={() => track("hero_explore_click")}
-          className="group shrink-0 self-center sm:self-auto inline-flex items-center gap-1.5 text-[13px] sm:text-sm font-semibold text-white/80 hover:text-white transition-colors"
+          className="group shrink-0 self-center sm:self-auto inline-flex items-center gap-1.5 py-3 -my-3 text-[13px] sm:text-sm font-semibold text-white/80 hover:text-white transition-colors"
           style={{ textShadow: "0 1px 10px rgba(0,0,0,0.5)" }}
         >
           <span className="whitespace-nowrap underline-offset-4 decoration-white/40 group-hover:underline">Explore all</span>

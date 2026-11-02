@@ -75,8 +75,13 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-export default function HeroSlider() {
-  const [shuffled, setShuffled] = useState<Slide[]>(slides);
+// Opens on slides[start]; the rest are shuffled after mount. The first slide stays put so the
+// photo the server preloaded is the one on screen, with no swap after hydration.
+export default function HeroSlider({ start = 0 }: { start?: number }) {
+  const [shuffled, setShuffled] = useState<Slide[]>(() => {
+    const s = start % slides.length;
+    return [...slides.slice(s), ...slides.slice(0, s)];
+  });
   const [current,     setCurrent]     = useState(0);
   const [prev,        setPrev]        = useState<number | null>(null);
   const [animating,   setAnimating]   = useState(false);
@@ -89,7 +94,7 @@ export default function HeroSlider() {
   const activationKey = useRef<Record<number, number>>({ 0: 0 });
 
   useEffect(() => {
-    setShuffled(shuffle(slides));
+    setShuffled((order) => [order[0], ...shuffle(order.slice(1))]);
   }, []);
 
   const goTo = useCallback((index: number, byUser = false) => {
@@ -157,7 +162,7 @@ export default function HeroSlider() {
                 alt={slide.alt}
                 fill
                 priority={i === 0}
-                quality={90}
+                quality={75}
                 sizes="100vw"
                 className="photo-grade object-cover"
                   style={{
@@ -196,7 +201,7 @@ export default function HeroSlider() {
 
       {/* Progress dots */}
       <div
-        className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2.5"
+        className="absolute bottom-3 left-1/2 -translate-x-1/2 hidden sm:flex items-center"
         style={{ zIndex: 5 }}
       >
         {shuffled.map((_, i) => (
@@ -204,14 +209,19 @@ export default function HeroSlider() {
             key={i}
             onClick={() => goTo(i, true)}
             aria-label={`Go to slide ${i + 1}`}
-            className="relative overflow-hidden rounded-full cursor-pointer"
-            style={{
-              width:      i === current ? 36 : 6,
-              height:     4,
-              background: "rgba(255,255,255,0.18)",
-              transition: "width 0.4s cubic-bezier(0.4,0,0.2,1)",
-            }}
+            aria-current={i === current ? "true" : undefined}
+            // The bar is tiny; the button around it is a comfortable target
+            className="group py-3 px-[5px] cursor-pointer"
           >
+            <span
+              className="relative block overflow-hidden rounded-full group-hover:!bg-white/50"
+              style={{
+                width:      i === current ? 36 : 6,
+                height:     4,
+                background: "rgba(255,255,255,0.32)",
+                transition: "width 0.4s cubic-bezier(0.4,0,0.2,1)",
+              }}
+            >
             {i === current && (
               <span
                 key={progressKey}
@@ -223,6 +233,7 @@ export default function HeroSlider() {
                 }}
               />
             )}
+            </span>
           </button>
         ))}
       </div>    </div>

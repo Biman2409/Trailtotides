@@ -82,7 +82,8 @@ export default function HomePage() {
 
       {/* ── HERO ─────────────────────────────────────────── */}
       <section data-hide-compass className={`${jakarta.variable} hero-motion relative h-[100svh] [@media(max-height:560px)]:h-auto flex overflow-hidden`}>
-        <HeroSlider />
+        {/* A different opening photo each day; the server picks it so its preload is the one shown */}
+        <HeroSlider start={new Date().getDate()} />
         <HeroOrbs />
         {/* Scrim: darker on the left where the copy sits, and a deeper band along the bottom
             (pooled behind the promise copy) so the promise and search stay legible over bright photos */}
@@ -123,7 +124,7 @@ export default function HomePage() {
         <a
           href="#after-hero"
           aria-label="Scroll to see more"
-          className="hero-scroll absolute z-10 bottom-3 right-5 lg:right-10 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/55 hover:text-white transition-colors"
+          className="hero-scroll absolute z-10 bottom-3 right-5 lg:right-10 p-3 -m-3 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/55 hover:text-white transition-colors"
         >
           <span className="hidden sm:inline">Scroll</span>
           <ChevronDown className="hero-scroll-icon w-4 h-4" strokeWidth={2.2} />

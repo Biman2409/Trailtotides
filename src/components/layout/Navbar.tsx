@@ -176,7 +176,7 @@ export default function Navbar() {
               </span>
               {/* Tagline tucked under the wordmark — small handwritten aside */}
               <span
-                className="text-[9px] sm:text-[11px] leading-none mt-[3px] sm:mt-1 whitespace-nowrap"
+                className="hidden sm:block text-[11px] leading-none mt-1 whitespace-nowrap"
                 style={{ fontFamily: "var(--font-script), cursive", fontWeight: 600, color: isTransparent ? "rgba(255,255,255,0.72)" : "var(--text-secondary)" }}
               >
                 India&apos;s first adventure platform

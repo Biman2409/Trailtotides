@@ -230,7 +230,7 @@ export default function HeroPromise() {
         .hp-swoosh path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: hpDraw .8s 1.3s cubic-bezier(.6,0,.2,1) forwards; }
         .hp-line { margin-top: calc(var(--adv) * 0.32); display: flex; }
         /* Icon at the left edge, arrow at the right */
-        .hp-link { width: 100%; display: flex; align-items: center; gap: 0.55em; padding: 0; background: none; border: 0; cursor: pointer; text-decoration: none;
+        .hp-link { width: 100%; display: flex; align-items: center; gap: 0.55em; padding: 12px 0; margin: -12px 0; background: none; border: 0; cursor: pointer; text-decoration: none;
                    font: 600 calc(var(--adv) * 0.225) var(--font-dm-sans, 'DM Sans'), sans-serif; color: var(--c); text-shadow: 0 1px 10px rgba(0,0,0,0.6);
                    animation: hpRoll .55s cubic-bezier(.2,1,.3,1) both; }
         .hp-text { white-space: nowrap; }

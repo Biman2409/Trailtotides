@@ -160,23 +160,27 @@ export function HeroHeadline() {
     return () => ro.disconnect();
   }, []);
 
+  // Spaces between the stacked words, so the heading's text reads "From Mountain Trail To Ocean Tides"
   return (
+    <>
     <h1 ref={ref} className="hh">
       <span className="hh-row" style={{ animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.05s both" }}>
-        <span className="hh-lead">From <strong>Mountain</strong></span>
+        <span className="hh-lead">From <strong>Mountain</strong></span>{" "}
         <span className="hh-wrap" data-text="Trail">
           <span ref={trailRef} className="hh-word">Trail<CanvasText targetRef={trailRef} paint={paintTrail} images={TRAIL_IMAGES} animate /></span>
         </span>
-      </span>
+      </span>{" "}
       <span className="hh-row hh-row2" style={{ animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.12s both" }}>
-        <span className="hh-lead">To <strong>Ocean</strong></span>
+        <span className="hh-lead">To <strong>Ocean</strong></span>{" "}
         <span className="hh-wrap" data-text="Tides">
           <span ref={tidesRef} className="hh-word">Tides<CanvasText targetRef={tidesRef} paint={paintTides} images={TIDES_WAVE_SRCS} animate /></span>
         </span>
       </span>
       {/* What the site does, for screen readers and search: the promise line below says it on screen */}
       <span className="sr-only">: find, compare and book adventures across India</span>
-      <style>{`
+    </h1>
+    {/* Outside the h1 so the CSS isn't part of the heading's text */}
+    <style>{`
         .hh { margin: 0; display: flex; flex-direction: column; text-transform: uppercase; transform-origin: center;
               font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif; letter-spacing: 0; }
         .hh-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.1rem; }
@@ -187,7 +191,7 @@ export function HeroHeadline() {
                    text-shadow: 0 1px 12px rgba(0,0,0,0.5); }
         .hh-lead strong { font-weight: 700; color: #fff; }
         /* Sized by the shorter of width and height, so short screens don't push the search off */
-        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(17vw, 9.5svh); line-height: 0.8;
+        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(20vw, 10.5svh); line-height: 0.8;
                    letter-spacing: -0.025em; }
         /* Shadow lives on a static copy behind the word, so it's painted once
            rather than re-filtered on every animation frame */
@@ -207,7 +211,7 @@ export function HeroHeadline() {
           .hh { position: relative; }
         }
       `}</style>
-    </h1>
+    </>
   );
 }
 
