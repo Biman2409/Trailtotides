@@ -438,7 +438,6 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
   const [fit, setFit] = useState({ width: PAGE_W, scale: 1 });
   const rootRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
-  const onScreen = useRef(false);
   const dragged = useRef(false);
 
   useEffect(() => {
@@ -474,15 +473,6 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
     return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
   }, []);
   const { width: pageW, scale } = fit;
-
-  // Arrow keys only turn pages while the book is actually on screen
-  useEffect(() => {
-    const el = shellRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(([e]) => { onScreen.current = e.isIntersecting; }, { threshold: 0.5 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
 
   // Trip pages are looked up by slug so stamps and logbook rows can jump to them
   const tripIndexRef = useRef(new Map<string, number>());
@@ -527,17 +517,6 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
     setIndex(next);
   }, [index, pages.length]);
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      const t = e.target as HTMLElement | null;
-      if (!onScreen.current || (t && /INPUT|TEXTAREA|SELECT/.test(t.tagName))) return;
-      if (e.key === "ArrowRight") go(index + 1);
-      if (e.key === "ArrowLeft") go(index - 1);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, go, index]);
 
   const sections = (Object.keys(SECTION_LABEL) as Section[]).filter((s) => pages.some((p) => p.section === s));
   const current = pages[index];

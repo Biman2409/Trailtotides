@@ -99,13 +99,9 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Cmd+K / Ctrl+K to open search
+  // Escape closes search
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setSearchOpen(true);
-      }
       if (e.key === "Escape") {
         setSearchOpen(false);
       }
@@ -242,7 +238,7 @@ export default function Navbar() {
             {/* ── Search bar — appears when navbar is solid (on scroll) ── */}
             <button
               onClick={() => setSearchOpen(true)}
-              // Only from xl up — between lg and xl it collided with the centred nav links (Ctrl/⌘+K still opens search)
+              // Only from xl up — between lg and xl it collided with the centred nav links
               className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full group cursor-pointer whitespace-nowrap transition-all duration-500"
               style={{
                 background: "var(--bg-surface-2)",
@@ -256,6 +252,16 @@ export default function Navbar() {
               <span className="text-xs whitespace-nowrap font-medium" style={{ color: "var(--text-tertiary)" }}>
                 Search
               </span>
+            </button>
+
+            {/* ── Search icon — where the search bar isn't shown: below xl, or while the navbar is transparent ── */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search"
+              className={`${isTransparent ? "flex" : "flex xl:hidden"} items-center justify-center w-9 h-9 rounded-xl transition-colors hover:bg-white/5`}
+              style={{ color: isTransparent ? "rgba(255,255,255,0.85)" : "var(--nav-text)" }}
+            >
+              <Search className="w-4 h-4" />
             </button>
 
             {/* ── Theme toggle ── */}

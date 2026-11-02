@@ -83,15 +83,6 @@ export default function Library({ guides, topics, index, treks }: {
     const s = p.toString();
     window.history.replaceState(null, "", s ? `?${s}` : window.location.pathname);
   }, [q, topic]);
-  // "/" jumps to search from anywhere on the page
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const el = e.target as HTMLElement;
-      if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) && !el.isContentEditable) { e.preventDefault(); input.current?.focus(); }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
 
   const toks = useMemo(() => tokens(q), [q]);
 
@@ -153,13 +144,11 @@ export default function Library({ guides, topics, index, treks }: {
                 className="w-full h-14 pl-12 pr-24 rounded-2xl text-[16px] t-text outline-none transition-shadow focus:shadow-[0_0_0_3px_rgba(255,81,0,0.18)]"
                 style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)", boxShadow: "0 8px 30px rgba(var(--shadow-color),0.08)" }}
               />
-              {q ? (
+              {q && (
                 <button onClick={() => { setQ(""); input.current?.focus(); }} aria-label="Clear search"
                   className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl flex items-center justify-center t-text-3 hover:bg-[var(--bg-surface-2)]">
                   <X className="w-4 h-4" />
                 </button>
-              ) : (
-                <kbd className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 items-center justify-center w-7 h-7 rounded-lg text-[13px] font-semibold t-text-3" style={{ border: "1px solid var(--border-default)" }}>/</kbd>
               )}
             </div>
             <div className="flex flex-wrap items-center gap-2 mt-3">

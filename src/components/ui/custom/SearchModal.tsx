@@ -115,10 +115,6 @@ export default function SearchModal({ open, onClose }: Props) {
               onKeyDown={handleKeyDown}
               className="flex-1 bg-transparent text-sm outline-none" style={{ color: "var(--text-primary)" }}
             />
-            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium rounded"
-              style={{ background: "var(--bg-page)", color: "var(--text-muted)", border: "1px solid var(--border-subtle)" }}>
-              <span className="text-[9px]">⌘</span>K
-            </kbd>
             <button onClick={onClose} aria-label="Close search" className="p-1 rounded-lg hover:bg-black/5 transition-colors" style={{ color: "var(--text-muted)" }}>
               <X className="w-4 h-4" />
             </button>

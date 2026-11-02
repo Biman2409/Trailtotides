@@ -316,18 +316,6 @@ function Dashboard({
     window.scrollTo({ top: 0 });
   };
 
-  // Keys 1–7 jump between sections
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      const n = parseInt(e.key, 10);
-      if (n >= 1 && n <= SECTIONS.length) go(SECTIONS[n - 1].key);
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  });
-
   // ── Counts ──────────────────────────────────────────────────────────────────
   const visitorInbox = inbox.filter((m) => !isInternal(m.email));
   const unread = visitorInbox.filter((m) => !marks.isRead(m.id)).length;
@@ -423,7 +411,7 @@ function Dashboard({
       <aside className="hidden lg:flex flex-col w-64 shrink-0 h-screen sticky top-0 border-r px-4 py-5" style={{ borderColor: "var(--border-subtle)", background: "var(--bg-surface)" }}>
         <Wordmark />
         <nav className="mt-8 space-y-0.5" aria-label="Admin sections">
-          {SECTIONS.map(({ key, label, icon: Icon }, i) => {
+          {SECTIONS.map(({ key, label, icon: Icon }) => {
             const active = section === key;
             const badge = badges[key];
             return (
@@ -435,8 +423,7 @@ function Dashboard({
               >
                 <Icon className="w-4 h-4 shrink-0" />
                 <span className="flex-1 text-left">{label}</span>
-                {badge ? <span className="min-w-5 h-5 px-1.5 rounded-full bg-[#ff5100] text-white text-[10px] font-bold flex items-center justify-center tabular-nums">{badge}</span>
-                  : <kbd className="text-[10px] t-text-3 font-mono opacity-60">{i + 1}</kbd>}
+                {badge ? <span className="min-w-5 h-5 px-1.5 rounded-full bg-[#ff5100] text-white text-[10px] font-bold flex items-center justify-center tabular-nums">{badge}</span> : null}
               </button>
             );
           })}
