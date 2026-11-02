@@ -49,6 +49,7 @@ import { parsePrice } from "@/lib/price";
 import { getNextDeparture } from "@/lib/nextDeparture";
 import SectionNav from "./SectionNav";
 import TrekGuide from "./TrekGuide";
+import { hasTrekGuide } from "@/lib/trekGuides";
 
 // The page's body copy is small and calm, so its secondary and tertiary tones are
 // raised (from 60% / 35% of the text colour) to keep it easy to read in both themes
@@ -122,9 +123,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const adventure = adventures.find((a) => a.slug === slug);
   if (!adventure) return {};
   const difficulty = computeDifficulty(getACE(adventure));
-  const hasItinerary = (getTrail(slug)?.days?.length ?? 0) > 0;
-  const title = experienceTitle(adventure, { hasItinerary });
-  const description = experienceDescription(adventure, { hasItinerary, priceFrom: lowestPrice(adventure) });
+  const title = experienceTitle(adventure);
+  const description = experienceDescription(adventure, { priceFrom: lowestPrice(adventure) });
   const label = routeLabel(adventure);
   return {
     title,
@@ -267,7 +267,7 @@ export default async function ExperiencePage({ params }: Props) {
     }] : []),
   ];
 
-  const faqs = experienceFaq(adventure, { difficulty, priceFrom: priceFrom ? parsePrice(priceFrom) : undefined, operatorCount: allOperators.length });
+  const faqs = hasTrekGuide(adventure) ? [] : experienceFaq(adventure, { difficulty, priceFrom: priceFrom ? parsePrice(priceFrom) : undefined, operatorCount: allOperators.length });
 
   // Structured data needs full URLs; some heroes live in /public
   const absoluteImage = absoluteUrl(adventure.heroImage);
@@ -337,7 +337,7 @@ export default async function ExperiencePage({ params }: Props) {
     breadcrumbStructuredData(destination
       ? [{ label: "Destinations", href: "/destinations" }, { label: destination.name, href: `/destinations/${destination.slug}` }, { label: adventure.name, href: `/experiences/${slug}` }]
       : [{ label: "Explore", href: "/explore" }, { label: adventure.name, href: `/experiences/${slug}` }]),
-    faqStructuredData(faqs),
+    ...(faqs.length > 0 ? [faqStructuredData(faqs)] : []),
   ];
 
   return (
@@ -420,7 +420,7 @@ export default async function ExperiencePage({ params }: Props) {
         <HeroActions adventure={adventure} />
       </section>
 
-      <SectionNav hasGuide={!!trail && trail.days?.length > 0} />
+      <SectionNav hasGuide={!!trail && trail.days?.length > 0} hasFaq={faqs.length > 0} />
 
       {/* Everything below the hero sits on the same topographic texture as the home page */}
       <div className="topo">
@@ -593,17 +593,20 @@ export default async function ExperiencePage({ params }: Props) {
                 <CommunityCards slug={adventure.slug} adventureType={adventure.type} adventureName={adventure.name} operators={allOperators} />
               </AccordionSection>
 
-              {/* FAQ — the questions people search, answered from the facts above */}
-              <AccordionSection id="faq" label="quick answers" title="Frequently asked questions" defaultOpen mobileDefaultOpen={false}>
-                <dl className="space-y-3 max-w-[66ch]">
-                  {faqs.map((f) => (
-                    <div key={f.question}>
-                      <dt><h3 className="text-[14px] font-medium leading-[1.5]" style={{ color: "var(--text-primary)" }}>{f.question}</h3></dt>
-                      <dd className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{f.answer}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </AccordionSection>
+              {/* FAQ — the questions people search, answered from the facts above
+                  (treks answer them in their Adventurepedia guide instead) */}
+              {faqs.length > 0 && (
+                <AccordionSection id="faq" label="quick answers" title="Frequently asked questions" defaultOpen mobileDefaultOpen={false}>
+                  <dl className="space-y-3 max-w-[66ch]">
+                    {faqs.map((f) => (
+                      <div key={f.question}>
+                        <dt><h3 className="text-[14px] font-medium leading-[1.5]" style={{ color: "var(--text-primary)" }}>{f.question}</h3></dt>
+                        <dd className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{f.answer}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </AccordionSection>
+              )}
 
               {/* Tags */}
               <div className="pt-4 pb-1">

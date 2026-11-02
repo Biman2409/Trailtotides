@@ -11,6 +11,7 @@ import type { SearchEntry } from "./adventurepedia";
 export const TREK_TYPES = ["Trekking", "Mountaineering"] as const;
 export const trekAdventures = () => adventures.filter((a) => (TREK_TYPES as readonly string[]).includes(a.type));
 export const trekGuideHref = (slug: string) => `/adventurepedia/treks/${slug}`;
+export const hasTrekGuide = (a: Pick<Adventure, "type">) => (TREK_TYPES as readonly string[]).includes(a.type);
 
 // ── Getting there ────────────────────────────────────────────────────────────
 

@@ -12,9 +12,9 @@ const NAV_ITEMS = [
   { id: "faq", label: "FAQ" },
 ];
 
-export default function SectionNav({ hasGuide = false }: { hasGuide?: boolean }) {
-  // The guide chapter exists only for treks with a mapped trail
-  const items = NAV_ITEMS.filter((item) => item.id !== "guide" || hasGuide);
+export default function SectionNav({ hasGuide = false, hasFaq = false }: { hasGuide?: boolean; hasFaq?: boolean }) {
+  // The guide chapter exists only for treks with a mapped trail, the FAQ only for adventures without a trek guide
+  const items = NAV_ITEMS.filter((item) => (item.id !== "guide" || hasGuide) && (item.id !== "faq" || hasFaq));
   const [active, setActive] = useState(items[0].id);
 
   useEffect(() => {
