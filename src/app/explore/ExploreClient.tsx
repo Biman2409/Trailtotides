@@ -45,7 +45,8 @@ export default function ExploreClient() {
   const set = (patch: Partial<AdventureFilterState>) => setF((cur) => ({ ...cur, ...patch }));
   const [sort, setSort] = useState<SortKey | null>(() => (searchParams.get("sort") as SortKey) || null);
   const [view, setView] = useState<View>(() => (searchParams.get("view") === "list" ? "list" : "grid"));
-  const [shown, setShown] = useState(PAGE);
+  // ?show= is where "Show more" links to, so crawlers can reach every card
+  const [shown, setShown] = useState(() => Math.max(PAGE, Number(searchParams.get("show")) || 0));
   const [filtersOpen, setFiltersOpen] = useState(false);
   const region = searchParams.get("region"); // from the home page's region cards
 
@@ -82,8 +83,12 @@ export default function ExploreClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [f, region, fitAce, sortKey, monthIdx]);
 
-  // New filters start from the top of the list again
-  useEffect(() => { setShown(PAGE); }, [f, region, sortKey]);
+  // New filters start from the top of the list again (but not on arrival, which keeps ?show=)
+  const firstReset = useRef(true);
+  useEffect(() => {
+    if (firstReset.current) { firstReset.current = false; return; }
+    setShown(PAGE);
+  }, [f, region, sortKey]);
 
   // The Filters badge counts only what's inside the panel; Type and Region show on their own buttons
   const extraCount = f.diffs.length + f.durs.length + f.months.length + (f.maxPrice ? 1 : 0) + (f.fit ? 1 : 0) + (f.editorOnly ? 1 : 0);
@@ -275,13 +280,15 @@ export default function ExploreClient() {
         {/* ── Show more ── */}
         {results.length > shown && (
           <div className="mt-10 flex flex-col items-center gap-2">
-            <button
-              onClick={() => setShown((n) => n + PAGE)}
+            {/* A real link for crawlers; people get the cards added in place */}
+            <a
+              href={(() => { const p = new URLSearchParams(searchParams.toString()); p.set("show", String(shown + PAGE)); return `/explore?${p}`; })()}
+              onClick={(e) => { e.preventDefault(); setShown((n) => n + PAGE); }}
               className="px-6 py-3 rounded-xl text-sm font-semibold transition-colors hover:bg-[var(--bg-card-hover)]"
               style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
             >
               Show {Math.min(PAGE, results.length - shown)} more
-            </button>
+            </a>
             <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>Showing {shown} of {results.length}</p>
           </div>
         )}

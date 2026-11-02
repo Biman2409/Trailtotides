@@ -174,6 +174,8 @@ export function HeroHeadline() {
           <span ref={tidesRef} className="hh-word">Tides<CanvasText targetRef={tidesRef} paint={paintTides} images={TIDES_WAVE_SRCS} animate /></span>
         </span>
       </span>
+      {/* What the site does, for screen readers and search: the promise line below says it on screen */}
+      <span className="sr-only">: find, compare and book adventures across India</span>
       <style>{`
         .hh { margin: 0; display: flex; flex-direction: column; text-transform: uppercase; transform-origin: center;
               font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif; letter-spacing: 0; }

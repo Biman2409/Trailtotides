@@ -269,6 +269,8 @@ export default async function ExperiencePage({ params }: Props) {
 
   const faqs = hasTrekGuide(adventure) ? [] : experienceFaq(adventure, { difficulty, priceFrom: priceFrom ? parsePrice(priceFrom) : undefined, operatorCount: allOperators.length });
 
+  const operatorPrices = allOperators.map((o) => parsePrice(o.priceFrom)).filter((p) => Number.isFinite(p) && p > 0);
+
   // Structured data needs full URLs; some heroes live in /public
   const absoluteImage = absoluteUrl(adventure.heroImage);
   const structuredData = [
@@ -311,22 +313,15 @@ export default async function ExperiencePage({ params }: Props) {
       description: adventure.tagline ?? stripEmphasis(adventure.description),
       image: absoluteImage,
       url: `${SITE_URL}/experiences/${slug}`,
-      brand: {
-        "@type": "Brand",
-        name: "Trail to Tides",
-      },
       category: adventure.type,
-      ...(priceFrom ? {
+      // The operators sell the trip, not us: the page offers their price range, not an offer of its own
+      ...(operatorPrices.length > 0 ? {
         offers: {
-          "@type": "Offer",
+          "@type": "AggregateOffer",
           priceCurrency: "INR",
-          price: priceFrom.replace(/[^0-9]/g, ""),
-          availability: "https://schema.org/InStock",
-          url: `${SITE_URL}/experiences/${slug}`,
-          seller: {
-            "@type": "Organization",
-            name: "Trail to Tides",
-          },
+          lowPrice: Math.min(...operatorPrices),
+          highPrice: Math.max(...operatorPrices),
+          offerCount: operatorPrices.length,
         },
       } : {}),
       // No aggregateRating: the only ratings we have are operators' Google
