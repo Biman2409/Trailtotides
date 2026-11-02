@@ -5,6 +5,7 @@
 //         find it by name. q overrides the search text. A loop lists its start again at the end.
 //         optional: true takes the stop only if the trek's OSM place list has it (by name or q),
 //         and leaves it out otherwise, with it the days' visits to it.
+//         ele: the stop's height in metres, over OpenStreetMap's, where OSM's tag is wrong
 // camps   camps between two stops: { name: [stopA, stopB, share, aka?] }. Looked up in
 //         OpenStreetMap by name and by the other names in aka, near where they should be; one it
 //         doesn't have is put that share of the way along the trail from stop A to stop B, and
@@ -21,7 +22,7 @@
 
 const LOHAJUNG = { name: "Lohajung", at: [30.1283, 79.6190] };
 const SANKRI = { name: "Sankri", at: [31.07802, 78.18411] };
-const GANGOTRI = { name: "Gangotri", at: [30.99437, 78.93987] };
+const GANGOTRI = { name: "Gangotri", at: [30.99437, 78.93987], ele: 3100 }; // OSM tags it 3,300 m
 const DHAK = { name: "Dhak", at: [30.49886, 79.61134] };
 const KHULLARA = { name: "Khullara", at: [30.45968, 79.58748] };
 
@@ -174,10 +175,12 @@ export const TREKS = {
       { name: "Rainbasera", at: [31.11588, 78.40142] },
       { name: "Ruinsara Tal", at: [31.08119, 78.45786] },
       { name: "Odari", at: [31.06098, 78.46323] },
-      { name: "Bali Pass", at: [31.03299, 78.43803] },
+      { name: "Bali Pass", at: [31.03299, 78.43803], ele: 4940 }, // OSM 4,800 m (marked fixme); operators 4,900–4,950
       { name: "Janki Chatti", at: [30.97645, 78.43834] },
     ],
-    camps: { "Lower Damini": ["Bali Pass", "Janki Chatti", 0.4, ["Damini", "Lower Dhamni", "Dhamni", "Damni"]] },
+    // Not in OSM: placed where the line comes down to ~3,350 m, mid-range of the heights trek
+    // operators give for Lower Dhamni (3,200–3,415 m)
+    camps: { "Lower Damini": ["Bali Pass", "Janki Chatti", 0.55,["Damini", "Lower Dhamni", "Dhamni", "Damni"]] },
     days: [
       { to: "Seema", note: "Drive from Sankri to Taluka, then up the Supin river to Seema" },
       { to: "Rainbasera", note: "Into the Ruinsara valley through forest and meadows" },
@@ -274,6 +277,9 @@ export const TREKS = {
     near: "Chamoli, Uttarakhand",
     stops: [DHAK, KHULLARA, { name: "Pangarchulla", at: [30.42367, 79.59214] }],
     camps: { Gulling: ["Dhak", "Khullara", 0.5, ["Guling", "Gulling Top"]] },
+    // OSM's path ends on the ridge past Kuari Pass; above it, the line follows where uploaded GPS
+    // tracks cluster, past Mini Pangarchulla to the top
+    through: [[30.43653, 79.58303], [30.43098, 79.58521], [30.42910, 79.58866], [30.42777, 79.59058], [30.42499, 79.59153]],
     days: [
       { to: "Gulling", note: "Drive from Joshimath to Dhak, then up past Tugasi village to a forest camp" },
       { to: "Khullara", note: "Through oak and rhododendron to a meadow facing Dronagiri and Hathi Ghoda" },
@@ -486,7 +492,7 @@ export const TREKS = {
       { name: "Tunda Bhuj", at: [31.9711, 77.59167] },
       { name: "Thakur Kuan", at: [31.95332, 77.64521] },
       { name: "Odi Thach", at: [31.9269, 77.70268] },
-      { name: "Mantalai", at: [31.86779, 77.78389] },
+      { name: "Mantalai", at: [31.86779, 77.78389], ele: 4120 }, // OSM 4,248 m; operators 4,100–4,150
       { name: "Pin Parvati Pass", at: [31.8355, 77.84444] },
       { name: "Mud", at: [31.959, 78.03241] },
     ],
@@ -508,11 +514,14 @@ export const TREKS = {
     near: "Shimla, Himachal Pradesh",
     stops: [
       { name: "Janglik", at: [31.31716, 78.00958] },
+      { name: "Dayara Thach", q: "Dehra Thach", at: [31.34772, 78.0609] }, // OSM spells it Dehra
       { name: "Litham", at: [31.36158, 78.10317] },
       { name: "Buran Ghati", at: [31.38742, 78.14567] },
+      { name: "Munirang", at: [31.41578, 78.1545] }, // OSM's campsite below the pass, unnamed there
       { name: "Barua", at: [31.4682, 78.17846] },
     ],
-    camps: { "Dayara Thach": ["Janglik", "Litham", 0.45, ["Dayara", "Diyara"]], Dhunda: ["Litham", "Buran Ghati", 0.6, ["Dunda", "Dhunda Camp"]], Munirang: ["Buran Ghati", "Barua", 0.3, ["Munirang Camp", "Muni Rang"]] },
+    // Not in OSM: placed where the line reaches ~4,050 m, the height trek operators give for Dhunda
+    camps: { Dhunda: ["Litham", "Buran Ghati", 0.68, ["Dunda", "Dhunda Camp"]] },
     days: [
       { to: "Dayara Thach", note: "Up from Janglik through forest onto one of the finest meadows in Himachal" },
       { to: "Litham", note: "Down through birch to Litham, below the Chandranahan waterfall" },
@@ -527,8 +536,10 @@ export const TREKS = {
     near: "Ganderbal, Jammu and Kashmir",
     stops: [
       { name: "Sonamarg", at: [34.30239, 75.29656] },
-      { name: "Vishansar Lake", q: "Vishansar", at: [34.38746, 75.11887] },
-      { name: "Gadsar Lake", q: "Gadsar", at: [34.4218, 75.05747] },
+      // The camps, not the middle of the lakes: OSM's Vishensar Campsite, and at Gadsar (no mapped
+      // campsite) the lakeshore spot on the trail where uploaded GPS tracks gather
+      { name: "Vishansar Lake", q: "Vishensar Campsite", at: [34.39103, 75.12633] },
+      { name: "Gadsar Lake", q: "Gadsar", at: [34.42207, 75.06428] },
       { name: "Gangbal Lake", q: "Gangbal campsite", at: [34.42556, 74.94058] },
       { name: "Naranag", at: [34.35023, 74.97212] },
     ],

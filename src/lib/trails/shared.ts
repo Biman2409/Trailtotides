@@ -72,7 +72,9 @@ export function trailHighPoint(t: Trail): TrailStop {
   return t.stops.reduce((hi, s) => ((s.ele ?? 0) > (hi.ele ?? 0) ? s : hi), t.stops[0]);
 }
 
-/** Distance along the line (km) against elevation (m), for profile charts */
+/** Distance along the line (km) against elevation (m), for profile charts. The stored line is
+ *  thinned, which cuts corners and comes out a few % short; its km are stretched to the trail's
+ *  measured length so they match the stops' km, the itinerary and lengthKm */
 export function trailProfile(t: Trail): { km: number; ele: number }[] {
   const out: { km: number; ele: number }[] = [];
   let km = 0;
@@ -85,5 +87,6 @@ export function trailProfile(t: Trail): { km: number; ele: number }[] {
     }
     out.push({ km, ele: p[2] });
   });
-  return out;
+  const k = km > 0 && t.lengthKm > 0 ? t.lengthKm / km : 1;
+  return out.map((p) => ({ km: p.km * k, ele: p.ele }));
 }

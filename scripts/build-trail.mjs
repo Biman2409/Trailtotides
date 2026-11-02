@@ -95,7 +95,7 @@ async function place(stop, trek, prev = null) {
       // The middle of a big meadow or lake can be far from the camp on its edge: when the stop
       // has its own coordinates, they stay, and OSM only confirms the place (and its height)
       const [lat, lng] = m.area && s.at ? s.at : [+m.lat.toFixed(5), +m.lng.toFixed(5)];
-      const p = { name: s.name, lat, lng, ele: (m.area && s.at ? null : m.ele) ?? (await heights([[lat, lng]]))[0], from: "osm" };
+      const p = { name: s.name, lat, lng, ele: s.ele ?? (m.area && s.at ? null : m.ele) ?? (await heights([[lat, lng]]))[0], from: "osm" };
       found.set(s.name, p);
       return p;
     }
@@ -118,7 +118,7 @@ async function place(stop, trek, prev = null) {
   if (hit && s.at && dist([+hit.lat, +hit.lon], s.at) > 2000) hit = null;
   if (hit && taken(+hit.lat, +hit.lon)) hit = null;
   let p;
-  if (hit) p = { name: s.name, lat: +(+hit.lat).toFixed(5), lng: +(+hit.lon).toFixed(5), ele: hit.extratags?.ele ? Math.round(+hit.extratags.ele) : null, from: "osm" };
+  if (hit) p = { name: s.name, lat: +(+hit.lat).toFixed(5), lng: +(+hit.lon).toFixed(5), ele: s.ele ?? (hit.extratags?.ele ? Math.round(+hit.extratags.ele) : null), from: "osm" };
   else if (s.at) p = { name: s.name, lat: s.at[0], lng: s.at[1], ele: s.ele ?? null, from: "given" };
   else throw new Error(`Couldn't find "${s.name}" in OpenStreetMap: give it coordinates (at)`);
   if (p.ele == null) p.ele = (await heights([[p.lat, p.lng]]))[0];

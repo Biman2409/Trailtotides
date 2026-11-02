@@ -78,7 +78,7 @@ export function ElevationPanel({ trail }: { trail: Trail }) {
   const maxKm = profile[profile.length - 1].km;
   const eles = profile.map((p) => p.ele);
   const lo = Math.floor((Math.min(...eles) - 150) / 500) * 500;
-  const hi = Math.ceil((Math.max(...eles, ...trail.stops.map((s) => s.ele ?? 0)) + 100) / 500) * 500;
+  const hi = Math.ceil((Math.max(...eles) + 100) / 500) * 500;
   const x = (km: number) => PAD.l + (km / maxKm) * (W - PAD.l - PAD.r);
   const y = (e: number) => PAD.t + (1 - (e - lo) / (hi - lo)) * (H - PAD.t - PAD.b);
   const line = profile.map((p, i) => `${i ? "L" : "M"}${x(p.km).toFixed(1)},${y(p.ele).toFixed(1)}`).join("");
@@ -125,9 +125,10 @@ export function ElevationPanel({ trail }: { trail: Trail }) {
         {kmTicks.map((k) => <text key={k} x={x(k)} y={H - PAD.b + 16} textAnchor="middle" fontSize="10.5" fill="var(--text-tertiary)">{k} km</text>)}
         <path d={area} fill="url(#strip-elev-fill)" />
         <path d={line} fill="none" stroke={ORANGE} strokeWidth="2.2" strokeLinejoin="round" />
-        {/* Stops: a tick on the line and the name above, on alternating rows so close ones don't collide */}
+        {/* Stops: a tick on the line and the name above, on alternating rows so close ones don't collide.
+            The dot sits on the profile: a stop's surveyed height can differ from the elevation model's */}
         {trail.stops.map((s, i) => {
-          const sy = y(s.ele ?? 0);
+          const sy = y(profile.reduce((a, p) => (Math.abs(p.km - s.km) < Math.abs(a.km - s.km) ? p : a)).ele);
           const ly = i % 2 ? 14 : 30;
           return (
             <g key={s.name}>
