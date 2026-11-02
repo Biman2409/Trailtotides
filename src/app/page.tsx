@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, ChevronRight, Crown } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronRight, Crown, PenLine } from "lucide-react";
 import HeroCTAs from "@/components/ui/custom/HeroCTAs";
 import HeroPromise from "@/components/ui/custom/HeroPromise";
 import MatchmakerHomepageSection from "@/components/ui/custom/MatchmakerHomepageSection";
@@ -322,7 +322,7 @@ export default function HomePage() {
                 </div>
                 <Link
                   href="/stories"
-                  className="flex items-center gap-1.5 font-medium hover:text-[#ff5100] transition-colors group text-sm"
+                  className="flex items-center gap-1.5 py-3 -my-3 font-medium hover:text-[#ff5100] transition-colors group text-sm"
                   style={{ color: "var(--text-tertiary)" }}
                 >
                   All stories
@@ -331,13 +331,39 @@ export default function HomePage() {
               </div>
             </FadeUp>
 
-            {/* Phones swipe through stories sideways; wider screens get columns that follow the number of stories */}
-            <div className={`flex sm:grid gap-3 lg:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0 ${featuredStories.length >= 3 ? "sm:grid-cols-2 md:grid-cols-3" : featuredStories.length === 2 ? "sm:grid-cols-2" : "sm:max-w-2xl"}`}>
+            {/* Phones swipe through stories sideways; wider screens get three columns. While there
+                are fewer than three stories, an invitation to share one fills the row. */}
+            <div className="flex sm:grid sm:grid-cols-2 md:grid-cols-3 gap-3 lg:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
               {featuredStories.map((story) => (
                 <div key={story.id} className="snap-start shrink-0 w-[82vw] sm:w-auto">
-                  <StoryCard story={story} />
+                  <StoryCard story={story} featuredBadge={false} />
                 </div>
               ))}
+              {featuredStories.length < 3 && (
+                <div className="snap-start shrink-0 w-[82vw] sm:w-auto">
+                  <Link
+                    href="/stories/submit"
+                    className="group h-full min-h-[320px] flex flex-col justify-between rounded-2xl p-6 transition-colors hover:border-[#ff5100]"
+                    style={{ background: "var(--bg-card)", border: "1.5px dashed var(--border-default)" }}
+                  >
+                    <span className="w-11 h-11 rounded-xl grid place-items-center" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100" }}>
+                      <PenLine className="w-5 h-5" />
+                    </span>
+                    <span className="block mt-8">
+                      <span className="block text-[22px] leading-snug t-text" style={{ fontFamily: "var(--font-display), Georgia, serif", fontWeight: 600 }}>
+                        Been somewhere worth telling?
+                      </span>
+                      <span className="block text-[13.5px] leading-relaxed mt-2" style={{ color: "var(--text-secondary)" }}>
+                        Write up your trek, ride or dive with your photos, and share it with everyone planning theirs.
+                      </span>
+                    </span>
+                    <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-[#ff5100]">
+                      Share your story
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </span>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </section>

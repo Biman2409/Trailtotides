@@ -13,8 +13,9 @@ const serif = { fontFamily: "var(--font-display), Georgia, serif", fontWeight: 6
 // The author tagline is set in the site script, like the logo tagline
 const script = { fontFamily: "var(--font-script), cursive", fontWeight: 600 } as const;
 
-export default function StoryCard({ story }: { story: Story }) {
-  const isFeatured = story.tags.includes("Featured");
+/** featuredBadge: off where every story shown is featured (the home row), so the badge means something */
+export default function StoryCard({ story, featuredBadge = true }: { story: Story; featuredBadge?: boolean }) {
+  const isFeatured = featuredBadge && story.tags.includes("Featured");
   const genre = (story.pillTags ?? story.tags.filter((t) => !BADGE_TAGS.includes(t)))[0];
   const img = storyImage(story.heroImage);
 
@@ -34,7 +35,7 @@ export default function StoryCard({ story }: { story: Story }) {
           fill
           quality={75}
           className="photo-grade object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          sizes="(max-width: 640px) 85vw, (max-width: 768px) 50vw, (max-width: 1280px) 33vw, 420px"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/25" />
 
