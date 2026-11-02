@@ -50,6 +50,7 @@ import { pickEditorsMix, inSeasonNow, currentMonthIndexIST, MONTHS, MONTH_NAMES 
 export const revalidate = 21600;
 
 const featuredAdventures = pickEditorsMix(adventures, 6);
+const editorPickCount = adventures.filter((a) => a.editorChoice).length;
 const featuredStories = stories.slice(0, 3);
 // Only what the map preview draws, so the full adventure records stay off the client
 // Difficulty is the rating the site shows everywhere, not the raw data field (they differ for many)
@@ -179,10 +180,10 @@ export default function HomePage() {
                   </h2>
                 </div>
                 <Link
-                  href="/explore"
+                  href="/explore?editor=1"
                   className="group hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#ff5100] hover:text-[#ff7d47] transition-colors mb-1"
                 >
-                  View all adventures
+                  See all {editorPickCount} picks
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </div>
@@ -191,24 +192,23 @@ export default function HomePage() {
             {/* Phones swipe through the picks sideways; wider screens get the feature grid */}
             <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
               {featuredAdventures.map((adventure, i) => (
-                <div key={adventure.id} className={`snap-start shrink-0 w-[78vw] sm:w-auto ${i === 0 ? "sm:col-span-2 lg:row-span-2" : ""}`}>
-                  {/* The section is already titled Editor's Choice — no per-card badge.
-                      The feature card is large only in the grid; in the phone swipe row it matches the rest. */}
+                // The 2-column tablet grid fits the feature and four more; the sixth waits for the 3-column grid
+                <div key={adventure.id} className={`snap-start shrink-0 w-[78vw] sm:w-auto ${i === 0 ? "sm:col-span-2 lg:row-span-2" : ""} ${i === 5 ? "sm:hidden lg:block" : ""}`}>
+                  {/* The section is already titled Editor's Choice — no per-card badge. The feature card
+                      is large only in the grid (CSS); in the phone swipe row it matches the rest.
+                      The others use wide photos so two rows fit on one screen beside the feature. */}
                   {i === 0 ? (
-                    <>
-                      <div className="sm:hidden"><AdventureCard adventure={adventure} badge={false} /></div>
-                      <div className="hidden sm:block h-full"><AdventureCard adventure={adventure} badge={false} fill size="large" /></div>
-                    </>
+                    <AdventureCard adventure={adventure} badge={false} fill size="large" />
                   ) : (
-                    <AdventureCard adventure={adventure} badge={false} />
+                    <AdventureCard adventure={adventure} badge={false} size="large" />
                   )}
                 </div>
               ))}
             </div>
 
             <div className="sm:hidden mt-3">
-              <Link href="/explore" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#ff5100]">
-                View all adventures
+              <Link href="/explore?editor=1" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#ff5100]">
+                See all {editorPickCount} picks
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

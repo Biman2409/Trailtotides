@@ -38,6 +38,10 @@ interface AdventureCardProps {
 // Save and compare are 28px; this widens what a finger can hit (to 38×44) without changing the look
 const HIT_AREA = "relative after:absolute after:-inset-y-2 after:-inset-x-[5px] after:content-['']";
 
+// The feature card's extra lines: the description's opening sentence and who it suits
+const firstSentence = (text: string) => text.replace(/\*\*/g, "").split(/(?<=[.!?])\s/)[0];
+const bestFor = (whoFor: string) => whoFor.split(" · ")[0];
+
 const MONTHS: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function formatSeasonShort(bestMonths: Month[]): string {
@@ -134,7 +138,8 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
         transition={{ type: "spring", stiffness: 300, damping: 24 }}
       >
       {/* Image area — kept calm: difficulty and save on the photo, everything else below it */}
-      <div className={`relative w-full overflow-hidden block group ${fill ? "flex-1 min-h-[260px]" : isLarge ? "aspect-video" : "aspect-video sm:aspect-[4/3]"}`}>
+      {/* Dark base under the photo: while it loads, the card reads as a card and the white title stays legible */}
+      <div className={`relative w-full overflow-hidden block group bg-[#2a2420] ${fill ? "aspect-video sm:aspect-auto sm:flex-1 sm:min-h-[260px]" : isLarge ? "aspect-video" : "aspect-video sm:aspect-[4/3]"}`}>
         <Link href={`/experiences/${adventure.slug}${fromPage && fromPage > 1 ? `?from=${fromPage}` : ""}`} aria-label={adventure.name} className="absolute inset-0 z-10" />
         <Image
           src={adventure.heroImage}
@@ -143,7 +148,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
           priority={priority}
           quality={75}
           className="photo-grade object-cover object-center transition-transform duration-700 group-hover:scale-105"
-          sizes={fill ? "(max-width: 1024px) 100vw, 66vw" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
+          sizes={fill ? "(max-width: 640px) 80vw, (max-width: 1024px) 100vw, 66vw" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
         />
 
         {/* Shading: a long soft fade under the title, and a faint one at the top for the pills */}
@@ -196,15 +201,15 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
         </div>
 
         {/* Bottom of the photo: title 100% → tagline 75% */}
-        <div className={`absolute bottom-0 left-0 right-0 z-20 pointer-events-none ${fill ? "p-5 lg:p-6" : "p-4"}`}>
+        <div className={`absolute bottom-0 left-0 right-0 z-20 pointer-events-none ${fill ? "p-4 sm:p-5 lg:p-6" : "p-4"}`}>
           {/* The title in the site's display serif, like its headlines */}
           <h3
-            className={`text-white leading-[1.12] tracking-[-0.01em] group-hover:text-[#ffb08a] transition-colors pointer-events-none ${fill ? "text-[28px] lg:text-[34px]" : "text-[19px] sm:text-xl"}`}
+            className={`text-white leading-[1.12] tracking-[-0.01em] group-hover:text-[#ffb08a] transition-colors pointer-events-none ${fill ? "text-[19px] sm:text-[28px] lg:text-[34px]" : "text-[19px] sm:text-xl"}`}
             style={{ fontFamily: "var(--font-display), Georgia, serif", fontWeight: 600 }}
           >
             {adventure.name}
           </h3>
-          <p className={`text-white/70 leading-snug mt-1.5 pointer-events-none ${fill ? "text-sm line-clamp-2 max-w-lg" : "text-[11px] line-clamp-1"}`}>
+          <p className={`text-white/70 leading-snug mt-1.5 pointer-events-none ${fill ? "text-[11px] line-clamp-1 sm:text-sm sm:line-clamp-2 max-w-lg" : "text-[11px] line-clamp-1"}`}>
             {adventure.tagline}
           </p>
         </div>
@@ -230,6 +235,17 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
               </>
             )}
           </p>
+          {/* The feature card has room to say why it's worth it (grid sizes only; phones keep the short card) */}
+          {fill && (
+            <div className="hidden sm:block mt-3 space-y-1.5 max-w-2xl">
+              <p className="text-sm leading-relaxed line-clamp-2" style={{ color: "var(--text-secondary)" }}>{firstSentence(adventure.description)}</p>
+              {adventure.whoFor && (
+                <p className="text-[13px] leading-snug line-clamp-1" style={{ color: "var(--text-tertiary)" }}>
+                  <span className="font-semibold" style={{ color: "var(--text-secondary)" }}>Best for: </span>{bestFor(adventure.whoFor)}
+                </p>
+              )}
+            </div>
+          )}
           <div className="mt-3 pt-3 flex items-end justify-between gap-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
             <div className="min-w-0">
               <span className="block text-[10px] font-medium leading-none mb-1.5" style={{ color: "var(--text-tertiary)" }}>
