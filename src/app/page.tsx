@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, ChevronDown, ChevronRight, Crown } from "lucide-react";
 import HeroCTAs from "@/components/ui/custom/HeroCTAs";
 import HeroPromise from "@/components/ui/custom/HeroPromise";
@@ -225,13 +224,6 @@ export default function HomePage() {
                the demo; edges fade into the page ── */}
         <section id="map-cta" className="relative py-5 lg:py-7 px-5 lg:px-8 overflow-hidden bg-[#eaf4ec] dark:bg-[#0f1a13]">
           <div className="absolute inset-0 pointer-events-none">
-            <Image
-              src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=80"
-              alt=""
-              fill
-              className="object-cover opacity-[0.07] grayscale mix-blend-luminosity"
-              style={{ objectFit: "cover" }}
-            />
             <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 55% 75% at 78% 50%, rgba(95,184,115,0.22), transparent 70%)" }} />
             <div
               className="absolute inset-0"
@@ -247,8 +239,8 @@ export default function HomePage() {
             <div className="absolute inset-x-0 bottom-0 h-24" style={{ background: "linear-gradient(to top, var(--bg-page), transparent)" }} />
           </div>
 
-          {/* A narrower demo keeps the section short; the text column carries its own button */}
-          <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_310px] xl:grid-cols-[1fr_320px] gap-4 lg:gap-12 items-center">
+          {/* Text and demo sit together as a centred pair rather than at opposite edges */}
+          <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-[minmax(0,520px)_400px] lg:justify-center gap-4 lg:gap-16 items-center">
             <FadeUp>
               <div className="max-w-2xl">
                 <p className="text-[#5fb873] text-xs font-semibold tracking-[0.22em] uppercase mb-2">
@@ -258,11 +250,12 @@ export default function HomePage() {
                   India&apos;s Adventures, <span className="text-[#5fb873]">Mapped</span>
                 </h2>
                 <p className="text-sm leading-relaxed w-full max-w-lg" style={{ color: "var(--text-secondary)" }}>
-                  Every trail, summit and coast on one map. Filter, zoom in, tap a pin.
+                  {adventures.length} adventures on one map, with more of India on the way. Filter, zoom in, tap a pin.
                 </p>
+                {/* Desktop only: below lg the demo sits right under it with its own "Open map" */}
                 <Link
                   href="/map"
-                  className="group mt-4 inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-[#07160b] bg-[#5fb873] hover:bg-[#7fd692] transition-colors"
+                  className="group mt-4 hidden lg:inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-[#07160b] bg-[#5fb873] hover:bg-[#7fd692] transition-colors"
                 >
                   Open the map
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

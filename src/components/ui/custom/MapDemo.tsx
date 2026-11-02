@@ -27,7 +27,9 @@ export type MapDemoPin = {
   image: string;
 };
 
-type Pin = { slug: string; name: string; genre: DemoGenre; x: number; y: number; lat: number; lng: number; image: string; meta: string; href: string; km: number };
+// real: a listing on the site. Sample spots (not real) are drawn faint and can't be tapped, so the
+// preview shows where the map is heading without passing them off as bookable adventures
+type Pin = { slug: string; name: string; genre: DemoGenre; x: number; y: number; lat: number; lng: number; image: string; meta: string; href: string; km: number; real: boolean };
 
 const GENRES: { id: DemoGenre; color: string }[] = [
   { id: "Trekking", color: "#ff7d47" },
@@ -41,7 +43,7 @@ const COLOR = Object.fromEntries(GENRES.map((g) => [g.id, g.color])) as Record<D
 
 const GENRE_OF: Record<string, DemoGenre> = {
   Trekking: "Trekking", Mountaineering: "Trekking", Scrambling: "Trekking",
-  Diving: "Water", Kayaking: "Water",
+  Diving: "Water", Kayaking: "Water", "River Rafting": "Water",
   Paragliding: "Air", "Hot Air Balloon": "Air",
   Skiing: "Snow", "Ice Skating": "Snow",
   Motorcycling: "Road", Cycling: "Road", "Jeep Safari": "Road",
@@ -100,14 +102,16 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
   const pins: Pin[] = useMemo(() => [
     ...real.filter((p) => GENRE_OF[p.type]).map((p) => ({
       slug: p.slug, name: p.name, genre: GENRE_OF[p.type], ...toXY(p.lng, p.lat), lat: p.lat, lng: p.lng,
-      image: p.image, meta: `${p.durationDays} · ${p.difficulty}`, href: `/experiences/${p.slug}`, km: kmBetween(ME, p),
+      image: p.image, meta: `${p.durationDays} · ${p.difficulty}`, href: `/experiences/${p.slug}`, km: kmBetween(ME, p), real: true,
     })),
     ...DEMO_SPOTS.map(([genre, name, lat, lng]) => ({
       slug: `spot-${name.toLowerCase().replace(/[^a-z]+/g, "-")}`, name, genre, ...toXY(lng, lat), lat, lng,
-      image: GENRE_IMAGE[genre], meta: `${genre} · sample spot`, href: `/explore?q=${encodeURIComponent(name)}`, km: kmBetween(ME, { lat, lng }),
+      image: GENRE_IMAGE[genre], meta: `${genre} · coming soon`, href: `/explore?q=${encodeURIComponent(name)}`, km: kmBetween(ME, { lat, lng }), real: false,
     })),
   ], [real]);
 
+  // Genres with at least one real listing; the rest are only sample spots so far
+  const liveGenres = useMemo(() => new Set(pins.filter((p) => p.real).map((p) => p.genre)), [pins]);
   const [genre, setGenre] = useState<DemoGenre | null>(null);
   const [mode, setMode] = useState<Mode>({ kind: "all" });
   const [target, setTarget] = useState<Camera>(HOME);
@@ -260,8 +264,14 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
         if (pt <= 0) continue;
         const pop = easeOutBack(pt);
         const col = COLOR[p.genre];
-        ctx.globalAlpha = st.a * Math.min(1, pt * 2);
         ctx.fillStyle = col;
+        if (!p.real) {
+          // Sample spot: a faint dot, no halo or outline
+          ctx.globalAlpha = st.a * Math.min(1, pt * 2) * 0.3;
+          ctx.beginPath(); ctx.arc(x, y, 1.9 * st.k * pop, 0, Math.PI * 2); ctx.fill();
+          continue;
+        }
+        ctx.globalAlpha = st.a * Math.min(1, pt * 2);
         ctx.globalAlpha *= 0.16;
         ctx.beginPath(); ctx.arc(x, y, 7.5 * st.k * pop, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = st.a * Math.min(1, pt * 2);
@@ -354,7 +364,7 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
     const c = live.current.cam, u = b.width / W;
     let best: Pin | null = null, bd = 12 * 12;
     for (const p of pins) {
-      const shown = (!genre || p.genre === genre) && (mode.kind !== "near" || p.km <= NEAR_KM);
+      const shown = p.real && (!genre || p.genre === genre) && (mode.kind !== "near" || p.km <= NEAR_KM);
       if (!shown) continue;
       const x = (p.x - c.x) * c.scale * u + b.width / 2 + b.left, y = (p.y - c.y) * c.scale * u + b.height / 2 + b.top;
       const d = (x - clientX) ** 2 + (y - clientY) ** 2;
@@ -383,11 +393,11 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
   const statusColor = mode.kind === "near" ? "#60a5fa" : genre ? COLOR[genre] : "#7edc96";
 
   return (
-    <div ref={rootRef} className="relative w-full min-w-0 max-w-[320px] sm:max-w-[360px] xl:max-w-[380px] mx-auto lg:mr-0 select-none">
+    <div ref={rootRef} className="relative w-full min-w-0 max-w-[320px] sm:max-w-[360px] lg:max-w-[400px] mx-auto lg:mr-0 select-none">
       <div className="md-shell rounded-[22px] p-3">
         {/* Genre chips */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar mb-2.5 -mx-0.5 px-0.5">
-          <button type="button" onClick={() => pickGenre(null)} className="md-chip shrink-0" data-on={!genre || undefined} style={{ "--c": "#ffffff" } as React.CSSProperties}>
+          <button type="button" onClick={() => pickGenre(null)} className="md-chip md-hit shrink-0" data-on={!genre || undefined} style={{ "--c": "#ffffff" } as React.CSSProperties}>
             All
           </button>
           {GENRES.map(({ id, color }) => (
@@ -396,7 +406,9 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
               ref={(el) => { chipRefs.current[id] = el; }}
               type="button"
               onClick={() => pickGenre(genre === id ? null : id)}
-              className="md-chip shrink-0 inline-flex items-center gap-1.5"
+              disabled={!liveGenres.has(id)}
+              title={liveGenres.has(id) ? undefined : `${id}: coming soon`}
+              className="md-chip md-hit shrink-0 inline-flex items-center gap-1.5"
               data-on={genre === id || undefined}
               style={{ "--c": color } as React.CSSProperties}
             >
@@ -474,7 +486,7 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); zoomOut(); }}
-            className="absolute right-2 top-2 text-[10px] font-semibold px-2 py-0.5 rounded-full transition-opacity duration-300"
+            className="md-hit absolute right-2 top-2 text-[10px] font-semibold px-2 py-0.5 rounded-full transition-opacity duration-300"
             style={{ background: "rgba(0,0,0,0.55)", color: "#fff", backdropFilter: "blur(6px)", opacity: zoomed ? 1 : 0, pointerEvents: zoomed ? "auto" : "none" }}
             tabIndex={zoomed ? 0 : -1}
           >
@@ -497,7 +509,7 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
             type="button"
             onClick={(e) => { e.stopPropagation(); locate(); }}
             aria-label="Show adventures near me"
-            className="md-locate absolute right-2 bottom-11 w-8 h-8 rounded-full grid place-items-center"
+            className="md-locate md-hit absolute right-2 bottom-11 w-8 h-8 rounded-full grid place-items-center"
             data-on={mode.kind === "near" || undefined}
           >
             <LocateFixed className="w-4 h-4" strokeWidth={2.2} />
@@ -552,6 +564,12 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
           )}
         </div>
 
+        {/* Key for the faint dots */}
+        <p className="flex items-center gap-1.5 mt-2 px-0.5 text-[10px] text-white/45">
+          <span className="w-1.5 h-1.5 rounded-full bg-white/30 shrink-0" aria-hidden />
+          Faint dots: places coming soon
+        </p>
+
         {/* Tour caption, progress, and the way into the real map */}
         <div className="flex items-center gap-3 mt-2.5 px-0.5">
           <div className="flex-1 min-w-0">
@@ -594,10 +612,14 @@ export default function MapDemo({ pins: real, cta }: { pins: MapDemoPin[]; cta: 
         .md-shell { background: linear-gradient(165deg, #121a18 0%, #0b100f 100%);
                     border: 1px solid rgba(255,255,255,0.07);
                     box-shadow: 0 30px 70px rgba(0,0,0,0.35), 0 0 0 1px rgba(126,220,150,0.04), inset 0 1px 0 rgba(255,255,255,0.05); }
-        .md-chip { padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap;
+        .md-chip { padding: 6px 11px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap;
                    color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
                    transition: color .35s, background .35s, border-color .35s, box-shadow .35s; }
-        .md-chip:hover { color: #fff; }
+        .md-chip:hover:not(:disabled) { color: #fff; }
+        .md-chip:disabled { opacity: 0.4; cursor: default; }
+        /* Small controls get a finger-sized hit area without growing */
+        .md-hit:not(.absolute) { position: relative; }
+        .md-hit::after { content: ""; position: absolute; inset: -9px -3px; }
         .md-chip[data-on] { color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent);
                             border-color: color-mix(in srgb, var(--c) 65%, transparent); box-shadow: 0 0 16px color-mix(in srgb, var(--c) 30%, transparent); }
         .md-map { container-type: inline-size; isolation: isolate; background: radial-gradient(120% 90% at 50% 35%, #12201d 0%, #0a1110 70%);
