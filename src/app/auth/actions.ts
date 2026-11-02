@@ -7,6 +7,7 @@ import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/email";
 import { callbackLink, safeNext } from "@/lib/authLinks";
 import { rateLimit } from "@/lib/rateLimit";
 import { findUserByUsername } from "@/lib/resolveUsername";
+import { USERNAME_RE, USERNAME_RULE_TEXT } from "@/lib/username";
 
 const firstName = (full: string) => full.trim().split(/\s+/)[0] || "explorer";
 
@@ -35,9 +36,9 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
     return { error: "Use a password of at least 8 characters." };
   }
 
-  // Validate username length
-  if (username.length < 3 || username.length > 20) {
-    return { error: "Username must be between 3 and 20 characters." };
+  // Same rule the availability check and the profile page use
+  if (!USERNAME_RE.test(username)) {
+    return { error: `${USERNAME_RULE_TEXT}.` };
   }
 
   // Check username uniqueness across every page of users; if the lookup fails, don't guess

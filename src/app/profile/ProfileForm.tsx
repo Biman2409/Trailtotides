@@ -9,6 +9,7 @@ import {
 import { updateProfile, changePassword } from "./actions";
 import { AVATARS } from "@/lib/avatars";
 import { AvatarPickerModal, useAvatarState, AceBadge } from "./AvatarPicker";
+import { USERNAME_RE, USERNAME_RULE_TEXT, checkUsernameAvailability } from "@/lib/username";
 
 type Profile = {
   id: string;
@@ -44,8 +45,10 @@ function AccountDetails({ profile }: { profile: Profile }) {
   const [email, setEmail] = useState(profile.email || "");
   const [phone, setPhone] = useState(profile.phone || "");
 
-  const [usernameState, setUsernameState] = useState<"idle" | "checking" | "available" | "taken" | "invalid" | "unchanged">("unchanged");
+  const [usernameState, setUsernameState] = useState<"idle" | "checking" | "available" | "taken" | "invalid" | "error" | "unchanged">("unchanged");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Bumped on every keystroke so a slow answer for an earlier name can't overwrite the current one
+  const checkSeq = useRef(0);
 
   const isDirty =
     fullName !== (profile.full_name || "") ||
@@ -55,13 +58,13 @@ function AccountDetails({ profile }: { profile: Profile }) {
 
   const checkUsername = useCallback((val: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
+    const seq = ++checkSeq.current;
     if (!val || val === profile.username) { setUsernameState("unchanged"); return; }
-    if (val.length < 3 || val.length > 20) { setUsernameState("invalid"); return; }
+    if (!USERNAME_RE.test(val)) { setUsernameState("invalid"); return; }
     setUsernameState("checking");
     debounceRef.current = setTimeout(async () => {
-      const res = await fetch(`/api/check-username?username=${encodeURIComponent(val)}`);
-      const data = await res.json();
-      setUsernameState(data.available ? "available" : "taken");
+      const result = await checkUsernameAvailability(val);
+      if (seq === checkSeq.current) setUsernameState(result);
     }, 500);
   }, [profile.username]);
 
@@ -133,12 +136,14 @@ function AccountDetails({ profile }: { profile: Profile }) {
           {editing && usernameState !== "idle" && usernameState !== "unchanged" && (
             <p className={`text-[10px] ml-1 ${
               usernameState === "available" ? "text-emerald-500" :
-              usernameState === "taken" ? "text-red-400" : "text-amber-400"
+              usernameState === "taken" ? "text-red-400" :
+              usernameState === "checking" ? "text-[var(--text-tertiary)]" : "text-amber-400"
             }`}>
               {usernameState === "checking"  && "Checking availability…"}
               {usernameState === "available" && `@${username} is available`}
               {usernameState === "taken"     && `@${username} is already taken`}
-              {usernameState === "invalid"   && "3–20 characters required"}
+              {usernameState === "invalid"   && USERNAME_RULE_TEXT}
+              {usernameState === "error"     && "Couldn't check that right now. Edit the name or try again in a moment."}
             </p>
           )}
         </div>

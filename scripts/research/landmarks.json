@@ -1,0 +1,275 @@
+[
+ {
+  "slug": "khopra-danda",
+  "name": "chistibung",
+  "lat": 28.45371,
+  "lng": 83.71096,
+  "r": 6000
+ },
+ {
+  "slug": "manaslu-circuit",
+  "name": "Dharmasala",
+  "lat": 28.6629,
+  "lng": 84.5747,
+  "r": 6000
+ },
+ {
+  "slug": "bali-pass",
+  "name": "Lower Damini",
+  "lat": 31.00699,
+  "lng": 78.45453,
+  "r": 6000
+ },
+ {
+  "slug": "kuari-pass",
+  "name": "Gulling",
+  "lat": 30.47866,
+  "lng": 79.60707,
+  "r": 6000
+ },
+ {
+  "slug": "deoriatal-chandrashila",
+  "name": "Rohini Bugyal",
+  "lat": 30.51661,
+  "lng": 79.20033,
+  "r": 6000
+ },
+ {
+  "slug": "panwali-kantha",
+  "name": "Gairu",
+  "lat": 30.53701,
+  "lng": 78.83914,
+  "r": 6000
+ },
+ {
+  "slug": "roopkund",
+  "name": "Patar Nachauni",
+  "lat": 30.2306,
+  "lng": 79.6917,
+  "r": 6000
+ },
+ {
+  "slug": "roopkund",
+  "name": "Bhagwabasa",
+  "lat": 30.2508,
+  "lng": 79.71499,
+  "r": 6000
+ },
+ {
+  "slug": "beas-kund",
+  "name": "Bakarthach",
+  "lat": 32.35023,
+  "lng": 77.10256,
+  "r": 6000
+ },
+ {
+  "slug": "chandrakhani-pass",
+  "name": "Stalling",
+  "lat": 32.08015,
+  "lng": 77.20535,
+  "r": 6000
+ },
+ {
+  "slug": "kareri-lake",
+  "name": "Rioti",
+  "lat": 32.30911,
+  "lng": 76.3077,
+  "r": 6000
+ },
+ {
+  "slug": "sar-pass",
+  "name": "Min Thach",
+  "lat": 31.96732,
+  "lng": 77.36531,
+  "r": 6000
+ },
+ {
+  "slug": "sar-pass",
+  "name": "Nagaru",
+  "lat": 31.97078,
+  "lng": 77.37731,
+  "r": 6000
+ },
+ {
+  "slug": "pin-parvati-pass",
+  "name": "Pin Valley Camp",
+  "lat": 31.84064,
+  "lng": 77.92603,
+  "r": 6000
+ },
+ {
+  "slug": "pin-parvati-pass",
+  "name": "Tiya",
+  "lat": 31.88392,
+  "lng": 78.01057,
+  "r": 6000
+ },
+ {
+  "slug": "buran-ghati",
+  "name": "Dayara Thach",
+  "lat": 31.34309,
+  "lng": 78.0522,
+  "r": 6000
+ },
+ {
+  "slug": "buran-ghati",
+  "name": "Dhunda",
+  "lat": 31.37093,
+  "lng": 78.13743,
+  "r": 6000
+ },
+ {
+  "slug": "buran-ghati",
+  "name": "Munirang",
+  "lat": 31.41354,
+  "lng": 78.15428,
+  "r": 6000
+ },
+ {
+  "slug": "kashmir-great-lakes",
+  "name": "Gadsar Pass",
+  "lat": 34.40832,
+  "lng": 75.09229,
+  "r": 6000
+ },
+ {
+  "slug": "kashmir-great-lakes",
+  "name": "Zaj Pass",
+  "lat": 34.42803,
+  "lng": 74.98715,
+  "r": 6000
+ },
+ {
+  "slug": "tarsar-marsar-trek",
+  "name": "Shekwas",
+  "lat": 34.16123,
+  "lng": 75.19513,
+  "r": 6000
+ },
+ {
+  "slug": "tarsar-marsar-trek",
+  "name": "Tarsar Pass",
+  "lat": 34.14073,
+  "lng": 75.12284,
+  "r": 6000
+ },
+ {
+  "slug": "sandakphu-phalut-trek",
+  "name": "Kalipokhri",
+  "lat": 27.0701,
+  "lng": 88.01891,
+  "r": 6000
+ },
+ {
+  "slug": "dodital-darwa-pass",
+  "name": "Darwa Pass",
+  "lat": 30.91411,
+  "lng": 78.51179,
+  "r": 5000
+ },
+ {
+  "slug": "kuari-pass",
+  "name": "Kuari Pass",
+  "lat": 30.45112,
+  "lng": 79.58154,
+  "r": 5000
+ },
+ {
+  "slug": "brahmatal",
+  "name": "Brahmatal Top",
+  "lat": 30.17779,
+  "lng": 79.58802,
+  "r": 5000
+ },
+ {
+  "slug": "ali-bedni-bugyal",
+  "name": "Bedni Top",
+  "lat": 30.2,
+  "lng": 79.68,
+  "r": 5000
+ },
+ {
+  "slug": "goechala",
+  "name": "Viewpoint 1",
+  "lat": 27.56166,
+  "lng": 88.18738,
+  "r": 5000
+ },
+ {
+  "slug": "valley-of-flowers",
+  "name": "Hemkund",
+  "lat": 30.70022,
+  "lng": 79.61598,
+  "r": 5000
+ },
+ {
+  "slug": "satopanth-lake",
+  "name": "Satopanth",
+  "lat": 30.74352,
+  "lng": 79.357,
+  "r": 5000
+ },
+ {
+  "slug": "gaumukh-tapovan",
+  "name": "Tapovan",
+  "lat": 30.9142,
+  "lng": 79.07652,
+  "r": 5000
+ },
+ {
+  "slug": "pindari-glacier",
+  "name": "Zero Point",
+  "lat": 30.26596,
+  "lng": 80.00519,
+  "r": 5000
+ },
+ {
+  "slug": "kareri-lake",
+  "name": "Kareri Lake",
+  "lat": 32.32565,
+  "lng": 76.27389,
+  "r": 5000
+ },
+ {
+  "slug": "everest-base-camp",
+  "name": "Pheriche",
+  "lat": 27.895,
+  "lng": 86.82,
+  "r": 5000
+ },
+ {
+  "slug": "annapurna-base-camp",
+  "name": "Jhinu Danda",
+  "lat": 28.43,
+  "lng": 83.81,
+  "r": 5000
+ },
+ {
+  "slug": "kashmir-great-lakes",
+  "name": "Vishansar",
+  "lat": 34.38,
+  "lng": 75.14,
+  "r": 5000
+ },
+ {
+  "slug": "kashmir-great-lakes",
+  "name": "Gadsar Lake",
+  "lat": 34.41,
+  "lng": 75.07,
+  "r": 5000
+ },
+ {
+  "slug": "roopkund",
+  "name": "Bedni Bugyal",
+  "lat": 30.205,
+  "lng": 79.67,
+  "r": 5000
+ },
+ {
+  "slug": "roopkund",
+  "name": "Didna",
+  "lat": 30.19,
+  "lng": 79.63,
+  "r": 5000
+ }
+]

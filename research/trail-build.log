@@ -1,74 +1,107 @@
-Build trails run 40878233394, 2026-10-29T13:01:56Z
-── roopkund 13:01:56
-[  37s] roopkund: 436 named places in OpenStreetMap around the trek
-[  44s]   leg Lohajung → Didna (4.3 km apart)
-[  47s]   leg Didna → Ali Bugyal (3.1 km apart)
-[  50s]   leg Ali Bugyal → Bedni Bugyal (3.2 km apart)
-[  51s]   leg Bedni Bugyal → Patar Nachauni (3.1 km apart)
-[  53s]   leg Patar Nachauni → Bhagwabasa (3.1 km apart)
-[  55s]   leg Bhagwabasa → Roopkund (2.3 km apart)
-[  58s] roopkund: 29.2 km, +3250 m, highest 4801 m, 0 km off the mapped paths (drawn along the terrain), 1373 → 282 points
-[  58s]   km     0  Lohajung (2335 m, given, 30.1283,79.619)
-[  58s]   km   7.8  Didna (2459 m, osm, 30.16473,79.63419)  4.3 km from last
-[  58s]   km  14.1  Ali Bugyal (3502 m, osm, 30.18229,79.65865)  3.1 km from last
-[  58s]   km    18  Bedni Bugyal (3501 m, osm, 30.20929,79.66919)  3.2 km from last
-[  58s]   km  29.2  Roopkund (4784 m, osm, 30.2621,79.73172)  8.4 km from last
-[  58s]   day  1 walk   Lohajung → Didna  7.8 km +530 −410
-[  58s]   day  2 walk   Didna → Bedni Bugyal  10.3 km +1230 −220 (approx)
-[  58s]   day  3 walk   Bedni Bugyal → Patar Nachauni  3.8 km +540 −50
-[  58s]   day  4 walk   Patar Nachauni → Bhagwabasa  4.2 km +410 −70
-[  58s]   day  5 walk   Bhagwabasa → Patar Nachauni  10.5 km +590 −930
-[  58s]   day  6 walk   Patar Nachauni → Lohajung  21.9 km +680 −2310
-── bhrigu-lake 13:02:56
-[  41s] bhrigu-lake: 608 named places in OpenStreetMap around the trek
-[  45s]   leg Gulaba → Rola Kholi (3.6 km apart)
-[  47s]   overpass: overpass-api.de Overpass 502 
-[ 140s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 236s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 246s]   overpass: overpass-api.de Overpass 502 
-[ 258s]   ! path search failed: Overpass 502 
-[ 258s]   ! Gulaba → Rola Kholi: a 22.4 km detour for 3.6 km; drawn along the terrain
-[ 258s]   leg Rola Kholi → Bhrigu Lake (2.5 km apart)
-[ 261s] bhrigu-lake: KEPT the saved trail (0.3 km off the mapped paths) over this build's 3.6 km
-── beas-kund 13:07:18
-[   0s]   overpass: overpass-api.de Overpass 502 
-[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 173s] beas-kund: 519 named places in OpenStreetMap around the trek
-[ 174s]   leg Dhundi → Bakarthach (2.9 km apart)
-[ 176s]   leg Bakarthach → Beas Kund (1.7 km apart)
-[ 177s] beas-kund: 6.8 km, +1000 m, highest 3609 m, 0 km off the mapped paths (drawn along the terrain), 114 → 62 points
-[ 177s]   km     0  Dhundi (2889 m, osm, 32.35553,77.12653)
-[ 177s]   km   6.8  Beas Kund (3609 m, osm, 32.36058,77.08136)  4.3 km from last
-[ 177s]   day  1 walk   Dhundi → Bakarthach  4.7 km +700 −290
-[ 177s]   day  2 walk   Bakarthach → Bakarthach  4.2 km +280 −270
-[ 177s]   day  3 walk   Bakarthach → Dhundi  4.7 km +290 −720
-── kareri-lake 13:10:17
-[  45s] kareri-lake: 1213 named places in OpenStreetMap around the trek
-[  62s]   leg Kareri → Kareri Lake (5.2 km apart)
-[  64s] kareri-lake: 15 km, +1660 m, highest 3095 m, 0 km off the mapped paths (drawn along the terrain), 559 → 214 points
-[  64s]   km     0  Kareri (1769 m, osm, 32.27896,76.27862)
-[  64s]   km    15  Kareri Lake (2937 m, osm, 32.32565,76.27389)  5.2 km from last
-[  64s]   camp (estimated): Rioti (2230 m, 32.30911,76.3077)
-[  64s]   day  1 walk   Kareri → Rioti  9 km +800 −350 (approx)
-[  64s]   day  2 walk   Rioti → Kareri Lake  5.9 km +850 −120
-[  64s]   day  3 walk   Kareri Lake → Kareri  15 km +510 −1700
-── pin-parvati-pass 13:11:23
-[   0s]   overpass: overpass-api.de Overpass 502 
-[  93s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 189s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 228s] pin-parvati-pass: 539 named places in OpenStreetMap around the trek
-[ 236s]   leg Barshaini → Kheerganga (5.8 km apart)
-[ 238s]   leg Kheerganga → Tunda Bhuj (8.1 km apart)
-[ 241s]   leg Tunda Bhuj → Thakur Kuan (5.4 km apart)
-[ 243s]   leg Thakur Kuan → Odi Thach (6.2 km apart)
-[ 244s]   leg Odi Thach → Mantalai (10.1 km apart)
-[ 247s]   leg Mantalai → Pin Parvati Pass (6.8 km apart)
-[ 253s]   overpass: overpass-api.de Overpass 502 
-[ 346s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
-[ 442s]   overpass: overpass.private.coffee The operation was aborted due to timeout
-[ 451s]   overpass: overpass-api.de Overpass 502 
-[ 463s]   ! path search failed: Overpass 502 
-[ 463s]   ! Mantalai → Pin Parvati Pass: operation killed by thread-priority-watchdog after 1 seconds ; drawn along the terrain
-[ 464s]   leg Pin Parvati Pass → Mud (22.4 km apart)
-[ 467s] pin-parvati-pass: KEPT the saved trail (0.2 km off the mapped paths) over this build's 6.8 km
-Done 13:19:11, 0 failed
+Build trails run 40937483557, 2026-10-29T19:09:36Z
+── ali-bedni-bugyal 19:09:36
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 170s] ali-bedni-bugyal: 370 named places in OpenStreetMap around the trek
+[ 177s]   leg Lohajung → Didna (4.3 km apart)
+[ 180s]   leg Didna → Ali Bugyal (3.1 km apart)
+[ 182s]   leg Ali Bugyal → Bedni Top (2.5 km apart)
+[ 185s]   leg Bedni Top → Bedni Bugyal (1.0 km apart)
+[ 188s]   leg Bedni Bugyal → Wan (4.8 km apart)
+[ 190s] ali-bedni-bugyal: 30.3 km, +2210 m, highest 3830 m, 1.6 km off the mapped paths (drawn along the terrain), 1649 → 317 points
+[ 190s]   km     0  Lohajung (2335 m, given, 30.1283,79.619)
+[ 190s]   km   7.8  Didna (2459 m, osm, 30.16473,79.63419)  4.3 km from last
+[ 190s]   km  14.1  Ali Bugyal (3502 m, osm, 30.18229,79.65865)  3.1 km from last
+[ 190s]   km  18.6  Bedni Top (3830 m, given, 30.20007,79.67382)  2.5 km from last
+[ 190s]   km  19.9  Bedni Bugyal (3552 m, given, 30.20635,79.66694)  1.0 km from last
+[ 190s]   km  30.3  Wan (2454 m, osm, 30.20504,79.61753)  4.8 km from last
+[ 190s]   day  1 walk   Lohajung → Didna  7.8 km +530 −400
+[ 190s]   day  2 walk   Didna → Ali Bugyal  6.4 km +1070 −20
+[ 190s]   day  3 walk   Ali Bugyal → Bedni Bugyal  5.8 km +460 −380
+[ 190s]   day  4 walk   Bedni Bugyal → Wan  10.3 km +150 −1250
+── gaumukh-tapovan 19:12:49
+[  39s] gaumukh-tapovan: 115 named places in OpenStreetMap around the trek
+[  40s]   leg Gangotri → Bhojbasa (11.7 km apart)
+[  42s]   leg Bhojbasa → Gaumukh (4.2 km apart)
+[  60s]   leg Gaumukh → Tapovan (1.3 km apart)
+[  63s] gaumukh-tapovan: 20.4 km, +1310 m, highest 4463 m, 0.3 km off the mapped paths (drawn along the terrain), 509 → 200 points
+[  63s]   km     0  Gangotri (3300 m, osm, 30.99437,78.93987)
+[  63s]   km  13.8  Bhojbasa (3792 m, osm, 30.95045,79.05151)  11.7 km from last
+[  63s]   km  18.7  Gaumukh (4050 m, osm, 30.92448,79.08407)  4.2 km from last
+[  63s]   km  20.4  Tapovan (4463 m, given, 30.91443,79.0765)  1.3 km from last
+[  63s]   day  1 walk   Gangotri → Bhojbasa  13.8 km +820 −70
+[  63s]   day  2 walk   Bhojbasa → Tapovan  6.6 km +500 −0
+[  63s]   day  3 rest   Tapovan → Tapovan
+[  63s]   day  4 walk   Tapovan → Bhojbasa  6.6 km +0 −500
+[  63s]   day  5 walk   Bhojbasa → Gangotri  13.8 km +100 −830
+── pin-parvati-pass 19:13:54
+[  44s] pin-parvati-pass: 539 named places in OpenStreetMap around the trek
+[  70s]   leg Barshaini → Kheerganga (5.8 km apart)
+[  73s]   leg Kheerganga → Tunda Bhuj (8.1 km apart)
+[  75s]   leg Tunda Bhuj → Thakur Kuan (5.4 km apart)
+[  77s]   leg Thakur Kuan → Odi Thach (6.2 km apart)
+[  79s]   leg Odi Thach → Mantalai (10.1 km apart)
+[  81s]   leg Mantalai → Pin Parvati Pass (6.8 km apart)
+[ 122s]   ~ Mantalai → Pin Parvati Pass: a 454.5 km detour for 6.8 km; routed over mapped paths, 0.2 of 8.7 km bridged
+[ 124s]   leg Pin Parvati Pass → Pin Valley Camp (4.0 km apart)
+[ 126s]   leg Pin Valley Camp → Tiya (13.0 km apart) along the track pin-valley
+[ 128s]   leg Tiya → Mud (8.4 km apart)
+[ 130s] pin-parvati-pass: 80.5 km, +3970 m, highest 5301 m, 0.5 km off the mapped paths (drawn along the terrain), 1981 → 754 points
+[ 130s]   km     0  Barshaini (2201 m, given, 31.99913,77.44969)
+[ 130s]   km   7.6  Kheerganga (2762 m, osm, 31.99481,77.51094)  5.8 km from last
+[ 130s]   km  17.1  Tunda Bhuj (3276 m, osm, 31.9711,77.59167)  8.1 km from last
+[ 130s]   km  23.3  Thakur Kuan (3507 m, osm, 31.95332,77.64521)  5.4 km from last
+[ 130s]   km  30.3  Odi Thach (3742 m, osm, 31.9269,77.70268)  6.2 km from last
+[ 130s]   km  41.9  Mantalai (4248 m, osm, 31.86779,77.78389)  10.1 km from last
+[ 130s]   km  50.7  Pin Parvati Pass (5296 m, osm, 31.8355,77.84444)  6.8 km from last
+[ 130s]   km  55.7  Pin Valley Camp (4376 m, given, 31.83555,77.88726)  4.0 km from last
+[ 130s]   km  70.4  Tiya (3950 m, given, 31.88552,78.01213)  13.0 km from last
+[ 130s]   km  80.5  Mud (3799 m, osm, 31.959,78.03241)  8.4 km from last
+[ 130s]   day  1 walk   Barshaini → Kheerganga  7.6 km +600 −50
+[ 130s]   day  2 walk   Kheerganga → Tunda Bhuj  9.5 km +590 −40
+[ 130s]   day  3 walk   Tunda Bhuj → Thakur Kuan  6.2 km +400 −210
+[ 130s]   day  4 walk   Thakur Kuan → Odi Thach  7.1 km +580 −300
+[ 130s]   day  5 walk   Odi Thach → Mantalai  11.6 km +520 −40
+[ 130s]   day  6 rest   Mantalai → Mantalai
+[ 130s]   day  7 walk   Mantalai → Pin Valley Camp  13.8 km +1150 −1020
+[ 130s]   day  8 walk   Pin Valley Camp → Tiya  14.7 km +110 −540
+[ 130s]   day  9 walk   Tiya → Mud  10.1 km +30 −150
+── sar-pass 19:16:06
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 233s] sar-pass: 554 named places in OpenStreetMap around the trek
+[ 241s]   leg Kasol → Grahan (5.3 km apart)
+[ 244s]   leg Grahan → Min Thach (2.1 km apart) along the track sar-pass
+[ 246s]   leg Min Thach → Nagaru (0.9 km apart) along the track sar-pass
+[ 246s]   leg Nagaru → Sar Pass (1.3 km apart) along the track sar-pass
+[ 246s]   leg Sar Pass → Biskeri Thach (2.0 km apart) along the track sar-pass
+[ 247s]   leg Biskeri Thach → Barshaini (6.6 km apart) along the track sar-pass
+[ 255s] sar-pass: 33.7 km, +3510 m, highest 4200 m, 0 km off the mapped paths (drawn along the terrain), 1139 → 500 points
+[ 255s]   km     0  Kasol (1565 m, osm, 32.01043,77.3166)
+[ 255s]   km   8.7  Grahan (2283 m, given, 31.9713,77.3479)  5.3 km from last
+[ 255s]   km  20.8  Sar Pass (4200 m, given, 31.96247,77.38869)  4.0 km from last
+[ 255s]   km  23.1  Biskeri Thach (4090 m, osm, 31.95217,77.40626)  2.0 km from last
+[ 255s]   km  33.7  Barshaini (2201 m, given, 31.99913,77.44969)  6.6 km from last
+[ 255s]   day  1 walk   Kasol → Grahan  8.7 km +1300 −590
+[ 255s]   day  2 walk   Grahan → Min Thach  8.9 km +1210 −300
+[ 255s]   day  3 walk   Min Thach → Nagaru  1.8 km +550 −0
+[ 255s]   day  4 walk   Nagaru → Biskeri Thach  3.8 km +390 −130
+[ 255s]   day  5 walk   Biskeri Thach → Barshaini  10.7 km +70 −1900
+── satopanth-lake 19:20:23
+[   1s]   overpass: overpass-api.de Overpass 502 
+[  94s]   overpass: overpass.kumi.systems The operation was aborted due to timeout
+[ 190s]   overpass: overpass.private.coffee The operation was aborted due to timeout
+[ 222s] satopanth-lake: 133 named places in OpenStreetMap around the trek
+[ 224s]   leg Mana → Laxmi Van (5.8 km apart)
+[ 226s]   leg Laxmi Van → Chakrateertha (6.1 km apart)
+[ 228s]   leg Chakrateertha → Satopanth Lake (2.7 km apart)
+[ 231s] satopanth-lake: 17.7 km, +1210 m, highest 4600 m, 0.2 km off the mapped paths (drawn along the terrain), 773 → 192 points
+[ 231s]   km     0  Mana (3179 m, osm, 30.77048,79.49594)
+[ 231s]   km  17.7  Satopanth Lake (4600 m, given, 30.74352,79.357)  13.6 km from last
+[ 231s]   day  1 walk   Mana → Laxmi Van  6.9 km +480 −20
+[ 231s]   day  2 walk   Laxmi Van → Chakrateertha  7.5 km +520 −0
+[ 231s]   day  3 walk   Chakrateertha → Satopanth Lake  3.3 km +200 −20
+[ 231s]   day  4 walk   Satopanth Lake → Laxmi Van  10.8 km +20 −730
+[ 231s]   day  5 walk   Laxmi Van → Mana  6.9 km +20 −480
+Done 19:24:16, 0 failed

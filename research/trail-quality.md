@@ -36,9 +36,9 @@
 - Check · straight: 2 straight segments over 500 m (538 m at km 35.5, 520 m at km 30.0)
 - Check · estimated: 0.2 km drawn along the terrain (no mapped path)
 
-## sar-pass (26.7 km, 2960 m up)
-- Check · spikes: 2 height spikes (worst 92 m at km 4.0)
-- Check · spikes: 8 steps steeper than 1 in 1 (first at km 3.3)
+## sar-pass (26.7 km, 2910 m up)
+- Check · spikes: 1 height spike (worst 71 m at km 4.0)
+- Check · spikes: 1 step steeper than 1 in 1 (first at km 12.5)
 
 ## ali-bedni-bugyal (28.6 km, 1740 m up)
 - Check · off-line: Bedni Bugyal is 544 m from the line
@@ -76,8 +76,8 @@
 ## markha-valley (65.7 km, 2230 m up)
 - Check · straight: 1 straight segment over 500 m (824 m at km 51.8)
 
-## pindari-glacier (22.1 km, 1880 m up)
-- Check · spikes: 3 steps steeper than 1 in 1 (first at km 6.8)
+## pindari-glacier (22.1 km, 1830 m up)
+- Check · spikes: 1 step steeper than 1 in 1 (first at km 8.9)
 
 ## roopkund (29.2 km, 2850 m up)
 - Check · off-line: Bedni Bugyal is 544 m from the line

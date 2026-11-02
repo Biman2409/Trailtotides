@@ -11,6 +11,7 @@ import TermsModal from "@/components/ui/custom/TermsModal";
 import { AVATARS } from "@/lib/avatars";
 import { CheckInbox } from "@/app/auth/ResendVerification";
 import AuthContextNote from "@/app/auth/AuthContextNote";
+import { USERNAME_RE, USERNAME_RULE_TEXT, checkUsernameAvailability } from "@/lib/username";
 
 const MIN_PASSWORD = 8;
 
@@ -19,13 +20,15 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [username, setUsername] = useState("");
-  const [usernameState, setUsernameState] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
+  const [usernameState, setUsernameState] = useState<"idle" | "checking" | "available" | "taken" | "invalid" | "error">("idle");
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [selectedAvatarId, setSelectedAvatarId] = useState<number | null>(null);
   const [avatarDropdownOpen, setAvatarDropdownOpen] = useState(false);
   const avatarDropdownRef = useRef<HTMLDivElement>(null);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Bumped on every keystroke so a slow answer for an earlier name can't overwrite the current one
+  const checkSeq = useRef(0);
   // Where they were headed before signing up (e.g. a group link); read on the client so the
   // page stays static. Only same-site paths are honoured.
   const [next, setNext] = useState<string | null>(null);
@@ -50,13 +53,13 @@ export default function SignUpPage() {
 
   const checkUsername = useCallback((value: string) => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    const seq = ++checkSeq.current;
     if (!value) { setUsernameState("idle"); return; }
-    if (value.length < 3 || value.length > 20) { setUsernameState("invalid"); return; }
+    if (!USERNAME_RE.test(value)) { setUsernameState("invalid"); return; }
     setUsernameState("checking");
     debounceTimer.current = setTimeout(async () => {
-      const res = await fetch(`/api/check-username?username=${encodeURIComponent(value)}`);
-      const data = await res.json();
-      setUsernameState(data.available ? "available" : "taken");
+      const result = await checkUsernameAvailability(value);
+      if (seq === checkSeq.current) setUsernameState(result);
     }, 500);
   }, []);
 
@@ -220,13 +223,14 @@ export default function SignUpPage() {
               <p id="signup-username-status" aria-live="polite" className={`ml-1 text-[11px] font-medium transition-colors ${usernameState === "idle" ? "" : "mt-1.5"} ${
                 usernameState === "available" ? "text-emerald-500" :
                 usernameState === "taken" ? "text-red-400" :
-                usernameState === "invalid" ? "text-amber-400" :
+                usernameState === "invalid" || usernameState === "error" ? "text-amber-400" :
                 "text-white/50"
               }`}>
                 {usernameState === "checking" && "Checking availability…"}
                 {usernameState === "available" && `@${username} is available`}
                 {usernameState === "taken" && `@${username} is already taken`}
-                {usernameState === "invalid" && "Username must be between 3 and 20 characters"}
+                {usernameState === "invalid" && USERNAME_RULE_TEXT}
+                {usernameState === "error" && "Couldn't check that right now. Edit the name or try again in a moment."}
               </p>
             </div>
 

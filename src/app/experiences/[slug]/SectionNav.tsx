@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 const NAV_ITEMS = [
   { id: "overview", label: "Overview" },
-  { id: "guide", label: "Guide" },
   { id: "safety", label: "Safety" },
   { id: "suitability", label: "Suitability" },
   { id: "book-this-adventure", label: "Book" },
@@ -12,13 +11,13 @@ const NAV_ITEMS = [
   { id: "faq", label: "FAQ" },
 ];
 
-export default function SectionNav({ hasGuide = false, hasFaq = false }: { hasGuide?: boolean; hasFaq?: boolean }) {
-  // The guide chapter exists only for treks with a mapped trail, the FAQ only for adventures without a trek guide
-  const items = NAV_ITEMS.filter((item) => (item.id !== "guide" || hasGuide) && (item.id !== "faq" || hasFaq));
+export default function SectionNav({ hasFaq = false }: { hasFaq?: boolean }) {
+  // The FAQ exists only for adventures without a trek guide
+  const items = NAV_ITEMS.filter((item) => item.id !== "faq" || hasFaq);
   const [active, setActive] = useState(items[0].id);
 
   useEffect(() => {
-    const sections = items
+    const sections = NAV_ITEMS
       .map((item) => document.getElementById(item.id))
       .filter((el): el is HTMLElement => el !== null);
     if (sections.length === 0) return;
@@ -34,7 +33,7 @@ export default function SectionNav({ hasGuide = false, hasFaq = false }: { hasGu
 
     sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
-  }, [hasGuide]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   // Calm style: plain text links, the active one marked by a thin orange rule
   return (
@@ -44,7 +43,7 @@ export default function SectionNav({ hasGuide = false, hasFaq = false }: { hasGu
     >
       <div className="max-w-7xl mx-auto px-5 lg:px-8">
         <nav className="flex items-center gap-8">
-          {items.map(({ id, label }) => {
+          {NAV_ITEMS.map(({ id, label }) => {
             const isActive = active === id;
             return (
               <a
