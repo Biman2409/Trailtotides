@@ -1,19 +1,13 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Sun, Mountain, MountainSnow, Trees, Waves, Palmtree, Building2, Sunrise } from "lucide-react";
 import Image from "next/image";
+import { ArrowRight, Sun, Mountain, MountainSnow, Trees, Waves, Palmtree, Building2, Sunrise } from "lucide-react";
 import { regions, adventures } from "@/lib/data";
-import type { AdventureType } from "@/lib/data";
-import CardFooterLink from "./CardFooterLink";
 import { REGION_STATES } from "@/lib/regionGroups";
 import SectionTexture from "./SectionTexture";
 
-const LAND_TYPES: AdventureType[] = ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Motorcycling", "Cycling", "Jeep Safari", "Caving", "Urban Adventure"];
-
-// Shared with the Region filter on Explore and the map
-const regionSubRegions = REGION_STATES;
+// A server component: counts are worked out here, so the adventure data stays off the client.
+// Regions with adventures get a wide card with their areas as direct links; the ones still to
+// come share a single "Coming soon" strip instead of a wall of empty photo cards.
 
 const regionIcons: Record<string, React.ReactNode> = {
   "Himalayas": <MountainSnow className="w-5 h-5" />,
@@ -37,32 +31,24 @@ const regionSubtitles: Record<string, string> = {
   "Urban": "Uncover secret adrenaline spots hidden in the city's pulse"
 };
 
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
 export default function FindByRegion() {
-  const [openId, setOpenId] = useState<string | null>(null);
-
+  // Counted the way Explore's region filter counts (every adventure whose region matches), so
+  // the number on the card is the number on the results page
   const regionData = regions.map((region) => {
-    const regionAdventures = adventures.filter((a) => a.region === region.name && LAND_TYPES.includes(a.type));
-    const subRegions = regionSubRegions[region.name] || [];
-
-    const items = subRegions.map(sr => {
-      const count = regionAdventures.filter(a => a.state.includes(sr)).length;
-      return {
-        label: sr,
-        count,
-        icon: regionIcons[region.name] || "📍"
-      };
-    }).filter(item => item.count > 0);
-
-    return {
-      ...region,
-      id: region.name.toLowerCase().replace(/\s+/g, "-"),
-      items,
-      totalCount: regionAdventures.length,
-    };
+    const inRegion = adventures.filter((a) => a.region === region.name);
+    const areas = (REGION_STATES[region.name] ?? [])
+      .map((state) => ({ state, count: inRegion.filter((a) => a.state.includes(state)).length }))
+      .filter((a) => a.count > 0)
+      .sort((x, y) => y.count - x.count);
+    return { ...region, total: inRegion.length, areas };
   });
+  const live = regionData.filter((r) => r.total > 0);
+  const upcoming = regionData.filter((r) => r.total === 0);
 
-    return (
-      <section id="regions" className="relative py-6 lg:py-10 t-bg-surface2 px-5 lg:px-8 overflow-hidden">
+  return (
+    <section id="regions" className="relative py-6 lg:py-10 t-bg-surface2 px-5 lg:px-8 overflow-hidden">
       {/* Background accent glow — pine green, complementing the orange genre section above */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -bottom-24 left-[6%] w-96 h-96 rounded-full opacity-[0.06] dark:opacity-[0.09] blur-[100px]" style={{ background: "var(--accent-green)" }} />
@@ -79,154 +65,97 @@ export default function FindByRegion() {
           </h2>
         </div>
 
-        {/* Grid */}
-        {/* Phones swipe sideways through the cards, like the rows above */}
-        <div className="flex items-start sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
-          {regionData.map((region) => {
-            const isOpen = openId === region.id;
-            
+        <div className="flex flex-col gap-4 lg:gap-5">
+          {live.map((region) => {
+            // A route can run through two areas (Manali–Leh is Himachal and Ladakh), so they can add up past the total
+            const overlaps = region.areas.reduce((s, a) => s + a.count, 0) > region.total;
             return (
-                <div
-                  key={region.id}
-                  className="snap-start shrink-0 w-[78vw] sm:w-auto rounded-2xl overflow-hidden flex flex-col"
-                    style={{
-                      background: "var(--bg-surface)",
-                        border: `1px solid ${isOpen ? "rgba(255,81,0,0.35)" : "var(--border-subtle)"}`,
-                        transition: "border-color 0.3s ease",
-                        boxShadow: isOpen
-                          ? `0 0 0 1px rgba(255,81,0,0.35), 0 20px 48px rgba(var(--shadow-color),0.35)`
-                          : "0 4px 16px rgba(var(--shadow-color),0.2)",
-                    }}
-                >
-                  {/* Image header */}
-                  <button
-                    onClick={() => setOpenId(isOpen ? null : region.id)}
-                      className="relative w-full overflow-hidden cursor-pointer group text-left"
-                      style={{ aspectRatio: "16/9" }}
-                    aria-expanded={isOpen}
-                  >
-                    <Image
-                      src={region.image}
-                      alt={region.name}
-                      fill
-                      quality={75}
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        style={{ 
-                          objectFit: "cover",
-                          filter: "brightness(1.05) contrast(1.1) saturate(1.1)" 
-                        }}
-                    />
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
-                    
-                    {/* Content over image */}
-                    <div className="absolute inset-0 p-5 flex flex-col justify-between">
-                        <div className="flex items-start justify-end">
-                          <span
-                            className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                            style={{
-                              background: isOpen ? "#ff5100" : "rgba(255,255,255,0.12)",
-                              color: "white",
-                              backdropFilter: "blur(6px)",
-                              transition: "background 0.25s",
-                            }}
-                          >
-                            {isOpen ? "Close" : "Explore"}
-                          </span>
-                        </div>
-
-
-                          <div>
-                            <div className="flex items-center gap-2.5">
-                              <span className="text-[#ff5100] transition-colors duration-300">
-                                {regionIcons[region.name]}
-                              </span>
-                              <h3 className="text-white font-bold text-2xl leading-tight tracking-tight">
-                                {region.name}
-                              </h3>
-                            </div>
-                              <p className="text-white/60 text-xs mt-1.5 leading-relaxed line-clamp-2">
-                                {regionSubtitles[region.name]}
-                              </p>
-                          </div>
-
-
-                  </div>
-                </button>
-
-                  {/* Body */}
-                  <div
-                    className="px-5 transition-all duration-300 ease-in-out overflow-hidden"
-                    style={{
-                      maxHeight: isOpen ? "600px" : "56px",
-                    }}
-                  >
-                    {/* Collapsed summary */}
-                    {!isOpen && (
-                        <div className="py-3.5 flex items-center justify-between">
-                          <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
-                            {region.totalCount > 0 && `${region.items.length} ${region.items.length === 1 ? "Area" : "Areas"}`}
-                          </span>
-                          {/* No adventures listed yet: say so rather than showing "0 Adventures" */}
-                          {region.totalCount === 0 ? (
-                            <span className="text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap" style={{ border: "1px dashed rgba(255,81,0,0.45)", color: "var(--accent-ink-soft)" }}>
-                              Coming Soon
-                            </span>
-                          ) : (
-                            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#ff5100]/15 text-[#ff5100]">
-                              {region.totalCount} Adventures
-                            </span>
-                          )}
-                        </div>
-                    )}
-
-                    {/* Expanded, nothing listed yet */}
-                    {isOpen && region.totalCount === 0 && (
-                      <div className="py-4">
-                        <div className="rounded-xl px-4 py-4 text-center" style={{ background: "rgba(255,81,0,0.06)", border: "1px dashed rgba(255,81,0,0.35)" }}>
-                          <p className="font-semibold text-sm" style={{ color: "var(--accent-ink-soft)" }}>Coming Soon</p>
-                          <p className="text-xs mt-1 leading-snug" style={{ color: "var(--text-tertiary)" }}>
-                            Adventures in {region.name} are on their way.
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Expanded items */}
-                    {isOpen && region.totalCount > 0 && (
-                      <div className="py-4">
-                        <div className="flex flex-col gap-0.5">
-                            {region.items.map(({ label, count }) => (
-                              <Link
-                                key={label}
-                                href={`/explore?region=${encodeURIComponent(region.name)}&subRegion=${encodeURIComponent(label)}`}
-                                className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150 hover:bg-[#ff5100]/10"
-                              >
-                                <div className="flex items-center gap-2.5">
-                                  <span className="group-hover/row:text-[var(--text-primary)] text-sm font-medium transition-colors duration-150" style={{ color: "var(--text-secondary)" }}>
-                                    {label}
-                                  </span>
-                                </div>
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#ff5100]/15 text-[#ff5100]">
-                                  {count}
-                                </span>
-                                <ArrowRight
-                                  className="w-3 h-3 opacity-0 group-hover/row:opacity-100 -translate-x-1 group-hover/row:translate-x-0 transition-all duration-150 text-[#ff5100]"
-                                />
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-  
-                      <CardFooterLink href={`/explore?region=${encodeURIComponent(region.name)}`} label={`View all in ${region.name}`} />
-
+              <article
+                key={region.name}
+                className="rounded-2xl overflow-hidden grid md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"
+                style={{
+                  background: "var(--bg-surface)",
+                  border: "1px solid var(--border-subtle)",
+                  boxShadow: "0 4px 16px rgba(var(--shadow-color),0.2)",
+                }}
+              >
+                {/* Photo with the name on it; the dark base keeps the white title legible while it loads */}
+                <div className="relative aspect-[16/9] md:aspect-auto md:min-h-[260px] overflow-hidden bg-[#2a2420]">
+                  <Image
+                    src={region.image}
+                    alt=""
+                    fill
+                    quality={75}
+                    sizes="(max-width: 768px) 100vw, 40vw"
+                    className="photo-grade object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/5" />
+                  <div className="absolute inset-x-0 bottom-0 p-5">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[#ff5100]">{regionIcons[region.name]}</span>
+                      <h3 className="text-white font-bold text-2xl leading-tight tracking-tight">{region.name}</h3>
                     </div>
-                  )}
+                    <p className="text-white/70 text-xs mt-1.5 leading-relaxed line-clamp-2">{regionSubtitles[region.name]}</p>
+                  </div>
                 </div>
-              </div>
+
+                <div className="p-5 lg:p-6 flex flex-col gap-4">
+                  <p className="t-text-3 text-xs">
+                    {plural(region.total, "adventure")} across {plural(region.areas.length, "area")}
+                    {overlaps && " · some routes cross two"}
+                  </p>
+                  {/* Each area straight to its results */}
+                  <ul className="flex flex-wrap gap-2">
+                    {region.areas.map(({ state, count }) => (
+                      <li key={state}>
+                        <Link
+                          href={`/explore?region=${encodeURIComponent(region.name)}&state=${encodeURIComponent(state)}`}
+                          className="inline-flex items-center gap-2 h-10 pl-3.5 pr-2 rounded-full text-sm font-medium transition-colors hover:bg-[rgba(255,81,0,0.12)]"
+                          style={{ color: "var(--text-secondary)", boxShadow: "inset 0 0 0 1px var(--border-default)" }}
+                        >
+                          {state}
+                          <span className="text-xs font-semibold tabular-nums px-1.5 py-0.5 rounded-full bg-[#ff5100]/15 text-[#ff5100]">{count}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href={`/explore?region=${encodeURIComponent(region.name)}`}
+                    className="group mt-auto self-start inline-flex items-center gap-1.5 h-10 px-4 rounded-xl text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                    style={{ background: "#ff5100", boxShadow: "0 4px 14px #ff510055" }}
+                  >
+                    View all {region.total} in the {region.name}
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                </div>
+              </article>
             );
           })}
+
+          {/* Regions still to come, in one quiet strip */}
+          {upcoming.length > 0 && (
+            <div
+              className="rounded-2xl p-4 lg:p-5 flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4"
+              style={{ background: "var(--bg-surface)", border: "1px dashed var(--border-default)" }}
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] shrink-0" style={{ color: "var(--accent-ink-soft)" }}>
+                Coming soon
+              </p>
+              <ul className="flex flex-wrap gap-2">
+                {upcoming.map((region) => (
+                  <li
+                    key={region.name}
+                    title={regionSubtitles[region.name]}
+                    className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-[13px] font-medium"
+                    style={{ color: "var(--text-tertiary)", boxShadow: "inset 0 0 0 1px var(--border-subtle)" }}
+                  >
+                    <span className="[&>svg]:w-3.5 [&>svg]:h-3.5" style={{ color: "var(--text-muted)" }}>{regionIcons[region.name]}</span>
+                    {region.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </section>
