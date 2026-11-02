@@ -64,8 +64,7 @@ export const TREKS = {
 
   "annapurna-base-camp": {
     near: "Kaski, Nepal",
-    stops: ["Nayapul", "Ulleri", "Ghorepani", { name: "Poon Hill", q: "Pun Danda", at: [28.40004, 83.68954] }, "Tadapani", { name: "Chhomrong", at: [28.42426, 83.81853] }, { name: "Bamboo", at: [28.45702, 83.85693] }, { name: "Deurali", at: [28.49756, 83.89833] }, { name: "Machapuchare Base Camp", q: "Machhapuchhare Base Camp", at: [28.52651, 83.90756] }, { name: "Annapurna Base Camp", at: [28.53076, 83.87785] }],
-    extra: ["Jhinu Danda"],
+    stops: ["Nayapul", "Ulleri", "Ghorepani", { name: "Poon Hill", q: "Pun Danda", at: [28.40004, 83.68954] }, "Tadapani", { name: "Chhomrong", at: [28.42426, 83.81853] }, { name: "Bamboo", at: [28.45702, 83.85693] }, { name: "Deurali", at: [28.49756, 83.89833] }, { name: "Machapuchare Base Camp", q: "Machhapuchhare Base Camp", at: [28.52651, 83.90756] }, { name: "Annapurna Base Camp", at: [28.53076, 83.87785] }, "Jhinu Danda"],
     days: [
       { to: "Ulleri", note: "Along the Bhurungdi river, then over 3,000 stone steps up to Ulleri" },
       { to: "Ghorepani", note: "Through rhododendron forest to the village under Poon Hill" },

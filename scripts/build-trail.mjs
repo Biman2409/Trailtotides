@@ -5,7 +5,7 @@
 //   line    the walking path between them, routed along OSM's paths by BRouter (hiking profile)
 //           through every camp and pass OSM has; where BRouter can't connect two points, over the
 //           mapped paths near them with only the gaps between paths bridged. Thinned to ~10 m
-//           accuracy so pages load it quickly
+//           accuracy so pages load it quickly. Its heights are Copernicus 90 m, from Open-Meteo
 //   side    side trips that aren't on the way (summit viewpoints), as points only
 //   days    the day-by-day itinerary: where each day walks from and to, distance, metres up and
 //           down (measured along the line), and where you sleep
@@ -70,18 +70,18 @@ function dist([la1, lo1], [la2, lo2]) {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
-// Heights from Open-Meteo's elevation model, 100 points a request
-async function heights(pts) {
+// Heights from Open-Meteo's elevation model, 100 points a request. `strict`: Open-Meteo or nothing
+async function heights(pts, { strict = false } = {}) {
   const out = [];
   for (let i = 0; i < pts.length; i += 100) {
     const part = pts.slice(i, i + 100).map(([la, lo]) => [+la.toFixed(5), +lo.toFixed(5)]);
-    out.push(...(await heightsOf(part)));
+    out.push(...(await heightsOf(part, strict)));
   }
   return out;
 }
 
 // Heights from Open-Meteo (Copernicus 90 m), else from OpenTopoData (SRTM 90 m)
-async function heightsOf(part) {
+async function heightsOf(part, strict) {
   try {
     const url = `https://api.open-meteo.com/v1/elevation?latitude=${part.map((p) => p[0]).join(",")}&longitude=${part.map((p) => p[1]).join(",")}`;
     const j = await request(url, { headers: {} });
@@ -89,6 +89,7 @@ async function heightsOf(part) {
     await sleep(300); // Open-Meteo's free tier limits requests a minute
     return j.elevation.map((e) => Math.round(e));
   } catch (e) {
+    if (strict) throw new Error(`line heights: Open-Meteo failed (${e.message})`);
     console.warn(`  heights: Open-Meteo failed (${e.message}), trying OpenTopoData`);
     const url = `https://api.opentopodata.org/v1/srtm90m?locations=${part.map((p) => p.join(",")).join("|")}`;
     const j = await request(url, { headers: {} });
@@ -181,8 +182,8 @@ async function leg(a, b) {
       }
       if (r) {
         console.warn(`  ~ ${a.name} → ${b.name}: ${e.message}; routed over mapped paths, ${(r.bridgedM / 1000).toFixed(1)} of ${(len / 1000).toFixed(1)} km bridged`);
-        const ele = await heights(r.coords);
-        return { coords: r.coords.map((p, i) => [p[0], p[1], ele[i]]), approxKm: r.bridgedM / 1000 };
+        // No heights yet: the whole line gets them in one go once it's joined up
+        return { coords: r.coords.map((p) => [p[0], p[1], 0]), approxKm: r.bridgedM / 1000 };
       }
     } catch (e2) { console.warn(`  ! path search failed: ${e2.message}`); }
     console.warn(`  ! ${a.name} → ${b.name}: ${e.message}; drawn along the terrain`);
@@ -330,24 +331,31 @@ async function build(slug) {
   if (dist(full[0], [first.lat, first.lng]) > 20) { full.unshift([first.lat, first.lng, first.ele ?? full[0][2]]); at.forEach((v, i) => (at[i] = i ? v + 1 : 0)); }
   if (dist(full[full.length - 1], [last.lat, last.lng]) > 20) { full.push([last.lat, last.lng, last.ele ?? full[full.length - 1][2]]); at[at.length - 1] = full.length - 1; }
 
+  // Every height on the line from one model, Copernicus (Open-Meteo). BRouter's and the terrain
+  // tiles' heights are SRTM, which in Himalayan gorges dips or jumps hundreds of metres where the
+  // path runs level, so OpenTopoData's SRTM is no stand-in: the build fails and the saved trail stays
+  const lineEle = await heights(full, { strict: true });
+  full.forEach((p, i) => { p[2] = lineEle[i]; });
+
   const cum = [0];
   for (let i = 1; i < full.length; i++) cum.push(cum[i - 1] + dist(full[i - 1], full[i]));
   stops.forEach((s, i) => { s.km = +(cum[at[i]] / 1000).toFixed(1); });
 
-  // The elevation model throws single-point spikes, hundreds of metres off, where a path runs
-  // under a cliff or along a gorge. A height more than 120 m from the median of its ±250 m of
-  // trail takes that median; stops keep the heights OpenStreetMap surveys give them
-  const pinned = new Set(at.filter((k) => stops.some((s) => s.ele != null && dist(full[k], [s.lat, s.lng]) < 30)));
+  // On a steep valley side the 90 m elevation model steps from cell to cell, so heights a few
+  // points apart jump up and down tens of metres. Each height takes the median of the line's
+  // height every 10 m over its ±100 m of trail: a steady climb keeps its heights, a jump doesn't
   const raw = full.map((p) => p[2]);
+  const heightAt = (x) => {
+    let lo = 0, hi = full.length - 1;
+    while (hi - lo > 1) { const m = (lo + hi) >> 1; if (cum[m] <= x) lo = m; else hi = m; }
+    const d = cum[hi] - cum[lo];
+    return d ? raw[lo] + ((raw[hi] - raw[lo]) * (x - cum[lo])) / d : raw[lo];
+  };
   full.forEach((p, i) => {
-    if (pinned.has(i)) return;
     const near = [];
-    for (let k = i; k >= 0 && cum[i] - cum[k] <= 250; k--) near.push(raw[k]);
-    for (let k = i + 1; k < full.length && cum[k] - cum[i] <= 250; k++) near.push(raw[k]);
-    if (near.length < 4) return;
+    for (let x = Math.max(0, cum[i] - 100); x <= Math.min(cum[cum.length - 1], cum[i] + 100); x += 10) near.push(heightAt(x));
     near.sort((a, b) => a - b);
-    const median = near[near.length >> 1];
-    if (Math.abs(raw[i] - median) > 120) p[2] = median;
+    p[2] = Math.round(near[near.length >> 1]);
   });
 
   // Camps the map doesn't have, placed a typical share of the way along the trail between two
