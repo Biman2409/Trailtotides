@@ -249,11 +249,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── ADVENTURE TYPES ──────────────────────────────── */}
-        <FindYourFormat />
-
-        {/* ── REGIONS ──────────────────────────────────────── */}
-        <FindByRegion />
+        {/* ── ADVENTURE MATCHMAKER ─────────────────────────── */}
+        <MatchmakerHomepageSection />
 
         {/* ── MAP CTA — a green band (as the Matchmaker's is warm), dot grid and a glow behind
                the demo; edges fade into the page ── */}
@@ -304,8 +301,11 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── ADVENTURE MATCHMAKER ─────────────────────────── */}
-        <MatchmakerHomepageSection />
+        {/* ── ADVENTURE TYPES ──────────────────────────────── */}
+        <FindYourFormat />
+
+        {/* ── REGIONS ──────────────────────────────────────── */}
+        <FindByRegion />
 
         {/* ── STORIES ──────────────────────────────────────── */}
         <section id="stories" className="py-6 lg:py-10 px-5 lg:px-8 t-bg-page topo">
