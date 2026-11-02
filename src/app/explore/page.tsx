@@ -22,10 +22,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://www.trailtotides.com/explore" },
 };
 
+// The page reads its filters from the address. Rendering it per request (rather than as a static
+// shell that draws in the browser) puts the real cards and their links in the HTML crawlers get.
+// Filtered addresses are kept out of the index by the middleware; the canonical is /explore.
+export const dynamic = "force-dynamic";
+
 export default function ExplorePage() {
   return (
-    // The page reads its filters from the address, so it draws in the browser. The fallback is
-    // what crawlers get in the HTML: the same heading the page shows, until it takes over.
     <Suspense fallback={
       <div className="min-h-screen">
         <h1 className="sr-only">Find your next adventure</h1>

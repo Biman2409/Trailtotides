@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const NOINDEX_WITH_QUERY = new Set(["/explore", "/map", "/stories", "/operators", "/destinations", "/adventurepedia/treks"]);
+
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -26,6 +28,12 @@ export async function middleware(request: NextRequest) {
   );
 
   await supabase.auth.getUser();
+
+  // Filtered, searched and map-positioned variants of a listing page show the same page as
+  // the clean one (their canonical): keep them out of the index, but follow their links
+  if (NOINDEX_WITH_QUERY.has(request.nextUrl.pathname) && request.nextUrl.search) {
+    supabaseResponse.headers.set("X-Robots-Tag", "noindex, follow");
+  }
 
   return supabaseResponse;
 }

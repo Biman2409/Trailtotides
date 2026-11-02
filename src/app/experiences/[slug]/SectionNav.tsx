@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { id: "suitability", label: "Suitability" },
   { id: "book-this-adventure", label: "Book" },
   { id: "community", label: "Reviews" },
+  { id: "faq", label: "FAQ" },
 ];
 
 export default function SectionNav({ hasGuide = false }: { hasGuide?: boolean }) {

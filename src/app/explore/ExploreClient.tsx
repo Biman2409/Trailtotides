@@ -262,9 +262,9 @@ export default function ExploreClient() {
           </div>
         ) : view === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-            {results.slice(0, shown).map((a) => (
+            {results.slice(0, shown).map((a, i) => (
               <div key={a.id} id={`card-${a.slug}`}>
-                <AdventureCard adventure={a} badge={false} />
+                <AdventureCard adventure={a} badge={false} priority={i < 3} />
               </div>
             ))}
           </div>

@@ -40,7 +40,8 @@ import { getTrail } from "@/lib/trails";
 import NearbyAdventuresMap from "./NearbyAdventuresMap";
 import BookingSidebarCard from "./BookingSidebarCard";
 import { haversineKm } from "@/lib/geo";
-import { destinationFor, lowestPrice, altitudeOf, inr } from "@/lib/destinations";
+import { destinationFor, lowestPrice } from "@/lib/destinations";
+import { SITE_URL, absoluteUrl, routeLabel, experienceTitle, experienceDescription, experienceFaq, faqStructuredData } from "@/lib/seo";
 import { breadcrumbStructuredData } from "@/components/ui/custom/Breadcrumbs";
 import TrainForThis from "./TrainForThis";
 import { getSeasonUrgency } from "@/lib/seasonUrgency";
@@ -76,7 +77,7 @@ function RelatedRow({ items, exploreHref, exploreLabel, pillMode = "type", meta 
           return (
             <Link key={a.id} href={`/experiences/${a.slug}`} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-56 snap-start transition-all duration-300 hover:-translate-y-1" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
               <div className="relative h-28 shrink-0 overflow-hidden">
-                <Image src={a.heroImage} alt={a.name} fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
+                <Image src={a.heroImage} alt={a.name} fill sizes="224px" loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
                 <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 z-10">
                   {pillMode === "type"
@@ -121,30 +122,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const adventure = adventures.find((a) => a.slug === slug);
   if (!adventure) return {};
   const difficulty = computeDifficulty(getACE(adventure));
-  // What people search for an adventure: how hard, how long, how high, when, how much
-  const price = lowestPrice(adventure);
-  // Height only matters up high (not for a river run at 380m)
-  const altitude = parseInt(altitudeOf(adventure).replace(/,/g, ""), 10) >= 1000 ? altitudeOf(adventure) : "";
-  // "Verified" only when we've actually verified one of the operators
-  const anyVerified = adventure.operators.some((o) => o.verified);
-  // Google shows about 160 characters: drop the least useful parts until it fits
-  const describe = (season: boolean, close: string) => [
-    `${adventure.name}, ${adventure.state}: ${difficulty.toLowerCase()}, ${adventure.durationDays}`,
-    altitude ? `, up to ${altitude}` : "",
-    season && adventure.bestSeason ? `. Best ${adventure.bestSeason}` : "",
-    price ? `. From ${inr(price)} with ${anyVerified ? "verified" : "local"} operators` : "",
-    close,
-  ].join("");
-  const description = [
-    describe(true, ". Compare and book, matched to your fitness."),
-    describe(true, ". Compare and book."),
-    describe(false, ". Compare and book."),
-  ].find((d) => d.length <= 160) ?? describe(false, ".");
-  // And about 60 characters of title: keep the brand suffix only when it fits
-  const fullTitle = `${adventure.name}: Difficulty, Cost & Best Time`;
-  const title = fullTitle.length + " | Trail to Tides".length <= 60
-    ? fullTitle
-    : { absolute: fullTitle.length <= 60 ? fullTitle : `${adventure.name}: Cost & Best Time` };
+  const hasItinerary = (getTrail(slug)?.days?.length ?? 0) > 0;
+  const title = experienceTitle(adventure, { hasItinerary });
+  const description = experienceDescription(adventure, { hasItinerary, priceFrom: lowestPrice(adventure) });
+  const label = routeLabel(adventure);
   return {
     title,
     description,
@@ -158,19 +139,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ...(adventure.tags ?? []),
     ],
     openGraph: {
-      title: `${adventure.name} — Trail to Tides`,
+      title: `${label} — Trail to Tides`,
       description,
-      url: `https://www.trailtotides.com/experiences/${slug}`,
+      url: `${SITE_URL}/experiences/${slug}`,
       images: [{ url: adventure.heroImage, width: 1200, height: 630, alt: adventure.name }],
       type: "article",
     },
     twitter: {
       card: "summary_large_image",
-      title: `${adventure.name} — Trail to Tides`,
+      title: `${label} — Trail to Tides`,
       description,
       images: [adventure.heroImage],
     },
-    alternates: { canonical: `https://www.trailtotides.com/experiences/${slug}` },
+    alternates: { canonical: `${SITE_URL}/experiences/${slug}` },
   };
 }
 
@@ -286,15 +267,17 @@ export default async function ExperiencePage({ params }: Props) {
     }] : []),
   ];
 
+  const faqs = experienceFaq(adventure, { difficulty, priceFrom: priceFrom ? parsePrice(priceFrom) : undefined, operatorCount: allOperators.length });
+
   // Structured data needs full URLs; some heroes live in /public
-  const absoluteImage = adventure.heroImage.startsWith("/") ? `https://www.trailtotides.com${adventure.heroImage}` : adventure.heroImage;
+  const absoluteImage = absoluteUrl(adventure.heroImage);
   const structuredData = [
     {
       "@context": "https://schema.org",
       "@type": "TouristAttraction",
       name: adventure.name,
       description: stripEmphasis(adventure.description ?? adventure.tagline ?? `${adventure.type} in ${adventure.state}.`),
-      url: `https://www.trailtotides.com/experiences/${slug}`,
+      url: `${SITE_URL}/experiences/${slug}`,
       image: absoluteImage,
       touristType: adventure.type,
       geo: {
@@ -318,7 +301,7 @@ export default async function ExperiencePage({ params }: Props) {
       provider: {
         "@type": "Organization",
         name: "Trail to Tides",
-        url: "https://www.trailtotides.com",
+        url: SITE_URL,
       },
     },
     {
@@ -327,7 +310,7 @@ export default async function ExperiencePage({ params }: Props) {
       name: adventure.name,
       description: adventure.tagline ?? stripEmphasis(adventure.description),
       image: absoluteImage,
-      url: `https://www.trailtotides.com/experiences/${slug}`,
+      url: `${SITE_URL}/experiences/${slug}`,
       brand: {
         "@type": "Brand",
         name: "Trail to Tides",
@@ -339,7 +322,7 @@ export default async function ExperiencePage({ params }: Props) {
           priceCurrency: "INR",
           price: priceFrom.replace(/[^0-9]/g, ""),
           availability: "https://schema.org/InStock",
-          url: `https://www.trailtotides.com/experiences/${slug}`,
+          url: `${SITE_URL}/experiences/${slug}`,
           seller: {
             "@type": "Organization",
             name: "Trail to Tides",
@@ -354,6 +337,7 @@ export default async function ExperiencePage({ params }: Props) {
     breadcrumbStructuredData(destination
       ? [{ label: "Destinations", href: "/destinations" }, { label: destination.name, href: `/destinations/${destination.slug}` }, { label: adventure.name, href: `/experiences/${slug}` }]
       : [{ label: "Explore", href: "/explore" }, { label: adventure.name, href: `/experiences/${slug}` }]),
+    faqStructuredData(faqs),
   ];
 
   return (
@@ -403,7 +387,7 @@ export default async function ExperiencePage({ params }: Props) {
               {(() => {
                 // The traveller rating sits as a superscript after the last word,
                 // kept on the same line as it so it never wraps on its own
-                const words = adventure.name.split(" ");
+                const words = routeLabel(adventure).split(" ");
                 const last = words.pop();
                 return (
                   <>
@@ -607,6 +591,18 @@ export default async function ExperiencePage({ params }: Props) {
               {/* Community */}
               <AccordionSection id="community" label="community" title="Traveller reviews" defaultOpen>
                 <CommunityCards slug={adventure.slug} adventureType={adventure.type} adventureName={adventure.name} operators={allOperators} />
+              </AccordionSection>
+
+              {/* FAQ — the questions people search, answered from the facts above */}
+              <AccordionSection id="faq" label="quick answers" title="Frequently asked questions" defaultOpen mobileDefaultOpen={false}>
+                <dl className="space-y-3 max-w-[66ch]">
+                  {faqs.map((f) => (
+                    <div key={f.question}>
+                      <dt><h3 className="text-[14px] font-medium leading-[1.5]" style={{ color: "var(--text-primary)" }}>{f.question}</h3></dt>
+                      <dd className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{f.answer}</dd>
+                    </div>
+                  ))}
+                </dl>
               </AccordionSection>
 
               {/* Tags */}

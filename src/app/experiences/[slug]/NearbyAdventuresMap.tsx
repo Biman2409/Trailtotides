@@ -45,8 +45,18 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
   const isDark = mounted && resolvedTheme !== "light";
   const router = useRouter();
 
+  // Leaflet and its tiles load only once the map is about to scroll into view
+  const [nearView, setNearView] = useState(false);
   useEffect(() => {
-    if (!mapRef.current) return;
+    const el = mapRef.current;
+    if (!el || nearView) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) setNearView(true); }, { rootMargin: "300px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [nearView]);
+
+  useEffect(() => {
+    if (!nearView || !mapRef.current) return;
     const el = mapRef.current;
     let cancelled = false;
 
@@ -277,7 +287,7 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
         (el as HTMLElement & { _leaflet_id?: number })._leaflet_id = undefined;
       }
     };
-  }, [current, nearby, trail, isDark, router]);
+  }, [current, nearby, trail, isDark, router, nearView]);
 
   function show(v: "trail" | "region") {
     setView(v);

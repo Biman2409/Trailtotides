@@ -163,7 +163,7 @@ export default function SearchModal({ open, onClose }: Props) {
                           }}
                         >
                           <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative">
-                            <Image src={r.image || ""} alt={r.title} fill className="object-cover" />
+                            <Image src={r.image || ""} alt={r.title} fill sizes="40px" className="object-cover" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>
@@ -230,7 +230,7 @@ export default function SearchModal({ open, onClose }: Props) {
                           }}
                         >
                           <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative">
-                            <Image src={r.image || ""} alt={r.title} fill className="object-cover" />
+                            <Image src={r.image || ""} alt={r.title} fill sizes="40px" className="object-cover" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>

@@ -312,7 +312,7 @@ export default function Navbar() {
                             className="flex items-center gap-3 flex-1 min-w-0"
                           >
                             <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative">
-                              <Image src={a.heroImage} alt={a.name} fill quality={60} className="object-cover" />
+                              <Image src={a.heroImage} alt={a.name} fill sizes="40px" quality={60} className="object-cover" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium leading-tight truncate hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-secondary)" }}>
@@ -400,7 +400,7 @@ export default function Navbar() {
                             className="flex items-center gap-3 flex-1 min-w-0"
                           >
                             <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative">
-                              <Image src={a.heroImage} alt={a.name} fill quality={60} className="object-cover" />
+                              <Image src={a.heroImage} alt={a.name} fill sizes="40px" quality={60} className="object-cover" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium leading-tight truncate hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-secondary)" }}>

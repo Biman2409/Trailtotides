@@ -28,6 +28,8 @@ interface AdventureCardProps {
   badge?: React.ReactNode | false;
   /** Stretch to fill its grid cell (image grows) — used for the large Editor's Choice feature. */
   fill?: boolean;
+  /** Load the photo up front: for the cards that show above the fold (the page's LCP) */
+  priority?: boolean;
 }
 
 const MONTHS: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -49,7 +51,7 @@ const CATEGORY_CLASS: Partial<Record<Adventure["type"], string>> = {
   Caving: "cat-forest", "Urban Adventure": "cat-forest",
 };
 
-export default function AdventureCard({ adventure, size = "default", fromPage, badge, fill = false }: AdventureCardProps) {
+export default function AdventureCard({ adventure, size = "default", fromPage, badge, fill = false, priority = false }: AdventureCardProps) {
   const isLarge = size === "large";
   const difficulty = computeDifficulty(getACE(adventure));
   const stat = keyStat(adventure);
@@ -132,6 +134,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
           src={adventure.heroImage}
           alt={adventure.name}
           fill
+          priority={priority}
           quality={75}
           className="photo-grade object-cover object-center transition-transform duration-700 group-hover:scale-105"
           sizes={fill ? "(max-width: 1024px) 100vw, 66vw" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}

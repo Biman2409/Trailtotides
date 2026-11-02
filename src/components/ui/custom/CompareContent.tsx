@@ -102,7 +102,7 @@ function WishlistPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
               onMouseEnter={(e) => e.currentTarget.style.background = "var(--bg-card)"}
               onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
               <div className="relative w-8 h-8 rounded-md overflow-hidden shrink-0">
-                <Image src={a.heroImage} alt={a.name} fill className="object-cover" />
+                <Image src={a.heroImage} alt={a.name} fill sizes="32px" className="object-cover" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-semibold truncate" style={{ color: "var(--text-primary)" }}>{a.name}</p>
@@ -170,7 +170,7 @@ function SearchPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
               onMouseEnter={(e) => e.currentTarget.style.background = "var(--bg-card)"}
               onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
               <div className="relative w-8 h-8 rounded-md overflow-hidden shrink-0">
-                <Image src={a.heroImage} alt={a.name} fill className="object-cover" />
+                <Image src={a.heroImage} alt={a.name} fill sizes="32px" className="object-cover" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-semibold truncate" style={{ color: "var(--text-primary)" }}>{a.name}</p>
