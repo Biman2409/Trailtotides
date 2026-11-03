@@ -3,6 +3,7 @@ import { adventures } from "@/lib/data";
 import { getPublishedStories } from "@/lib/stories";
 import { DESTINATIONS } from "@/lib/destinations";
 import { GUIDES } from "@/lib/adventurepedia";
+import { ACTIVITIES, activityHref } from "@/lib/activityGuides";
 import { trekAdventures } from "@/lib/trekGuides";
 
 const BASE = "https://www.trailtotides.com";
@@ -26,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/adventurepedia`, priority: 0.7 },
     { url: `${BASE}/adventurepedia/offline-maps`, priority: 0.5 },
     ...GUIDES.filter((g) => !g.custom).map((g) => ({ url: `${BASE}/adventurepedia/${g.slug}`, priority: 0.6 })),
+    ...ACTIVITIES.map((a) => ({ url: `${BASE}${activityHref(a)}`, priority: 0.6 })),
     { url: `${BASE}/adventurepedia/treks`, priority: 0.7 },
     ...trekAdventures().map((a) => ({ url: `${BASE}/adventurepedia/treks/${a.slug}`, priority: 0.6 })),
     { url: `${BASE}/stories`, priority: 0.8 },

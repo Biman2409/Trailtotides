@@ -6,6 +6,12 @@
 // Keep guides practical and India-first. Anything that changes with the rules (permits, fees,
 // devices) says so and points people to their operator for the current word.
 
+import { ACTIVITIES } from "@/lib/activityGuides";
+import { AXIS_LABEL } from "@/lib/fitness";
+
+/** An activity's name, linked to its primer page */
+const act = (a: (typeof ACTIVITIES)[number]) => `[${a.type}](/adventurepedia/activities/${a.slug})`;
+
 export type Block =
   | { p: string }
   | { list: string[] }
@@ -21,7 +27,7 @@ export const TOPICS: { id: Topic; label: string; blurb: string }[] = [
   { id: "plan", label: "Plan & prepare", blurb: "Seasons, operators, permits, fitness and gear" },
   { id: "health", label: "Health & safety", blurb: "Altitude, first aid, water and emergencies" },
   { id: "trail", label: "On the trail", blurb: "Navigation, trail craft and leaving no trace" },
-  { id: "rides", label: "Rides & rivers", blurb: "High-pass motorcycling and white-water rafting" },
+  { id: "rides", label: "By activity", blurb: "Guides for one kind of adventure, from riding the high passes to rafting" },
 ];
 
 export interface Guide {
@@ -221,9 +227,10 @@ export const GUIDES: Guide[] = [
     slug: "insurance-and-emergencies",
     title: "Insurance, rescue and emergencies",
     short: "Insurance & emergencies",
-    summary: "What your insurance has to cover at altitude, how rescue actually works in the Indian Himalaya, and the rules on satellite devices.",
+    summary: "What your insurance has to cover for your adventure, how rescue actually works in the Indian Himalaya, and the rules on satellite devices.",
     topic: "health",
     icon: "emergency",
+    featured: true,
     tldr: [
       "Buy insurance that names trekking and covers your maximum altitude, including helicopter evacuation.",
       "Rescue in remote valleys means hours to days of walking or a stretcher: speed depends on your team.",
@@ -242,6 +249,7 @@ export const GUIDES: Guide[] = [
             "**Evacuation:** helicopter rescue and medical evacuation are included, with a high enough limit. A helicopter in Nepal can cost several lakh rupees.",
             "**Cancellation:** covers weather, landslides and road closures, which cancel more Himalayan trips than anything else.",
           ] },
+          { callout: "warn", title: "Name the adventure", text: "Many travel and health policies leave out adventure sports unless they're named. Check yours covers what you're doing, and how: trekking to your highest altitude, diving to your depth, paragliding, skiing off-piste or rafting your river's grade." },
           { callout: "tip", title: "Ask your operator too", text: "Some operators include basic insurance in the price; many don't. Ask what it covers and get the policy number before you leave." },
         ],
       },
@@ -367,7 +375,6 @@ export const GUIDES: Guide[] = [
     summary: "The layering system that keeps you warm at -10°C, the right shoes, season-by-season extras, and what your operator usually provides.",
     topic: "plan",
     icon: "pack",
-    featured: true,
     tldr: [
       "Dress in layers: a quick-dry base, a fleece, a down jacket and a waterproof shell. No cotton.",
       "Broken-in trekking shoes with ankle support matter more than anything else you buy.",
@@ -511,15 +518,23 @@ export const GUIDES: Guide[] = [
           { p: "If you smoke, the best training you can do is stop, even just for the weeks before the trek." },
         ],
       },
+      {
+        id: "by-adventure",
+        title: "What other adventures ask of your body",
+        blocks: [
+          { p: "This plan is built for trekking. Other adventures lean on different capabilities on the [ACE™ scale](/ace): train the ones that matter for yours. The [Adventure Matchmaker](/matchmaker) shows where you stand on each." },
+          { table: { head: ["Adventure", "Train most", "Why"], rows: ACTIVITIES.map((a) => [act(a), a.body.length ? a.body.map((x) => AXIS_LABEL[x]).join(", ") : "Nothing special", a.bodyNote]) } },
+        ],
+      },
     ],
     related: ["altitude-sickness", "what-to-pack", "choosing-a-season"],
     appliesTo: ["Trekking", "Mountaineering", "Cycling"],
   },
   {
     slug: "choosing-a-season",
-    title: "When to go: the Himalayan seasons",
+    title: "When to go: seasons for every adventure",
     short: "When to go",
-    summary: "Spring flowers, monsoon rain-shadow valleys, autumn's clear skies and winter snow treks: which season suits which adventure.",
+    summary: "The Himalayan seasons, the monsoon question, and the best months for every adventure in India, from treks and rides to diving, surfing and skiing.",
     topic: "plan",
     icon: "season",
     tldr: [
@@ -575,16 +590,25 @@ export const GUIDES: Guide[] = [
           { p: "On [Explore](/explore) you can filter adventures by the month you want to go." },
         ],
       },
+      {
+        id: "by-adventure",
+        title: "The best months, adventure by adventure",
+        blocks: [
+          { p: "India's seasons pull different adventures in different directions: the monsoon that closes the reefs and the rapids opens Ladakh's roads, and the cold that shuts the high passes brings the ski season." },
+          { table: { head: ["Adventure", "When to go"], rows: ACTIVITIES.map((a) => [act(a), a.season]) } },
+        ],
+      },
     ],
     related: ["what-to-pack", "riding-the-high-passes", "river-rafting"],
   },
   {
     slug: "choosing-an-operator",
-    title: "How to choose a trek operator",
+    title: "How to choose an adventure operator",
     short: "Choosing an operator",
-    summary: "The questions that separate a safe operator from a cheap one: guides, ratios, oxygen, acclimatisation, turnaround rules and refunds.",
+    summary: "The questions that separate a safe operator from a cheap one, for any adventure: guides, ratios, safety kit, certifications, turnaround rules and refunds.",
     topic: "plan",
     icon: "operator",
+    featured: true,
     tldr: [
       "Ask who leads: their mountaineering course, first-aid training and years on this trek.",
       "Look for a guide-to-trekker ratio around 1:8, with a sweep at the back.",
@@ -630,6 +654,14 @@ export const GUIDES: Guide[] = [
             "Group sizes of 25 or more with one guide",
           ] },
           { callout: "tip", title: "Compare on the trek page", text: "Each adventure's \"Where to book\" section compares its operators' prices, ratings and inclusions in one place." },
+        ],
+      },
+      {
+        id: "by-adventure",
+        title: "What to check, adventure by adventure",
+        blocks: [
+          { p: "The questions above apply to any operator. Each kind of adventure also has its own must-haves: certifications, kit and limits. Each name opens a fuller page." },
+          { table: { head: ["Adventure", "Check before you book"], rows: ACTIVITIES.map((a) => [act(a), a.operator.slice(0, 2).join(". ") + "."]) } },
         ],
       },
     ],
@@ -694,6 +726,14 @@ export const GUIDES: Guide[] = [
           { p: "Flying a drone in India needs registration and, near borders, military areas and airports, permission. Most high Himalayan border zones are no-fly. Ask before photographing military installations, bridges and checkposts, and ask people before taking their photo." },
         ],
       },
+      {
+        id: "islands",
+        title: "Islands and reefs",
+        blocks: [
+          { p: "**Lakshadweep** needs an entry permit for every visitor, Indian or not, arranged before you travel; dive and snorkel trips there usually help with it. For the **Andamans**, carry your ID, and bring your diving certification card if you're already certified." },
+          { callout: "tip", title: "Check before you go", text: "Island rules change. Ask your operator for the current permit process when you book." },
+        ],
+      },
     ],
     related: ["choosing-an-operator", "riding-the-high-passes", "insurance-and-emergencies"],
   },
@@ -707,7 +747,6 @@ export const GUIDES: Guide[] = [
     topic: "trail",
     icon: "map",
     custom: true,
-    featured: true,
     tldr: [
       "Install Organic Maps and download the state's map at home on Wi-Fi.",
       "Download the trek's GPX trail from its page and open it in the app.",
@@ -1001,8 +1040,8 @@ export interface SearchEntry {
   guide: string;
   summary: string;
   icon: Guide["icon"];
-  /** Trek guides have no topic; they show under "Trek guides" */
-  topic: Topic | "treks";
+  /** Trek guides and activity primers have no topic; they show under their own headings */
+  topic: Topic | "treks" | "activities";
   section?: string;
   sectionId?: string;
   text: string;

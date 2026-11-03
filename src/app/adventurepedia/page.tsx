@@ -3,13 +3,15 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { GUIDES, TOPICS, readMinutes, searchIndex } from "@/lib/adventurepedia";
 import { trekAdventures, trekSearchIndex } from "@/lib/trekGuides";
-import Library, { type GuideCard, type TrekTile } from "./Library";
+import { ACTIVITIES, ELEMENTS, activitySearchIndex } from "@/lib/activityGuides";
+import { adventures } from "@/lib/data";
+import Library, { type ActivityTile, type GuideCard, type TrekTile } from "./Library";
 
 const SITE = "https://www.trailtotides.com";
 
 export const metadata: Metadata = {
-  title: "Adventurepedia: Guides for Treks and Rides",
-  description: "Practical guides for Himalayan treks and rides: a complete guide to every trek, plus altitude sickness, what to pack, getting fit, seasons, permits, choosing an operator, offline maps and more.",
+  title: "Adventurepedia: Guides for Every Adventure in India",
+  description: "Everything adventure in India: guides to trekking, riding, rafting, diving, paragliding, skiing and more, plus every trek, altitude sickness, getting fit, seasons, permits, choosing an operator and offline maps.",
   alternates: { canonical: `${SITE}/adventurepedia` },
   openGraph: { title: "Adventurepedia — Trail to Tides", url: `${SITE}/adventurepedia`, type: "website" },
 };
@@ -26,12 +28,13 @@ export default function Adventurepedia() {
     .sort((a, b) => Number(!!b.editorChoice) - Number(!!a.editorChoice) || Number(b.featured) - Number(a.featured))
     .slice(0, 4)
     .map((a) => ({ slug: a.slug, name: a.name, state: a.state, days: a.durationDays, image: a.heroImage }));
+  const activities: ActivityTile[] = ACTIVITIES.map((a) => ({ slug: a.slug, type: a.type, element: a.element, count: adventures.filter((x) => x.type === a.type).length }));
 
   return (
     <div className="min-h-screen">
       <Navbar />
       <main className="pt-24 lg:pt-28 pb-20">
-        <Library guides={guides} topics={TOPICS} index={[...searchIndex(), ...trekSearchIndex()]} treks={{ count: allTreks.length, featured }} />
+        <Library guides={guides} topics={TOPICS} index={[...searchIndex(), ...activitySearchIndex(), ...trekSearchIndex()]} treks={{ count: allTreks.length, featured }} activities={activities} elements={ELEMENTS} />
       </main>
       <Footer />
     </div>

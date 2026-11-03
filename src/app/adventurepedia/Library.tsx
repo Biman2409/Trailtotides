@@ -5,6 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Clock, Search, X, CornerDownRight } from "lucide-react";
 import type { Guide, SearchEntry, Topic } from "@/lib/adventurepedia";
+import type { Element } from "@/lib/activityGuides";
+import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import { GuideIcon, serif } from "./blocks";
 
 export interface GuideCard {
@@ -57,12 +59,16 @@ function Highlight({ text, toks }: { text: string; toks: string[] }) {
 }
 
 export interface TrekTile { slug: string; name: string; state: string; days: string; image: string }
+/** One kind of adventure: how many are live (0 = coming soon) */
+export interface ActivityTile { slug: string; type: string; element: Element; count: number }
 
-export default function Library({ guides, topics, index, treks }: {
+export default function Library({ guides, topics, index, treks, activities, elements }: {
   guides: GuideCard[];
   topics: { id: Topic; label: string; blurb: string }[];
   index: SearchEntry[];
   treks: { count: number; featured: TrekTile[] };
+  activities: ActivityTile[];
+  elements: { id: Element; label: string; blurb: string }[];
 }) {
   const [q, setQ] = useState("");
   const [topic, setTopic] = useState<Topic | "all">("all");
@@ -127,7 +133,7 @@ export default function Library({ guides, topics, index, treks }: {
           <p className="text-[11.5px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "var(--accent-ink)" }}>Guides</p>
           <h1 className="text-[42px] sm:text-6xl t-text leading-[1.02]" style={{ ...serif, letterSpacing: "-0.025em" }}>Adventurepedia</h1>
           <p className="text-[17px] sm:text-[19px] leading-[1.55] t-text-2 mt-4 max-w-2xl">
-            Everything to know before you go, and on the way. Practical, tested guides for Himalayan treks, rides and rivers.
+            Everything adventure in India: before you go, and on the way. Practical guides for every adventure on land, water, snow and air, from your first trek to your first dive.
           </p>
 
           <div className="mt-7 max-w-2xl">
@@ -186,10 +192,38 @@ export default function Library({ guides, topics, index, treks }: {
         ) : topic === "all" ? (
           <>
             {/* ── Start here ── */}
-            <SectionHead title="Start here" blurb="The three guides every first-time Himalayan trekker should read." />
+            <SectionHead title="Start here" blurb="Read these before any big adventure: who to go with, what covers you, and how fast is too fast up high." />
             <ul className="grid md:grid-cols-3 gap-4">
               {guides.filter((g) => g.featured).map((g) => <li key={g.slug}><FeatureCard g={g} /></li>)}
             </ul>
+
+            {/* ── Every adventure, live and coming soon ── */}
+            <div id="every-adventure" className="scroll-mt-28">
+              <SectionHead title="Every adventure" blurb={`What each one is, where and when in India, what it asks of your body, and how to pick an operator. ${activities.filter((a) => a.count > 0).length} to book now, more coming soon.`} />
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {elements.map((el) => (
+                <div key={el.id} className="rounded-2xl p-4" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
+                  <p className="text-[17px] t-text" style={serif}>{el.label}</p>
+                  <p className="text-[12.5px] t-text-3 mb-3">{el.blurb}</p>
+                  <ul className="space-y-0.5">
+                    {activities.filter((a) => a.element === el.id).map((a) => (
+                      <li key={a.slug}>
+                        <Link href={`/adventurepedia/activities/${a.slug}`} className="group flex items-center gap-2.5 -mx-2 px-2 py-1.5 rounded-lg transition-colors hover:bg-[var(--bg-surface-2)]">
+                          <span className="w-7 h-7 rounded-lg grid place-items-center shrink-0" style={a.count > 0 ? { background: "rgba(255,81,0,0.1)", color: "#ff5100" } : { background: "var(--bg-surface-2)", color: "var(--text-tertiary)" }}>
+                            {ADVENTURE_TYPE_ICONS[a.type]?.(15)}
+                          </span>
+                          <span className="flex-1 min-w-0 text-[14px] font-semibold t-text truncate group-hover:text-[#ff5100] transition-colors">{a.type}</span>
+                          {a.count > 0
+                            ? <span className="text-[11.5px] font-semibold tabular-nums" style={{ color: "#10b981" }}>{a.count}</span>
+                            : <span className="text-[10.5px] font-semibold uppercase tracking-[0.08em] t-text-3">Soon</span>}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
 
             {/* ── Trek guides ── */}
             <SectionHead title="Trek guides" blurb={`A complete guide to each of our ${treks.count} treks and climbs: season, travel, day-by-day plan, permits and cost.`}
