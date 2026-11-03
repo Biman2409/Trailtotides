@@ -159,7 +159,7 @@ function DefaultCTA() {
               className="group hidden lg:inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors"
               style={{ boxShadow: "0 6px 20px rgba(255,81,0,0.25)" }}
             >
-              Take the assessment
+              Take the Matchmaker
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
             {/* The full explanation lives on /ace */}
@@ -321,7 +321,7 @@ function ProfileSummary({ profile, ace, credits, stale }: { profile: StoredProfi
               <span className="scale-125">{tier.icon}</span>
             </span>
             <span className="flex-1 min-w-0">
-              <span className="block text-[10px] uppercase tracking-[0.2em] font-semibold" style={{ color: "var(--text-tertiary)" }}>Your rank</span>
+              <span className="block text-[10px] uppercase tracking-[0.2em] font-semibold" style={{ color: "var(--text-tertiary)" }}>Your ACE™ rank</span>
               <span className="block text-lg font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</span>
             </span>
             <span className="text-right shrink-0 text-[11px] leading-snug" style={{ color: "var(--text-tertiary)" }}>

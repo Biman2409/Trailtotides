@@ -119,7 +119,7 @@ export default function PinCard({
                 <p className="text-[11px] text-white/45">
                   {group && fit.weakest && fit.bucket.key !== "ready"
                     ? <>Waiting on {fit.weakest}{fit.weeks > 0 ? ` · ~${fit.weeks} weeks of training` : ""}</>
-                    : fit.weeks > 0 ? <>About {fit.weeks} weeks of training to be ready</> : <>Matched to {group ? `“${group}”` : "your fitness profile"}</>}
+                    : fit.weeks > 0 ? <>About {fit.weeks} weeks of training to be ready</> : <>Matched to {group ? `“${group}”` : "your ACE™ profile"}</>}
                 </p>
               </div>
               {group && <Users className="w-4 h-4 ml-auto text-white/30 shrink-0" />}
@@ -137,7 +137,7 @@ export default function PinCard({
         ) : !hasProfile && (
           <Link href="/matchmaker" className="tm-panel flex items-center gap-2.5 group" onClick={() => track("map_fitness_cta", { from: "card" })}>
             <MatchmakerMark className="w-4 h-4 shrink-0 text-[#ffa576]" />
-            <span className="text-[12px] text-white/75 flex-1">Are you ready for this? <span className="text-[#ffa576] font-semibold">Take the 2-min fitness test</span></span>
+            <span className="text-[12px] text-white/75 flex-1">Are you ready for this? <span className="text-[#ffa576] font-semibold">Take the 2-min Adventure Matchmaker</span></span>
             <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         )}

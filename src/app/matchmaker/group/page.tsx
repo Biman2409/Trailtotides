@@ -10,7 +10,7 @@ import GroupClient from "./GroupClient";
 
 export const metadata: Metadata = {
   title: "Group Match",
-  description: "Add everyone's fitness profile and find the adventures your whole group is ready for.",
+  description: "Add everyone's ACE™ profile and find the adventures your whole group is ready for.",
   // Old-style group links carry each member's fitness levels — keep them out of search results.
   robots: { index: false, follow: false },
 };

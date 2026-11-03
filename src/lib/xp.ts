@@ -31,7 +31,7 @@ export const XP_CAPS: Record<XPAction, number> = {
 export const MAX_XP = (Object.keys(XP_CAPS) as XPAction[]).reduce((sum, a) => sum + XP_CAPS[a] * XP_REWARDS[a], 0); // 9,000
 
 export const XP_LABELS: Record<XPAction, string> = {
-  ace_complete: "ACE™ Assessment",
+  ace_complete: "Adventure Matchmaker",
   review:       "Review",
   photo:        "Photo upload",
   wishlist:     "Wishlist save",

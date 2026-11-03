@@ -188,7 +188,7 @@ function Hero({ profiles }: { profiles: Profile[] }) {
           {/* A page that explains ACE: no buttons up here, the page itself is the explanation
               and the closing panel leads into the Matchmaker */}
           <p className="ace-in text-base sm:text-[17px] leading-relaxed max-w-xl" style={{ color: "var(--ace-soft)", animationDelay: "520ms" }}>
-            &ldquo;Easy&rdquo; and &ldquo;hard&rdquo; hide too much. ACE scores every adventure on <strong style={{ color: "var(--ace-ink)" }}>eight things it asks of your body and mind</strong>. Answer a few questions and we score you the same way, so you can see what you&apos;re ready for before you book.
+            &ldquo;Easy&rdquo; and &ldquo;hard&rdquo; hide too much. ACE™ scores every adventure on <strong style={{ color: "var(--ace-ink)" }}>eight things it asks of your body and mind</strong>. Answer a few questions and we score you the same way, so you can see what you&apos;re ready for before you book.
           </p>
         </div>
 

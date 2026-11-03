@@ -141,7 +141,7 @@ function IdPage({ data }: { data: PassportData }) {
             </>
           ) : (
             <p className="text-[13px]" style={{ color: "var(--pp-muted)" }}>
-              Take the <Link href="/ace" className="underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>ACE™ assessment</Link> to fill this in.
+              Take the <Link href="/matchmaker" className="underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>Adventure Matchmaker</Link> to fill this in.
             </p>
           )}
         </div>

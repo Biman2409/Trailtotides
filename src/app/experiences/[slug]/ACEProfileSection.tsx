@@ -233,7 +233,7 @@ export default function ACEProfileSection({ ace, slug, name, bare }: Props) {
                     className="self-start inline-flex items-center gap-1.5 h-10 px-5 rounded-full text-[14px] font-medium text-[#ff5100] transition-colors hover:bg-[rgba(255,81,0,0.06)]"
                     style={{ border: "1px solid rgba(255,81,0,0.55)" }}
                   >
-                    Take the assessment
+                    Take the Adventure Matchmaker
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
@@ -254,7 +254,7 @@ export default function ACEProfileSection({ ace, slug, name, bare }: Props) {
               style={{ background: "rgba(var(--fg-rgb),0.04)", border: "1px solid rgba(var(--fg-rgb),0.08)", color: "rgba(var(--fg-rgb),0.35)" }}
             >
               <RotateCcw className="w-2.5 h-2.5" />
-              Retake Assessment
+              Retake the Matchmaker
             </Link>
         </div>
         )}

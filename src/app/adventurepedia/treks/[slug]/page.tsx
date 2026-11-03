@@ -289,7 +289,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
             {/* ── Fitness ── */}
             <Section id="fitness" kicker="Fitness" title="How fit you need to be">
               {FITNESS[a.difficulty] && <BlockView block={{ p: `Rated **${a.difficulty}**. A fair benchmark before you go: ${FITNESS[a.difficulty].charAt(0).toLowerCase()}${FITNESS[a.difficulty].slice(1)}` }} />}
-              <p className="text-[14px] t-text-2 mb-3">What this trek asks of you, on the ACE scale from 0 to 5:</p>
+              <p className="text-[14px] t-text-2 mb-3">What this trek asks of you, on the ACE™ scale from 0 to 5:</p>
               <div className="grid sm:grid-cols-2 gap-x-6 gap-y-2.5 rounded-2xl p-4" style={card}>
                 {ACE_AXES.map((k) => (
                   <div key={k} className="flex items-center gap-3">

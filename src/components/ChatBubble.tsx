@@ -17,7 +17,7 @@ const AI_RING = COMPASS_RING;
 
 // What the thinking row says as the wait goes on, and when each line appears (ms). Most answers
 // come back at once; the later lines only show when a question needs the AI.
-const WAIT_LINES = ["Thinking…", "Looking through every adventure…", "Matching them to what you asked…", "Almost there, the AI is busy right now…"];
+const WAIT_LINES = ["Thinking…", "Looking through every adventure…", "Matching them to what you asked…", "Almost there, Compass.AI is busy right now…"];
 const WAIT_AT = [0, 3000, 8000, 15000];
 // Past this the server has already given up on the AI, so stop waiting too
 const CLIENT_TIMEOUT_MS = 45_000;

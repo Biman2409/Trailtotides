@@ -300,7 +300,7 @@ function InviteView({ ctx, code, preview }: { ctx: Ctx; code: string; preview: G
 
   const steps = [
     { label: `Signed in as ${ctx.viewer.name || "you"}`, done: true },
-    { label: ctx.ace ? "Your fitness profile is ready" : "Take the 2-minute quick match", done: !!ctx.ace },
+    { label: ctx.ace ? "Your ACE™ profile is ready" : "Take the 2-minute Adventure Matchmaker", done: !!ctx.ace },
     { label: "Join and see what you can all do", done: false },
   ];
   return (

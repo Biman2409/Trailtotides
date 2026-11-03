@@ -10,7 +10,7 @@ import { track } from "@/lib/analytics";
 // The hero bar talks to Compass.AI, so prompts read like how people describe a trip.
 // Both sets open with the same line so the phone swap after hydration is invisible.
 const PLACEHOLDERS = [
-  "Describe your trip…",
+  "Ask Compass.AI…",
   "A 5-day trek with big views, not too hard…",
   "Somewhere quiet and remote this autumn…",
   "First Himalayan trek for me and two friends…",
@@ -19,7 +19,7 @@ const PLACEHOLDERS = [
 ];
 // Phones only fit a few words before the field truncates, so they get short prompts
 const PLACEHOLDERS_SHORT = [
-  "Describe your trip…",
+  "Ask Compass.AI…",
   "A trek with big views…",
   "Ladakh by bike in July…",
   "Something wild, one weekend…",

@@ -49,10 +49,10 @@ export default function ACEProfileSection() {
         </div>
         <div className="mt-4 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
           <p className="text-[14px] leading-relaxed max-w-sm" style={{ color: "var(--text-secondary)" }}>
-            Take the 8-question ACE<sup>™</sup> assessment to map your physical profile and unlock your adventure rank.
+            Take the 2-minute Adventure Matchmaker to build your ACE<sup>™</sup> profile and unlock your ACE<sup>™</sup> rank.
           </p>
           <Link href="/matchmaker" className="shrink-0 inline-flex items-center h-10 px-5 rounded-full text-[14px] font-semibold text-white transition-[filter] hover:brightness-110" style={{ background: ORANGE }}>
-            Take the assessment
+            Take the Adventure Matchmaker
           </Link>
         </div>
       </div>
@@ -121,7 +121,7 @@ export default function ACEProfileSection() {
             style={{ color: "var(--accent-ink)", border: `1px solid ${ORANGE}` }}
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            Retake the assessment
+            Retake the Matchmaker
           </Link>
         </div>
 

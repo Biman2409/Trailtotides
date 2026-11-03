@@ -472,7 +472,7 @@ export const GUIDES: Guide[] = [
             ["Advanced", "Several long training days with a 10 kg pack, and earlier treks above 4,000 m"],
             ["Extreme", "Regular long training days with a heavy pack, and prior high-altitude experience"],
           ] } },
-          { callout: "tip", title: "Know what a trek asks of you", text: "Every adventure on Trail to Tides has an ACE score for stamina, strength, altitude and more. Take the Matchmaker and it compares them with you: [How ACE works](/ace)." },
+          { callout: "tip", title: "Know what a trek asks of you", text: "Every adventure on Trail to Tides has an ACE™ score for stamina, strength, altitude and more. Take the Matchmaker and it compares them with you: [How ACE™ works](/ace)." },
         ],
       },
       {

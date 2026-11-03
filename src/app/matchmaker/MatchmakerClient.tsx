@@ -482,7 +482,7 @@ function LoadingScreen() {
         <Loader2 className="w-8 h-8 text-[#ff5100] animate-spin" />
       </div>
       <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-4 inline-flex items-center gap-1.5"><MatchmakerMark className="w-3.5 h-3.5" />Adventure Matchmaker</p>
-      <h2 className="t-text text-2xl font-bold mb-8">Building your fitness profile</h2>
+      <h2 className="t-text text-2xl font-bold mb-8">Building your ACE™ profile</h2>
       <div className="space-y-3">
         {steps.map((s, i) => (
           <div
@@ -965,7 +965,7 @@ function ResultsScreen({
                     <span className="scale-[1.6]">{tier.icon}</span>
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: "var(--text-tertiary)" }}>Your rank</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: "var(--text-tertiary)" }}>Your ACE™ rank</p>
                     <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-[1.05]" style={{ color: tier.color }}>{tier.label}</h1>
                   </div>
                 </div>
@@ -1130,7 +1130,7 @@ function ResultsScreen({
           style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
         >
           <RotateCcw className="w-3.5 h-3.5" />
-          Retake assessment
+          Retake the Matchmaker
         </button>
       </div>
 

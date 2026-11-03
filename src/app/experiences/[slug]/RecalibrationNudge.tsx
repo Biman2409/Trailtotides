@@ -66,7 +66,7 @@ export default function RecalibrationNudge({ difficulty, thresholdDays = 90 }: P
           </p>
         )}
         <Link href="/matchmaker?retake=1" className="inline-flex items-center gap-1.5 text-xs font-semibold mt-2 transition-colors hover:brightness-110" style={{ color: accent }}>
-          <RotateCcw className="w-3 h-3" /> Retake Assessment
+          <RotateCcw className="w-3 h-3" /> Retake the Matchmaker
         </Link>
       </div>
       <button onClick={() => setDismissed(true)} aria-label="Dismiss" className="shrink-0 transition-colors" style={{ color: "var(--text-muted)" }}>

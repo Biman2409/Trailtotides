@@ -76,7 +76,7 @@ function LoginForm() {
           Welcome <span className="text-[#ff5100]">back.</span>
         </h1>
         <p className="text-white/60 text-sm font-medium leading-relaxed">
-          Log in to your saved trips, fitness profile and groups.
+          Log in to your saved trips, ACE™ profile and groups.
         </p>
       </div>
 

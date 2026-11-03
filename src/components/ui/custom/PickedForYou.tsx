@@ -43,7 +43,7 @@ export default function PickedForYou() {
       backdrop={backdrop}
       eyebrow={<><Sparkles className="w-3.5 h-3.5" /> Picked for you</>}
       title="Your best fitness matches"
-      subtitle="Ranked by how well each adventure fits your Matchmaker profile."
+      subtitle="Ranked by how well each adventure fits your ACE™ profile."
       action={{ href: "/explore?ace=ready", label: "See all matches" }}
       items={mode.items}
     />

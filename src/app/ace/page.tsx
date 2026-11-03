@@ -5,7 +5,7 @@ import AceContent, { type AceTrek } from "./AceContent";
 
 export const metadata = {
   title: "How ACE rates adventures",
-  description: "ACE scores every adventure on 8 things it asks of you, from stamina to nerve, so you can see what you're ready for before you book.",
+  description: "ACE™ scores every adventure on 8 things it asks of you, from stamina to nerve, so you can see what you're ready for before you book.",
   openGraph: {
     title: "How ACE rates adventures — Trail to Tides",
     description: "Every adventure scored on 8 things it asks of you, so you can see what fits.",

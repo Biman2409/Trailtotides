@@ -399,7 +399,7 @@ export default function MatchmakerStory({ you, questions, samples, train, group,
         <div className={`ms-pane ${beat === RADAR ? "ms-on" : ""}`} aria-hidden={beat !== RADAR}>
           <div className="flex items-end justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "var(--text-tertiary)" }}>Rank</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "var(--text-tertiary)" }}>ACE™ rank</p>
               <p className="text-xl font-bold tracking-tight" style={{ color: YOU }}>{rank.label}</p>
             </div>
             <p className="text-right text-[11px] leading-snug" style={{ color: "var(--text-tertiary)" }}>

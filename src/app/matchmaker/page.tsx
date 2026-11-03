@@ -7,7 +7,7 @@ import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 
 export const metadata: Metadata = {
   title: "Adventure Matchmaker",
-  description: "Answer a few questions and discover the toughest adventure you're genuinely ready for. A capability assessment built for Indian terrain.",
+  description: "Answer a few questions and discover the toughest adventure you're genuinely ready for. The Adventure Matchmaker builds your ACE™ profile, made for Indian terrain.",
   openGraph: {
     title: "Adventure Matchmaker — Trail to Tides",
     description: "Answer a few questions and discover the toughest adventure you're genuinely ready for.",

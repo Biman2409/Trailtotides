@@ -81,7 +81,7 @@ export default async function DestinationPage({ params }: Props) {
     },
     f.hardest && f.hardest !== f.easiest && {
       q: `What is the hardest?`,
-      a: `${f.hardest.name} is rated ${difficultyOf(f.hardest)} on our ACE scale${f.hardest.altitude ? `, topping out at ${altitudeOf(f.hardest)}` : ""}. Take the fitness check before booking it.`,
+      a: `${f.hardest.name} is rated ${difficultyOf(f.hardest)} on our ACE™ scale${f.hardest.altitude ? `, topping out at ${altitudeOf(f.hardest)}` : ""}. Take the Adventure Matchmaker before booking it.`,
     },
     f.bestMonths.length > 0 && {
       q: `When is the best time to go?`,
