@@ -314,7 +314,7 @@ async function build(slug) {
   }
   // Points the line must pass through, to keep it on the trail people walk where OSM has another
   for (const [lat, lng] of trek.through ?? []) {
-    const p = { name: `${lat},${lng}`, lat, lng };
+    const p = { name: `${lat},${lng}`, lat, lng, through: true };
     let li = 0;
     for (let i = 0; i < stops.length - 1; i++) if (segDist(p, stops[i], stops[i + 1]) < segDist(p, stops[li], stops[li + 1])) li = i;
     via[li].push(p);
@@ -332,10 +332,11 @@ async function build(slug) {
       // The router starts and ends on the nearest mapped path: a summit or camp off the paths is
       // joined to it, so the line reaches every stop (drawn along the terrain by alongTerrain)
       const A = chain[k], B = chain[k + 1];
-      // (the line's heights are the elevation model's, not a stop's published height)
-      if (k + i > 0 && dist(l.coords[0], [A.lat, A.lng]) > 30) { l.coords.unshift([A.lat, A.lng, (await heights([[A.lat, A.lng]]))[0]]); l.approxKm += dist(l.coords[0], l.coords[1]) / 1000; }
+      // (the line's heights are the elevation model's, not a stop's published height). A through
+      // point only steers the router: joining it would draw a spur out to it and back
+      if (k + i > 0 && !A.through && dist(l.coords[0], [A.lat, A.lng]) > 30) { l.coords.unshift([A.lat, A.lng, (await heights([[A.lat, A.lng]]))[0]]); l.approxKm += dist(l.coords[0], l.coords[1]) / 1000; }
       const end = l.coords[l.coords.length - 1];
-      if (dist(end, [B.lat, B.lng]) > 30) { l.approxKm += dist(end, [B.lat, B.lng]) / 1000; l.coords.push([B.lat, B.lng, (await heights([[B.lat, B.lng]]))[0]]); }
+      if (!B.through && dist(end, [B.lat, B.lng]) > 30) { l.approxKm += dist(end, [B.lat, B.lng]) / 1000; l.coords.push([B.lat, B.lng, (await heights([[B.lat, B.lng]]))[0]]); }
       l.coords = await alongTerrain(l.coords);
       approxKm += l.approxKm;
       full = full.concat(full.length ? l.coords.slice(1) : l.coords);
