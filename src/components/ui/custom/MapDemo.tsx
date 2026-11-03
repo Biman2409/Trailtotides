@@ -3,15 +3,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, ArrowUp, ArrowUpRight, BadgeCheck, Download, GitCompare, LocateFixed, Map as MapIcon, MapPin, MousePointer2, Shapes, WifiOff } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, BadgeCheck, Download, GitCompare, Heart, LocateFixed, Map as MapIcon, MapPin, MousePointer2, Route, Satellite, Shapes, WifiOff } from "lucide-react";
 import { INDIA_PATH, PROJ } from "@/lib/passportVisuals";
 import { DEMO_SPOTS, type DemoGenre } from "@/lib/mapDemoSpots";
 import { CompassAIMark } from "@/components/ui/custom/BrandMarks";
 
 // A small, live preview of /map for the home page, acting out what the real map does: pins
-// coloured by difficulty, ask Compass.AI and its picks light up with rings for how ready you
-// are, what's near you, a pin's card with its trail and compare, and the trail's GPX to follow
-// offline. A pointer acts the tour out; any click hands over the controls.
+// clustered and coloured by difficulty, ask Compass.AI and its picks light up with rings for how
+// ready you are, what's near you, a pin's card (fit, best months, save, compare), its trail drawn
+// on the map with its stops, the satellite view, and the trail's GPX to follow offline. A pointer
+// acts the tour out; any click hands over the controls.
 //
 // Rendering is split for smoothness: the map itself is drawn once and moved as a single
 // GPU layer, while the dots, rings and pulses are painted on a canvas every frame.
@@ -33,6 +34,7 @@ export type MapDemoPin = {
   verified: number;
   /** How ready the example profile is for it (the same one the Matchmaker preview uses) */
   fit: MapDemoFit;
+  bestMonths: string[];
 };
 
 /** What the tour acts out with real listings: a Compass.AI prompt and its picks, and the pin it opens */
@@ -46,12 +48,17 @@ export type MapDemoTour = {
   profile: number[];
   lengthKm: number;
   maxEleM: number;
+  /** The trail as [lat, lng], for drawing it on the map */
+  line: [number, number][];
+  stops: { name: string; lat: number; lng: number }[];
 };
 
 type Pin = {
   slug: string; name: string; genre: DemoGenre; difficulty: string; x: number; y: number; lat: number; lng: number;
   image: string; meta: string; href: string; km: number; price: number | null; verified: number; fit: MapDemoFit | null;
+  months: string[];
 };
+type Cluster = { x: number; y: number; n: number; color: string; members: string[] };
 
 // Pins are coloured by difficulty, as on the real map and the cards
 const DIFFS = ["Easy", "Moderate", "Hard", "Advanced", "Extreme"] as const;
@@ -108,18 +115,35 @@ const SWEEP_MS = 1500;
 const ARRIVE = 900; // the pointer's travel time before it "clicks"
 const TYPE_MS = 32; // per character of the Compass prompt
 const BEATS = [
-  { caption: "Every pin, coloured by difficulty", ms: 3400 },
+  { caption: "Clustered by difficulty", ms: 5200 },
   { caption: "Ask Compass.AI, see your matches", ms: 7000 },
   { caption: "Near you", ms: 3400 },
-  { caption: "Tap a pin, add it to compare", ms: 5600 },
-  { caption: "Get the GPX, follow it offline", ms: 5000 },
+  { caption: "Tap a pin: fit, season, compare", ms: 5400 },
+  { caption: "Its trail, drawn on the map", ms: 4200 },
+  { caption: "Switch to satellite", ms: 3800 },
+  { caption: "Get the GPX, follow it offline", ms: 4600 },
   // The tour ends on the way in: the pointer taps the demo's own "Open map" button
   { caption: "Open the map", ms: 2800 },
 ];
+// Within the cluster beat: the camera settles back over India (from the trail, on a replay)
+// and the pins gather, then the pointer taps a cluster and it splits
+const CLUSTER_TAP_AT = 2400;
 // Within the Compass beat: the prompt types out and the map frames the picks, then the rings come on
 const MATCH_AT = 3600;
 // Within the pin beat: the card opens, then the pointer moves on to compare
 const COMPARE_AT = 2700;
+// Pins within this many map units of each other cluster at the whole-India view; clusters
+// split as the camera zooms past CLUSTER_UNTIL
+const CLUSTER_R = 13;
+const CLUSTER_UNTIL = 1.6;
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// The trail view: web-mercator pixels, as map tiles use, so the satellite imagery and the line agree
+const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile";
+const merc = (lat: number, lng: number, z: number) => {
+  const s = 256 * 2 ** z, r = (lat * Math.PI) / 180;
+  return { x: ((lng + 180) / 360) * s, y: ((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2) * s };
+};
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const easeOutBack = (t: number) => { const c = 1.7; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
@@ -132,12 +156,12 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
     ...real.filter((p) => GENRE_OF[p.type]).map((p) => ({
       slug: p.slug, name: p.name, genre: GENRE_OF[p.type], difficulty: p.difficulty, ...toXY(p.lng, p.lat), lat: p.lat, lng: p.lng,
       image: p.image, meta: `${p.durationDays} · ${p.difficulty}`, href: `/experiences/${p.slug}`, km: kmBetween(ME, p),
-      price: p.price, verified: p.verified, fit: p.fit,
+      price: p.price, verified: p.verified, fit: p.fit, months: p.bestMonths,
     })),
     ...DEMO_SPOTS.map(([genre, name, lat, lng]) => ({
       slug: `spot-${name.toLowerCase().replace(/[^a-z]+/g, "-")}`, name, genre, difficulty: sampleDifficulty(name), ...toXY(lng, lat), lat, lng,
       image: GENRE_IMAGE[genre], meta: `${genre} · sample spot`, href: `/explore?q=${encodeURIComponent(name)}`, km: kmBetween(ME, { lat, lng }),
-      price: null, verified: 0, fit: null,
+      price: null, verified: 0, fit: null, months: [] as string[],
     })),
   ], [real]);
 
@@ -170,6 +194,63 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
   const [revealed, setRevealed] = useState(false);
   const [cursor, setCursor] = useState<{ x: number; y: number; click: number } | null>(null);
   const [ctaHot, setCtaHot] = useState(false);
+  const [trail, setTrail] = useState(false);     // the selected trek's trail, drawn on the map
+  const [sat, setSat] = useState(false);         // satellite under the trail
+  const [saved, setSaved] = useState<string | null>(null);
+
+  // Clusters for the whole-India view, as the real map groups its pins: greedy, nearest first,
+  // in map units so they hold still while the camera moves. Each takes the average difficulty.
+  const clusters = useMemo(() => {
+    const shown = pins.filter((p) => !genre || p.genre === genre);
+    const taken = new Set<string>(), out: Cluster[] = [];
+    for (const p of shown) {
+      if (taken.has(p.slug)) continue;
+      const group = shown.filter((q) => !taken.has(q.slug) && Math.hypot(q.x - p.x, q.y - p.y) <= CLUSTER_R);
+      group.forEach((q) => taken.add(q.slug));
+      if (group.length < 2) continue;
+      const lvl = Math.round(group.reduce((s, q) => s + Math.max(0, DIFFS.indexOf(q.difficulty as (typeof DIFFS)[number])), 0) / group.length);
+      out.push({
+        x: group.reduce((s, q) => s + q.x, 0) / group.length, y: group.reduce((s, q) => s + q.y, 0) / group.length,
+        n: group.length, color: DIFF_COLOR[DIFFS[lvl]], members: group.map((q) => q.slug),
+      });
+    }
+    return out;
+  }, [pins, genre]);
+  const clusterOf = useMemo(() => {
+    const m = new Map<string, Cluster>();
+    clusters.forEach((c) => c.members.forEach((s) => m.set(s, c)));
+    return m;
+  }, [clusters]);
+
+  // The trail view: the line in web-mercator pixels at a zoom where it fills the map about twice
+  // over (sharp on high-res screens), framed to the map's shape, and the satellite tiles under it
+  const tv = useMemo(() => {
+    if (tour.line.length < 2) return null;
+    const p0 = tour.line.map(([la, lo]) => merc(la, lo, 0));
+    const xs = p0.map((p) => p.x), ys = p0.map((p) => p.y);
+    let [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+    const padX = (x1 - x0) * 0.22, padY = (y1 - y0) * 0.16;
+    x0 -= padX; x1 += padX; y0 -= padY; y1 += padY;
+    // Widen or heighten to the map's own shape, around the trail's middle
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    let w = x1 - x0, h = y1 - y0;
+    if (w / h < W / H) w = (h * W) / H; else h = (w * H) / W;
+    const z = Math.max(3, Math.min(16, Math.round(Math.log2(760 / w))));
+    const k = 2 ** z;
+    const vb = { x: (cx - w / 2) * k, y: (cy - h / 2) * k, w: w * k, h: h * k };
+    const at = (la: number, lo: number) => { const p = merc(la, lo, z); return `${(p.x - vb.x).toFixed(1)},${(p.y - vb.y).toFixed(1)}`; };
+    const pts = tour.line.map(([la, lo]) => at(la, lo));
+    const tiles: { x: number; y: number; href: string }[] = [];
+    for (let tx = Math.floor(vb.x / 256); tx <= Math.floor((vb.x + vb.w) / 256); tx++)
+      for (let ty = Math.floor(vb.y / 256); ty <= Math.floor((vb.y + vb.h) / 256); ty++)
+        tiles.push({ x: tx * 256 - vb.x, y: ty * 256 - vb.y, href: `${ESRI}/${z}/${ty}/${tx}` });
+    // A loop ends where it began: its last stop would hide the start, so a stop on top of an
+    // earlier one is left out
+    const stops = tour.stops
+      .map((s, i) => { const [x, y] = at(s.lat, s.lng).split(",").map(Number); return { ...s, x, y, n: i + 1 }; })
+      .filter((s, i, all) => !all.slice(0, i).some((q) => Math.hypot(q.x - s.x, q.y - s.y) < vb.w * 0.02));
+    return { w: vb.w, h: vb.h, line: pts.join(" "), path: `M${pts.join(" L")}`, tiles, stops };
+  }, [tour.line, tour.stops]);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -180,6 +261,8 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
   const nearRef = useRef<HTMLButtonElement>(null);
   const compareRef = useRef<HTMLButtonElement>(null);
   const gpxRef = useRef<HTMLAnchorElement>(null);
+  const trailBtnRef = useRef<HTMLButtonElement>(null);
+  const satRef = useRef<HTMLButtonElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
   const typeTimer = useRef<ReturnType<typeof setInterval>>(undefined);
   const sendTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -195,8 +278,13 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
     revealAt: 0,
     ringAt: 0,
     w: 0, h: 0,
+    clu: 1, // how clustered the pins are, eased toward 1 at the whole-India view and 0 zoomed in
+    clusters: [] as Cluster[],
+    clusterOf: new Map<string, Cluster>(),
     anim: new Map<string, { a: number; k: number; r: number }>(),
   });
+  live.current.clusters = clusters;
+  live.current.clusterOf = clusterOf;
   live.current.genre = genre;
   live.current.selected = selected;
   live.current.matches = matches;
@@ -300,9 +388,16 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
       // Pins
       const asking = L.mode.kind === "picks";
       const ease = 1 - Math.exp(-dt / 140); // smooth every state change toward its target
+      // Clustered at the whole-India view, and only while nothing narrows the pins down
+      const wantClu = L.mode.kind === "all" && !L.selected ? Math.min(1, Math.max(0, (CLUSTER_UNTIL - c.scale) / 0.45)) : 0;
+      L.clu += (wantClu - L.clu) * ease;
+      const clu = L.clu < 0.01 ? 0 : L.clu;
       let selPin: Pin | null = null;
       for (const p of pins) {
-        const x = sx(p.x), y = sy(p.y);
+        // A clustered pin slides into its cluster and fades as the view widens
+        const cl = clu ? L.clusterOf.get(p.slug) : undefined;
+        const m = cl ? clu : 0;
+        const x = sx(p.x + (cl ? (cl.x - p.x) * m : 0)), y = sy(p.y + (cl ? (cl.y - p.y) * m : 0));
         if (x < -20 || y < -20 || x > w + 20 || y > h + 20) continue;
         const picked = asking && picks.has(p.slug);
         const shown = (!L.genre || p.genre === L.genre) && (!near || p.km <= NEAR_KM) && (!asking || picked);
@@ -316,7 +411,8 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
         const pt = L.revealAt ? Math.min(1, Math.max(0, (now - L.revealAt - (p.x / W) * SWEEP_MS) / 650)) : 0;
         if (pt <= 0) continue;
         const pop = easeOutBack(pt);
-        const alpha = st.a * Math.min(1, pt * 2);
+        const alpha = st.a * Math.min(1, pt * 2) * (1 - m);
+        if (alpha < 0.01) continue;
         const col = DIFF_COLOR[p.difficulty] ?? "#94a3b8";
         // Compass's picks glow in its colour
         if (picked) {
@@ -339,6 +435,28 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
         if (on) selPin = p;
       }
       ctx.globalAlpha = 1;
+
+      // Clusters: a count in a dark disc, ringed in the average difficulty
+      if (clu) {
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        for (const cl of L.clusters) {
+          const x = sx(cl.x), y = sy(cl.y);
+          if (x < -20 || y < -20 || x > w + 20 || y > h + 20) continue;
+          const pt = L.revealAt ? Math.min(1, Math.max(0, (now - L.revealAt - (cl.x / W) * SWEEP_MS) / 650)) : 0;
+          if (pt <= 0) continue;
+          const r = (6.5 + Math.min(4, cl.n / 5)) * easeOutBack(pt) * (0.6 + 0.4 * clu);
+          ctx.globalAlpha = clu * Math.min(1, pt * 2);
+          ctx.fillStyle = cl.color; ctx.globalAlpha *= 0.22;
+          ctx.beginPath(); ctx.arc(x, y, r + 3, 0, Math.PI * 2); ctx.fill();
+          ctx.globalAlpha = clu * Math.min(1, pt * 2);
+          ctx.fillStyle = "rgba(9,14,13,0.9)";
+          ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = cl.color; ctx.lineWidth = 1.8; ctx.stroke();
+          ctx.fillStyle = "#fff"; ctx.font = `700 ${r > 9 ? 8.5 : 8}px system-ui, sans-serif`;
+          ctx.fillText(String(cl.n), x, y + 0.5);
+        }
+        ctx.globalAlpha = 1;
+      }
 
       // Selected pin pulse
       if (selPin) {
@@ -375,7 +493,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
     const c = el?.getBoundingClientRect();
     return c ? relToRoot(c.left + c.width * 0.6, c.top + c.height * 0.7) : null;
   };
-  const pinPoint = (p: Pin, c: Camera) => {
+  const pinPoint = (p: { x: number; y: number }, c: Camera) => {
     const b = boxRef.current?.getBoundingClientRect();
     if (!b) return null;
     const s = screenPct(p.x, p.y, c);
@@ -411,8 +529,14 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
     if (step === 0) {
       stopTyping();
       setGenre(null); setMode({ kind: "all" }); setTarget(HOME); setSelected(null); setCtaHot(false);
-      setAsked(""); setMatches(false); setCompared(null); setOffline(false);
+      setAsked(""); setMatches(false); setCompared(null); setOffline(false); setTrail(false); setSat(false); setSaved(null);
       setCursor((c) => c ?? (() => { const r = rootRef.current?.getBoundingClientRect(); return r ? { x: r.width * 0.84, y: r.height * 0.8, click: 0 } : null; })());
+      // Tap the cluster the tour's trek is in: it splits into its pins
+      const cl = clusterOf.get(tourPin.slug);
+      if (cl) {
+        at(CLUSTER_TAP_AT, () => press(pinPoint(cl, HOME)));
+        at(CLUSTER_TAP_AT + ARRIVE, () => setTarget({ x: cl.x, y: cl.y, scale: 2.8 }));
+      }
     } else if (step === 1) {
       // Ask, then light up how ready you are for what came back
       press(elPoint(askRef.current));
@@ -429,9 +553,16 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
       at(COMPARE_AT, () => press(elPoint(compareRef.current)));
       at(COMPARE_AT + ARRIVE, () => setCompared(tourPin.slug));
     } else if (step === 4) {
+      // The trail, drawn on the map
+      press(elPoint(trailBtnRef.current));
+      at(ARRIVE, () => openTrail());
+    } else if (step === 5) {
+      press(elPoint(satRef.current));
+      at(ARRIVE, () => setSat(true));
+    } else if (step === 6) {
       press(elPoint(gpxRef.current));
       at(ARRIVE, () => setOffline(true));
-    } else if (step === 5) {
+    } else if (step === 7) {
       press(elPoint(ctaRef.current));
       at(ARRIVE, () => setCtaHot(true));
     }
@@ -444,10 +575,25 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
   const replay = () => {
     stopTyping();
     setStep(0); setGenre(null); setMode({ kind: "all" }); setTarget(HOME); setSelected(null); setCursor(null);
-    setAsked(""); setMatches(false); setCompared(null); setOffline(false); setTouring(true);
+    setAsked(""); setMatches(false); setCompared(null); setOffline(false); setTrail(false); setSat(false); setSaved(null); setTouring(true);
+  };
+  // Fly in on the trek, then its trail takes over the map
+  const openTrail = () => {
+    const p = pins.find((q) => q.slug === tour.slug);
+    if (p) setTarget({ x: p.x, y: p.y, scale: 5 });
+    setTrail(true);
   };
 
-  // Hit-test the canvas: the nearest visible pin within reach of the pointer
+  // Hit-test the canvas: a cluster at the whole-India view, else the nearest visible pin
+  const clusterAt = (clientX: number, clientY: number) => {
+    const b = boxRef.current?.getBoundingClientRect();
+    if (!b || live.current.clu < 0.5) return null;
+    const c = live.current.cam, u = b.width / W;
+    return clusters.find((cl) => {
+      const x = (cl.x - c.x) * c.scale * u + b.width / 2 + b.left, y = (cl.y - c.y) * c.scale * u + b.height / 2 + b.top;
+      return (x - clientX) ** 2 + (y - clientY) ** 2 < 14 * 14;
+    }) ?? null;
+  };
   const pinAt = (clientX: number, clientY: number) => {
     const b = boxRef.current?.getBoundingClientRect();
     if (!b) return null;
@@ -455,7 +601,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
     let best: Pin | null = null, bd = 12 * 12;
     for (const p of pins) {
       const shown = (!genre || p.genre === genre) && (mode.kind !== "near" || p.km <= NEAR_KM) && (mode.kind !== "picks" || picks.has(p.slug));
-      if (!shown) continue;
+      if (!shown || (live.current.clu > 0.5 && clusterOf.has(p.slug))) continue;
       const x = (p.x - c.x) * c.scale * u + b.width / 2 + b.left, y = (p.y - c.y) * c.scale * u + b.height / 2 + b.top;
       const d = (x - clientX) ** 2 + (y - clientY) ** 2;
       if (d < bd) { bd = d; best = p; }
@@ -465,6 +611,9 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
 
   const sel = selected ? pins.find((p) => p.slug === selected) ?? null : null;
   const hasTrail = !!sel && sel.slug === tour.slug && tour.route.length > 1;
+  // The trail view is the selected trek's: leaving the trek (All India, Near me, another pin) closes it
+  const trailOn = trail && hasTrail;
+  useEffect(() => { if (!hasTrail) { setTrail(false); setOffline(false); } }, [hasTrail]);
   const routePts = tour.route.map(([x, y]) => `${x},${y}`).join(" ");
   const selPos = sel && !flying ? screenPct(sel.x, sel.y, cam) : null;
   const zoomed = target.scale > 1;
@@ -530,12 +679,21 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
           ref={boxRef}
           className="md-map relative w-full overflow-hidden rounded-2xl"
           style={{ aspectRatio: `${W} / ${H}` }}
-          onClick={(e) => { const p = pinAt(e.clientX, e.clientY); if (p) selectPin(p); else { takeOver(); setSelected(null); } }}
-          onMouseMove={(e) => {
+          onClick={(e) => {
+            if (trailOn) return;
+            const cl = clusterAt(e.clientX, e.clientY);
+            if (cl) { takeOver(); setTarget({ x: cl.x, y: cl.y, scale: 2.8 }); return; }
             const p = pinAt(e.clientX, e.clientY);
+            if (p) selectPin(p); else { takeOver(); setSelected(null); }
+          }}
+          onMouseMove={(e) => {
+            if (trailOn) { setHover(null); e.currentTarget.style.cursor = "default"; return; }
+            const cl = clusterAt(e.clientX, e.clientY);
+            const p = cl ? null : pinAt(e.clientX, e.clientY);
             const b = boxRef.current!.getBoundingClientRect();
-            setHover(p && p.slug !== selected ? { name: p.name, left: e.clientX - b.left, top: e.clientY - b.top } : null);
-            e.currentTarget.style.cursor = p ? "pointer" : "default";
+            const label = cl ? `${cl.n} adventures · tap to zoom` : p && p.slug !== selected ? p.name : null;
+            setHover(label ? { name: label, left: e.clientX - b.left, top: e.clientY - b.top } : null);
+            e.currentTarget.style.cursor = cl || p ? "pointer" : "default";
           }}
           onMouseLeave={() => setHover(null)}
         >
@@ -584,7 +742,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
           )}
 
           {/* Status; once something is in compare, the compare tray takes its place (up here, clear of the card) */}
-          <div className="absolute left-2 top-2 right-16 pointer-events-none">
+          <div className="absolute left-2 top-2 right-16 pointer-events-none transition-opacity duration-300" style={{ opacity: trailOn ? 0 : 1 }}>
             {compared ? (
               <span key="compare" className="md-badge inline-flex items-center gap-1.5 text-[10px] font-semibold pl-2 pr-2.5 py-1 rounded-full" style={{ background: "rgba(255,81,0,0.92)", color: "#fff" }}>
                 <GitCompare className="w-3 h-3" />1 in compare · add 2 more
@@ -598,8 +756,8 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
             type="button"
             onClick={(e) => { e.stopPropagation(); zoomOut(); }}
             className="md-hit absolute right-2 top-2 text-[10px] font-semibold px-2 py-0.5 rounded-full transition-opacity duration-300"
-            style={{ background: "rgba(0,0,0,0.55)", color: "#fff", backdropFilter: "blur(6px)", opacity: zoomed ? 1 : 0, pointerEvents: zoomed ? "auto" : "none" }}
-            tabIndex={zoomed ? 0 : -1}
+            style={{ background: "rgba(0,0,0,0.55)", color: "#fff", backdropFilter: "blur(6px)", opacity: zoomed && !trailOn ? 1 : 0, pointerEvents: zoomed && !trailOn ? "auto" : "none" }}
+            tabIndex={zoomed && !trailOn ? 0 : -1}
           >
             All India
           </button>
@@ -616,7 +774,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
           </div>
 
           {/* Key: what the colours mean (difficulty), or the rings when they're on */}
-          <div className="absolute left-2 right-10 bottom-2 pointer-events-none">
+          <div className="absolute left-2 right-10 bottom-2 pointer-events-none" style={{ opacity: trailOn ? 0 : 1 }}>
             {(
               <span className="inline-flex items-center gap-1.5 text-[9px] font-semibold px-2 py-1 rounded-full" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.7)" }}>
                 {matches ? (
@@ -637,8 +795,82 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
             <path d="M16 27 L19 16 L16 17.5 L13 16 Z" fill="rgba(255,255,255,0.5)" />
           </svg>
 
-          {/* Pin card: the trail, how ready you are, verified operators and price, then compare */}
-          {sel && selPos && (
+          {/* The trail view: the trek's trail on the map with its stops, over the map or satellite,
+              and its GPX to follow with no signal */}
+          {trailOn && tv && sel && (
+            <div className="md-trail absolute inset-0 z-[9] overflow-hidden" onClick={(e) => e.stopPropagation()}>
+              <div className="md-trail-map absolute inset-0" aria-hidden />
+              <svg viewBox={`0 0 ${tv.w} ${tv.h}`} preserveAspectRatio="xMidYMid slice" className="absolute inset-0 w-full h-full" aria-hidden>
+                {/* Satellite tiles load as the view opens, so the switch is instant */}
+                <g className="md-sat" style={{ opacity: sat ? 1 : 0 }}>
+                  {tv.tiles.map((t) => <image key={t.href} href={t.href} x={t.x} y={t.y} width={256} height={256} />)}
+                </g>
+                <polyline points={tv.line} fill="none" stroke="rgba(0,0,0,0.55)" strokeWidth={6} vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round" />
+                <polyline points={tv.line} fill="none" stroke="#ff5100" strokeWidth={3} vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round" pathLength={1} className="md-line" />
+                {tv.stops.map((s, i) => (
+                  <g key={s.name} className="md-stop" style={{ animationDelay: `${0.7 + (i / Math.max(1, tv.stops.length - 1)) * 1.3}s` }}>
+                    <circle cx={s.x} cy={s.y} r={tv.w * 0.024} fill={i === 0 ? "#16a34a" : "#ff5100"} stroke="#fff" strokeWidth={1.6} vectorEffect="non-scaling-stroke" />
+                    <text x={s.x} y={s.y} dy="0.36em" textAnchor="middle" fill="#fff" fontSize={tv.w * 0.027} fontWeight={700} fontFamily="system-ui, sans-serif">{s.n}</text>
+                  </g>
+                ))}
+                {/* Offline: your GPS position walking the trail */}
+                {offline && (
+                  <g>
+                    <circle r={tv.w * 0.03} fill="#60a5fa" opacity={0.35}>
+                      <animateMotion dur="10s" repeatCount="indefinite" path={tv.path} />
+                      <animate attributeName="r" values={`${tv.w * 0.02};${tv.w * 0.045};${tv.w * 0.02}`} dur="1.6s" repeatCount="indefinite" />
+                    </circle>
+                    <circle r={tv.w * 0.016} fill="#60a5fa" stroke="#fff" strokeWidth={2} vectorEffect="non-scaling-stroke">
+                      <animateMotion dur="10s" repeatCount="indefinite" path={tv.path} />
+                    </circle>
+                  </g>
+                )}
+              </svg>
+
+              {/* Back to the card, and the map style */}
+              <div className="absolute left-2 right-2 top-2 flex items-start justify-between gap-2">
+                <button type="button" onClick={() => { takeOver(); setTrail(false); setOffline(false); }}
+                  className="md-hit md-glass min-w-0 inline-flex items-center gap-1 text-[10px] font-semibold pl-1.5 pr-2 py-1 rounded-full text-white">
+                  <ArrowLeft className="w-3 h-3 shrink-0" /><span className="truncate">{sel.name}</span>
+                </button>
+                <span className="md-glass shrink-0 flex rounded-full p-0.5 text-[9.5px] font-semibold" role="group" aria-label="Map style">
+                  {([["map", "Map", MapIcon], ["sat", "Satellite", Satellite]] as const).map(([k, label, Icon]) => {
+                    const on = (k === "sat") === sat;
+                    return (
+                      <button key={k} ref={k === "sat" ? satRef : undefined} type="button" aria-pressed={on} onClick={() => { takeOver(); setSat(k === "sat"); }}
+                        className="md-hit inline-flex items-center gap-1 px-2 py-0.5 rounded-full transition-colors"
+                        style={on ? { background: "#ff5100", color: "#fff" } : { color: "rgba(255,255,255,0.7)" }}>
+                        <Icon className="w-2.5 h-2.5" />{label}
+                      </button>
+                    );
+                  })}
+                </span>
+              </div>
+
+              {/* The trail file, for following it with no signal */}
+              <div className="absolute left-2 right-2 bottom-2 flex items-end justify-between gap-2">
+                <span className="md-glass min-w-0 flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full">
+                  <a
+                    ref={gpxRef}
+                    href={`/experiences/${sel.slug}/trail.gpx`}
+                    download
+                    onClick={() => { takeOver(); setOffline(true); }}
+                    className="md-hit shrink-0 inline-flex items-center gap-1 text-[10px] font-bold px-2 h-6 rounded-full transition-colors"
+                    style={offline ? { background: "rgba(16,185,129,0.92)", color: "#03140d" } : { background: "#ff5100", color: "#fff" }}
+                  >
+                    {offline ? <WifiOff className="w-3 h-3" /> : <Download className="w-3 h-3" />}{offline ? "GPS on" : "GPX"}
+                  </a>
+                  <span key={String(offline)} className="md-badge text-[9.5px] text-white/75 truncate tabular-nums">
+                    {offline ? "No signal, still on the trail" : `${tour.lengthKm} km · ${tv.stops.length} stops · up to ${tour.maxEleM.toLocaleString("en-IN")} m`}
+                  </span>
+                </span>
+                {sat && <span className="shrink-0 text-[7.5px] text-white/60 px-1 pb-0.5" style={{ textShadow: "0 1px 2px #000" }}>Imagery © Esri</span>}
+              </div>
+            </div>
+          )}
+
+          {/* Pin card: how ready you are, best months, the trail, verified operators and price, then save and compare */}
+          {sel && selPos && !trailOn && (
             <div
               key={sel.slug}
               onClick={(e) => e.stopPropagation()}
@@ -656,11 +888,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                 <Image src={sel.image} alt="" fill sizes="204px" className="object-cover transition-transform duration-700 group-hover:scale-105" />
                 <span className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(11,14,13,0.95), transparent 70%)" }} />
                 <span className="absolute left-2.5 bottom-1.5 right-2.5 text-[12.5px] font-semibold text-white leading-snug truncate">{sel.name}</span>
-                {offline && hasTrail ? (
-                  <span key="off" className="md-badge absolute right-2 top-2 inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.92)", color: "#03140d" }}>
-                    <WifiOff className="w-2.5 h-2.5" />No signal · GPS on
-                  </span>
-                ) : mode.kind === "near" && (
+                {mode.kind === "near" && (
                   <span className="absolute right-2 top-2 text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(96,165,250,0.9)", color: "#06121f" }}>
                     {Math.round(sel.km)} km away
                   </span>
@@ -675,17 +903,21 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                     </span>
                   )}
                 </span>
-                {/* The trail and its climb, for the trek the tour opens */}
+                {/* Best months, as on the real card */}
+                {sel.months.length > 0 && (
+                  <span className="grid grid-cols-12 gap-[2px] mt-1.5" title={`Best: ${sel.months.join(", ")}`}>
+                    {MONTHS.map((mo) => {
+                      const on = sel.months.includes(mo);
+                      return <i key={mo} className="h-[11px] rounded-[3px] grid place-items-center not-italic text-[6.5px] font-bold" style={{ background: on ? "rgba(126,220,150,0.22)" : "rgba(255,255,255,0.04)", color: on ? "#7edc96" : "rgba(255,255,255,0.22)" }}>{mo[0]}</i>;
+                    })}
+                  </span>
+                )}
+                {/* The trail and its climb, for the trek the tour opens: tap to draw it on the map */}
                 {hasTrail && (
-                  <span className="flex items-center gap-2 mt-2">
+                  <button ref={trailBtnRef} type="button" onClick={() => { takeOver(); openTrail(); }}
+                    className="md-hit w-full flex items-center gap-2 mt-2 p-1 -mx-1 rounded-lg text-left transition-colors hover:bg-white/[0.05]">
                     <svg viewBox="-0.08 -0.08 1.16 1.16" className="w-9 h-9 shrink-0 rounded-md" style={{ background: "rgba(255,255,255,0.04)" }} aria-hidden>
                       <polyline points={routePts} fill="none" stroke={AI_COLOR} strokeWidth={0.06} strokeLinejoin="round" strokeLinecap="round" pathLength={1} className="md-draw" />
-                      {/* Offline: your GPS position walking the trail */}
-                      {offline && (
-                        <circle r={0.07} fill="#60a5fa" stroke="#fff" strokeWidth={0.025}>
-                          <animateMotion dur="4s" repeatCount="indefinite" path={`M${routePts.replaceAll(" ", " L")}`} />
-                        </circle>
-                      )}
                     </svg>
                     <span className="flex-1 min-w-0">
                       <svg viewBox="0 0 100 24" preserveAspectRatio="none" className="block w-full h-5" aria-hidden>
@@ -695,27 +927,12 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                           return <><polygon points={`0,24 ${pts} 100,24`} fill="rgba(255,179,122,0.18)" /><polyline points={pts} fill="none" stroke={AI_COLOR} strokeWidth={1.2} vectorEffect="non-scaling-stroke" /></>;
                         })()}
                       </svg>
-                      <span className="block text-[9.5px] text-white/50 mt-0.5 tabular-nums">{tour.lengthKm} km · up to {tour.maxEleM.toLocaleString("en-IN")} m</span>
+                      <span className="flex items-center gap-1 text-[9.5px] text-white/50 mt-0.5 tabular-nums whitespace-nowrap">
+                        <span className="truncate">{tour.lengthKm} km · {tour.maxEleM.toLocaleString("en-IN")} m</span>
+                        <span className="ml-auto shrink-0 inline-flex items-center gap-0.5 font-semibold text-[#ffb37a]"><Route className="w-2.5 h-2.5" />On map</span>
+                      </span>
                     </span>
-                  </span>
-                )}
-                {/* The trail file, for following it with no signal */}
-                {hasTrail && (
-                  <span className="flex items-center justify-between gap-2 mt-1.5">
-                    <a
-                      ref={gpxRef}
-                      href={`/experiences/${sel.slug}/trail.gpx`}
-                      download
-                      onClick={() => { takeOver(); setOffline(true); }}
-                      className="md-hit inline-flex items-center gap-1 text-[10px] font-semibold px-2 h-6 rounded-full transition-colors"
-                      style={offline ? { background: "rgba(16,185,129,0.18)", color: "#34d399" } : { background: "rgba(255,255,255,0.08)", color: "#fff" }}
-                    >
-                      <Download className="w-3 h-3" />{offline ? "GPX saved" : "GPX"}
-                    </a>
-                    <Link href="/adventurepedia/offline-maps" className="text-[9.5px] text-white/50 hover:text-white truncate">
-                      {offline ? "Works with no signal" : "Follow it offline"}
-                    </Link>
-                  </span>
+                  </button>
                 )}
                 <span className="flex items-center justify-between gap-2 mt-2">
                   {sel.price ? (
@@ -725,6 +942,16 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                     </span>
                   ) : <span className="text-[10px] text-white/45">Sample spot</span>}
                   <span className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => { takeOver(); setSaved((s) => (s === sel.slug ? null : sel.slug)); }}
+                      aria-label={saved === sel.slug ? "Remove from saved" : "Save"}
+                      aria-pressed={saved === sel.slug}
+                      className="md-hit w-6 h-6 rounded-full grid place-items-center transition-colors"
+                      style={{ background: "rgba(255,255,255,0.08)", color: saved === sel.slug ? "#ff5100" : "rgba(255,255,255,0.75)" }}
+                    >
+                      <Heart className="w-3 h-3" fill={saved === sel.slug ? "#ff5100" : "none"} />
+                    </button>
                     <button
                       ref={compareRef}
                       type="button"
@@ -817,6 +1044,18 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
         @keyframes mdRegion { from { letter-spacing: 0.6em; opacity: 0; } to { letter-spacing: 0.28em; } }
         .md-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: mdDraw 1.4s 0.2s cubic-bezier(0.6,0,0.2,1) forwards; }
         @keyframes mdDraw { to { stroke-dashoffset: 0; } }
+        /* The trail view grows in once the camera has flown to the trek */
+        .md-trail { animation: mdTrailIn 0.7s 0.55s cubic-bezier(0.22,1,0.36,1) both; }
+        @keyframes mdTrailIn { from { opacity: 0; transform: scale(1.18); } to { opacity: 1; transform: none; } }
+        .md-trail-map { background:
+            url("/hero/trail-contours.png") 0 0 / 420px 72px repeat,
+            radial-gradient(110% 80% at 50% 40%, #233326 0%, #141d16 75%); }
+        .md-trail-map::after { content: ""; position: absolute; inset: 0; background: rgba(10,16,12,0.55); }
+        .md-sat { transition: opacity 0.7s ease; filter: saturate(0.88) contrast(1.06) brightness(0.93); }
+        .md-line { stroke-dasharray: 1; stroke-dashoffset: 1; animation: mdDraw 1.8s 0.9s cubic-bezier(0.6,0,0.2,1) forwards; }
+        .md-stop { opacity: 0; transform-box: fill-box; transform-origin: center; animation: mdStop 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
+        @keyframes mdStop { from { opacity: 0; transform: scale(0.3); } to { opacity: 1; transform: none; } }
+        .md-glass { background: rgba(0,0,0,0.58); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.1); }
         .md-cta { color: #07160b; background: #5fb873; transition: background .3s, box-shadow .3s, transform .3s; }
         .md-cta:hover { background: #7fd692; }
         .md-cta[data-hot] { background: #7fd692; animation: mdCtaPulse 1.4s ease-out infinite; }
@@ -831,7 +1070,8 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
         @media (prefers-reduced-motion: reduce) {
           .md-cursor { transition-duration: 0.01ms; }
           .md-ripple, .md-sea, .md-scan, .md-region, .md-cta[data-hot], .md-caret { animation: none; }
-          .md-draw { animation: none; stroke-dashoffset: 0; }
+          .md-draw, .md-line { animation: none; stroke-dashoffset: 0; }
+          .md-trail, .md-stop { animation: none; opacity: 1; }
         }
       `}</style>
     </div>

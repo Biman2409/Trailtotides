@@ -61,7 +61,7 @@ const mapPins: MapDemoPin[] = adventures.map((a) => {
   const verified = a.operators.filter((o) => o.verified);
   return {
     slug: a.slug, name: a.name, type: a.type, lat: a.lat, lng: a.lng, difficulty: computeDifficulty(getACE(a)),
-    durationDays: a.durationDays, state: a.state, image: a.heroImage,
+    durationDays: a.durationDays, state: a.state, image: a.heroImage, bestMonths: a.bestMonths,
     price: getLowestPrice({ operators: verified.length ? verified : a.operators }), verified: verified.length,
     fit: bucketFor(computeMatchScore(SAMPLE_ACE, getACE(a))).key,
   };
@@ -75,7 +75,7 @@ function buildMapTour(): MapDemoTour {
   const picks = adventures.filter((a) => a.type === "Trekking" && a.state.includes("Uttarakhand") && a.durationDays === "5 days").map((a) => a.slug);
   const slug = "kedarkantha-trek";
   const trail = getTrail(slug);
-  if (!trail) return { prompt, picks, slug, route: [], profile: [], lengthKm: 0, maxEleM: 0 };
+  if (!trail) return { prompt, picks, slug, route: [], profile: [], lengthKm: 0, maxEleM: 0, line: [], stops: [] };
   // The trail's shape in a unit box (east-west squeezed by latitude, so it isn't stretched)
   const k = Math.cos((trail.line[0][0] * Math.PI) / 180);
   const xs = trail.line.map((q) => q[1] * k), ys = trail.line.map((q) => -q[0]);
@@ -87,7 +87,13 @@ function buildMapTour(): MapDemoTour {
     .map((q) => [+((q[1] * k - x0) / span).toFixed(3), +((-q[0] - y0) / span).toFixed(3)] as [number, number]);
   const prof = trailProfile(trail);
   const profile = Array.from({ length: 40 }, (_, i) => Math.round(prof[Math.round((i / 39) * (prof.length - 1))].ele));
-  return { prompt, picks, slug, route, profile, lengthKm: trail.lengthKm, maxEleM: trail.maxEleM };
+  // The trail itself, for drawing it on the map (about 150 points is plenty at that size)
+  const step = Math.max(1, Math.floor(trail.line.length / 150));
+  const line = trail.line
+    .filter((_, i) => i % step === 0 || i === trail.line.length - 1)
+    .map((q) => [+q[0].toFixed(5), +q[1].toFixed(5)] as [number, number]);
+  const stops = trail.stops.map((s) => ({ name: s.name, lat: s.lat, lng: s.lng }));
+  return { prompt, picks, slug, route, profile, lengthKm: trail.lengthKm, maxEleM: trail.maxEleM, line, stops };
 }
 
 function SeasonNote({ monthsLeft, endsIn }: { monthsLeft: number; endsIn: string }) {
