@@ -136,7 +136,7 @@ function IdPage({ data }: { data: PassportData }) {
           <Label>capability</Label>
           {data.hasAceData ? (
             <>
-              <p className="text-[14px]">ACE {data.aceScore}/40</p>
+              <p className="text-[14px]">ACE™ score {data.aceScore}/40</p>
               <p className="text-[13px]" style={{ color: "var(--pp-muted)" }}>Strongest in {RADAR_AXIS_LABELS[data.topAxis]}</p>
             </>
           ) : (

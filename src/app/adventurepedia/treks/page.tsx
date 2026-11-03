@@ -11,7 +11,7 @@ import { serif } from "../blocks";
 const SITE = "https://www.trailtotides.com";
 
 export const metadata: Metadata = {
-  title: "Trek Guides: Itineraries, Seasons and Permits for Every Trek",
+  title: "Trek Guides: Itineraries, Seasons and Permits",
   description: "Detailed guides to Himalayan treks in India and Nepal: day-by-day itineraries, best season, how to get there, permits, packing, fitness and costs.",
   alternates: { canonical: `${SITE}/adventurepedia/treks` },
   openGraph: { title: "Trek guides — Adventurepedia", url: `${SITE}/adventurepedia/treks`, type: "website" },

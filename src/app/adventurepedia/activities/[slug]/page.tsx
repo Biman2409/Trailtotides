@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const a = activityBySlug((await params).slug);
   if (!a) return {};
   const url = `${SITE}${activityHref(a)}`;
-  const description = `${a.what} Where to do it in India, when to go, what it asks of your body and how to pick an operator.`;
+  const description = `${a.type} in India: where and when to go, what it asks of your body, how to pick an operator and how to start.`;
   return {
     title: `${a.type} in India: Adventurepedia`,
     description,

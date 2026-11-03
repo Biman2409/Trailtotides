@@ -4,13 +4,13 @@ import { adventures } from "@/lib/data";
 import AceContent, { type AceTrek } from "./AceContent";
 
 export const metadata = {
-  title: "How ACE rates adventures",
+  title: "How ACE™ rates adventures",
   description: "ACE™ scores every adventure on 8 things it asks of you, from stamina to nerve, so you can see what you're ready for before you book.",
   openGraph: {
-    title: "How ACE rates adventures — Trail to Tides",
+    title: "How ACE™ rates adventures — Trail to Tides",
     description: "Every adventure scored on 8 things it asks of you, so you can see what fits.",
     url: "https://www.trailtotides.com/ace",
-    images: [{ url: "https://images.unsplash.com/photo-1526139334526-f591a54b477c?w=1200&q=90", width: 1200, height: 630, alt: "How ACE rates adventures" }],
+    images: [{ url: "https://images.unsplash.com/photo-1526139334526-f591a54b477c?w=1200&q=90", width: 1200, height: 630, alt: "How ACE™ rates adventures" }],
   },
   alternates: { canonical: "https://www.trailtotides.com/ace" },
 };

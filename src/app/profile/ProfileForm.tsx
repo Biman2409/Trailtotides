@@ -285,7 +285,7 @@ function AvatarSection() {
   const selected = selectedId !== null ? AVATARS.find(a => a.id === selectedId) ?? null : null;
 
   return (
-    <Section title="Profile Picture" subtitle="Upload your own photo, choose a character, or display your ACE adventure rank.">
+    <Section title="Profile Picture" subtitle="Upload your own photo, choose a character, or display your ACE™ rank.">
       <div className="flex items-center gap-5">
         <button
           type="button"

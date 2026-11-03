@@ -11,7 +11,7 @@ const SITE = "https://www.trailtotides.com";
 
 export const metadata: Metadata = {
   title: "Adventurepedia: Guides for Every Adventure in India",
-  description: "Everything adventure in India: guides to trekking, riding, rafting, diving, paragliding, skiing and more, plus every trek, altitude sickness, getting fit, seasons, permits, choosing an operator and offline maps.",
+  description: "Guides to every adventure in India, from trekking and rafting to diving, paragliding and skiing, plus every trek and the essentials, from altitude to permits.",
   alternates: { canonical: `${SITE}/adventurepedia` },
   openGraph: { title: "Adventurepedia — Trail to Tides", url: `${SITE}/adventurepedia`, type: "website" },
 };

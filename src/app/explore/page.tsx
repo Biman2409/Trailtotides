@@ -31,7 +31,8 @@ export default function ExplorePage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen">
-        <h1 className="sr-only">Find your next adventure</h1>
+        {/* Not a heading: the page itself has the h1, and both reach the streamed HTML */}
+        <p className="sr-only">Find your next adventure</p>
         <p className="sr-only">Browse treks, bike trips, rafting and more across India and Nepal, filtered by type, region, difficulty, season, duration and price.</p>
       </div>
     }>

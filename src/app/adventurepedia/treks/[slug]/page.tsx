@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const url = `${SITE}${trekGuideHref(a.slug)}`;
   const description = `${a.name} guide: ${a.durationDays}, ${a.distance ?? ""} to ${a.altitude ?? ""}. Best season, how to get there, day-by-day itinerary, permits, packing, fitness and costs.`.replace(/ ,/g, ",");
   return {
-    title: `${a.name} Guide: Itinerary, Season, Permits & Cost`,
+    title: `${a.name}: Itinerary, Season & Permits`,
     description,
     alternates: { canonical: url },
     openGraph: { title: `${a.name}: the complete guide`, description, url, type: "article", images: [a.heroImage] },
@@ -302,7 +302,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
                 ))}
               </div>
               <p className="text-[14px] leading-[1.65] t-text-2 mt-4">
-                Take the <Link href="/matchmaker" className="font-semibold underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>Matchmaker</Link> to compare yourself against these scores, and use the <Link href="/adventurepedia/getting-fit" className="font-semibold underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>8-week plan</Link> to close any gaps. <Link href="/ace" className="underline underline-offset-2 t-text-3">How ACE works</Link>.
+                Take the <Link href="/matchmaker" className="font-semibold underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>Matchmaker</Link> to compare yourself against these scores, and use the <Link href="/adventurepedia/getting-fit" className="font-semibold underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>8-week plan</Link> to close any gaps. <Link href="/ace" className="underline underline-offset-2 t-text-3">How ACE™ works</Link>.
               </p>
             </Section>
 
