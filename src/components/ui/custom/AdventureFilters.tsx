@@ -13,6 +13,8 @@ import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import { REGION_STATES, REGION_ORDER } from "@/lib/regionGroups";
 import { MONTHS, SORT_LABELS, type SortKey } from "@/lib/exploreHelpers";
 import { currentMonthIndexIST } from "@/lib/homeCuration";
+import { DIFFICULTY_CONFIG } from "@/components/ui/custom/DifficultyMeter";
+import { panelCount } from "@/lib/adventureFilterState";
 
 export type { FitFilter, AdventureFilterState } from "@/lib/adventureFilterState";
 export { NO_FILTERS, filtersFromParams, writeFilterParams, panelCount, anyFilter, filterAdventures } from "@/lib/adventureFilterState";
@@ -255,7 +257,7 @@ const CAT_CSS = `
 
 /* ── Full panel: bottom sheet on phones, side drawer on larger screens ──────── */
 
-export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun = "adventure", sortKey, setSort, hasProfile }: {
+export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun = "adventure", sortKey, setSort, hasProfile, countWith }: {
   f: AdventureFilterState;
   set: (patch: Partial<AdventureFilterState>) => void;
   onClose: () => void;
@@ -266,8 +268,13 @@ export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun 
   sortKey: SortKey;
   setSort: (v: SortKey) => void;
   hasProfile: boolean;
+  /** How many results with these filters changed: options then show what they'd leave */
+  countWith?: (patch: Partial<AdventureFilterState>) => number;
 }) {
   const closeRef = useRef(onClose);
+  // An option's count: what you'd get with just it chosen in its group, everything else as set
+  const n = (patch: Partial<AdventureFilterState>) => (countWith ? countWith(patch) : undefined);
+  const anySet = panelCount(f) > 0 || f.editorOnly || !!f.fit;
   closeRef.current = onClose;
   // Escape closes; the page behind doesn't scroll while the panel is open
   useEffect(() => {
@@ -300,8 +307,8 @@ export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun 
           </Section>
           {/* Type and Region have their own buttons; this panel holds everything broader */}
           <PriceSlider value={f.maxPrice} onChange={(v) => set({ maxPrice: v })} />
-          <Section title="Season: when do you want to go?">
-            <Opt on={f.months.length === 1 && f.months[0] === THIS_MONTH} onClick={() => set({ months: f.months.length === 1 && f.months[0] === THIS_MONTH ? [] : [THIS_MONTH] })}>
+          <Section title="When do you want to go?">
+            <Opt on={f.months.length === 1 && f.months[0] === THIS_MONTH} onClick={() => set({ months: f.months.length === 1 && f.months[0] === THIS_MONTH ? [] : [THIS_MONTH] })} count={n({ months: [THIS_MONTH] })}>
               <span className="inline-flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />In season now</span>
             </Opt>
             <div className="w-full grid grid-cols-6 gap-1.5 mt-1">
@@ -310,28 +317,32 @@ export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun 
               ))}
             </div>
           </Section>
-          <Section title="Duration">
-            {DURATIONS.map((d) => <Opt key={d} on={f.durs.includes(d)} onClick={() => toggle(f.durs, d, (v) => set({ durs: v }))}>{d}</Opt>)}
+          <Section title="How long">
+            {DURATIONS.map((d) => <Opt key={d} on={f.durs.includes(d)} onClick={() => toggle(f.durs, d, (v) => set({ durs: v }))} count={n({ durs: [d] })}>{d}</Opt>)}
           </Section>
-          <Section title="Difficulty">
-            {DIFFICULTIES.map((d) => <Opt key={d} on={f.diffs.includes(d)} onClick={() => toggle(f.diffs, d, (v) => set({ diffs: v }))}>{d}</Opt>)}
+          <Section title="How hard">
+            {DIFFICULTIES.map((d) => (
+              <Opt key={d} on={f.diffs.includes(d)} onClick={() => toggle(f.diffs, d, (v) => set({ diffs: v }))} count={n({ diffs: [d] })}>
+                <span className="inline-flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ background: DIFFICULTY_CONFIG[d]?.color }} />{d}</span>
+              </Opt>
+            ))}
           </Section>
           {hasProfile && (
             <Section title="Your fitness">
-              <Opt on={f.fit === "ready"} onClick={() => set({ fit: f.fit === "ready" ? null : "ready" })}>Ready for me</Opt>
-              <Opt on={f.fit === "stretch"} onClick={() => set({ fit: f.fit === "stretch" ? null : "stretch" })}>A stretch</Opt>
+              <Opt on={f.fit === "ready"} onClick={() => set({ fit: f.fit === "ready" ? null : "ready" })} count={n({ fit: "ready" })}>Ready for me</Opt>
+              <Opt on={f.fit === "stretch"} onClick={() => set({ fit: f.fit === "stretch" ? null : "stretch" })} count={n({ fit: "stretch" })}>A stretch</Opt>
             </Section>
           )}
           <Section title="Picks">
-            <Opt on={f.editorOnly} onClick={() => set({ editorOnly: !f.editorOnly })}>
+            <Opt on={f.editorOnly} onClick={() => set({ editorOnly: !f.editorOnly })} count={n({ editorOnly: true })}>
               <span className="inline-flex items-center gap-1.5"><Crown className="w-3.5 h-3.5" />Editor&apos;s Choice</span>
             </Opt>
           </Section>
         </div>
 
         <div className="flex items-center gap-3 px-5 py-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-          <button onClick={onClear} className="px-4 py-3 rounded-xl text-sm font-medium" style={{ color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
-            Clear
+          <button onClick={onClear} disabled={!anySet} className="px-4 py-3 rounded-xl text-sm font-medium disabled:opacity-40" style={{ color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
+            Clear all
           </button>
           <button onClick={onClose} className="flex-1 px-4 py-3 rounded-xl text-sm font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors">
             Show {resultCount} {resultCount === 1 ? resultNoun : `${resultNoun}s`}
@@ -360,6 +371,9 @@ const PRICES = adventures.map((a) => getLowestPrice(a)).filter((p): p is number 
 const PRICE_MIN = Math.floor(Math.min(...PRICES) / 1000) * 1000;
 const PRICE_MAX = Math.ceil(Math.max(...PRICES) / 5000) * 5000;
 const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
+// Starting prices in 28 bands across the slider, for the histogram behind it
+const PRICE_BINS = PRICES.reduce((bins, p) => { bins[Math.min(27, Math.floor(((p - PRICE_MIN) / (PRICE_MAX - PRICE_MIN)) * 28))]++; return bins; }, Array(28).fill(0) as number[]);
+const PRICE_PEAK = Math.max(...PRICE_BINS);
 
 function PriceSlider({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   const shown = value || PRICE_MAX;
@@ -368,10 +382,17 @@ function PriceSlider({ value, onChange }: { value: number; onChange: (v: number)
   return (
     <div>
       <div className="flex items-baseline justify-between mb-2.5">
-        <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Budget: starting price</p>
+        <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Budget, per person</p>
         <p className="text-[13px] font-semibold tabular-nums" style={{ color: value ? "var(--accent-ink-soft)" : "var(--text-secondary)" }}>
           {value ? `Up to ${inr(value)}` : "Any price"}
         </p>
+      </div>
+      {/* Where starting prices sit: the bars up to your budget light up */}
+      <div className="flex items-end gap-[2px] h-9 mb-1 px-[9px]" aria-hidden>
+        {PRICE_BINS.map((c, i) => {
+          const lit = PRICE_MIN + ((i + 0.5) / PRICE_BINS.length) * (PRICE_MAX - PRICE_MIN) <= shown;
+          return <span key={i} className="flex-1 rounded-t-[2px] transition-colors" style={{ height: `${c ? 12 + (c / PRICE_PEAK) * 88 : 0}%`, background: lit ? "rgba(255,81,0,0.55)" : "var(--border-default)" }} />;
+        })}
       </div>
       <input
         type="range" min={PRICE_MIN} max={PRICE_MAX} step={1000} value={shown}
@@ -395,17 +416,19 @@ function PriceSlider({ value, onChange }: { value: number; onChange: (v: number)
   );
 }
 
-function Opt({ on, onClick, children, block }: { on: boolean; onClick: () => void; children: React.ReactNode; block?: boolean }) {
+function Opt({ on, onClick, children, block, count }: { on: boolean; onClick: () => void; children: React.ReactNode; block?: boolean; count?: number }) {
   return (
     <button
       onClick={onClick}
       aria-pressed={on}
-      className={`px-3 py-1.5 rounded-lg text-[13px] font-medium transition-colors ${block ? "w-full px-0" : ""}`}
+      disabled={count === 0 && !on}
+      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-colors disabled:opacity-40 ${block ? "w-full justify-center px-0" : ""}`}
       style={on
         ? { background: "rgba(255,81,0,0.14)", color: "var(--accent-ink-soft)", border: "1px solid rgba(255,81,0,0.4)" }
         : { background: "var(--bg-card)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)" }}
     >
       {children}
+      {count !== undefined && <span className="text-[11px] tabular-nums" style={{ opacity: 0.6 }}>{count}</span>}
     </button>
   );
 }

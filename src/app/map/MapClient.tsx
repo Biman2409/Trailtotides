@@ -1,14 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { toast } from "sonner";
 import {
   SlidersHorizontal, Loader2, Compass, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen, BookmarkPlus, X,
 } from "lucide-react";
 import { nearFrom } from "@/lib/alerts";
 import { EMAIL_ALERTS } from "@/lib/features";
-import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import Navbar from "@/components/layout/Navbar";
 import ChatBubble from "@/components/ChatBubble";
 import { useTripLog } from "@/contexts/TripLogContext";
@@ -31,12 +29,12 @@ import CompassBar, { type CompassPick } from "./CompassBar";
 import ResultsList from "./ResultsList";
 import PinCard from "./PinCard";
 import CompareTray from "./CompareTray";
-import { fitFor, haversineKm, difficultyColor, BASE_KEY, type Fit, type LayerKey } from "./mapShared";
+import { fitFor, haversineKm, BASE_KEY, type Fit, type LayerKey } from "./mapShared";
 import PeekCarousel from "./PeekCarousel";
 import MapEmptyState from "./MapEmptyState";
+import MapKey from "./MapKey";
 import { trailUrl, type Trail } from "@/lib/trails/shared";
 
-const DIFFICULTY_SCALE = ["Easy", "Moderate", "Hard", "Advanced", "Extreme"];
 
 // The Adventure Map, built on the home page promise:
 //   FIND     — Type, Where and Near me on screen; every other filter (Explore's, shared) under Filters
@@ -178,13 +176,14 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const score = useMemo(() => (canFit ? (a: Adventure) => fits.get(a.slug)?.score ?? 0 : undefined), [canFit, fits]);
   const sortKey: SortKey = sort ?? (canFit ? "match" : "recommended");
 
-  // Explore's filters, then the Near me radius (a map-only filter)
-  const filtered = useMemo(() => {
-    let rows = filterAdventures(adventures, f, { score });
+  // Explore's filters, then the Near me radius (a map-only filter). The map key counts with it too.
+  const filterWith = useCallback((ff: AdventureFilterState) => {
+    let rows = filterAdventures(adventures, ff, { score });
     // The group's suggestions: the same 55% floor as Group Match's "ready" and "stretch" lists
     if (groupOnly && group) rows = rows.filter((a) => (fits.get(a.slug)?.score ?? 0) >= 55);
     return nearMe && radius ? rows.filter((a) => haversineKm(nearMe.lat, nearMe.lng, a.lat, a.lng) <= radius) : rows;
-  }, [f, score, nearMe, radius, groupOnly, group, fits]);
+  }, [score, nearMe, radius, groupOnly, group, fits]);
+  const filtered = useMemo(() => filterWith(f), [filterWith, f]);
 
   // Compass picks stay on the map even when a filter would hide them
   const shown = useMemo(() => {
@@ -193,12 +192,15 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   }, [filtered, pickReasons]);
 
   // Explore's sort; with Near me on, nearest first
+  // "In view" is what the map shows; on a phone with the sheet pulled all the way up the map is
+  // hidden, so the list is every match
+  const sheetCoversMap = !desktop && sheet === "full";
   const listed = useMemo(() => {
-    const rows = sortAdventures(shown.filter((a) => inView.has(a.slug)), sortKey, { monthIdx, score });
+    const rows = sortAdventures(sheetCoversMap ? shown : shown.filter((a) => inView.has(a.slug)), sortKey, { monthIdx, score });
     if (!nearMe) return rows;
     const dist = (a: Adventure) => haversineKm(nearMe.lat, nearMe.lng, a.lat, a.lng);
     return [...rows].sort((x, y) => dist(x) - dist(y));
-  }, [shown, inView, sortKey, monthIdx, score, nearMe]);
+  }, [shown, inView, sortKey, monthIdx, score, nearMe, sheetCoversMap]);
 
   const pickAdventures = useMemo(() => picks.map((p) => adventures.find((a) => a.slug === p.slug)).filter((a): a is Adventure => !!a), [picks]);
   const selectedAdv = selected ? adventures.find((a) => a.slug === selected) ?? null : null;
@@ -390,68 +392,56 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
       onPlace={(lat, lng, name) => { apiRef.current?.flyTo(lat, lng, 9); apiRef.current?.placePin(lat, lng, name); }}
       onAdventure={(a) => select(a.slug)}
       floating={floating}
-      trailing={filtersButton}
+      trailing={floating ? filtersButton : undefined}
     />
   );
 
-  // Not filters: the way into fitness matching, and whose fitness the rings show
-  // One quiet line: what the pin colours and rings mean, and the way into fitness matching
-  const legendLine = (
-    <div className="flex items-center gap-2.5 text-[10.5px] text-white/45 overflow-x-auto no-scrollbar whitespace-nowrap">
-      <span className="inline-flex items-center gap-1 shrink-0" title="Pin colour: difficulty">
-        {DIFFICULTY_SCALE.map((d) => <i key={d} title={d} className="w-2 h-2 rounded-full" style={{ background: difficultyColor(d) }} />)}
-        <span className="ml-0.5">Easy → Extreme</span>
-      </span>
-      {canFit ? (
-        <span className="inline-flex items-center gap-1 shrink-0" title="Ring: how ready you are">
-          <i className="w-2 h-2 rounded-full border-2 border-[#10b981]" /><i className="w-2 h-2 rounded-full border-2 border-[#f59e0b]" /><i className="w-2 h-2 rounded-full border-2 border-[#f43f5e]" />
-          <span className="ml-0.5">Ready → Not yet</span>
-        </span>
-      ) : (
-        <Link href="/matchmaker" onClick={() => track("map_fitness_cta", { from: "toolbar" })} className="inline-flex items-center gap-1 py-2.5 -my-2.5 font-semibold text-[#ffa576] hover:underline shrink-0">
-          <MatchmakerMark className="w-3 h-3" />Light up my matches
-        </Link>
-      )}
-      {loggedIn && groups.length > 0 && (
-        <label className="relative inline-flex items-center gap-1 font-semibold text-white/60 hover:text-white shrink-0 cursor-pointer">
-          {groupLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Users className="w-3 h-3" />}
-          <span className="max-w-[100px] truncate">{group ? group.name : "Fit for a group"}</span>
-          <select aria-label="Rate adventures for a group" value={group?.code ?? ""} onChange={(e) => chooseGroup(e.target.value)} className="absolute inset-0 opacity-0 cursor-pointer">
-            <option value="">Just me</option>
-            {groups.map((g) => <option key={g.code} value={g.code}>{g.name} ({g.memberCount})</option>)}
-          </select>
-        </label>
-      )}
-    </div>
+  // The map key: difficulty and best months as columns of what's on the map, your fit, and the
+  // filters you've set as chips. It stands in for the old colour legend.
+  const mapKey = (
+    <MapKey
+      f={f} set={set} filterWith={filterWith} monthIdx={monthIdx} score={score} canFit={canFit}
+      group={group ? { code: group.code, name: group.name } : null}
+      groups={loggedIn ? groups : []} groupLoading={groupLoading} onGroup={chooseGroup}
+      onMore={() => setFiltersOpen(true)}
+      morePanelCount={f.durs.length + (f.maxPrice ? 1 : 0) + (f.editorOnly ? 1 : 0)}
+      onClear={clearAll}
+    />
   );
 
+  // The count leads the list: what's in view, then sort
   const statusLine = (
-    <div className="flex items-center gap-2 text-[11px] text-white/45">
-      <span><b className="text-white/85">{listed.length}</b> in view{shown.length !== adventures.length && <> · {shown.length} of {adventures.length} match</>}</span>
-      {listed.length < shown.length && listed.length > 0 && (
-        <button type="button" onClick={showAll} className="font-semibold text-white/60 hover:text-white underline-offset-2 hover:underline">Show all</button>
-      )}
-      {groupOnly && group && (
-        <button type="button" onClick={() => setGroupOnly(false)} title="Show every adventure, rated for the group"
-          className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-semibold text-[#ffb37a]" style={{ background: "rgba(255,81,0,0.14)" }}>
-          <Users className="w-3 h-3" />{group.name}&apos;s picks<X className="w-3 h-3" />
-        </button>
-      )}
-      {filtersActive && <button type="button" onClick={clearAll} className="font-semibold text-[#ff9a66] hover:underline">Clear</button>}
-      {(filtersActive || nearMe) && (
-        <button type="button" onClick={saveSearch} className="inline-flex items-center gap-1 font-semibold text-white/60 hover:text-white">
-          <BookmarkPlus className="w-3 h-3" />Save search
-        </button>
-      )}
-      {/* Same sort options as Explore (phones get them in the Filters panel) */}
-      <label className="hidden md:inline-flex items-center gap-1 ml-auto">
-        <span className="sr-only">Sort</span>
-        <select value={sortKey} onChange={(e) => setSort(e.target.value as SortKey)} className="tm-sort">
-          {(Object.keys(SORT_LABELS) as SortKey[]).filter((k) => k !== "match" || canFit).map((k) => (
-            <option key={k} value={k}>{SORT_LABELS[k]}</option>
-          ))}
-        </select>
-      </label>
+    <div className="flex items-end gap-2.5">
+      <p className="min-w-0 leading-none">
+        <span className="tm-count">{listed.length}</span>
+        <span className="text-[12px] text-white/50 ml-1.5">{sheetCoversMap ? (listed.length === 1 ? "match" : "matches") : "in view"}</span>
+        {shown.length !== adventures.length && <span className="block mt-1 text-[11px] text-white/40">{shown.length} of {adventures.length} match your filters</span>}
+      </p>
+      <div className="ml-auto flex items-center gap-2 text-[11.5px] shrink-0">
+        {listed.length < shown.length && listed.length > 0 && (
+          <button type="button" onClick={showAll} className="font-semibold text-white/60 hover:text-white py-1.5">Show all</button>
+        )}
+        {groupOnly && group && (
+          <button type="button" onClick={() => setGroupOnly(false)} title="Show every adventure, rated for the group"
+            className="inline-flex items-center gap-1 rounded-full px-2 py-1 font-semibold text-[#ffb37a]" style={{ background: "rgba(255,81,0,0.14)" }}>
+            <Users className="w-3 h-3" />{group.name}&apos;s picks<X className="w-3 h-3" />
+          </button>
+        )}
+        {(filtersActive || nearMe) && (
+          <button type="button" onClick={saveSearch} title="Save this search" aria-label="Save this search" className="inline-flex items-center gap-1 font-semibold text-white/60 hover:text-white py-1.5">
+            <BookmarkPlus className="w-3.5 h-3.5" /><span className="hidden lg:inline">Save</span>
+          </button>
+        )}
+        {/* Same sort options as Explore (phones get them in the Filters panel) */}
+        <label className="hidden md:inline-flex items-center gap-1">
+          <span className="sr-only">Sort</span>
+          <select value={sortKey} onChange={(e) => setSort(e.target.value as SortKey)} className="tm-sort">
+            {(Object.keys(SORT_LABELS) as SortKey[]).filter((k) => k !== "match" || canFit).map((k) => (
+              <option key={k} value={k}>{SORT_LABELS[k]}</option>
+            ))}
+          </select>
+        </label>
+      </div>
     </div>
   );
 
@@ -556,10 +546,10 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
               <div className="p-3 space-y-2 border-b border-white/[0.06]">
                 <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} />
                 {dock(false)}
-                {statusLine}
-                {legendLine}
+                {mapKey}
               </div>
-              <div className="flex-1 overflow-y-auto p-3.5 tm-scroll">{body}</div>
+              <div className="px-3.5 pt-3 pb-2">{statusLine}</div>
+              <div className="flex-1 overflow-y-auto px-3.5 pb-3.5 pt-1 tm-scroll">{body}</div>
             </aside>
 
             <div className="absolute z-[1000] top-3 flex items-center gap-1.5" style={{ right: 56 }}>
@@ -589,8 +579,8 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
                     <PeekCarousel list={listed.length ? listed : shown} fits={fits} onHover={setHovered} onOpen={select} />
                   ) : (
                     <>
+                      {mapKey}
                       {statusLine}
-                      {legendLine}
                       <CompareTray onFocus={select} />
                     </>
                   )}
@@ -611,6 +601,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
           resultCount={filtered.length}
           sortKey={sortKey} setSort={setSort}
           hasProfile={canFit}
+          countWith={(patch) => filterWith({ ...f, ...patch }).length}
         />
       )}
 
@@ -668,8 +659,11 @@ const PAGE_CSS = `
 
   .tm-label { font-size: 9.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 6px; }
 
-  .tm-sort { height: 26px; padding: 0 6px; border-radius: 8px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.75);
-             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); outline: none; cursor: pointer; }
+  .tm-sort { height: 30px; padding: 0 8px; border-radius: 9px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8);
+             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); outline: none; cursor: pointer; }
+  .tm-sort:hover { border-color: rgba(255,255,255,0.2); }
+  /* The count that leads the list, in the site's display serif */
+  .tm-count { font-family: var(--font-display), Georgia, serif; font-weight: 600; font-size: 26px; letter-spacing: -0.02em; color: #fff; font-variant-numeric: lining-nums tabular-nums; }
   .tm-sort option { background: #17120f; }
 
   /* Sized to the phone, leaving the next card peeking in from the right */
