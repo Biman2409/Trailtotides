@@ -421,6 +421,8 @@ button:not([class*="transition"]) {
 .leaflet-container {
   font-family: 'DM Sans', sans-serif !important;
 }
+/* Satellite imagery, toned a touch quieter so the trail and labels lead */
+.tm-sat { filter: saturate(0.88) contrast(1.06) brightness(0.93); }
 .leaflet-popup-content-wrapper {
   border-radius: 14px !important;
   box-shadow: 0 12px 40px rgba(var(--shadow-color), 0.18) !important;

@@ -15,7 +15,9 @@ declare global { interface Window { L: typeof L } }
 // drawn by MapLibre inside Leaflet, with hillshade from the public Terrarium elevation tiles so the
 // Himalaya and the Ghats read as relief — mountain to ocean, in the hero's palette. Its credit is
 // shown, as the licences require. Satellite is Esri's World Imagery (Maxar and others, keyless,
-// sharp to zoom 18 across the Himalaya) with Esri's place names and borders laid over it.
+// sharp to zoom 18 across the Himalaya), toned down a touch, with only a few labels over it in
+// the AllTrails manner: places, rivers and lakes, and named peaks with their heights, all from
+// the same OpenStreetMap data as the map.
 
 const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services";
 const OSM_CREDIT = '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
@@ -30,7 +32,7 @@ export interface BaseStyle {
   style?: string;
   /** … or a raster tile URL (drawn by Leaflet) */
   url?: string;
-  /** A raster drawn over url: place names and borders over imagery */
+  /** A MapLibre style whose labels alone are drawn over url */
   labels?: string;
   dark?: boolean;
 }
@@ -50,10 +52,10 @@ export const BASE_LAYERS: Record<LayerKey, BaseStyle> = {
   satellite: {
     label: "Satellite",
     url: `${ESRI}/World_Imagery/MapServer/tile/{z}/{y}/{x}`,
-    labels: `${ESRI}/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}`,
+    labels: "https://tiles.openfreemap.org/styles/dark",
     dark: true,
     maxZoom: 18,
-    attribution: 'Imagery © <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>, Maxar, Earthstar Geographics and the GIS User Community',
+    attribution: `Imagery © <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>, Maxar, Earthstar Geographics and the GIS User Community · Labels: ${OPENFREEMAP_CREDIT}`,
   },
 };
 
@@ -69,9 +71,21 @@ export const LIGHT_BASE: BaseStyle = {
 /** Builds a base layer for any style. Vector styles load MapLibre on first use. Add it with addBaseLayer. */
 export async function createBaseLayer(leaflet: typeof L, cfg: BaseStyle, className = "tm-base"): Promise<L.Layer> {
   if (cfg.url) {
-    const tiles = leaflet.tileLayer(cfg.url, { maxZoom: cfg.maxZoom, maxNativeZoom: cfg.maxZoom, attribution: cfg.attribution, className });
+    // On sharp screens, tiles one zoom deeper at half size; the deepest asked for stays maxZoom
+    const retina = leaflet.Browser.retina;
+    const tiles = leaflet.tileLayer(cfg.url, {
+      maxZoom: cfg.maxZoom, maxNativeZoom: retina ? cfg.maxZoom - 1 : cfg.maxZoom, detectRetina: true,
+      attribution: cfg.attribution, className: `${className} tm-sat`,
+    });
     if (!cfg.labels) return tiles;
-    return leaflet.layerGroup([tiles, leaflet.tileLayer(cfg.labels, { maxZoom: cfg.maxZoom, maxNativeZoom: cfg.maxZoom, className })]);
+    await loadMapLibre(leaflet);
+    const style = await fetch(cfg.labels).then((r) => r.json()).then(labelsOnly).catch(() => null);
+    if (!style) return tiles;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const labels = (leaflet as any).maplibreGL({ style, interactive: false, attributionControl: false });
+    // Leaflet gives the tiles z-index 1; the labels' canvas has none, so would sit under them
+    labels.on("add", () => { labels.getContainer().style.zIndex = "2"; });
+    return leaflet.layerGroup([tiles, labels]);
   }
   await loadMapLibre(leaflet);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,6 +94,36 @@ export async function createBaseLayer(leaflet: typeof L, cfg: BaseStyle, classNa
   layer.getAttribution = () => cfg.attribution;
   layer.on("add", () => tuneStyle(layer.getMaplibreMap(), !!cfg.dark));
   return layer;
+}
+
+// A style's labels for laying over imagery: places, water and peaks only, in English, white on a
+// dark halo, no dots. Peaks aren't in the style, so they're added, with their heights.
+const NAME_EN = ["coalesce", ["get", "name_en"], ["get", "name:latin"], ["get", "name"]];
+const KEEP = /^(water_name|place_(village|town|city|city_large|state|country_\w+))$/;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function labelsOnly(s: any) {
+  const halo = { "text-color": "rgba(255,255,255,0.94)", "text-halo-color": "rgba(0,0,0,0.72)", "text-halo-width": 1.3, "text-halo-blur": 0.5 };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const layers = s.layers.filter((l: any) => KEEP.test(l.id)).map((l: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { "icon-image": _i, "text-transform": _t, ...layout } = l.layout ?? {};
+    const water = l.id === "water_name";
+    return {
+      ...l, layout: { ...layout, "text-field": NAME_EN, ...(water ? { "text-font": ["Noto Sans Italic"] } : { "text-offset": [0, 0], "text-anchor": "center" }) },
+      paint: water ? { ...halo, "text-color": "rgba(190,225,255,0.9)" } : halo,
+    };
+  });
+  layers.push(
+    { id: "ttt-peak-dot", type: "circle", source: "openmaptiles", "source-layer": "mountain_peak", minzoom: 9, filter: ["has", "name"],
+      paint: { "circle-radius": 2.5, "circle-color": "#fff", "circle-stroke-color": "rgba(0,0,0,0.6)", "circle-stroke-width": 1 } },
+    { id: "ttt-peak", type: "symbol", source: "openmaptiles", "source-layer": "mountain_peak", minzoom: 9, filter: ["has", "name"],
+      layout: {
+        "text-field": ["format", NAME_EN, {}, ["case", ["has", "ele"], ["concat", "\n", ["to-string", ["get", "ele"]], " m"], ""], { "font-scale": 0.85 }],
+        "text-font": ["Noto Sans Regular"], "text-size": 11, "text-anchor": "top", "text-offset": [0, 0.5],
+      },
+      paint: halo },
+  );
+  return { version: 8, sources: { openmaptiles: s.sources.openmaptiles }, glyphs: s.glyphs, sprite: s.sprite, layers };
 }
 
 // English labels (the styles show local scripts beside them) and shaded relief under the labels,
