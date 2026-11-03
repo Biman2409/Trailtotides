@@ -1,47 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Trail to Tides
 
-## Getting Started
+India's adventure platform: treks, rafting, diving and more, with mapped trails, operator
+comparison, a fitness Matchmaker and an adventure map. Live at https://www.trailtotides.com.
 
-First, run the development server:
+## Running it
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open http://localhost:3000. Secrets live in `.env.local` (not committed).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where things are
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Path | What's there |
+| --- | --- |
+| `src/app/` | Pages and API routes (Next.js 15 App Router) |
+| `src/lib/data.ts` | Every adventure: facts, prices, operators, copy |
+| `src/lib/trails/` | Built trek trails, one JSON per trek, and the helpers that read them |
+| `src/app/map/` | The Adventure Map (Leaflet with MapLibre styles, satellite from Esri) |
+| `src/lib/email.ts` | Transactional emails (sent through Resend) |
+| `supabase/` | Database schema: `setup.sql` for a fresh project, then `migrations/` in order |
+| `scripts/` | Trail builder and checks, email images, the hero contour image, image upload |
+| `research/` | Trail check reports and research notes |
+| `.github/workflows/` | Trail builds and research jobs run on GitHub's runners |
+
+## Trails
+
+Trails are built from OpenStreetMap by `scripts/build-trail.mjs`, using the settings in
+`scripts/trek-configs.mjs`. It runs on GitHub (Actions → Build trails), since Overpass isn't
+reachable from every machine. After a build, these check the result and write their reports to
+`research/`:
+
+```bash
+node scripts/check-trails.mjs
+node scripts/check-consistency.mjs
+node scripts/check-traces.mjs
+```
 
 ## Deployment
 
-The site is hosted on Vercel at https://www.trailtotides.com. Vercel's GitHub
-integration builds and deploys every push to `master`; other branches and pull
-requests get preview deployments.
+Vercel builds and deploys every push to `master`; other branches get preview deployments.
 
-Set these environment variables in the Vercel project (Settings → Environment
-Variables): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
-`SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`,
-`RESEND_API_KEY` and `NEXT_PUBLIC_SITE_URL`.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Set these environment variables in the Vercel project (Settings → Environment Variables):
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`,
+`ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `RESEND_API_KEY` and `NEXT_PUBLIC_SITE_URL`.
