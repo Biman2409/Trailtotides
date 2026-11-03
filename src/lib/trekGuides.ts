@@ -149,22 +149,8 @@ export function seasonNotes(a: Adventure): string[] {
   return notes;
 }
 
-/** Nightly sleeping-height gains, checked against the 300 to 500 m rule above 3,000 m */
-export function acclimatisation(trail: Trail) {
-  const nights = trail.days.filter((d) => d.sleepEle != null);
-  const startEle = trail.stops[0]?.ele ?? nights[0]?.sleepEle ?? 0;
-  let prev = startEle;
-  const jumps: { day: number; from: number; to: number; gain: number; place: string }[] = [];
-  for (const d of nights) {
-    const ele = d.sleepEle!;
-    const gain = ele - prev;
-    if (ele > 3000 && gain > 500) jumps.push({ day: d.day, from: prev, to: ele, gain, place: d.to ?? d.from });
-    prev = ele;
-  }
-  const highestSleep = Math.max(...nights.map((d) => d.sleepEle!), startEle);
-  const restDays = trail.days.filter((d) => d.kind === "rest").length;
-  return { startEle, highestSleep, restDays, jumps, nights: nights.length };
-}
+// acclimatisation() lives with the trail types, so the trek page's itinerary can flag the same nights
+export { acclimatisation } from "./trails/shared";
 
 /** Elevation along the trail, thinned to at most n points: [km from start, metres] */
 export function profile(trail: Trail, n = 120): [number, number][] {

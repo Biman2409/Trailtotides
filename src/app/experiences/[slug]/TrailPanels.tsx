@@ -4,8 +4,8 @@
 // elevation profile, and the weather at every place the itinerary sleeps.
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDown, ArrowUp, BedDouble, Footprints, Moon, Plane, Route, RotateCw } from "lucide-react";
-import { trailHighPoint, trailProfile, trailWalkKm, type Trail, type TrailDay } from "@/lib/trails/shared";
+import { AlertTriangle, ArrowDown, ArrowUp, BedDouble, Footprints, Moon, Plane, Route, RotateCw } from "lucide-react";
+import { acclimatisation, trailHighPoint, trailProfile, trailWalkKm, type Trail, type TrailDay } from "@/lib/trails/shared";
 import { WeatherIcon, iconColor, desc } from "./WeatherWidget";
 
 const ORANGE = "#ff5100";
@@ -22,17 +22,21 @@ function dayTitle(d: TrailDay) {
 export function ItineraryPanel({ trail }: { trail: Trail }) {
   const walking = trail.days.filter((d) => d.kind === "walk");
   const rest = trail.days.filter((d) => d.kind === "rest").length;
+  // Nights above 3,000 m that sleep more than 500 m higher than the night before
+  const { jumps } = acclimatisation(trail);
 
   return (
     <div className="p-4 sm:p-5">
       <p className="text-[13px] mb-4" style={{ color: "var(--text-secondary)" }}>
         <b style={{ color: "var(--text-primary)" }}>{trail.days.length} days</b> from {trail.days[0].from}: {walking.length} walking, {rest} rest {rest === 1 ? "day" : "days"} to acclimatise, about {trailWalkKm(trail)} km on foot. A typical plan; operators vary it a little.
         {(trail.approxKm ?? 0) > 0 && <> About {Math.round(trail.approxKm ?? 0)} km of the path isn&apos;t on the map yet, so those days&apos; figures are estimates.</>}
+        {jumps.length > 0 && <> {jumps.length === 1 ? "One night climbs" : `${jumps.length} nights climb`} faster than the usual 300 to 500 m a night above 3,000 m: marked below.</>}
       </p>
       <ol className="relative">
         {trail.days.map((d, i) => {
           const Icon = d.kind === "rest" ? Moon : d.kind === "travel" ? Plane : Footprints;
           const last = i === trail.days.length - 1;
+          const jump = jumps.find((j) => j.day === d.day);
           return (
             <li key={d.day} className="relative flex gap-3.5 pb-4 last:pb-0">
               {/* The day's dot on a line running down the list */}
@@ -53,6 +57,13 @@ export function ItineraryPanel({ trail }: { trail: Trail }) {
                     <span className="inline-flex items-center gap-1"><ArrowUp className="w-3 h-3" />{fmt(d.up ?? 0)} m</span>
                     <span className="inline-flex items-center gap-1"><ArrowDown className="w-3 h-3" />{fmt(d.down ?? 0)} m</span>
                     {d.sleepEle != null && <span className="inline-flex items-center gap-1"><BedDouble className="w-3 h-3" />sleep at {fmt(d.sleepEle)} m</span>}
+                  </p>
+                )}
+                {jump && (
+                  <p className="mt-1.5 inline-flex items-start gap-1.5 rounded-lg px-2 py-1 text-[12px] leading-snug"
+                    style={{ background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.28)", color: "var(--text-primary)" }}>
+                    <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-px" style={{ color: "var(--danger-ink, #dc2626)" }} />
+                    <span>Big jump: you sleep <b>{fmt(jump.gain)} m higher</b> than last night ({fmt(jump.from)} → {fmt(jump.to)} m). Go slowly, drink well, and tell your leader about any headache.</span>
                   </p>
                 )}
                 {d.kind === "rest" && d.sleepEle != null && (
@@ -102,7 +113,7 @@ export function ElevationPanel({ trail }: { trail: Trail }) {
     <div className="p-4 sm:p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2 mb-2 text-[13px]" style={{ color: "var(--text-secondary)" }}>
         {trail.stops[0].name === trail.stops[trail.stops.length - 1].name ? (
-          <span>A loop from <b style={{ color: "var(--text-primary)" }}>{fmt(trail.stops[0].ele ?? eles[0])} m</b> at {trail.stops[0].name}, highest at {trailHighPoint(trail).name} (<b style={{ color: "var(--text-primary)" }}>{fmt(trailHighPoint(trail).ele ?? 0)} m</b>), about {fmt(trail.ascentM)} m of climbing in all</span>
+          <span>A loop from <b style={{ color: "var(--text-primary)" }}>{fmt(trail.stops[0].ele ?? eles[0])} m</b> at {trail.stops[0].name}, highest <b style={{ color: "var(--text-primary)" }}>{fmt(trailHighPoint(trail).ele)} m</b>{trailHighPoint(trail).name ? ` at ${trailHighPoint(trail).name}` : ""}, about {fmt(trail.ascentM)} m of climbing in all</span>
         ) : (
           <span>From <b style={{ color: "var(--text-primary)" }}>{fmt(trail.stops[0].ele ?? eles[0])} m</b> at {trail.stops[0].name} to <b style={{ color: "var(--text-primary)" }}>{fmt(trail.stops[trail.stops.length - 1].ele ?? eles[eles.length - 1])} m</b> at {trail.stops[trail.stops.length - 1].name}, about {fmt(trail.ascentM)} m of climbing on the way</span>
         )}

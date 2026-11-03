@@ -4,7 +4,8 @@
 //   sleep height  a day's sleeping height far from the profile where you sleep
 //   day km        a day's distance against the line between where it starts and ends
 //   day climb     a day's metres up and down against the profile between the same points
-//   high point    the highest stop well below the profile's peak (a pass that isn't a stop)
+//   high point    the highest stop or side trip well below the profile's peak: the top is a
+//                 ridge with no name, or a pass that isn't a stop (the page then shows it unnamed)
 //   page ...      the trek page's distance, days, altitude and base camp against the trail
 // Run: node scripts/check-consistency.mjs   (no network; reads the built files only)
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
@@ -34,10 +35,10 @@ for (const f of readdirSync(DIR).filter((f) => f.endsWith(".json")).sort()) {
     const h = eleAtKm(s.km);
     if (Math.abs(s.ele - h) > 60) add("profile dot", `${s.name} drawn at ${s.ele} m, the profile is ${h} m at km ${s.km}`);
   }
-  // B. Header high point (highest stop) against the profile's peak
-  const hp = t.stops.reduce((a, s) => ((s.ele ?? 0) > (a.ele ?? 0) ? s : a), t.stops[0]);
+  // B. Header high point (highest stop or side trip) against the profile's peak
+  const hp = [...t.stops, ...t.side].reduce((a, s) => ((s.ele ?? 0) > (a.ele ?? 0) ? s : a), t.stops[0]);
   const peak = Math.max(...L.map((p) => p[2]));
-  if (Math.abs((hp.ele ?? 0) - peak) > 60) add("high point", `header says ${hp.name} ${hp.ele} m, the profile peaks at ${peak} m`);
+  if ((hp.ele ?? 0) < peak - 60 || ((hp.ele ?? 0) > peak + 60 && !t.side.includes(hp))) add("high point", `header says ${hp.name} ${hp.ele} m, the profile peaks at ${peak} m`);
   // C. Each day's sleeping height against the profile where you sleep
   for (const d of t.days) {
     if (d.kind !== "walk" || d.sleepEle == null) continue;
@@ -72,7 +73,7 @@ for (const f of readdirSync(DIR).filter((f) => f.endsWith(".json")).sort()) {
   const walk = Math.round(t.days.reduce((s, d) => s + (d.kind === "walk" ? d.km ?? 0 : 0), 0));
   if (P.km && Math.abs(P.km - walk) > 1) add("page distance", `page ${P.km} km, itinerary ${walk} km`);
   if (P.days && P.days !== t.days.length) add("page days", `page ${P.days} days, itinerary ${t.days.length}`);
-  if (P.alt && Math.abs(P.alt - (hp.ele ?? 0)) > 100) add("page altitude", `page ${P.alt} m, trail high point ${hp.name} ${hp.ele} m (profile peak ${peak} m)`);
+  if (P.alt && Math.abs(P.alt - Math.max(hp.ele ?? 0, peak)) > 30) add("page altitude", `page ${P.alt} m, trail high point ${hp.name} ${hp.ele} m (profile peak ${peak} m)`);
   if (P.base && P.base !== t.days[0]?.from) add("page base camp", `page "${P.base}", day 1 starts at "${t.days[0]?.from}"`);
   out.push({ slug: t.slug, issues });
 }

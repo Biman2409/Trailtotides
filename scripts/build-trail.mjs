@@ -26,6 +26,7 @@ import { TREKS } from "./trek-configs.mjs";
 import { placesNear, matchPlace, pathRoute } from "./osm.mjs";
 import { terrainPath, satellitePreview } from "./terrain.mjs";
 import { copernicusHeights } from "./copernicus.mjs";
+import { fitTrail } from "./fit-heights.mjs";
 
 const UA = { "User-Agent": "TrailToTides/1.0 (hello@trailtotides.com)" };
 
@@ -508,6 +509,9 @@ async function build(slug) {
     sleepPlaces,
     line,
   };
+
+  // The profile runs through each stop's published height, and the days' climbs follow it
+  fitTrail(trail);
 
   await mkdir("src/lib/trails", { recursive: true });
   // The map services fail now and then, and a leg they fail on is drawn off the mapped paths: a build with

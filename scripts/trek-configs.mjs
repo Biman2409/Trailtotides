@@ -123,8 +123,10 @@ export const TREKS = {
 
   "manaslu-circuit": {
     near: "Gorkha, Nepal",
-    stops: ["Soti Khola", { name: "Machha Khola", q: "Machhakhola", at: [28.22931, 84.87377] }, "Jagat", "Deng", "Namrung", "Lho", { name: "Samagaun", q: "Samagau", at: [28.58467, 84.64404] }, "Samdo", { name: "Larkya La", at: [28.66392, 84.52031] }, "Bimthang", { name: "Dharapani", at: [28.519, 84.35838] }],
+    stops: ["Soti Khola", { name: "Machha Khola", q: "Machhakhola", at: [28.22931, 84.87377] }, "Jagat", "Deng", "Namrung", "Lho", { name: "Samagaun", q: "Samagau", at: [28.58467, 84.64404] }, "Samdo", { name: { name: "Larkya La", ele: 5160 }, at: [28.66392, 84.52031] }, "Bimthang", { name: "Dharapani", at: [28.519, 84.35838] }],
     // Larke Phedi from OSM ("Larke Phedi (Dharmasala)", ele 4,475 m; 4,466 m on the elevation model)
+    // Larkya La: 5,106 m and 5,160 m are both quoted; the trail tops out at 5,157 m on the model,
+    // which reads passes low, so 5,160 m it is
     camps: { Dharmasala: ["Samdo", "Larkya La", 0.55, ["Larkya Phedi", "Dharamsala", "Dharamshala", "Larke Phedi"], [28.65892, 84.58443]] },
     days: [
       { to: "Machha Khola", note: "Up the Budhi Gandaki gorge on a path cut into its side" },
@@ -136,7 +138,7 @@ export const TREKS = {
       { rest: "Acclimatisation day: up towards Manaslu Base Camp or Birendra Tal and back" },
       { to: "Samdo", note: "Up to the last village before Tibet" },
       { to: "Dharmasala", note: "A short climb to the stone huts below the pass" },
-      { to: "Bimthang", via: ["Larkya La"], note: "Leave around 4 am to cross Larkya La at 5,106 m, then a long descent to Bimthang" },
+      { to: "Bimthang", via: ["Larkya La"], note: "Leave around 4 am to cross Larkya La at 5,160 m, then a long descent to Bimthang" },
       { to: "Dharapani", note: "Down through forest to join the Annapurna Circuit" },
     ],
   },
@@ -225,7 +227,7 @@ export const TREKS = {
       // Where Darwa Pass treks go: the top of the ridge west of the lake (Darwa or Dayara Top), at
       // 4,129 m on the elevation model, as published (4,131-4,150 m), by a trekker's waypoint
       // (ultrajourneys.org). The saddle north of the lake that OSM calls the pass is 3,775 m
-      { name: "Darwa Pass", at: [30.89822, 78.49873], exact: true },
+      { name: "Darwa Pass", at: [30.89822, 78.49873], exact: true, ele: 4150 }, // operators 4,150 m; the 90 m model reads a narrow pass low
     ],
     days: [
       { to: "Agoda", note: "Up from the road through fields to Agoda village" },
@@ -245,7 +247,8 @@ export const TREKS = {
       { name: "Gaumukh", at: [30.92574, 79.08182] },
       // The meadow where OSM and ultrajourneys.org's waypoint agree; its published height (4,463 m).
       // The elevation model reads about 4,320 m
-      { name: "Tapovan", at: [30.91443, 79.0765], exact: true, ele: 4463 },
+      // Not the 4,463 m operators quote: both mapped camps on the meadow read 4,311 m, and flat ground reads true
+      { name: "Tapovan", at: [30.91443, 79.0765], exact: true },
     ],
     days: [
       { to: "Bhojbasa", note: "Along the Bhagirathi past Chirbasa's pines, the Bhagirathi peaks ahead" },
@@ -294,7 +297,7 @@ export const TREKS = {
 
   "pangarchulla-peak": {
     near: "Chamoli, Uttarakhand",
-    stops: [DHAK, KHULLARA, { name: "Pangarchulla", at: [30.42367, 79.59214] }],
+    stops: [DHAK, KHULLARA, { name: "Pangarchulla", at: [30.42367, 79.59214], ele: 4590 }],
     // Not on the map by name: placed on the trail where it reaches the camp's published height
     // (Gulling Top, about 2,900 m)
     camps: { Gulling: ["Dhak", "Khullara", 0.5, ["Guling", "Gulling Top"], [30.46828, 79.6011]] },
@@ -315,7 +318,8 @@ export const TREKS = {
       { name: "Mana", at: [30.77048, 79.49594] },
       // The lake where OSM and ultrajourneys.org's waypoint agree; its published height (4,600 m:
       // Wikipedia, Uttarakhand Tourism, operators). The elevation model reads about 4,340 m
-      { name: "Satopanth Lake", at: [30.74352, 79.357], exact: true, ele: 4600 },
+      // Not the 4,600 m often quoted: the lake surface reads 4,346 m (one operator gives 4,400 m)
+      { name: "Satopanth Lake", at: [30.74352, 79.357], exact: true },
     ],
     camps: { "Laxmi Van": ["Mana", "Satopanth Lake", 0.35, ["Laxmiban", "Lakshmi Van", "Laxmi Ban", "Lakshmiban"]], Chakrateertha: ["Mana", "Satopanth Lake", 0.75, ["Chakratirtha", "Chakra Tirth", "Chakrateerth", "Chakra Tirtha"]] },
     days: [
@@ -335,7 +339,7 @@ export const TREKS = {
       { name: "Chopta", q: "Chopta Tungnath", at: [30.47786, 79.21015] },
       // The temple, placed from ultrajourneys.org's map; OSM's Tunganath is checked within 2 km
       { name: "Tungnath", q: "Tunganath", at: [30.4887, 79.21702] },
-      { name: "Chandrashila", at: [30.48806, 79.22139] },
+      { name: "Chandrashila", at: [30.48806, 79.22139], ele: 3690 }, // surveyed summit; the model reads 3,642 m
     ],
     // Not on the map by name: placed on the trail where it reaches the camp's published height
     // (about 2,750 m)
@@ -452,7 +456,7 @@ export const TREKS = {
     ],
     days: [
       { to: "Rola Kholi", note: "Up from Gulaba through forest onto open meadows facing the Pir Panjal" },
-      { to: "Rola Kholi", via: ["Bhrigu Lake"], note: "A steep climb to the lake at 4,300 m, often still frozen, and back to camp" },
+      { to: "Rola Kholi", via: ["Bhrigu Lake"], note: "A steep climb to the lake at about 4,150 m, often still frozen, and back to camp" },
       { to: "Gulaba", note: "Down to the road" },
     ],
   },
@@ -544,7 +548,7 @@ export const TREKS = {
       { name: "Thakur Kuan", at: [31.95332, 77.64521] },
       { name: "Odi Thach", at: [31.9269, 77.70268] },
       { name: "Mantalai", at: [31.86779, 77.78389], ele: 4120 }, // OSM 4,248 m; operators 4,100–4,150
-      { name: "Pin Parvati Pass", at: [31.8355, 77.84444] },
+      { name: "Pin Parvati Pass", at: [31.8355, 77.84444], ele: 5319 },
       // The Spiti side from ultrajourneys.org's recorded trail ("Shepherd Camp to Mudh"): the
       // shepherds' camp below the glacier where it starts, and its end above Tiya's meadows
       { name: "Pin Valley Camp", at: [31.83555, 77.88726], exact: true },
@@ -692,7 +696,7 @@ export const TREKS = {
 
   "sandakphu-phalut-trek": {
     near: "Darjeeling, West Bengal",
-    stops: [{ name: "Manebhanjan", q: "Maneybhanjang", at: [26.98863, 88.12034] }, { name: "Tumling", at: [27.03126, 88.06896] }, { name: "Sandakphu", at: [27.10444, 88.00048] }, { name: "Phalut", at: [27.20754, 88.01583] }, { name: "Gorkhey", at: [27.18744, 88.07195] }],
+    stops: [{ name: "Manebhanjan", q: "Maneybhanjang", at: [26.98863, 88.12034] }, { name: "Tumling", at: [27.03126, 88.06896] }, { name: "Sandakphu", at: [27.10444, 88.00048], ele: 3636 }, { name: "Phalut", at: [27.20754, 88.01583] }, { name: "Gorkhey", at: [27.18744, 88.07195] }],
     // Kalipokhri on the trail by GeoNames' Kal Pokhari
     camps: { Kalipokhri: ["Tumling", "Sandakphu", 0.6, ["Kalipokhari", "Kali Pokhari", "Kalpokhari", "Kalipokhri Lake"], [27.07825, 88.01757]] },
     days: [
