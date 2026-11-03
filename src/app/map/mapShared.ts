@@ -71,10 +71,11 @@ export const LIGHT_BASE: BaseStyle = {
 /** Builds a base layer for any style. Vector styles load MapLibre on first use. Add it with addBaseLayer. */
 export async function createBaseLayer(leaflet: typeof L, cfg: BaseStyle, className = "tm-base"): Promise<L.Layer> {
   if (cfg.url) {
-    // On sharp screens, tiles one zoom deeper at half size; the deepest asked for stays maxZoom
-    const retina = leaflet.Browser.retina;
+    // On sharp screens (1.5x and up), tiles one zoom deeper at half size; the deepest asked for
+    // stays maxZoom. Slightly sharp screens (1.25x) don't gain enough to fetch four times the tiles.
+    const retina = typeof window !== "undefined" && window.devicePixelRatio >= 1.5;
     const tiles = leaflet.tileLayer(cfg.url, {
-      maxZoom: cfg.maxZoom, maxNativeZoom: retina ? cfg.maxZoom - 1 : cfg.maxZoom, detectRetina: true,
+      maxZoom: cfg.maxZoom, maxNativeZoom: retina ? cfg.maxZoom - 1 : cfg.maxZoom, detectRetina: retina,
       attribution: cfg.attribution, className: `${className} tm-sat`,
     });
     if (!cfg.labels) return tiles;

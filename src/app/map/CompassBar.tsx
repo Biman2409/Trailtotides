@@ -18,10 +18,13 @@ export default function CompassBar({
   ace,
   onPicks,
   active,
+  compact = false,
 }: {
   ace: ACE | null;
   onPicks: (picks: CompassPick[], question: string) => void;
   active: boolean;
+  /** The phone sheet: a placeholder short enough to fit */
+  compact?: boolean;
 }) {
   const [text, setText] = useState("");
   const [asked, setAsked] = useState("");
@@ -82,10 +85,10 @@ export default function CompassBar({
             onChange={(e) => setText(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
-            placeholder="Describe your trip — Compass.AI picks"
+            placeholder={compact ? "Ask Compass.AI for a trip…" : "Describe your trip — Compass.AI picks"}
             aria-label="Describe your trip and Compass.AI will pick adventures on the map"
             enterKeyHint="send"
-            className="flex-1 min-w-0 bg-transparent text-[13px] text-white placeholder:text-white/45 outline-none"
+            className="flex-1 min-w-0 bg-transparent text-[16px] lg:text-[13px] text-white placeholder:text-white/45 outline-none"
             style={{ caretColor: "#ff5100" }}
           />
           <button

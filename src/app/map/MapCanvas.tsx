@@ -329,12 +329,14 @@ export default function MapCanvas(props: Props) {
       const m = leaflet.marker([a.lat, a.lng], opts)
         .bindTooltip(peekHtml(a), { direction: "top", offset: [0, -18], className: "tm-tip tm-tip-peek", opacity: 1 });
       m.on("click", () => live.current.onSelect(a.slug));
+      // Pins are buttons to a screen reader: give each its adventure's name
+      m.on("add", () => m.getElement()?.setAttribute("aria-label", `${a.name}, ${difficultyOf(a)}`));
       cluster.addLayer(m);
       markersRef.current.set(a.slug, m);
     }
   }
 
-  useEffect(() => { setTiles(); }, [props.base]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { setTiles(); }, [props.base]);
 
   // The set of pins changes: rebuild. Only their look changes: swap icons in place.
   useEffect(() => { buildMarkers(); reportView(); }, [advs]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -520,6 +522,9 @@ const MAP_CSS = `
   .tm-credit-btn { width: 20px; height: 20px; margin: 8px 12px 0 0 !important; border-radius: 9999px; display: flex; align-items: center; justify-content: center;
     font: italic 600 11px/1 Georgia, serif; cursor: pointer; background: rgba(11,13,16,0.6); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.14); }
   .tm-credit-btn:hover, .tm-map.tm-credits-open .tm-credit-btn { color: #ff5100; border-color: rgba(255,81,0,0.5); }
+  /* Small to look at, finger-sized to tap */
+  .tm-credit-btn { position: relative; }
+  .tm-credit-btn::after { content: ""; position: absolute; inset: -12px; }
   /* Phones and tablets: the filter dock and Layers button cover the top-right corner, so sit below them */
   @media (max-width: 1023px) { .tm-credit-btn { margin-top: 108px !important; } }
 

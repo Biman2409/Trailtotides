@@ -159,7 +159,7 @@ function WhereMenu({ f, set, onPlace, onAdventure }: {
           ? <Loader2 className="absolute right-5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 animate-spin text-white/40" />
           : q && <button type="button" aria-label="Clear" onClick={() => setQ("")} className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white"><X className="w-3.5 h-3.5" /></button>}
         <input ref={inputRef} value={q} onChange={(e) => setQ(e.target.value)} placeholder="A state, a place or an adventure" aria-label="Search states, places and adventures"
-          className="tm-input w-full h-10 pl-9 pr-8 rounded-xl text-[13px]" />
+          className="tm-input w-full h-10 pl-9 pr-8 rounded-xl text-[16px] lg:text-[13px]" />
       </div>
 
       <div className="max-h-[min(52vh,360px)] overflow-y-auto tm-scroll p-2">

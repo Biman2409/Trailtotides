@@ -44,10 +44,10 @@ function Row({ a, fit, month, active, onPick, onHover }: {
             <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: c, boxShadow: `0 0 6px ${c}88` }} />
             <span className="text-[13px] font-semibold text-white/90 truncate">{a.name}</span>
           </span>
-          <span className="block text-[10.5px] text-white/40 truncate mt-0.5">
+          <span className="block text-[11px] text-white/45 truncate mt-0.5">
             {a.type} · {a.durationDays} · <span style={{ color: difficultyColor(diff) }}>{diff}</span>
           </span>
-          <span className="flex items-center gap-2 mt-1 text-[10.5px]">
+          <span className="flex items-center gap-2 mt-1 text-[11.5px]">
             {fit && <span className="font-semibold" style={{ color: fit.bucket.color }}>{fit.bucket.label}</span>}
             {v > 0 && <span className="inline-flex items-center gap-0.5 text-[#6ff0e0]/80"><BadgeCheck className="w-3 h-3" />{v}</span>}
             {price !== null && <span className="text-white/55">from <b className="text-white/85">{formatINR(price)}</b></span>}

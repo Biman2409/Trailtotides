@@ -280,8 +280,15 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
     return () => clearTimeout(t);
   }, [picks]);
 
+  // Escape closes the topmost thing only: an open menu closes itself, then the filters, then the card
+  const filtersOpenRef = useRef(filtersOpen);
+  filtersOpenRef.current = filtersOpen;
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { setSelected(null); setFiltersOpen(false); } };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || document.querySelector(".tm-menu")) return;
+      if (filtersOpenRef.current) setFiltersOpen(false);
+      else setSelected(null);
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
@@ -401,7 +408,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
           <span className="ml-0.5">Ready → Not yet</span>
         </span>
       ) : (
-        <Link href="/matchmaker" onClick={() => track("map_fitness_cta", { from: "toolbar" })} className="inline-flex items-center gap-1 font-semibold text-[#ffa576] hover:underline shrink-0">
+        <Link href="/matchmaker" onClick={() => track("map_fitness_cta", { from: "toolbar" })} className="inline-flex items-center gap-1 py-2.5 -my-2.5 font-semibold text-[#ffa576] hover:underline shrink-0">
           <MatchmakerMark className="w-3 h-3" />Light up my matches
         </Link>
       )}
@@ -576,7 +583,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
                   Compass, the count and the legend step aside until you go back */}
               {!selectedAdv && (
                 <div className="px-3.5 pb-3 space-y-2.5">
-                  <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} />
+                  <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} compact />
                   {sheet === "peek" ? (
                     // Collapsed: a swipeable row of what's in view, tied to the pins
                     <PeekCarousel list={listed.length ? listed : shown} fits={fits} onHover={setHovered} onOpen={select} />
