@@ -9,7 +9,7 @@ import type { Adventure } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import { haversineKm } from "@/lib/geo";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
-import { BASE_LAYERS, LIGHT_BASE, createBaseLayer, loadLeaflet } from "@/app/map/mapShared";
+import { BASE_LAYERS, BASE_KEY, LIGHT_BASE, createBaseLayer, loadLeaflet, type LayerKey } from "@/app/map/mapShared";
 import { trailEnds, trailWalkKm, type Trail } from "@/lib/trails/shared";
 
 interface Props {
@@ -44,6 +44,10 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
   useEffect(() => setMounted(true), []);
   const isDark = mounted && resolvedTheme !== "light";
   const router = useRouter();
+  // Map or satellite, remembered across pages; mapGen ticks each time the map is (re)built
+  const [base, setBase] = useState<LayerKey>("map");
+  useEffect(() => { try { if (localStorage.getItem(BASE_KEY) === "satellite") setBase("satellite"); } catch {} }, []);
+  const [mapGen, setMapGen] = useState(0);
 
   // Leaflet and its tiles load only once the map is about to scroll into view
   const [nearView, setNearView] = useState(false);
@@ -186,11 +190,8 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
       const credits = L.control.attribution({ position: "bottomright", prefix: false }).addTo(map);
       if (trail) credits.addAttribution("Trail: © OpenStreetMap contributors, via BRouter");
 
-      // OpenStreetMap via OpenFreeMap, as on the Adventure Map: its dark style with
-      // hillshade in dark mode, the light "positron" style in light mode
-      createBaseLayer(L, isDark ? BASE_LAYERS.map : LIGHT_BASE).then((base) => {
-        if (!cancelled && mapInstanceRef.current === map) base.addTo(map);
-      });
+      // The base map goes on in its own effect, so Map ⇄ Satellite doesn't rebuild the rest
+      setMapGen((g) => g + 1);
 
       function makeIcon(color: string, size: number, type: string, isActive = false) {
         const iconSize = Math.round(size * 0.42);
@@ -289,6 +290,30 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
     };
   }, [current, nearby, trail, isDark, router, nearView]);
 
+  // OpenStreetMap via OpenFreeMap, as on the Adventure Map (its dark style with hillshade in dark
+  // mode, the light "positron" style in light mode), or satellite imagery
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+    const cfg = base === "satellite" ? BASE_LAYERS.satellite : isDark ? BASE_LAYERS.map : LIGHT_BASE;
+    let stale = false, layer: import("leaflet").Layer | null = null;
+    loadLeaflet().then((L) => createBaseLayer(L, cfg)).then((l) => {
+      if (stale || mapInstanceRef.current !== map) return;
+      layer = l;
+      map.setMaxZoom(cfg.maxZoom);
+      l.addTo(map);
+    });
+    return () => {
+      stale = true;
+      if (layer && mapInstanceRef.current === map) map.removeLayer(layer);
+    };
+  }, [mapGen, base, isDark]);
+
+  function pickBase(b: LayerKey) {
+    setBase(b);
+    try { localStorage.setItem(BASE_KEY, b); } catch {}
+  }
+
   function show(v: "trail" | "region") {
     setView(v);
     const b = boundsRef.current[v];
@@ -331,6 +356,15 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
             ))}
           </div>
         )}
+        <div className="absolute top-2 right-2 z-[500] flex rounded-lg overflow-hidden text-[11px] font-semibold shadow" role="group" aria-label="Map style">
+          {(["map", "satellite"] as const).map((b) => (
+            <button key={b} type="button" onClick={() => pickBase(b)} aria-pressed={base === b}
+              className="px-2.5 h-7 capitalize transition-colors"
+              style={base === b ? { background: "#ff5100", color: "#fff" } : { background: isDark ? "rgba(9,16,31,0.85)" : "rgba(255,255,255,0.92)", color: isDark ? "rgba(255,255,255,0.75)" : "rgba(15,23,31,0.7)" }}>
+              {b}
+            </button>
+          ))}
+        </div>
         <div
           className="absolute inset-0 pointer-events-none"
           style={{ boxShadow: `inset 0 0 20px 0px rgba(0,0,0,${isDark ? 0.35 : 0.1})` }}

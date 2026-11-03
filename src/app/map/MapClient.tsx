@@ -31,7 +31,7 @@ import CompassBar, { type CompassPick } from "./CompassBar";
 import ResultsList from "./ResultsList";
 import PinCard from "./PinCard";
 import CompareTray from "./CompareTray";
-import { fitFor, haversineKm, difficultyColor, type Fit } from "./mapShared";
+import { fitFor, haversineKm, difficultyColor, BASE_KEY, type Fit, type LayerKey } from "./mapShared";
 import PeekCarousel from "./PeekCarousel";
 import MapEmptyState from "./MapEmptyState";
 import { trailUrl, type Trail } from "@/lib/trails/shared";
@@ -100,6 +100,10 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const [shotsLoading, setShotsLoading] = useState(false);
   const [photos, setPhotos] = useState<UserPhoto[]>([]);
   const [trailOn, setTrailOn] = useState(false);
+  // Map or satellite, remembered across visits (shared with the adventure pages' trail map)
+  const [base, setBase] = useState<LayerKey>("map");
+  useEffect(() => { try { if (localStorage.getItem(BASE_KEY) === "satellite") setBase("satellite"); } catch {} }, []);
+  const pickBase = (b: LayerKey) => { setBase(b); try { localStorage.setItem(BASE_KEY, b); } catch {} };
   const [groups, setGroups] = useState<GroupSummary[]>([]);
   const [group, setGroup] = useState<{ code: string; name: string; members: GroupMember[] } | null>(null);
   const [groupLoading, setGroupLoading] = useState(false);
@@ -476,6 +480,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
       loggedIn={loggedIn}
       shotsOn={shotsOn} shotsLoading={shotsLoading} onShots={toggleShots}
       trailOn={trailOn} onTrail={toggleTrail}
+      base={base} onBase={pickBase}
     />
   );
 
@@ -503,6 +508,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
             radiusKm={radius}
             userPhotos={photos}
             completed={completed}
+            base={base}
             apiRef={apiRef}
             onSelect={select}
             onViewChange={onViewChange}

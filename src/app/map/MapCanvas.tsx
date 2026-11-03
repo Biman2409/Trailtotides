@@ -10,7 +10,7 @@ import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import {
   BASE_LAYERS, createBaseLayer, INDIA_CENTER, INDIA_ZOOM, INDIA_BOUNDS, loadLeaflet, inSeason, esc,
   difficultyOf, difficultyColor, priceFrom, formatINR, verifiedOperators,
-  type Fit,
+  type Fit, type LayerKey,
 } from "./mapShared";
 
 // The Leaflet side of the map. Leaflet owns the DOM inside this div; React state comes in
@@ -58,6 +58,8 @@ interface Props {
   radiusKm: number | null;
   userPhotos: UserPhoto[];
   completed: CompletedAdventure[];
+  /** The base map: the dark map or satellite imagery */
+  base: LayerKey;
   apiRef: React.MutableRefObject<MapApi | null>;
   onSelect: (slug: string) => void;
   onViewChange: (inView: Set<string>) => void;
@@ -294,11 +296,11 @@ export default function MapCanvas(props: Props) {
 
   // ── Tiles ───────────────────────────────────────────────────────────────────
 
-  // One base map (the dark Default style)
+  // The dark Default style, or satellite imagery
   function setTiles() {
     const map = mapRef.current, leaflet = leafletRef.current;
     if (!map || !leaflet) return;
-    const cfg = BASE_LAYERS.map;
+    const cfg = BASE_LAYERS[live.current.base];
     // The vector style loads MapLibre first, so only the latest request wins
     const token = ++tileToken.current;
     createBaseLayer(leaflet, cfg).then((base) => {
@@ -331,6 +333,8 @@ export default function MapCanvas(props: Props) {
       markersRef.current.set(a.slug, m);
     }
   }
+
+  useEffect(() => { setTiles(); }, [props.base]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // The set of pins changes: rebuild. Only their look changes: swap icons in place.
   useEffect(() => { buildMarkers(); reportView(); }, [advs]); // eslint-disable-line react-hooks/exhaustive-deps

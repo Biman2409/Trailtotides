@@ -14,8 +14,10 @@ declare global { interface Window { L: typeof L } }
 // OpenStreetMap data, keyless. The map is OpenFreeMap's dark vector style,
 // drawn by MapLibre inside Leaflet, with hillshade from the public Terrarium elevation tiles so the
 // Himalaya and the Ghats read as relief — mountain to ocean, in the hero's palette. Its credit is
-// shown, as the licences require.
+// shown, as the licences require. Satellite is Esri's World Imagery (Maxar and others, keyless,
+// sharp to zoom 18 across the Himalaya) with Esri's place names and borders laid over it.
 
+const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services";
 const OSM_CREDIT = '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
 const OPENFREEMAP_CREDIT = `<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> · © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> · ${OSM_CREDIT}`;
 const TERRARIUM = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
@@ -28,11 +30,14 @@ export interface BaseStyle {
   style?: string;
   /** … or a raster tile URL (drawn by Leaflet) */
   url?: string;
+  /** A raster drawn over url: place names and borders over imagery */
+  labels?: string;
   dark?: boolean;
 }
 
-/** One base map now; the key stays so callers read BASE_LAYERS.map */
-export type LayerKey = "map";
+export type LayerKey = "map" | "satellite";
+/** localStorage key for the viewer's last pick, shared by both maps */
+export const BASE_KEY = "ttt-map-base";
 
 export const BASE_LAYERS: Record<LayerKey, BaseStyle> = {
   map: {
@@ -41,6 +46,14 @@ export const BASE_LAYERS: Record<LayerKey, BaseStyle> = {
     dark: true,
     maxZoom: 16,
     attribution: `${OPENFREEMAP_CREDIT} · Elevation: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a>`,
+  },
+  satellite: {
+    label: "Satellite",
+    url: `${ESRI}/World_Imagery/MapServer/tile/{z}/{y}/{x}`,
+    labels: `${ESRI}/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}`,
+    dark: true,
+    maxZoom: 18,
+    attribution: 'Imagery © <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>, Maxar, Earthstar Geographics and the GIS User Community',
   },
 };
 
@@ -56,7 +69,9 @@ export const LIGHT_BASE: BaseStyle = {
 /** Builds a base layer for any style. Vector styles load MapLibre on first use. Add it with addBaseLayer. */
 export async function createBaseLayer(leaflet: typeof L, cfg: BaseStyle, className = "tm-base"): Promise<L.Layer> {
   if (cfg.url) {
-    return leaflet.tileLayer(cfg.url, { maxZoom: cfg.maxZoom, maxNativeZoom: cfg.maxZoom, attribution: cfg.attribution, className });
+    const tiles = leaflet.tileLayer(cfg.url, { maxZoom: cfg.maxZoom, maxNativeZoom: cfg.maxZoom, attribution: cfg.attribution, className });
+    if (!cfg.labels) return tiles;
+    return leaflet.layerGroup([tiles, leaflet.tileLayer(cfg.labels, { maxZoom: cfg.maxZoom, maxNativeZoom: cfg.maxZoom, className })]);
   }
   await loadMapLibre(leaflet);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
