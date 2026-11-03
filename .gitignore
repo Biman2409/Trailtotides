@@ -56,3 +56,6 @@ supabase/.temp/
 append_string.txt
 new_adventures.json
 new_adventures.txt
+
+# uploads dropped in by the Orchids builder; the image hook turns them into adventure images
+.orchids/
