@@ -82,7 +82,7 @@ const pt = (i: number, v: number) => {
 const poly = (vals: number[]) => vals.map((v, i) => pt(i, v).map((n) => n.toFixed(1)).join(",")).join(" ");
 
 const BEATS = [
-  { label: "Answer", ms: 6900 },
+  { label: "Answer", ms: 7800 },
   { label: "Radar", ms: 4800 },
   { label: "Rated", ms: 7800 },
   { label: "Train", ms: 5800 },
@@ -250,8 +250,18 @@ export default function MatchmakerStory({ you, questions, samples, train, group,
           ))}
           {AXES.map((k, i) => {
             const [x, y] = pt(i, MAX);
-            const asking = beat === ANSWER && !qPicked && q?.axes.includes(k);
-            return <line key={k} x1={CX} y1={CY} x2={x} y2={y} stroke={asking ? YOU : "var(--ms-grid)"} strokeWidth={asking ? 1.4 : 0.6} strokeOpacity={asking ? 0.7 : 1} style={{ transition: "stroke 0.3s ease" }} />;
+            return <line key={k} x1={CX} y1={CY} x2={x} y2={y} stroke="var(--ms-grid)" strokeWidth={0.6} />;
+          })}
+          {/* The capability being asked about: a soft beam along its spoke until it's answered */}
+          {AXES.map((k, i) => {
+            const asking = beat === ANSWER && q?.axes[0] === k;
+            const [x, y] = pt(i, MAX);
+            return (
+              <g key={`ask-${k}`} style={{ opacity: asking && !qPicked ? 1 : 0, transition: "opacity 0.45s ease" }}>
+                <line x1={CX} y1={CY} x2={x} y2={y} stroke={YOU} strokeWidth={10} strokeOpacity={0.12} strokeLinecap="round" />
+                <line x1={CX} y1={CY} x2={x} y2={y} stroke={YOU} strokeWidth={1.2} strokeOpacity={0.6} strokeLinecap="round" />
+              </g>
+            );
           })}
 
           {/* Trek demands */}
@@ -327,7 +337,7 @@ export default function MatchmakerStory({ you, questions, samples, train, group,
             const [x, y] = pt(i, MAX + 1.2);
             const short = gaps.includes(k);
             const gained = beat === TRAIN && trained && train?.axis === k;
-            const asking = beat === ANSWER && q?.axes.includes(k);
+            const asking = beat === ANSWER && q?.axes[0] === k;
             return (
               <text
                 key={k}

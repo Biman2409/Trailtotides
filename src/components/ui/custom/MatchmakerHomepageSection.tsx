@@ -105,11 +105,12 @@ function sampleResults() {
 }
 
 // Three of the Matchmaker's own questions, answered as the example profile would (it is 3 on
-// stamina and agility, 2 on altitude); each fills in the capabilities it stands for here
+// stamina and agility, 2 on altitude). They go round the radar clockwise, each filling in the
+// capabilities beside it, so the shape grows in one sweep.
 const SAMPLE_QUESTIONS: StoryQuestion[] = [
   { text: "How long can you keep moving before you need a proper rest?", options: ["1–3 hours", "3–5 hours", "5–8 hours"], pick: 1, axes: ["stamina", "power", "strength"] },
-  { text: "The highest you've slept without getting properly sick?", options: ["Under 2,500m", "2,500–3,500m", "3,500–4,500m"], pick: 1, axes: ["altitude", "water", "nerve"] },
-  { text: "On uneven ground, how confident is your footing?", options: ["Very slow", "Cautious, steady", "Confident"], pick: 1, axes: ["agility", "focus"] },
+  { text: "On uneven ground, how confident is your footing?", options: ["Very slow", "Cautious, steady", "Confident"], pick: 1, axes: ["agility", "water"] },
+  { text: "The highest you've slept without getting properly sick?", options: ["Under 2,500m", "2,500–3,500m", "3,500–4,500m"], pick: 1, axes: ["altitude", "focus", "nerve"] },
 ];
 
 // The training step for the example profile: the level up that opens the most, and the trek
@@ -140,7 +141,7 @@ function DefaultCTA() {
 
   return (
     <Band>
-      {/* Text and sample sit together as a centred pair, lined up with the map section above */}
+      {/* Text and sample sit together as a centred pair, lined up with the map section below */}
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,520px)_400px] lg:justify-center gap-4 lg:gap-16 items-center">
         {/* Left: promise and action */}
         <div className="min-w-0">

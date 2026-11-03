@@ -134,12 +134,14 @@ const MATCH_AT = 3600;
 const COMPARE_AT = 2700;
 // Pins within this many map units of each other cluster at the whole-India view; clusters
 // split as the camera zooms past CLUSTER_UNTIL
-const CLUSTER_R = 13;
+const CLUSTER_R = 20;
 const CLUSTER_UNTIL = 1.6;
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 // The trail view: web-mercator pixels, as map tiles use, so the satellite imagery and the line agree
 const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile";
+// Shaded relief for the map style, tinted to the demo's greens, as the real map shades its hills
+const RELIEF = "https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade_Dark/MapServer/tile";
 const merc = (lat: number, lng: number, z: number) => {
   const s = 256 * 2 ** z, r = (lat * Math.PI) / 180;
   return { x: ((lng + 180) / 360) * s, y: ((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2) * s };
@@ -198,23 +200,34 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
   const [sat, setSat] = useState(false);         // satellite under the trail
   const [saved, setSaved] = useState<string | null>(null);
 
-  // Clusters for the whole-India view, as the real map groups its pins: greedy, nearest first,
-  // in map units so they hold still while the camera moves. Each takes the average difficulty.
+  // Clusters for the whole-India view, as the real map groups its pins: densest spots first, then
+  // any two clusters close enough to overlap merge, so the bubbles never pile up. In map units so
+  // they hold still while the camera moves. Each takes the average difficulty.
   const clusters = useMemo(() => {
     const shown = pins.filter((p) => !genre || p.genre === genre);
-    const taken = new Set<string>(), out: Cluster[] = [];
-    for (const p of shown) {
+    const near = (a: { x: number; y: number }, b: { x: number; y: number }, r = CLUSTER_R) => Math.hypot(a.x - b.x, a.y - b.y) <= r;
+    const density = new Map(shown.map((p) => [p.slug, shown.filter((q) => near(p, q)).length]));
+    const taken = new Set<string>();
+    let groups: Pin[][] = [];
+    for (const p of [...shown].sort((a, b) => density.get(b.slug)! - density.get(a.slug)!)) {
       if (taken.has(p.slug)) continue;
-      const group = shown.filter((q) => !taken.has(q.slug) && Math.hypot(q.x - p.x, q.y - p.y) <= CLUSTER_R);
+      const group = shown.filter((q) => !taken.has(q.slug) && near(p, q));
       group.forEach((q) => taken.add(q.slug));
-      if (group.length < 2) continue;
-      const lvl = Math.round(group.reduce((s, q) => s + Math.max(0, DIFFS.indexOf(q.difficulty as (typeof DIFFS)[number])), 0) / group.length);
-      out.push({
-        x: group.reduce((s, q) => s + q.x, 0) / group.length, y: group.reduce((s, q) => s + q.y, 0) / group.length,
-        n: group.length, color: DIFF_COLOR[DIFFS[lvl]], members: group.map((q) => q.slug),
-      });
+      if (group.length >= 2) groups.push(group);
     }
-    return out;
+    const centre = (g: Pin[]) => ({ x: g.reduce((s, q) => s + q.x, 0) / g.length, y: g.reduce((s, q) => s + q.y, 0) / g.length });
+    for (let merged = true; merged;) {
+      merged = false;
+      outer: for (let i = 0; i < groups.length; i++) for (let j = i + 1; j < groups.length; j++) {
+        if (near(centre(groups[i]), centre(groups[j]), CLUSTER_R * 1.2)) {
+          groups[i] = [...groups[i], ...groups[j]]; groups = groups.filter((_, k) => k !== j); merged = true; break outer;
+        }
+      }
+    }
+    return groups.map((g): Cluster => {
+      const lvl = Math.round(g.reduce((s, q) => s + Math.max(0, DIFFS.indexOf(q.difficulty as (typeof DIFFS)[number])), 0) / g.length);
+      return { ...centre(g), n: g.length, color: DIFF_COLOR[DIFFS[lvl]], members: g.map((q) => q.slug) };
+    });
   }, [pins, genre]);
   const clusterOf = useMemo(() => {
     const m = new Map<string, Cluster>();
@@ -240,10 +253,10 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
     const vb = { x: (cx - w / 2) * k, y: (cy - h / 2) * k, w: w * k, h: h * k };
     const at = (la: number, lo: number) => { const p = merc(la, lo, z); return `${(p.x - vb.x).toFixed(1)},${(p.y - vb.y).toFixed(1)}`; };
     const pts = tour.line.map(([la, lo]) => at(la, lo));
-    const tiles: { x: number; y: number; href: string }[] = [];
+    const tiles: { x: number; y: number; href: string; relief: string }[] = [];
     for (let tx = Math.floor(vb.x / 256); tx <= Math.floor((vb.x + vb.w) / 256); tx++)
       for (let ty = Math.floor(vb.y / 256); ty <= Math.floor((vb.y + vb.h) / 256); ty++)
-        tiles.push({ x: tx * 256 - vb.x, y: ty * 256 - vb.y, href: `${ESRI}/${z}/${ty}/${tx}` });
+        tiles.push({ x: tx * 256 - vb.x, y: ty * 256 - vb.y, href: `${ESRI}/${z}/${ty}/${tx}`, relief: `${RELIEF}/${z}/${ty}/${tx}` });
     // A loop ends where it began: its last stop would hide the start, so a stop on top of an
     // earlier one is left out
     const stops = tour.stops
@@ -801,6 +814,9 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
             <div className="md-trail absolute inset-0 z-[9] overflow-hidden" onClick={(e) => e.stopPropagation()}>
               <div className="md-trail-map absolute inset-0" aria-hidden />
               <svg viewBox={`0 0 ${tv.w} ${tv.h}`} preserveAspectRatio="xMidYMid slice" className="absolute inset-0 w-full h-full" aria-hidden>
+                <g className="md-relief">
+                  {tv.tiles.map((t) => <image key={t.relief} href={t.relief} x={t.x} y={t.y} width={256} height={256} />)}
+                </g>
                 {/* Satellite tiles load as the view opens, so the switch is instant */}
                 <g className="md-sat" style={{ opacity: sat ? 1 : 0 }}>
                   {tv.tiles.map((t) => <image key={t.href} href={t.href} x={t.x} y={t.y} width={256} height={256} />)}
@@ -864,7 +880,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                     {offline ? "No signal, still on the trail" : `${tour.lengthKm} km · ${tv.stops.length} stops · up to ${tour.maxEleM.toLocaleString("en-IN")} m`}
                   </span>
                 </span>
-                {sat && <span className="shrink-0 text-[7.5px] text-white/60 px-1 pb-0.5" style={{ textShadow: "0 1px 2px #000" }}>Imagery © Esri</span>}
+                {<span className="shrink-0 text-[7.5px] text-white/60 px-1 pb-0.5" style={{ textShadow: "0 1px 2px #000" }}>{sat ? "Imagery" : "Relief"} © Esri</span>}
               </div>
             </div>
           )}
@@ -1051,6 +1067,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
             url("/hero/trail-contours.png") 0 0 / 420px 72px repeat,
             radial-gradient(110% 80% at 50% 40%, #233326 0%, #141d16 75%); }
         .md-trail-map::after { content: ""; position: absolute; inset: 0; background: rgba(10,16,12,0.55); }
+        .md-relief { filter: sepia(1) hue-rotate(58deg) saturate(0.55) brightness(0.5) contrast(1.15); opacity: 0.95; }
         .md-sat { transition: opacity 0.7s ease; filter: saturate(0.88) contrast(1.06) brightness(0.93); }
         .md-line { stroke-dasharray: 1; stroke-dashoffset: 1; animation: mdDraw 1.8s 0.9s cubic-bezier(0.6,0,0.2,1) forwards; }
         .md-stop { opacity: 0; transform-box: fill-box; transform-origin: center; animation: mdStop 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
