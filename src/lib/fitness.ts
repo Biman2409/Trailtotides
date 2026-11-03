@@ -72,6 +72,26 @@ export function gapsFor(ace: ACE, adventure: Adventure): Gap[] {
     .sort((x, y) => (y.need - y.have) - (x.need - x.have));
 }
 
+export interface NextStep { axis: AceAxis; from: number; to: number; unlocked: number }
+
+/** Each capability's next level and how many adventures it makes "ready", most first, as the
+ *  Matchmaker's training focus ranks them. Levels that open nothing are left out. */
+export function nextSteps(ace: ACE, all: Adventure[]): NextStep[] {
+  const notReady = all.filter((a) => matchScore(ace, a) < 80);
+  return AXES.filter((axis) => ace[axis] < 5)
+    .map((axis) => {
+      const lifted = { ...ace, [axis]: ace[axis] + 1 };
+      return { axis, from: ace[axis], to: ace[axis] + 1, unlocked: notReady.filter((a) => matchScore(lifted, a) >= 80).length };
+    })
+    .filter((s) => s.unlocked > 0)
+    .sort((x, y) => y.unlocked - x.unlocked);
+}
+
+/** The one level up that opens the most. Null when none opens anything. */
+export function bestNextStep(ace: ACE, all: Adventure[]): NextStep | null {
+  return nextSteps(ace, all)[0] ?? null;
+}
+
 /** Rough weeks of steady training to close the gaps — trained in parallel, ~4 weeks per level. */
 export function weeksToReady(gaps: Gap[]): number {
   const trainable = gaps.filter((g) => g.axis !== "altitude");

@@ -1,16 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, RotateCcw } from "lucide-react";
+import { ArrowRight, Mountain, RefreshCw, RotateCcw, TrendingUp, Users } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { type StoredProfile } from "@/lib/matchmaker";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
+import { AXES, AXIS_LABEL, TRAINING_TIPS, bestNextStep, nextSteps, type TripCredit } from "@/lib/fitness";
 import { getACE, computeMatchScore, type ACE } from "@/lib/ace";
 import { SAMPLE_ACE } from "@/lib/homeCuration";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import RankBar from "@/components/ui/custom/RankBar";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
-import MatchmakerStory from "@/components/ui/custom/MatchmakerStory";
+import MatchmakerStory, { type StoryQuestion, type StoryTrain } from "@/components/ui/custom/MatchmakerStory";
 const RANKS = [
   {
     label: "Uncharted", color: "#6b7280", stars: 0, minScore: 0,
@@ -66,9 +67,9 @@ function Eyebrow({ className = "mb-2" }: { className?: string }) {
 }
 
 export default function MatchmakerHomepageSection() {
-  const { profile, ace, stale, ready } = useFitnessProfile();
+  const { profile, ace, credits, stale, ready } = useFitnessProfile();
   if (!ready || !profile?.ace || !ace) return <DefaultCTA />;
-  return <ProfileSummary profile={profile} ace={ace} stale={stale} />;
+  return <ProfileSummary profile={profile} ace={ace} credits={credits} stale={stale} />;
 }
 
 /* ── First-time visitors: what you get, how long it takes, one clear action ── */
@@ -103,6 +104,37 @@ function sampleResults() {
   return [best(inRange(80, 101)), best(inRange(55, 80)), worst(inRange(0, 55))].filter(Boolean);
 }
 
+// Three of the Matchmaker's own questions, answered as the example profile would (it is 3 on
+// stamina and agility, 2 on altitude); each fills in the capabilities it stands for here
+const SAMPLE_QUESTIONS: StoryQuestion[] = [
+  { text: "How long can you keep moving before you need a proper rest?", options: ["1–3 hours", "3–5 hours", "5–8 hours"], pick: 1, axes: ["stamina", "power", "strength"] },
+  { text: "The highest you've slept without getting properly sick?", options: ["Under 2,500m", "2,500–3,500m", "3,500–4,500m"], pick: 1, axes: ["altitude", "water", "nerve"] },
+  { text: "On uneven ground, how confident is your footing?", options: ["Very slow", "Cautious, steady", "Confident"], pick: 1, axes: ["agility", "focus"] },
+];
+
+// The training step for the example profile: the level up that opens the most, and the trek
+// from the sample pool it turns from a stretch into ready
+function sampleTrain(): StoryTrain | null {
+  const pool = adventures.filter((a) => a.type === "Trekking" && !/nepal|bhutan/i.test(a.state));
+  // The level up that opens the most and has a trek to show it on
+  for (const step of nextSteps(SAMPLE_ACE, adventures)) {
+    const lifted = { ...SAMPLE_ACE, [step.axis]: step.to } as ACE;
+    const f = pool
+      .map((a) => {
+        const req = getACE(a);
+        // What's still short after the level up, so the demo can show the gap closing cleanly
+        const left = AXES.reduce((s, k) => s + Math.max(0, req[k] - lifted[k]), 0);
+        return { a, req, left, before: computeMatchScore(SAMPLE_ACE, req), after: computeMatchScore(lifted, req) };
+      })
+      // A stretch that turns ready and was short on this capability; best if the new level is
+      // exactly what it needs, then the fewest gaps left
+      .filter((x) => x.before >= 55 && x.before < 80 && x.after >= 80 && x.req[step.axis] >= step.to)
+      .sort((x, y) => Number(x.req[step.axis] !== step.to) - Number(y.req[step.axis] !== step.to) || x.left - y.left || y.after - x.after)[0];
+    if (f) return { ...step, trek: { name: f.a.name, ace: f.req, before: f.before, after: f.after } };
+  }
+  return null;
+}
+
 function DefaultCTA() {
   const samples = sampleResults();
 
@@ -117,7 +149,7 @@ function DefaultCTA() {
             Adventures built for <span className="text-[#ff5100]">your body</span>
           </h2>
           <p className="text-sm leading-relaxed max-w-xl" style={{ color: "var(--text-secondary)" }}>
-            Answer a few questions, about 2 minutes, and every adventure gets rated for you: ready, a stretch, or not yet.
+            Answer a few quick questions, about 2 minutes, and every adventure gets rated for you: ready, a stretch, or not yet. Then see what to train to unlock more, and match a whole group.
           </p>
           {/* Desktop only: below lg the sample sits right under it with its own "Start" */}
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -140,6 +172,8 @@ function DefaultCTA() {
         <div className="min-w-0">
           <MatchmakerStory
             you={SAMPLE_ACE}
+            questions={SAMPLE_QUESTIONS}
+            train={sampleTrain()}
             samples={samples.map(({ a, score }) => ({ id: a.id, name: a.name, image: a.heroImage, ace: getACE(a), score }))}
             group={sampleGroup(samples)}
             cta={{ href: "/matchmaker", label: "Start", note: "Sample. Yours takes 2 min." }}
@@ -150,11 +184,18 @@ function DefaultCTA() {
   );
 }
 
-/* ── Returning visitors: their profile at a glance (the adventure list lives in "Picked for you") ── */
+/* ── Returning visitors: where they stand, what to do next (the adventure list lives in "Picked for you") ── */
 
-function ProfileSummary({ profile, ace, stale }: { profile: StoredProfile; ace: ACE; stale: boolean }) {
-  // Rank, counts and radar all use the trip-adjusted profile, so logging a trip moves them together
-  const totalScore = Object.values(ace).reduce((a: number, b) => a + (b as number), 0);
+const BUCKETS = [
+  { key: "ready", label: "Ready", color: "#10b981", href: "/explore?ace=ready" },
+  { key: "stretch", label: "A stretch", color: "#f59e0b", href: "/explore?ace=stretch" },
+  { key: "notyet", label: "Not yet", color: "#f43f5e", href: "/explore?ace=out-of-range" },
+] as const;
+
+function ProfileSummary({ profile, ace, credits, stale }: { profile: StoredProfile; ace: ACE; credits: TripCredit[]; stale: boolean }) {
+  // Rank, counts, radar and the training step all use the trip-adjusted profile, so logging a
+  // trip moves them together
+  const totalScore = AXES.reduce((s, k) => s + ace[k], 0);
   const rankIndex = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
   const tier = RANKS[rankIndex] ?? RANKS[1];
   const nextRank = RANKS[rankIndex + 1] ?? null;
@@ -162,81 +203,152 @@ function ProfileSummary({ profile, ace, stale }: { profile: StoredProfile; ace: 
     ? Math.min(100, Math.round(((totalScore - tier.minScore) / (nextRank.minScore - tier.minScore)) * 100))
     : 100;
 
-  // Counts use the trip-adjusted profile, same as every match score on the site
   const scores = adventures.map((a) => computeMatchScore(ace, getACE(a)));
-  const ready = scores.filter((s) => s >= 80).length;
-  const stretch = scores.filter((s) => s >= 55 && s < 80).length;
+  const counts = {
+    ready: scores.filter((s) => s >= 80).length,
+    stretch: scores.filter((s) => s >= 55 && s < 80).length,
+    notyet: scores.filter((s) => s < 55).length,
+  };
+  const step = bestNextStep(ace, adventures);
+  const strengths = [...AXES].sort((a, b) => ace[b] - ace[a]).slice(0, 3);
   const updated = timeAgo(profile.updatedAt);
+  // The latest lift from a logged trip, per capability
+  const lifts = [...new Map(credits.map((c) => [c.axis, c])).values()];
 
   return (
     <Band>
-      <div className="grid lg:grid-cols-[1fr_340px] gap-5 lg:gap-10 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,520px)_400px] lg:justify-center gap-6 lg:gap-16 items-center">
         <div className="min-w-0">
-          <Eyebrow />
-          <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
-            Your fitness profile
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
+            <Eyebrow className="" />
+            {stale ? (
+              <Link href="/matchmaker?retake=1" className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(245,158,11,0.12)", color: "#d97706" }}>
+                <RefreshCw className="w-3 h-3" />Due a refresh{updated ? ` · ${updated}` : ""}
+              </Link>
+            ) : updated && (
+              <span className="text-[11px] font-medium" style={{ color: "var(--text-tertiary)" }}>Updated {updated}</span>
+            )}
+          </div>
+          <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-2">
+            You&apos;re ready for <span style={{ color: "#10b981" }}>{counts.ready} adventures</span>
           </h2>
-          <p className="text-sm sm:text-base leading-relaxed max-w-xl" style={{ color: "var(--text-secondary)" }}>
-            You&apos;re ready for <span className="font-semibold" style={{ color: "#10b981" }}>{ready} adventures</span>
-            {stretch > 0 && <>, and <span className="font-semibold" style={{ color: "#f59e0b" }}>{stretch} more</span> are a stretch</>}.
-            {updated && <span style={{ color: "var(--text-tertiary)" }}> Updated {updated}.</span>}
+          <p className="text-sm leading-relaxed max-w-xl" style={{ color: "var(--text-secondary)" }}>
+            Every adventure on the site is rated for your body{credits.length > 0 ? ", and for the trips you've logged" : ""}. Tap a group to see it.
           </p>
-          {stale && (
-            <p className="text-sm mt-3 max-w-xl rounded-xl px-3.5 py-2.5" style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.25)", color: "var(--text-secondary)" }}>
-              Fitness changes — a 2-minute refresh keeps these matches honest.{" "}
-              <Link href="/matchmaker?retake=1" className="font-semibold text-[#f59e0b] hover:underline">Refresh now</Link>
+
+          {/* Where you stand: each count opens those adventures */}
+          <div className="grid grid-cols-3 gap-2 mt-4 max-w-xl">
+            {BUCKETS.map((b) => {
+              const n = counts[b.key];
+              return (
+                <Link key={b.key} href={b.href} className="group rounded-xl px-3 py-2.5 transition-all hover:-translate-y-0.5" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
+                  <span className="block text-2xl font-bold tabular-nums leading-none" style={{ color: b.color }}>{n}</span>
+                  <span className="flex items-center justify-between mt-1.5 text-[12px] font-semibold" style={{ color: "var(--text-secondary)" }}>
+                    {b.label}
+                    <ArrowRight className="w-3 h-3 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                  </span>
+                  <span className="block mt-2 h-1 rounded-full overflow-hidden" style={{ background: "var(--border-subtle)" }}>
+                    <span className="block h-full rounded-full" style={{ width: `${Math.round((n / Math.max(1, scores.length)) * 100)}%`, background: b.color }} />
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* What to do next: the level up that opens the most, as the results page's training focus ranks it */}
+          {step && (
+            <Link href="/matchmaker#training-focus" className="group flex items-start gap-3 rounded-xl p-3.5 mt-2.5 max-w-xl transition-colors" style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.25)" }}>
+              <span className="w-9 h-9 rounded-xl grid place-items-center shrink-0" style={{ background: "rgba(16,185,129,0.14)", color: "#10b981" }}>
+                <TrendingUp className="w-4 h-4" />
+              </span>
+              <span className="flex-1 min-w-0">
+                <span className="block text-[14px] font-bold" style={{ color: "var(--text-primary)" }}>
+                  Train next: {AXIS_LABEL[step.axis]} <span className="tabular-nums" style={{ color: "#10b981" }}>{step.from} → {step.to}</span>
+                </span>
+                <span className="block text-[12.5px] mt-0.5" style={{ color: "var(--text-secondary)" }}>
+                  Unlocks <b style={{ color: "#10b981" }}>{step.unlocked} more</b> {step.unlocked === 1 ? "adventure" : "adventures"}. {TRAINING_TIPS[step.axis]}
+                </span>
+              </span>
+              <ArrowRight className="w-4 h-4 mt-1 shrink-0 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" style={{ color: "var(--text-secondary)" }} />
+            </Link>
+          )}
+
+          {/* What logged trips have lifted */}
+          {lifts.length > 0 && (
+            <p className="flex items-start gap-2 mt-2.5 max-w-xl text-[12.5px]" style={{ color: "var(--text-secondary)" }}>
+              <Mountain className="w-4 h-4 mt-0.5 shrink-0 text-[#ff5100]" />
+              <span>
+                Your trips lifted{" "}
+                {lifts.slice(0, 2).map((c, i) => (
+                  <span key={c.axis}>{i > 0 && " and "}<b style={{ color: "var(--text-primary)" }}>{AXIS_LABEL[c.axis]} to {c.to}</b> ({c.adventure})</span>
+                ))}
+                {lifts.length > 2 && ` and ${lifts.length - 2} more`}.
+              </span>
             </p>
           )}
 
-          {/* Rank */}
-          <div className="rounded-2xl p-4 mt-6 max-w-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
-            <div className="flex items-center gap-3 mb-3">
-              <span className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${tier.color}18`, color: tier.color }}>
-                <span className="scale-125">{tier.icon}</span>
-              </span>
-              <span className="flex-1 min-w-0">
-                <span className="block text-[10px] uppercase tracking-[0.2em] font-semibold" style={{ color: "var(--text-tertiary)" }}>Your rank</span>
-                <span className="block text-lg font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</span>
-              </span>
-              {nextRank && (
-                <span className="text-right shrink-0">
-                  <span className="block text-lg font-bold tabular-nums" style={{ color: tier.color }}>{progressPct}%</span>
-                  <span className="block text-[10px]" style={{ color: "var(--text-tertiary)" }}>to {nextRank.label}</span>
-                </span>
-              )}
-            </div>
-            <RankBar totalScore={totalScore} trackH={6} showLabels showYouTag />
-          </div>
-
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-7">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-3 mt-5">
             <Link
               href="/explore?ace=ready"
-              className="group inline-flex items-center gap-2 bg-[#ff5100] text-white font-semibold px-6 py-3.5 rounded-xl text-[15px] hover:bg-[#ff6a24] hover:-translate-y-0.5 transition-all duration-200"
-              style={{ boxShadow: "0 6px 20px rgba(255,81,0,0.28)" }}
+              className="group inline-flex items-center gap-2 bg-[#ff5100] text-white font-semibold px-5 h-11 rounded-xl text-[14px] hover:bg-[#ff6a24] transition-colors"
+              style={{ boxShadow: "0 6px 20px rgba(255,81,0,0.25)" }}
             >
-              See all your matches
+              See your matches
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
             <Link
-              href="/matchmaker?retake=1"
-              className="inline-flex items-center gap-2 font-semibold px-5 py-3.5 rounded-xl text-sm transition-colors hover:bg-[var(--bg-card-hover)]"
+              href="/matchmaker/group"
+              className="inline-flex items-center gap-2 font-semibold px-4 h-11 rounded-xl text-[14px] transition-colors hover:bg-[var(--bg-card-hover)]"
               style={{ color: "var(--text-primary)", border: "1px solid var(--border-default)" }}
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              Retake
+              <Users className="w-4 h-4" />
+              Match a group
             </Link>
-            <Link href="/matchmaker" className="group inline-flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-[var(--text-primary)]" style={{ color: "var(--text-secondary)" }}>
-              Detailed results
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            <Link href="/matchmaker" className="py-3 -my-3 px-1 text-[13px] font-medium underline underline-offset-2 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+              Full results
+            </Link>
+            <Link href="/matchmaker?retake=1" className="py-3 -my-3 px-1 inline-flex items-center gap-1 text-[13px] font-medium underline underline-offset-2 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+              <RotateCcw className="w-3 h-3" />Retake
             </Link>
           </div>
         </div>
 
-        <div className="rounded-2xl p-4 flex flex-col items-center" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", boxShadow: "0 20px 50px rgba(var(--shadow-color), 0.18)" }}>
-          <p className="self-start text-[10px] font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "var(--text-tertiary)" }}>Your capabilities</p>
-          <ACERadar ace={ace} size={260} showLabels labelSize={11} />
+        {/* Your profile: rank, the radar (the capability to train lit up), strengths */}
+        <div className="mm-card rounded-[22px] p-4 sm:p-5 min-w-0 w-full max-w-[420px] mx-auto">
+          <div className="flex items-center gap-3">
+            <span className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${tier.color}18`, color: tier.color }}>
+              <span className="scale-125">{tier.icon}</span>
+            </span>
+            <span className="flex-1 min-w-0">
+              <span className="block text-[10px] uppercase tracking-[0.2em] font-semibold" style={{ color: "var(--text-tertiary)" }}>Your rank</span>
+              <span className="block text-lg font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</span>
+            </span>
+            <span className="text-right shrink-0 text-[11px] leading-snug" style={{ color: "var(--text-tertiary)" }}>
+              <span className="text-lg font-bold tabular-nums" style={{ color: "var(--text-primary)" }}>{totalScore}</span>/40
+              {nextRank && <><br />{progressPct}% to {nextRank.label}</>}
+            </span>
+          </div>
+          <div className="mt-3">
+            <RankBar totalScore={totalScore} trackH={5} />
+          </div>
+          <div className="flex justify-center mt-2">
+            <ACERadar ace={ace} size={250} showLabels labelSize={11} highlightAxis={step?.axis ?? null} />
+          </div>
+          <div className="flex flex-wrap gap-1.5 mt-1">
+            {strengths.map((k) => (
+              <span key={k} className="text-[11px] font-semibold px-2 py-1 rounded-full" style={{ background: "rgba(95,224,212,0.1)", color: "var(--accent-teal, #0e9f94)" }}>Strong in {AXIS_LABEL[k]}</span>
+            ))}
+            {step && (
+              <span className="text-[11px] font-semibold px-2 py-1 rounded-full" style={{ background: "rgba(16,185,129,0.1)", color: "#10b981" }}>Next: {AXIS_LABEL[step.axis]}</span>
+            )}
+          </div>
         </div>
       </div>
+      <style>{`
+        .mm-card { background: linear-gradient(160deg, var(--bg-surface) 0%, var(--bg-card) 100%);
+                   border: 1px solid var(--border-subtle);
+                   box-shadow: 0 24px 60px rgba(var(--shadow-color), 0.22), inset 0 1px 0 rgba(255,255,255,0.04); }
+      `}</style>
     </Band>
   );
 }
