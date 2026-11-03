@@ -97,6 +97,31 @@ export async function createBaseLayer(leaflet: typeof L, cfg: BaseStyle, classNa
   return layer;
 }
 
+// ── India's official map ──────────────────────────────────────────────────────
+// OpenStreetMap draws the de facto lines in Kashmir and the Himalaya (the Line of Control and the
+// Line of Actual Control, tagged disputed) and labels the areas beyond them as other countries'
+// regions. Both styles follow India's official map instead: those labels and lines are left out,
+// and India's own outline (public/india-boundary.geojson) is drawn in their place.
+const NOT_INDIAN_REGIONS = ["Azad Kashmir", "Azad Jammu and Kashmir", "Gilgit-Baltistan", "Gilgit Baltistan", "Aksai Chin", "South Tibet", "Zangnan"];
+const OFFICIAL_LABELS = ["!", ["any", ...["name", "name_en", "name:en", "name:latin"].map((k) => ["in", ["coalesce", ["get", k], ""], ["literal", NOT_INDIAN_REGIONS]])]];
+const OFFICIAL_LINES = ["!=", ["get", "disputed"], 1];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const withFilter = (filter: any, extra: any) => (filter ? ["all", filter, extra] : extra);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const officialFilter = (l: any) =>
+  l["source-layer"] === "place" ? withFilter(l.filter, OFFICIAL_LABELS)
+  : l["source-layer"] === "boundary" && /country/.test(l.id) ? withFilter(l.filter, OFFICIAL_LINES)
+  : null;
+const OUTLINE_W = ["interpolate", ["linear"], ["zoom"], 3, 1.1, 8, 2];
+/** India's outline as a line, with a dark casing under it where it has to read over imagery */
+const indiaOutline = (color: string, casing?: string) => ({
+  source: { type: "geojson", data: `${typeof window !== "undefined" ? window.location.origin : ""}/india-boundary.geojson` },
+  layers: [
+    ...(casing ? [{ id: "ttt-india-casing", type: "line", source: "ttt-india", paint: { "line-color": casing, "line-width": ["interpolate", ["linear"], ["zoom"], 3, 3.1, 8, 4] } }] : []),
+    { id: "ttt-india", type: "line", source: "ttt-india", paint: { "line-color": color, "line-width": OUTLINE_W } },
+  ],
+});
+
 // A style's labels for laying over imagery: places, water and peaks only, in English, white on a
 // dark halo, no dots. Peaks aren't in the style, so they're added, with their heights.
 const NAME_EN = ["coalesce", ["get", "name_en"], ["get", "name:latin"], ["get", "name"]];
@@ -110,7 +135,7 @@ function labelsOnly(s: any) {
     const { "icon-image": _i, "text-transform": _t, ...layout } = l.layout ?? {};
     const water = l.id === "water_name";
     return {
-      ...l, layout: { ...layout, "text-field": NAME_EN, ...(water ? { "text-font": ["Noto Sans Italic"] } : { "text-offset": [0, 0], "text-anchor": "center" }) },
+      ...l, filter: officialFilter(l) ?? l.filter, layout: { ...layout, "text-field": NAME_EN, ...(water ? { "text-font": ["Noto Sans Italic"] } : { "text-offset": [0, 0], "text-anchor": "center" }) },
       paint: water ? { ...halo, "text-color": "rgba(190,225,255,0.9)" } : halo,
     };
   });
@@ -124,11 +149,13 @@ function labelsOnly(s: any) {
       },
       paint: halo },
   );
-  return { version: 8, sources: { openmaptiles: s.sources.openmaptiles }, glyphs: s.glyphs, sprite: s.sprite, layers };
+  // India's official outline, under the labels
+  const outline = indiaOutline("rgba(255,255,255,0.9)", "rgba(0,0,0,0.4)");
+  return { version: 8, sources: { openmaptiles: s.sources.openmaptiles, "ttt-india": outline.source }, glyphs: s.glyphs, sprite: s.sprite, layers: [...outline.layers, ...layers] };
 }
 
-// English labels (the styles show local scripts beside them) and shaded relief under the labels,
-// from the Terrarium elevation tiles (public, keyless)
+// English labels (the styles show local scripts beside them), India's official map (see above),
+// and shaded relief under the labels, from the Terrarium elevation tiles (public, keyless)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function tuneStyle(gl: any, dark: boolean) {
   const add = () => {
@@ -138,7 +165,14 @@ function tuneStyle(gl: any, dark: boolean) {
       if (field && JSON.stringify(field).includes("name:nonlatin")) {
         gl.setLayoutProperty(l.id, "text-field", ["coalesce", ["get", "name_en"], ["get", "name:latin"], ["get", "name"]]);
       }
+      const filter = officialFilter(l);
+      if (filter) gl.setFilter(l.id, filter);
     }
+    const outline = indiaOutline(dark ? "rgba(255,255,255,0.38)" : "rgba(60,60,60,0.5)");
+    gl.addSource("ttt-india", outline.source);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const below = gl.getStyle().layers.find((l: any) => l.type === "symbol")?.id;
+    outline.layers.forEach((l) => gl.addLayer(l, below));
     gl.addSource("ttt-dem", { type: "raster-dem", tiles: [TERRARIUM], encoding: "terrarium", tileSize: 256, maxzoom: 14 });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const firstLabel = gl.getStyle().layers.find((l: any) => l.type === "symbol")?.id;
