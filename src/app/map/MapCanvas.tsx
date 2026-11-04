@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type L from "leaflet";
 import type { GeoJsonObject } from "geojson";
@@ -116,6 +116,8 @@ export default function MapCanvas(props: Props) {
   const trailRef = useRef<L.LayerGroup | null>(null);
   /** Slug of the pin currently taken out of its cluster */
   const loose = useRef<string | null>(null);
+  /** The map has loaded: effects that need it run again once it has */
+  const [ready, setReady] = useState(false);
 
   // Latest props for Leaflet event handlers, which are bound once
   const live = useRef(props);
@@ -247,6 +249,7 @@ export default function MapCanvas(props: Props) {
       new CreditToggle({ position: "topright" }).addTo(map);
       leaflet.control.attribution({ position: "topright", prefix: false }).addTo(map);
       mapRef.current = map;
+      setReady(true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const cluster = (leaflet as any).markerClusterGroup({
         maxClusterRadius: 44,
@@ -454,7 +457,9 @@ export default function MapCanvas(props: Props) {
       };
       map.once("moveend", draw);
     }
-  }, [trail]);
+    // ready: a trail that arrives before the map has loaded (an adventure opened from a link) is
+    // drawn and framed once it has
+  }, [trail, ready]);
 
   // ── Trip photos ─────────────────────────────────────────────────────────────
 

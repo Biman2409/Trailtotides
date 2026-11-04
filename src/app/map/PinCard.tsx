@@ -70,7 +70,7 @@ export default function PinCard({
 
   return (
     <article className="tm-card" style={{ "--g": g.color } as React.CSSProperties}>
-      <div className="relative h-36 lg:h-40 shrink-0">
+      <div className="relative h-28 lg:h-36 shrink-0">
         <Image src={a.heroImage} alt="" fill className="object-cover" sizes="380px" unoptimized />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #111418 2%, rgba(17,20,24,0.35) 55%, rgba(0,0,0,0.25))" }} />
         <div className="absolute top-3 left-3 flex items-center gap-1.5">
@@ -93,7 +93,7 @@ export default function PinCard({
         </div>
       </div>
 
-      <div className="px-4 pb-4 pt-3 space-y-3 overflow-y-auto">
+      <div className="px-4 pb-4 pt-3 space-y-3">
         <p className="text-[12.5px] leading-relaxed text-white/60">{a.tagline}</p>
 
         {/* The trail, now drawn on the map */}
@@ -189,8 +189,22 @@ export default function PinCard({
           {!verified.length && <p className="mt-1.5 text-[10.5px] text-white/35">None of these operators are verified yet.</p>}
         </div>
 
-        {/* Compare or book */}
-        <div className="grid grid-cols-2 gap-2 pt-1">
+        {top?.website && (
+          <p className="text-center text-[10.5px] text-white/40">
+            Book with <span className="text-white/70 font-semibold">{top.name}</span>, our top-rated verified operator here
+          </p>
+        )}
+        <Link href={`/experiences/${a.slug}`} className="flex items-center justify-center gap-1 text-[12px] font-semibold text-white/55 hover:text-white transition-colors">
+          Full details <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
+
+      {/* Compare or book: pinned to the bottom of the panel or sheet, so it's always in reach */}
+      <div className="tm-card-actions">
+        {comparing && selected.length > 1 && (
+          <button type="button" onClick={openDrawer} className="w-full mb-2 text-[11.5px] font-semibold text-[#6ff0e0] hover:underline">Compare {selected.length} side by side →</button>
+        )}
+        <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             disabled={!comparing && isFull}
@@ -207,17 +221,6 @@ export default function PinCard({
             <Link href={`/experiences/${a.slug}`} className="tm-btn tm-btn-primary">See options <ArrowRight className="w-3.5 h-3.5" /></Link>
           )}
         </div>
-        {top?.website && (
-          <p className="-mt-1 text-center text-[10.5px] text-white/40">
-            Book with <span className="text-white/70 font-semibold">{top.name}</span>, our top-rated verified operator here
-          </p>
-        )}
-        {comparing && selected.length > 1 && (
-          <button type="button" onClick={openDrawer} className="w-full text-[11.5px] font-semibold text-[#6ff0e0] hover:underline">Compare {selected.length} side by side →</button>
-        )}
-        <Link href={`/experiences/${a.slug}`} className="flex items-center justify-center gap-1 text-[12px] font-semibold text-white/55 hover:text-white transition-colors">
-          Full details <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
       </div>
     </article>
   );

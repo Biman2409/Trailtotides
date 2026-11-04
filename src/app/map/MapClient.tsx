@@ -69,17 +69,24 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const [selected, setSelected] = useState<string | null>(null);
   // The selected adventure's trail, fetched only when one is opened (most adventures have none yet)
   const [trail, setTrail] = useState<Trail | null>(null);
+  // The adventure whose trail has finished loading (found or not), so the camera knows when to move
+  const [trailDone, setTrailDone] = useState<string | null>(null);
   const trailCache = useRef(new Map<string, Trail>());
+  const hasTrail = !!selected && trailSlugs.includes(selected);
   useEffect(() => {
     if (!selected || !trailSlugs.includes(selected)) { setTrail(null); return; }
     const hit = trailCache.current.get(selected);
-    if (hit) { setTrail(hit); return; }
+    if (hit) { setTrail(hit); setTrailDone(selected); return; }
     let cancelled = false;
     setTrail(null);
     fetch(trailUrl(selected))
       .then((r) => (r.ok ? r.json() : null))
-      .then((t: Trail | null) => { if (t && !cancelled) { trailCache.current.set(t.slug, t); setTrail(t); } })
-      .catch(() => {});
+      .then((t: Trail | null) => {
+        if (cancelled) return;
+        if (t) { trailCache.current.set(t.slug, t); setTrail(t); }
+        setTrailDone(selected);
+      })
+      .catch(() => { if (!cancelled) setTrailDone(selected); });
     return () => { cancelled = true; };
   }, [selected, trailSlugs]);
   const [hovered, setHovered] = useState<string | null>(null);
@@ -223,7 +230,6 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
     setSelected(slug);
     setFiltersOpen(false);
     setPanelOpen(true);
-    apiRef.current?.focus(slug);
     if (!desktop) setSheet((s) => (s === "full" ? s : "half"));
     track("map_pin_open", { slug });
   }, [desktop]);
@@ -325,6 +331,18 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   // The map only knows what's in view once it has drawn; until then don't call the view empty
   const [viewReady, setViewReady] = useState(false);
   const onViewChange = useCallback((s: Set<string>) => { setInView(s); setViewReady(true); }, []);
+
+  // Opening an adventure moves the camera once, after the map has loaded and the panel or sheet
+  // has made room: to its trail when it has one (the canvas frames the trail as it draws it), else
+  // to its pin. However it was opened (a pin, a row, a card, a search result or a link), the map
+  // does the same.
+  useEffect(() => {
+    if (!selected || !viewReady) return;
+    if (hasTrail && trailDone !== selected) return; // wait for the trail
+    if (hasTrail && trail?.slug === selected) return; // framed with the trail
+    const t = setTimeout(() => apiRef.current?.focus(selected), 0);
+    return () => clearTimeout(t);
+  }, [selected, viewReady, hasTrail, trailDone, trail]);
   const emptyKind: "none" | "elsewhere" | null = !mounted || selectedAdv ? null
     : shown.length === 0 ? "none"
     : viewReady && listed.length === 0 ? "elsewhere" : null;
@@ -453,7 +471,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
 
   const body = selectedAdv ? (
     <div>
-      <button type="button" onClick={() => setSelected(null)} className="mb-2 inline-flex items-center gap-1 text-[12px] font-semibold text-white/60 hover:text-white"><ChevronLeft className="w-4 h-4" /> All in view</button>
+      <button type="button" onClick={() => setSelected(null)} className="mb-2 inline-flex items-center gap-1 text-[12px] font-semibold text-white/60 hover:text-white"><ChevronLeft className="w-4 h-4" /> Back to results</button>
       <PinCard
         adventure={selectedAdv}
         fit={fits.get(selectedAdv.slug) ?? null}
@@ -549,13 +567,15 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
             )}
             <aside className={`absolute z-[1000] flex flex-col tm-glass rounded-3xl overflow-hidden transition-[transform,opacity] duration-300 ${panelOpen ? "" : "-translate-x-[110%] opacity-0 pointer-events-none"}`}
               style={{ top: GAP, left: GAP, bottom: GAP, width: PANEL_W }} aria-hidden={!panelOpen || undefined}>
-              <div className="p-3 space-y-2 border-b border-white/[0.06]">
+              {/* An open adventure gets the whole panel, as it gets the whole sheet on a phone.
+                  Hidden rather than removed, so Compass keeps its answer for the way back. */}
+              <div className={`p-3 space-y-2 border-b border-white/[0.06] ${selectedAdv ? "hidden" : ""}`}>
                 <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} />
                 {dock(false)}
                 {mapKey}
               </div>
-              <div className="px-3.5 pt-3 pb-2">{statusLine}</div>
-              <div className="flex-1 overflow-y-auto px-3.5 pb-3.5 pt-1 tm-scroll">{body}</div>
+              {!selectedAdv && <div className="px-3.5 pt-3 pb-2">{statusLine}</div>}
+              <div className={`flex-1 overflow-y-auto px-3.5 tm-scroll ${selectedAdv ? "pt-3" : "pb-3.5 pt-1"}`}>{body}</div>
             </aside>
 
             <div className="absolute z-[1000] top-3 flex items-center gap-1.5" style={{ right: 56 }}>
@@ -744,7 +764,10 @@ const PAGE_CSS = `
   .tm-cmp.is-on { color: #6ff0e0; border-color: rgba(111,240,224,0.4); background: rgba(111,240,224,0.1); }
   .tm-cmp:disabled { opacity: 0.35; cursor: not-allowed; }
 
-  .tm-card { border-radius: 20px; overflow: hidden; background: #111418; border: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; }
+  /* clip, not hidden: hidden would make the card its own scroller and stop the action bar sticking */
+  .tm-card { border-radius: 20px; overflow: clip; background: #111418; border: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; }
+  .tm-card-actions { position: sticky; bottom: 0; z-index: 2; padding: 10px 12px 12px; background: rgba(17,20,24,0.96); backdrop-filter: blur(10px);
+                     border-top: 1px solid rgba(255,255,255,0.07); border-radius: 0 0 20px 20px; }
   .tm-chip { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.12); }
   .tm-panel { padding: 10px 12px; border-radius: 14px; background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.06); }
   .tm-score { --p: 0%; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0;
