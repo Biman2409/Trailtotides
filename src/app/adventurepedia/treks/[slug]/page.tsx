@@ -20,6 +20,7 @@ import { Rich, BlockView, serif } from "../../blocks";
 import AskCompassButton from "../../activities/AskCompassButton";
 import TrekElevation, { type DayBand } from "./TrekElevation";
 import TrekChecklist, { type ChecklistItem } from "./TrekChecklist";
+import CompareTreksButton from "./CompareTreksButton";
 
 const SITE = "https://www.trailtotides.com";
 const fmt = (n: number) => Math.round(n).toLocaleString("en-IN");
@@ -490,9 +491,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
                   </Link>
                 ))}
               </div>
-              <Link href={`/adventurepedia/treks/compare?a=${a.slug}${similar[0] ? `&b=${similar[0].t.slug}` : ""}`} className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-semibold" style={{ color: "var(--accent-ink)" }}>
-                Compare {a.name} with another trek <ArrowRight className="w-4 h-4" />
-              </Link>
+              {similar[0] && <CompareTreksButton slugs={[a.slug, similar[0].t.slug]} label={`Compare it side by side with ${similar[0].t.name}`} />}
               {nearby.length > 0 && (
                 <>
                   <h3 className="text-[18px] t-text mt-7 mb-2" style={serif}>Make a week of it</h3>
