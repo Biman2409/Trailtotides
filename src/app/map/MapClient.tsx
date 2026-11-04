@@ -489,15 +489,6 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
           <SlidersHorizontal className="w-3.5 h-3.5" /> Filters
           {panelCount(f) > 0 && <b className="min-w-4 h-4 px-1 rounded-full bg-[#ff5100] text-white text-[9px] font-bold grid place-items-center">{panelCount(f)}</b>}
         </button>
-        {/* Same sort options as Explore (phones get them in the Filters panel) */}
-        <label className="hidden md:inline-flex items-center gap-1">
-          <span className="sr-only">Sort</span>
-          <select value={sortKey} onChange={(e) => setSort(e.target.value as SortKey)} className="tm-sort">
-            {(Object.keys(SORT_LABELS) as SortKey[]).filter((k) => k !== "match" || canFit).map((k) => (
-              <option key={k} value={k}>{SORT_LABELS[k]}</option>
-            ))}
-          </select>
-        </label>
       </div>
     </div>
   );
@@ -674,7 +665,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
           onClose={() => setFiltersOpen(false)}
           onClear={clearAll}
           resultCount={filtered.length}
-          sortKey={sortKey} setSort={setSort}
+          sortKey={sortKey} setSort={setSort} sortEverywhere
           hasProfile={canFit}
           countWith={(patch) => filterWith({ ...f, ...patch }).length}
         />

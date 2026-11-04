@@ -260,7 +260,7 @@ const CAT_CSS = `
 
 /* ── Full panel: bottom sheet on phones, side drawer on larger screens ──────── */
 
-export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun = "adventure", sortKey, setSort, hasProfile, countWith }: {
+export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun = "adventure", sortKey, setSort, hasProfile, countWith, sortEverywhere = false }: {
   f: AdventureFilterState;
   set: (patch: Partial<AdventureFilterState>) => void;
   onClose: () => void;
@@ -273,6 +273,8 @@ export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun 
   hasProfile: boolean;
   /** How many results with these filters changed: options then show what they'd leave */
   countWith?: (patch: Partial<AdventureFilterState>) => number;
+  /** Show Sort by on every screen (the map has no sort menu of its own); else phones only */
+  sortEverywhere?: boolean;
 }) {
   const closeRef = useRef(onClose);
   // An option's count: what you'd get with just it chosen in its group, everything else as set
@@ -303,7 +305,7 @@ export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun 
 
         <div className="flex-1 overflow-y-auto px-5 py-5 space-y-6">
           {/* Sort lives here on phones (the toolbar select is hidden there) */}
-          <Section title="Sort by" className="md:hidden">
+          <Section title="Sort by" className={sortEverywhere ? "" : "md:hidden"}>
             {(Object.keys(SORT_LABELS) as SortKey[]).filter((k) => k !== "match" || hasProfile).map((k) => (
               <Opt key={k} on={sortKey === k} onClick={() => setSort(k)}>{SORT_LABELS[k]}</Opt>
             ))}
