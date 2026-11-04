@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { SlidersHorizontal, Sun, Users, X, Loader2 } from "lucide-react";
+import { ChevronDown, SlidersHorizontal, Sun, Users, X, Loader2 } from "lucide-react";
 import type { Adventure, Difficulty, Month } from "@/lib/data";
 import type { AdventureFilterState } from "@/lib/adventureFilterState";
 import { MONTHS } from "@/lib/exploreHelpers";
@@ -10,12 +11,15 @@ import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { track } from "@/lib/analytics";
 import { difficultyColor, difficultyOf, formatINR } from "./mapShared";
 
-// The map's key, made of the controls themselves: difficulty in the pins' own colours and the
-// best months, each a column as tall as the adventures it would show, so the key reads the
-// catalogue and filters it in one. Then how ready you are, and the filters you've set as chips.
-// Counts are "if you also picked this": each row counts with every other filter applied.
+// The map's key, folded: one row of pills (Difficulty, Season, Fit, More) that says what's set at
+// a glance and opens its chart on tap, so the list keeps the room. Opened, Difficulty and Season
+// are columns as tall as the adventures they'd show, in the pins' own colours, so the key reads
+// the catalogue and filters it in one. Counts are "if you also picked this": each row counts with
+// every other filter applied. Below the pills, the filters you've set as removable chips.
 
 const DIFFS: Difficulty[] = ["Easy", "Moderate", "Hard", "Advanced", "Extreme"];
+const FITS = [["ready", "Ready", "#10b981"], ["stretch", "A stretch", "#f59e0b"]] as const;
+type Section = "diff" | "month" | "fit" | null;
 
 export default function MapKey({ f, set, filterWith, monthIdx, score, canFit, group, groups, groupLoading, onGroup, onMore, morePanelCount, onClear }: {
   f: AdventureFilterState;
@@ -34,118 +38,176 @@ export default function MapKey({ f, set, filterWith, monthIdx, score, canFit, gr
   morePanelCount: number;
   onClear: () => void;
 }) {
-  const byDiff = filterWith({ ...f, diffs: [] });
-  const byMonth = filterWith({ ...f, months: [] });
-  const diffN = DIFFS.map((d) => byDiff.filter((a) => difficultyOf(a) === d).length);
-  const monthN = MONTHS.map((m) => byMonth.filter((a) => a.bestMonths.includes(m)).length);
-  const byFit = score ? filterWith({ ...f, fit: null }) : [];
-  const fitN = { ready: byFit.filter((a) => bucketFor(score!(a)).key === "ready").length, stretch: byFit.filter((a) => bucketFor(score!(a)).key === "stretch").length };
-  const now = MONTHS[monthIdx];
+  const [open, setOpen] = useState<Section>(null);
+  const toggleOpen = (s: Exclude<Section, null>) => setOpen((cur) => (cur === s ? null : s));
 
-  const toggle = <T,>(list: T[], v: T) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
+  const now = MONTHS[monthIdx] as Month;
+  const inSeasonNow = f.months.length === 1 && f.months[0] === now;
+  const fitOn = canFit && !!score;
   const chips = activeChips(f, set);
+
+  // What each pill says when something is set
+  const diffLabel = f.diffs.length === 0 ? "Difficulty" : f.diffs.length === 1 ? f.diffs[0] : `${f.diffs[0]} +${f.diffs.length - 1}`;
+  const monthLabel = f.months.length === 0 ? "Season" : inSeasonNow ? "In season" : f.months.length === 1 ? f.months[0] : `${f.months[0]} +${f.months.length - 1}`;
+  const fitLabel = f.fit === "ready" ? "Ready" : f.fit === "stretch" ? "A stretch" : group ? group.name : "Your fit";
 
   return (
     <div className="mk">
-      {/* Difficulty: the pins' colours, as columns */}
-      <div className="mk-row">
-        <div className="mk-head">
-          <span className="mk-label">Difficulty</span>
-          <span className="mk-hint">Pin colour</span>
-        </div>
-        <div className="mk-cols mk-cols-5" role="group" aria-label="Difficulty">
-          {DIFFS.map((d, i) => {
-            const on = f.diffs.includes(d);
-            const dim = f.diffs.length > 0 && !on;
-            return (
-              <button key={d} type="button" onClick={() => set({ diffs: toggle(f.diffs, d) })} aria-pressed={on}
-                aria-label={`${d}: ${diffN[i]} ${diffN[i] === 1 ? "adventure" : "adventures"}`} title={d}
-                className="mk-col" data-on={on || undefined} data-dim={dim || undefined} disabled={!diffN[i] && !on}
-                style={{ "--c": difficultyColor(d) } as React.CSSProperties}>
-                <span className="mk-n">{diffN[i]}</span>
-                <span className="mk-bar" style={{ height: `${barH(diffN[i], diffN)}%` }} />
-                <span className="mk-tick">{d === "Moderate" ? "Mod" : d === "Advanced" ? "Adv" : d}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Best months: how many adventures are in season, month by month */}
-      <div className="mk-row">
-        <div className="mk-head">
-          <span className="mk-label">Best months</span>
-          <button type="button" onClick={() => set({ months: f.months.length === 1 && f.months[0] === now ? [] : [now] })}
-            className="mk-quick" data-on={(f.months.length === 1 && f.months[0] === now) || undefined}>
-            <Sun className="w-3 h-3" />In season now
+      <div className="mk-pills no-scrollbar" role="toolbar" aria-label="Map key and filters">
+        <button type="button" onClick={() => toggleOpen("diff")} aria-expanded={open === "diff"} className="mk-pill" data-on={f.diffs.length > 0 || undefined} data-open={open === "diff" || undefined}>
+          {/* The pins' colours, so the folded key still reads as a legend */}
+          <span className="mk-swatch" aria-hidden>{DIFFS.map((d) => <i key={d} style={{ background: difficultyColor(d) }} />)}</span>
+          <span className="truncate">{diffLabel}</span>
+          <ChevronDown className="mk-chev" />
+        </button>
+        <button type="button" onClick={() => toggleOpen("month")} aria-expanded={open === "month"} className="mk-pill" data-on={f.months.length > 0 || undefined} data-open={open === "month" || undefined}>
+          <Sun className="w-3.5 h-3.5 shrink-0 opacity-70" />
+          <span className="truncate">{monthLabel}</span>
+          <ChevronDown className="mk-chev" />
+        </button>
+        {fitOn ? (
+          <button type="button" onClick={() => toggleOpen("fit")} aria-expanded={open === "fit"} className="mk-pill" data-on={!!f.fit || undefined} data-open={open === "fit" || undefined}>
+            {group ? <Users className="w-3.5 h-3.5 shrink-0 opacity-70" /> : <span className="mk-dot" style={{ "--c": f.fit === "stretch" ? "#f59e0b" : "#10b981" } as React.CSSProperties} />}
+            <span className="truncate max-w-[92px]">{fitLabel}</span>
+            <ChevronDown className="mk-chev" />
           </button>
-        </div>
-        <div className="mk-cols mk-cols-12" role="group" aria-label="Best months">
-          {MONTHS.map((m, i) => {
-            const on = f.months.includes(m as Month);
-            const dim = f.months.length > 0 && !on;
-            return (
-              <button key={m} type="button" onClick={() => set({ months: toggle(f.months, m as Month) })} aria-pressed={on}
-                aria-label={`${m}: ${monthN[i]} in season`} title={`${m} · ${monthN[i]}`}
-                className="mk-col" data-on={on || undefined} data-dim={dim || undefined} data-now={m === now || undefined}
-                style={{ "--c": "#ff7d47" } as React.CSSProperties}>
-                <span className="mk-bar" style={{ height: `${shapeH(monthN[i], monthN)}%` }} />
-                <span className="mk-tick">{m[0]}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* How ready you are, or the way into it */}
-      <div className="mk-row mk-row-line">
-        {canFit && score ? (
-          <>
-            <span className="mk-label">Your fit</span>
-            <div className="flex items-center gap-1.5 min-w-0">
-              {([["ready", "Ready", "#10b981"], ["stretch", "A stretch", "#f59e0b"]] as const).map(([k, label, c]) => {
-                const on = f.fit === k;
-                return (
-                  <button key={k} type="button" onClick={() => set({ fit: on ? null : k })} aria-pressed={on} className="mk-fit" data-on={on || undefined} style={{ "--c": c } as React.CSSProperties}>
-                    <i />{label}<b>{fitN[k]}</b>
-                  </button>
-                );
-              })}
-              {groups.length > 0 && (
-                <label className="mk-fit relative cursor-pointer" title="Rate adventures for a group">
-                  {groupLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Users className="w-3 h-3" />}
-                  <span className="max-w-[84px] truncate">{group ? group.name : "Just me"}</span>
-                  <select aria-label="Rate adventures for a group" value={group?.code ?? ""} onChange={(e) => onGroup(e.target.value)} className="absolute inset-0 opacity-0 cursor-pointer">
-                    <option value="">Just me</option>
-                    {groups.map((g) => <option key={g.code} value={g.code}>{g.name} ({g.memberCount})</option>)}
-                  </select>
-                </label>
-              )}
-            </div>
-          </>
         ) : (
-          <Link href="/matchmaker" onClick={() => track("map_fitness_cta", { from: "key" })} className="mk-cta">
+          <Link href="/matchmaker" onClick={() => track("map_fitness_cta", { from: "key" })} className="mk-pill mk-pill-cta" title="Find what you're ready for">
             <MatchmakerMark className="w-3.5 h-3.5 shrink-0" />
-            <span className="flex-1 min-w-0 truncate">Find what you&apos;re ready for</span>
-            <span className="mk-cta-go">Matchmaker →</span>
+            <span>Your fit</span>
           </Link>
         )}
+        <button type="button" onClick={onMore} className="mk-pill mk-pill-icon" data-on={morePanelCount > 0 || undefined} aria-label={morePanelCount ? `More filters, ${morePanelCount} set` : "More filters"} title="More filters">
+          <SlidersHorizontal className="w-3.5 h-3.5" />
+          {morePanelCount > 0 && <b className="mk-badge">{morePanelCount}</b>}
+        </button>
       </div>
 
-      {/* What's set, each one removable */}
-      <div className="mk-row mk-row-chips">
-        {chips.map((c) => (
-          <button key={c.key} type="button" onClick={c.remove} className="mk-chip" aria-label={`Remove ${c.label}`}>
-            {c.label}<X className="w-3 h-3" />
-          </button>
-        ))}
-        <button type="button" onClick={onMore} className="mk-more" data-on={morePanelCount > 0 || undefined}>
-          <SlidersHorizontal className="w-3.5 h-3.5" />More filters{morePanelCount > 0 && <b>{morePanelCount}</b>}
-        </button>
-        {chips.length > 1 && <button type="button" onClick={onClear} className="mk-clear">Clear all</button>}
-      </div>
+      {open === "diff" && <DiffChart f={f} set={set} filterWith={filterWith} />}
+      {open === "month" && <MonthChart f={f} set={set} filterWith={filterWith} now={now} inSeasonNow={inSeasonNow} />}
+      {open === "fit" && fitOn && (
+        <FitChoices f={f} set={set} filterWith={filterWith} score={score!} group={group} groups={groups} groupLoading={groupLoading} onGroup={onGroup} />
+      )}
+
+      {chips.length > 0 && (
+        <div className="mk-chips">
+          {chips.map((c) => (
+            <button key={c.key} type="button" onClick={c.remove} className="mk-chip" aria-label={`Remove ${c.label}`}>
+              {c.label}<X className="w-3 h-3" />
+            </button>
+          ))}
+          {chips.length > 1 && <button type="button" onClick={onClear} className="mk-clear">Clear all</button>}
+        </div>
+      )}
 
       <style>{KEY_CSS}</style>
+    </div>
+  );
+}
+
+const toggle = <T,>(list: T[], v: T) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
+
+type ChartProps = { f: AdventureFilterState; set: (p: Partial<AdventureFilterState>) => void; filterWith: (f: AdventureFilterState) => Adventure[] };
+
+/* ── Difficulty: the pins' colours, as columns ── */
+function DiffChart({ f, set, filterWith }: ChartProps) {
+  const rows = filterWith({ ...f, diffs: [] });
+  const n = DIFFS.map((d) => rows.filter((a) => difficultyOf(a) === d).length);
+  return (
+    <div className="mk-drop">
+      <div className="mk-head">
+        <span className="mk-label">Difficulty · pin colour</span>
+        {f.diffs.length > 0 && <button type="button" onClick={() => set({ diffs: [] })} className="mk-reset">Any</button>}
+      </div>
+      <div className="mk-cols mk-cols-5" role="group" aria-label="Difficulty">
+        {DIFFS.map((d, i) => {
+          const on = f.diffs.includes(d);
+          return (
+            <button key={d} type="button" onClick={() => set({ diffs: toggle(f.diffs, d) })} aria-pressed={on}
+              aria-label={`${d}: ${n[i]} ${n[i] === 1 ? "adventure" : "adventures"}`} title={d}
+              className="mk-col" data-on={on || undefined} data-dim={(f.diffs.length > 0 && !on) || undefined} disabled={!n[i] && !on}
+              style={{ "--c": difficultyColor(d) } as React.CSSProperties}>
+              <span className="mk-n">{n[i]}</span>
+              <span className="mk-bar" style={{ height: `${barH(n[i], n)}%` }} />
+              <span className="mk-tick">{d === "Moderate" ? "Mod" : d === "Advanced" ? "Adv" : d}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ── Season: how many adventures are at their best, month by month ── */
+function MonthChart({ f, set, filterWith, now, inSeasonNow }: ChartProps & { now: Month; inSeasonNow: boolean }) {
+  const rows = filterWith({ ...f, months: [] });
+  const n = MONTHS.map((m) => rows.filter((a) => a.bestMonths.includes(m as Month)).length);
+  return (
+    <div className="mk-drop">
+      <div className="mk-head">
+        <span className="mk-label">Best months</span>
+        <span className="flex items-center gap-3">
+          {f.months.length > 0 && !inSeasonNow && <button type="button" onClick={() => set({ months: [] })} className="mk-reset">Any</button>}
+          <button type="button" onClick={() => set({ months: inSeasonNow ? [] : [now] })} className="mk-quick" data-on={inSeasonNow || undefined}>
+            <Sun className="w-3 h-3" />In season now
+          </button>
+        </span>
+      </div>
+      <div className="mk-cols mk-cols-12" role="group" aria-label="Best months">
+        {MONTHS.map((m, i) => {
+          const on = f.months.includes(m as Month);
+          return (
+            <button key={m} type="button" onClick={() => set({ months: toggle(f.months, m as Month) })} aria-pressed={on}
+              aria-label={`${m}: ${n[i]} in season`} title={`${m} · ${n[i]}`}
+              className="mk-col" data-on={on || undefined} data-dim={(f.months.length > 0 && !on) || undefined} data-now={m === now || undefined}
+              style={{ "--c": "#ff7d47" } as React.CSSProperties}>
+              <span className="mk-bar" style={{ height: `${shapeH(n[i], n)}%` }} />
+              <span className="mk-tick">{m[0]}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ── Fit: ready or a stretch, for you or a group ── */
+function FitChoices({ f, set, filterWith, score, group, groups, groupLoading, onGroup }: ChartProps & {
+  score: (a: Adventure) => number;
+  group: { code: string; name: string } | null;
+  groups: { code: string; name: string; memberCount: number }[];
+  groupLoading: boolean;
+  onGroup: (code: string) => void;
+}) {
+  const rows = filterWith({ ...f, fit: null });
+  const n = { ready: rows.filter((a) => bucketFor(score(a)).key === "ready").length, stretch: rows.filter((a) => bucketFor(score(a)).key === "stretch").length };
+  return (
+    <div className="mk-drop">
+      <div className="mk-head">
+        <span className="mk-label">{group ? `Fit for ${group.name}` : "Your fit"}</span>
+        {f.fit && <button type="button" onClick={() => set({ fit: null })} className="mk-reset">Any</button>}
+      </div>
+      <div className="flex flex-wrap items-center gap-1.5">
+        {FITS.map(([k, label, c]) => {
+          const on = f.fit === k;
+          return (
+            <button key={k} type="button" onClick={() => set({ fit: on ? null : k })} aria-pressed={on} className="mk-fit" data-on={on || undefined} style={{ "--c": c } as React.CSSProperties}>
+              <i />{label}<b>{n[k]}</b>
+            </button>
+          );
+        })}
+        {groups.length > 0 && (
+          <label className="mk-fit relative cursor-pointer ml-auto" title="Rate adventures for a group">
+            {groupLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Users className="w-3 h-3" />}
+            <span className="max-w-[96px] truncate">{group ? group.name : "Just me"}</span>
+            <ChevronDown className="w-3 h-3 opacity-60" />
+            <select aria-label="Rate adventures for a group" value={group?.code ?? ""} onChange={(e) => onGroup(e.target.value)} className="absolute inset-0 opacity-0 cursor-pointer">
+              <option value="">Just me</option>
+              {groups.map((g) => <option key={g.code} value={g.code}>{g.name} ({g.memberCount})</option>)}
+            </select>
+          </label>
+        )}
+      </div>
     </div>
   );
 }
@@ -175,21 +237,46 @@ function activeChips(f: AdventureFilterState, set: (p: Partial<AdventureFilterSt
 }
 
 const KEY_CSS = `
-  .mk { display: flex; flex-direction: column; gap: 12px; }
-  .mk-row { display: flex; flex-direction: column; gap: 6px; }
-  .mk-row-line { flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; }
-  .mk-row-chips { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px; }
-  .mk-head { display: flex; align-items: baseline; justify-content: space-between; }
+  .mk { display: flex; flex-direction: column; gap: 8px; }
+
+  /* The folded key: one row of pills */
+  .mk-pills { display: flex; align-items: center; gap: 6px; overflow-x: auto; }
+  .mk-pill { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap;
+             color: rgba(255,255,255,0.72); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); transition: color .2s, background .2s, border-color .2s; }
+  .mk-pill:hover, .mk-pill[data-open] { color: #fff; border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.07); }
+  .mk-pill[data-on] { color: #ffcfb5; background: rgba(255,81,0,0.12); border-color: rgba(255,125,71,0.42); }
+  .mk-pill:focus-visible { outline: 2px solid #ff7d47; outline-offset: 2px; }
+  .mk-chev { width: 12px; height: 12px; flex-shrink: 0; opacity: 0.5; transition: transform .2s; }
+  .mk-pill[data-open] .mk-chev { transform: rotate(180deg); opacity: 0.8; }
+  .mk-pill-icon { width: 32px; padding: 0; justify-content: center; position: relative; margin-left: auto; }
+  /* Phones have the Filters button in the dock over the map already */
+  @media (max-width: 1023px) { .mk-pill-icon { display: none; } }
+  .mk-pill-cta { color: #ffb08a; border-style: dashed; border-color: rgba(255,125,71,0.4); background: rgba(255,81,0,0.06); }
+  .mk-pill-cta svg { color: #ff9a66; }
+  .mk-pill-cta:hover { border-style: solid; color: #fff; }
+  .mk-badge { position: absolute; top: -4px; right: -4px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; display: grid; place-items: center; font-size: 9.5px; color: #fff; background: #ff5100; }
+  .mk-swatch { display: inline-flex; gap: 2px; flex-shrink: 0; }
+  .mk-swatch i { width: 4px; height: 12px; border-radius: 2px; }
+  .mk-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; box-shadow: inset 0 0 0 2px var(--c); }
+  .mk-pill[data-on] .mk-dot { background: var(--c); }
+
+  /* An opened pill's chart */
+  .mk-drop { display: flex; flex-direction: column; gap: 8px; padding: 10px 10px 8px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); animation: mkIn .18s ease-out both; }
+  @keyframes mkIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  .mk-head { display: flex; align-items: center; justify-content: space-between; min-height: 18px; }
   .mk-label { font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.42); }
-  .mk-hint { font-size: 10.5px; color: rgba(255,255,255,0.32); }
+  .mk-reset { font-size: 11px; font-weight: 600; color: #ff9a66; }
+  .mk-reset:hover { text-decoration: underline; }
+  .mk-quick { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.55); }
+  .mk-quick:hover, .mk-quick[data-on] { color: #ffb08a; }
 
   /* Columns: a count, a bar as tall as its share, a tick label */
   .mk-cols { display: grid; gap: 3px; align-items: end; }
   .mk-cols-5 { grid-template-columns: repeat(5, 1fr); gap: 6px; }
   .mk-cols-12 { grid-template-columns: repeat(12, 1fr); }
   .mk-col { position: relative; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-end; gap: 3px;
-            height: 50px; padding: 0; border-radius: 8px; cursor: pointer; background: none; transition: opacity .2s; }
-  .mk-cols-12 .mk-col { height: 38px; }
+            height: 54px; padding: 0; border-radius: 8px; cursor: pointer; background: none; transition: opacity .2s; }
+  .mk-cols-12 .mk-col { height: 42px; }
   .mk-col:disabled { cursor: default; }
   .mk-n { font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: rgba(255,255,255,0.55); text-align: center; font-variant-numeric: tabular-nums; }
   .mk-bar { display: block; width: 100%; min-height: 3px; border-radius: 4px 4px 2px 2px;
@@ -200,12 +287,8 @@ const KEY_CSS = `
   .mk-col[data-on] .mk-tick, .mk-col[data-on] .mk-n { color: #fff; }
   .mk-col[data-dim] { opacity: 0.4; }
   .mk-col[data-dim]:hover { opacity: 0.75; }
-  /* This month: a dot under its tick */
   .mk-col[data-now] .mk-tick::after { content: ""; display: block; width: 3px; height: 3px; margin: 3px auto 0; border-radius: 50%; background: #ff7d47; }
   .mk-col:focus-visible { outline: 2px solid #ff7d47; outline-offset: 2px; }
-
-  .mk-quick { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.55); padding: 6px 0; margin: -6px 0; }
-  .mk-quick:hover, .mk-quick[data-on] { color: #ffb08a; }
 
   .mk-fit { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
             color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); transition: all .2s; }
@@ -215,21 +298,13 @@ const KEY_CSS = `
   .mk-fit[data-on] { color: #fff; background: color-mix(in srgb, var(--c) 16%, transparent); border-color: color-mix(in srgb, var(--c) 55%, transparent); }
   .mk-fit[data-on] i { background: var(--c); }
 
-  .mk-cta { flex: 1; display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 12px; border-radius: 12px; font-size: 12.5px; font-weight: 600;
-            color: rgba(255,255,255,0.8); background: rgba(255,81,0,0.07); border: 1px dashed rgba(255,125,71,0.35); transition: all .2s; }
-  .mk-cta svg { color: #ff9a66; }
-  .mk-cta-go { font-size: 11px; color: #ff9a66; white-space: nowrap; }
-  .mk-cta:hover { background: rgba(255,81,0,0.12); border-style: solid; }
-
-  .mk-chip { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 8px 0 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
-             color: #ffcfb5; background: rgba(255,81,0,0.14); border: 1px solid rgba(255,125,71,0.4); transition: background .15s; }
+  /* What's set, each one removable */
+  .mk-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .mk-chip { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 7px 0 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
+             color: #ffcfb5; background: rgba(255,81,0,0.1); border: 1px solid rgba(255,125,71,0.3); transition: background .15s; }
   .mk-chip svg { opacity: 0.7; }
-  .mk-chip:hover { background: rgba(255,81,0,0.24); }
-  .mk-more { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
-             color: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.12); transition: all .2s; }
-  .mk-more b { min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; display: grid; place-items: center; font-size: 10px; color: #fff; background: #ff5100; }
-  .mk-more:hover, .mk-more[data-on] { color: #fff; border-color: rgba(255,255,255,0.25); }
-  .mk-clear { font-size: 12px; font-weight: 600; color: #ff9a66; padding: 6px 2px; }
+  .mk-chip:hover { background: rgba(255,81,0,0.2); }
+  .mk-clear { font-size: 11.5px; font-weight: 600; color: #ff9a66; padding: 4px 2px; }
   .mk-clear:hover { text-decoration: underline; }
-  @media (prefers-reduced-motion: reduce) { .mk-bar { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .mk-bar { transition: none; } .mk-drop { animation: none; } }
 `;

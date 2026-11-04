@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import type L from "leaflet";
 import type { GeoJsonObject } from "geojson";
-import type { Adventure, Month } from "@/lib/data";
+import { adventures as allAdventures, type Adventure, type Month } from "@/lib/data";
 import type { Trail } from "@/lib/trails/shared";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import {
@@ -181,7 +181,8 @@ export default function MapCanvas(props: Props) {
     apiRef.current = {
       flyTo: (lat, lng, zoom = 10) => centreOn(lat, lng, zoom),
       focus: (slug) => {
-        const a = live.current.adventures.find((x) => x.slug === slug);
+        // From the whole catalogue: an adventure opened from search may not be on the map until the next render
+        const a = allAdventures.find((x) => x.slug === slug);
         const map = mapRef.current;
         if (!a || !map) return;
         centreOn(a.lat, a.lng, Math.max(map.getZoom(), 8));

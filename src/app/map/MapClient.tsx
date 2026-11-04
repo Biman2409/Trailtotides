@@ -204,6 +204,9 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
 
   const pickAdventures = useMemo(() => picks.map((p) => adventures.find((a) => a.slug === p.slug)).filter((a): a is Adventure => !!a), [picks]);
   const selectedAdv = selected ? adventures.find((a) => a.slug === selected) ?? null : null;
+  // An adventure opened from search gets its pin even if a filter hides it, like Compass picks;
+  // the counts and the list still follow the filters
+  const pinned = useMemo(() => (selectedAdv && !shown.includes(selectedAdv) ? [...shown, selectedAdv] : shown), [shown, selectedAdv]);
 
   const completed: CompletedAdventure[] = useMemo(() => trailOn
     ? tripLog.map((e) => { const adv = adventures.find((a) => a.slug === e.slug); return adv ? { adv, date: e.date } : null; }).filter((x): x is CompletedAdventure => !!x)
@@ -244,7 +247,10 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
     if (!mounted || linkRead.current) return;
     linkRead.current = true;
     const params = new URLSearchParams(window.location.search);
-    setF(filtersFromParams(params));
+    const fromLink = filtersFromParams(params);
+    // The link's filters are where you start, not a change to undo
+    prevF.current = fromLink;
+    setF(fromLink);
     if (params.get("sort") && params.get("sort")! in SORT_LABELS) setSort(params.get("sort") as SortKey);
     // A saved search can carry Near me (near=lat,lng&r=km)
     const near = nearFrom(params);
@@ -492,7 +498,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
       <div ref={areaRef} className="relative flex-1 overflow-hidden isolate" data-hide-compass>
         {mounted ? (
           <MapCanvas
-            adventures={shown}
+            adventures={pinned}
             fits={fits}
             month={month}
             picks={pickSet}
@@ -647,6 +653,9 @@ function MobileSheet({ height, state, onState, areaH, children }: {
 }
 
 const PAGE_CSS = `
+  /* The map fills the screen: no room kept for the phones' bottom tab bar (it stays hidden here),
+     or the page scrolls by that much and slides the map under the navbar */
+  body:has(.tm-page) { padding-bottom: 0 !important; overflow: hidden; }
   .tm-page { background: #0b0d10; color: #fff; }  .tm-glass { background: rgba(17,20,24,0.86); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2);
               border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 16px 48px rgba(0,0,0,0.45); }
   @media (prefers-reduced-transparency: reduce) { .tm-glass { background: #121519; backdrop-filter: none; } }
