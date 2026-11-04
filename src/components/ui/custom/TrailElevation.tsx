@@ -12,7 +12,11 @@ export type { DayBand };
 const fmt = (n: number) => Math.round(n).toLocaleString("en-IN");
 
 /** compact: drawn on a narrower canvas, so its labels stay readable in a side panel */
-export default function TrailElevation({ pts, bands, compact = false }: { pts: [number, number][]; bands: DayBand[]; compact?: boolean }) {
+export default function TrailElevation({ pts, bands, compact = false, peakM }: {
+  pts: [number, number][]; bands: DayBand[]; compact?: boolean;
+  /** The height to label the top with, when the page states it elsewhere (so the two agree) */
+  peakM?: number;
+}) {
   const W = compact ? 480 : 1000, H = compact ? 220 : 236, PAD = { l: 44, r: 12, t: 34, b: 24 };
   const maxKm = pts[pts.length - 1][0] || 1;
   const eles = pts.map((p) => p[1]);
@@ -71,7 +75,7 @@ export default function TrailElevation({ pts, bands, compact = false }: { pts: [
         {!at && (
           <>
             <circle cx={x(top[0])} cy={y(top[1])} r="5" fill="#ff5100" stroke="var(--bg-surface)" strokeWidth="2" />
-            <text x={x(top[0])} y={y(top[1]) - 10} textAnchor={x(top[0]) > W - 80 ? "end" : x(top[0]) < PAD.l + 60 ? "start" : "middle"} fontSize="14" fontWeight="700" fill="var(--text-primary)">{fmt(top[1])} m</text>
+            <text x={x(top[0])} y={y(top[1]) - 10} textAnchor={x(top[0]) > W - 80 ? "end" : x(top[0]) < PAD.l + 60 ? "start" : "middle"} fontSize="14" fontWeight="700" fill="var(--text-primary)">{fmt(peakM ?? top[1])} m</text>
           </>
         )}
         {/* Where you're pointing: the kilometre, the height, the day */}

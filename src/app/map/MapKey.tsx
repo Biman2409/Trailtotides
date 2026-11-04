@@ -8,6 +8,7 @@ import type { AdventureFilterState } from "@/lib/adventureFilterState";
 import { MONTHS } from "@/lib/exploreHelpers";
 import { bucketFor } from "@/lib/fitness";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
+import { durationLabel } from "@/components/ui/custom/AdventureFilters";
 import { track } from "@/lib/analytics";
 import { difficultyColor, difficultyOf, formatINR } from "./mapShared";
 
@@ -116,7 +117,7 @@ function DiffChart({ f, set, filterWith }: ChartProps) {
   return (
     <div className="mk-drop">
       <div className="mk-head">
-        <span className="mk-label">Difficulty · pin colour</span>
+        <span className="mk-label">Pin colour shows difficulty</span>
         {f.diffs.length > 0 && <button type="button" onClick={() => set({ diffs: [] })} className="mk-reset">Any</button>}
       </div>
       <div className="mk-cols mk-cols-5" role="group" aria-label="Difficulty">
@@ -129,7 +130,7 @@ function DiffChart({ f, set, filterWith }: ChartProps) {
               style={{ "--c": difficultyColor(d) } as React.CSSProperties}>
               <span className="mk-n">{n[i]}</span>
               <span className="mk-bar" style={{ height: `${barH(n[i], n)}%` }} />
-              <span className="mk-tick">{d === "Moderate" ? "Mod" : d === "Advanced" ? "Adv" : d}</span>
+              <span className="mk-tick">{d}</span>
             </button>
           );
         })}
@@ -145,7 +146,7 @@ function MonthChart({ f, set, filterWith, now, inSeasonNow }: ChartProps & { now
   return (
     <div className="mk-drop">
       <div className="mk-head">
-        <span className="mk-label">Best months</span>
+        <span className="mk-label">In season, month by month</span>
         <span className="flex items-center gap-3">
           {f.months.length > 0 && !inSeasonNow && <button type="button" onClick={() => set({ months: [] })} className="mk-reset">Any</button>}
           <button type="button" onClick={() => set({ months: inSeasonNow ? [] : [now] })} className="mk-quick" data-on={inSeasonNow || undefined}>
@@ -229,7 +230,7 @@ function activeChips(f: AdventureFilterState, set: (p: Partial<AdventureFilterSt
   f.states.forEach((s) => out.push({ key: `s-${s}`, label: s, remove: () => set({ states: f.states.filter((x) => x !== s) }) }));
   f.diffs.forEach((d) => out.push({ key: `d-${d}`, label: d, remove: () => set({ diffs: f.diffs.filter((x) => x !== d) }) }));
   f.months.forEach((m) => out.push({ key: `m-${m}`, label: m, remove: () => set({ months: f.months.filter((x) => x !== m) }) }));
-  f.durs.forEach((d) => out.push({ key: `u-${d}`, label: d, remove: () => set({ durs: f.durs.filter((x) => x !== d) }) }));
+  f.durs.forEach((d) => out.push({ key: `u-${d}`, label: durationLabel(d), remove: () => set({ durs: f.durs.filter((x) => x !== d) }) }));
   if (f.maxPrice) out.push({ key: "p", label: `Under ${formatINR(f.maxPrice)}`, remove: () => set({ maxPrice: 0 }) });
   if (f.editorOnly) out.push({ key: "e", label: "Editor's picks", remove: () => set({ editorOnly: false }) });
   if (f.fit) out.push({ key: "f", label: f.fit === "ready" ? "Ready for me" : "A stretch", remove: () => set({ fit: null }) });

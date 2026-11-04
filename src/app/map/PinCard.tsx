@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { X, Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, GitCompareArrows, Check, Clock, Users, Route, Download, Mountain, Waves, CalendarDays } from "lucide-react";
+import { Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, GitCompareArrows, Check, Users, Route, Mountain, Waves, CalendarDays, ChevronRight, Loader2 } from "lucide-react";
 import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import type { Adventure, Month } from "@/lib/data";
 import { useCompare } from "@/contexts/CompareContext";
@@ -12,7 +12,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { AXIS_LABEL } from "@/lib/fitness";
 import { MONTHS } from "@/lib/homeCuration";
 import { track } from "@/lib/analytics";
-import { trailClimbM, trailEnds, trailHighPoint, trailProfile, trailWalkKm, type Trail } from "@/lib/trails/shared";
+import { trailClimbM, trailHighPoint, trailWalkKm, type Trail } from "@/lib/trails/shared";
 import {
   genreOf, difficultyOf, difficultyColor, verifiedOperators, priceFrom, formatINR, daysAgo, inSeason, type Fit,
 } from "./mapShared";
@@ -30,7 +30,7 @@ export default function PinCard({
   trail,
   hasTrail = false,
   onItinerary,
-  onClose,
+  itineraryOpen = false,
 }: {
   adventure: Adventure;
   fit: Fit | null;
@@ -44,7 +44,10 @@ export default function PinCard({
   hasTrail?: boolean;
   /** Opens the itinerary and elevation beside the card, on the map */
   onItinerary?: () => void;
-  onClose: () => void;
+  /** The itinerary panel is showing this adventure */
+  itineraryOpen?: boolean;
+  /** Unused here: "Back to results" above the card closes it */
+  onClose?: () => void;
 }) {
   const { isSelected, add, remove, isFull, openDrawer, selected } = useCompare();
   const { isSaved, toggle, signedIn } = useWishlist();
@@ -84,16 +87,15 @@ export default function PinCard({
           {!inSeason(a, month) && month && <span className="tm-chip text-white/60">Out of season in {month}</span>}
         </div>
         <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
-          <button type="button" onClick={save} aria-pressed={saved} aria-label={saved ? "Remove from saved" : "Save"} className="tm-iconbtn">
+          <button type="button" onClick={save} aria-pressed={saved} aria-label={saved ? "Remove from your wishlist" : "Save to your wishlist"} title={saved ? "In your wishlist" : "Save to your wishlist"} className="tm-iconbtn">
             <Heart className="w-3.5 h-3.5" fill={saved ? "#ff5100" : "none"} color={saved ? "#ff5100" : "currentColor"} />
           </button>
-          <button type="button" onClick={onClose} aria-label="Close" className="tm-iconbtn"><X className="w-3.5 h-3.5" /></button>
         </div>
         <div className="absolute bottom-2.5 left-4 right-4">
           <h2 className="text-[17px] sm:text-[19px] font-bold leading-tight text-white tracking-tight">{a.name}</h2>
           <p className="mt-1 text-[11.5px] text-white/55 flex items-center gap-1.5 flex-wrap">
             <span>{a.state}</span><span className="opacity-40">·</span>
-            <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />{a.durationDays}</span><span className="opacity-40">·</span>
+            {/* Duration is the first fact below, so the hero keeps to place and difficulty */}
             <span style={{ color: difficultyColor(diff) }}>{diff}</span>
           </p>
         </div>
@@ -105,8 +107,22 @@ export default function PinCard({
         {/* 1. At a glance: always the same three facts, a dash where one doesn't apply */}
         <Facts a={a} trail={trail ?? null} />
 
-        {/* 2. Best months, always here */}
-        <Section title="Best months" aside={month ? (inSeason(a, month) ? `In season in ${month}` : `Not in ${month}`) : a.bestSeason}>
+        {/* 2. The day-by-day plan and height profile open beside the card, when the trail is mapped */}
+        {hasTrail && (
+          <button type="button" onClick={onItinerary} disabled={!trail || !onItinerary} className="tm-itin" aria-expanded={itineraryOpen} data-on={itineraryOpen || undefined}>
+            <span className="tm-itin-icon">{trail ? <Route className="w-4 h-4" /> : <Loader2 className="w-4 h-4 animate-spin" />}</span>
+            <span className="min-w-0 flex-1 text-left">
+              <span className="block text-[13px] font-bold text-white">Itinerary &amp; elevation</span>
+              <span className="block text-[11px] text-white/50 truncate">
+                {trail ? `${trail.days.length}-day plan · ${trailWalkKm(trail)} km · ${trailClimbM(trail).toLocaleString("en-IN")} m up` : "Loading the trail…"}
+              </span>
+            </span>
+            <ChevronRight className="w-4 h-4 text-white/40 shrink-0" />
+          </button>
+        )}
+
+        {/* 3. Best months, always here */}
+        <Section title="Best months" aside={month ? (inSeason(a, month) ? `In season in ${month}` : `Not in season in ${month}`) : a.bestSeason}>
           <div className="grid grid-cols-12 gap-[3px]">
             {MONTHS.map((m) => {
               const on = a.bestMonths.includes(m);
@@ -118,13 +134,6 @@ export default function PinCard({
               );
             })}
           </div>
-        </Section>
-
-        {/* 3. The trail: drawn on the map when there is one, said plainly when there isn't */}
-        <Section title="Trail">
-          {trail ? <TrailPanel trail={trail} slug={a.slug} onItinerary={onItinerary} />
-            : hasTrail ? <div className="tm-panel h-[118px] animate-pulse" aria-label="Loading the trail" />
-            : <p className="tm-panel text-[12px] text-white/50">No mapped trail for this one yet. <Link href={`/experiences/${a.slug}`} className="font-semibold text-white/75 hover:text-white underline underline-offset-2">See the plan</Link></p>}
         </Section>
 
         {/* 4. Your fit, and why Compass.AI picked it */}
@@ -205,18 +214,18 @@ export default function PinCard({
 
         {top?.website && (
           <p className="text-center text-[10.5px] text-white/40">
-            Book with <span className="text-white/70 font-semibold">{top.name}</span>, our top-rated verified operator here
+            <span className="text-white/70 font-semibold">Book now</span> opens {top.name}, the top-rated verified operator here
           </p>
         )}
         <Link href={`/experiences/${a.slug}`} className="flex items-center justify-center gap-1 text-[12px] font-semibold text-white/55 hover:text-white transition-colors">
-          Full details <ArrowRight className="w-3.5 h-3.5" />
+          Open the full adventure page <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
       {/* Compare or book: pinned to the bottom of the panel or sheet, so it's always in reach */}
       <div className="tm-card-actions">
         {comparing && selected.length > 1 && (
-          <button type="button" onClick={openDrawer} className="w-full mb-2 text-[11.5px] font-semibold text-[#6ff0e0] hover:underline">Compare {selected.length} side by side →</button>
+          <button type="button" onClick={openDrawer} className="w-full mb-2 text-[11.5px] font-semibold text-[#6ff0e0] hover:underline">Compare these {selected.length} side by side →</button>
         )}
         <div className="grid grid-cols-2 gap-2">
           <button
@@ -227,7 +236,7 @@ export default function PinCard({
             style={comparing ? { background: "rgba(111,240,224,0.12)", color: "#6ff0e0", borderColor: "rgba(111,240,224,0.35)" } : undefined}
           >
             {comparing ? <Check className="w-3.5 h-3.5" /> : <GitCompareArrows className="w-3.5 h-3.5" />}
-            {comparing ? "Comparing" : isFull ? "Compare full" : "Compare"}
+            {comparing ? "In compare" : isFull ? "Compare is full" : "Add to compare"}
           </button>
           {top?.website ? (
             <button type="button" onClick={book} className="tm-btn tm-btn-primary" title={`Opens ${top.name}'s site`}>Book now <ArrowUpRight className="w-3.5 h-3.5" /></button>
@@ -237,40 +246,6 @@ export default function PinCard({
         </div>
       </div>
     </article>
-  );
-}
-
-/** Length, climb and a small elevation line for the trail on the map, with the way to the full trail and GPX */
-function TrailPanel({ trail, slug, onItinerary }: { trail: Trail; slug: string; onItinerary?: () => void }) {
-  const prof = trailProfile(trail);
-  const maxKm = prof[prof.length - 1].km;
-  const eles = prof.map((p) => p.ele);
-  const lo = Math.min(...eles), hi = Math.max(...eles);
-  const W = 240, H = 40;
-  const d = prof.map((p, i) => `${i ? "L" : "M"}${((p.km / maxKm) * W).toFixed(1)},${(H - 2 - ((p.ele - lo) / Math.max(1, hi - lo)) * (H - 6)).toFixed(1)}`).join("");
-  return (
-    <div className="tm-panel" style={{ borderColor: "rgba(255,81,0,0.35)", background: "rgba(255,81,0,0.06)" }}>
-      <div className="flex items-center gap-2">
-        <Route className="w-4 h-4 text-[#ff7d47] shrink-0" />
-        <p className="text-[12.5px] font-bold text-white">Drawn on the map</p>
-        <p className="ml-auto text-[11px] text-white/50 tabular-nums" title={`${trailEnds(trail).from} to ${trailEnds(trail).to}, start to end`}>{trailWalkKm(trail)} km · +{trailClimbM(trail).toLocaleString("en-IN")} m · {trail.stops.length} stops</p>
-      </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-10 mt-2" aria-label={`Elevation ${lo.toLocaleString("en-IN")} to ${hi.toLocaleString("en-IN")} m`} role="img">
-        <path d={`${d}L${W},${H}L0,${H}Z`} fill="rgba(255,81,0,0.18)" />
-        <path d={d} fill="none" stroke="#ff7d47" strokeWidth="1.6" />
-      </svg>
-      <div className="flex items-center justify-between text-[10.5px] text-white/40 -mt-0.5">
-        <span>{trail.stops[0].name}</span><span>{trail.stops[trail.stops.length - 1].name}</span>
-      </div>
-      <div className="flex gap-2 mt-2.5">
-        {onItinerary ? (
-          <button type="button" onClick={onItinerary} className="flex-1 inline-flex items-center justify-center gap-1 h-8 rounded-lg text-[12px] font-semibold text-white bg-white/10 hover:bg-white/15">Itinerary &amp; elevation <ArrowRight className="w-3.5 h-3.5" /></button>
-        ) : (
-          <Link href={`/experiences/${slug}#at-a-glance`} className="flex-1 inline-flex items-center justify-center gap-1 h-8 rounded-lg text-[12px] font-semibold text-white bg-white/10 hover:bg-white/15">Itinerary &amp; elevation <ArrowRight className="w-3.5 h-3.5" /></Link>
-        )}
-        <a href={`/experiences/${slug}/trail.gpx`} download className="inline-flex items-center justify-center gap-1 h-8 px-3 rounded-lg text-[12px] font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a1f]"><Download className="w-3.5 h-3.5" />GPX</a>
-      </div>
-    </div>
   );
 }
 
@@ -295,7 +270,7 @@ function Facts({ a, trail }: { a: Adventure; trail: Trail | null }) {
     [<Route key="r" className="w-3.5 h-3.5" />, "Distance", trail ? `${trailWalkKm(trail)} km` : a.distance ?? "—"],
     a.depth
       ? [<Waves key="w" className="w-3.5 h-3.5" />, "Depth", a.depth]
-      : [<Mountain key="m" className="w-3.5 h-3.5" />, "Highest", a.altitude ?? (high ? `${high.toLocaleString("en-IN")} m` : "—")],
+      : [<Mountain key="m" className="w-3.5 h-3.5" />, "Highest", a.altitude ? a.altitude.replace(/(\d)\s*m$/, "$1 m") : (high ? `${high.toLocaleString("en-IN")} m` : "—")],
   ];
   return (
     <div className="grid grid-cols-3 gap-1.5">

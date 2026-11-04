@@ -22,6 +22,9 @@ import type { AdventureFilterState } from "@/lib/adventureFilterState";
 
 export const DIFFICULTIES: Difficulty[] = ["Easy", "Moderate", "Hard", "Advanced", "Extreme"];
 export const DURATIONS: Duration[] = ["Weekend", "3–5 days", "7+ days"];
+/** What a duration bucket is called on screen. "7+ days" stays the stored value (saved links and
+ *  searches use it) but it holds 6-day trips too, so it reads "6+ days" */
+export const durationLabel = (d: Duration | string) => (d === "7+ days" ? "6+ days" : d);
 export const PRICE_STEPS = [0, 10000, 20000, 40000, 75000];
 
 // Only offer options that actually have adventures behind them — no dead ends.
@@ -61,7 +64,7 @@ export function QuickFilterChips({ f, set, thisMonth, hasFit, fitLabel = "Ready 
       ))}
       <span className="w-px h-5 shrink-0" style={{ background: "var(--border-default)" }} />
       {DURATIONS.map((d) => (
-        <FilterChip key={d} on={f.durs.includes(d)} onClick={() => toggle(f.durs, d, (v) => set({ durs: v }))}>{d}</FilterChip>
+        <FilterChip key={d} on={f.durs.includes(d)} onClick={() => toggle(f.durs, d, (v) => set({ durs: v }))}>{durationLabel(d)}</FilterChip>
       ))}
     </>
   );
@@ -318,7 +321,7 @@ export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun 
             </div>
           </Section>
           <Section title="How long">
-            {DURATIONS.map((d) => <Opt key={d} on={f.durs.includes(d)} onClick={() => toggle(f.durs, d, (v) => set({ durs: v }))} count={n({ durs: [d] })}>{d}</Opt>)}
+            {DURATIONS.map((d) => <Opt key={d} on={f.durs.includes(d)} onClick={() => toggle(f.durs, d, (v) => set({ durs: v }))} count={n({ durs: [d] })}>{durationLabel(d)}</Opt>)}
           </Section>
           <Section title="How hard">
             {DIFFICULTIES.map((d) => (
@@ -403,7 +406,8 @@ function PriceSlider({ value, onChange }: { value: number; onChange: (v: number)
       />
       <div className="flex justify-between mt-1.5 text-[11px] tabular-nums" style={{ color: "var(--text-tertiary)" }}>
         <span>{inr(PRICE_MIN)}</span>
-        <span>{within} adventure{within === 1 ? "" : "s"}</span>
+        {/* Counts adventures with a listed starting price: the ones a budget can include */}
+        <span>{value ? `${within} within budget` : `${within} with prices listed`}</span>
         <span>{inr(PRICE_MAX)}+</span>
       </div>
       <style>{`

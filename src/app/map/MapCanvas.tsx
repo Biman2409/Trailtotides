@@ -36,6 +36,8 @@ export interface MapApi {
   fitTo: (slugs: string[]) => void;
   reset: () => void;
   placePin: (lat: number, lng: number, name: string) => void;
+  /** Frames the drawn trail again in the map that's left visible (after a panel opens or closes) */
+  frameTrail: () => void;
 }
 
 /** Screen space the overlays cover, so focusing and "in view" use the map you can actually see */
@@ -114,6 +116,7 @@ export default function MapCanvas(props: Props) {
   const meRef = useRef<L.LayerGroup | null>(null);
   const trophyRef = useRef<L.LayerGroup | null>(null);
   const trailRef = useRef<L.LayerGroup | null>(null);
+  const trailBoundsRef = useRef<import("leaflet").LatLngBounds | null>(null);
   /** Slug of the pin currently taken out of its cluster */
   const loose = useRef<string | null>(null);
   /** The map has loaded: effects that need it run again once it has */
@@ -199,6 +202,12 @@ export default function MapCanvas(props: Props) {
         });
       },
       reset: () => fitIndia(true),
+      frameTrail: () => {
+        const map = mapRef.current, b = trailBoundsRef.current;
+        if (!map || !b) return;
+        const { left, bottom, top = 0 } = live.current.insets;
+        map.flyToBounds(b, { paddingTopLeft: [left + 40, top + 40], paddingBottomRight: [40, bottom + 40], maxZoom: 13, duration: 0.8 });
+      },
       placePin: (lat, lng, name) => {
         const leaflet = leafletRef.current, layer = placeRef.current;
         if (!leaflet || !layer) return;
@@ -418,6 +427,7 @@ export default function MapCanvas(props: Props) {
     const map = mapRef.current, leaflet = leafletRef.current, layer = trailRef.current;
     if (!map || !leaflet || !layer) return;
     layer.clearLayers();
+    trailBoundsRef.current = null;
     if (!trail) return;
     const pts = trail.line.map(([la, lo]) => [la, lo] as [number, number]);
     leaflet.polyline(pts, { color: "#000", weight: 7, opacity: 0.5, interactive: false }).addTo(layer);
@@ -435,6 +445,7 @@ export default function MapCanvas(props: Props) {
         .addTo(layer);
     });
 
+    trailBoundsRef.current = line.getBounds();
     const { left, bottom, top = 0 } = live.current.insets;
     map.flyToBounds(line.getBounds(), { paddingTopLeft: [left + 40, top + 40], paddingBottomRight: [40, bottom + 40], maxZoom: 13, duration: 1.1 });
 

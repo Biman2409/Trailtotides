@@ -45,6 +45,7 @@ import { trailUrl, type Trail } from "@/lib/trails/shared";
 
 const PANEL_W = 380;
 const GAP = 12;
+const ITIN_W = 400;
 // Peek fits the handle, Compass's one line and a row of cards
 const SHEET = { peek: 206, half: 0.55, full: 0.88 } as const;
 type SheetState = "peek" | "half" | "full";
@@ -226,7 +227,18 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
     : [], [trailOn, tripLog]);
 
   const sheetH = sheet === "peek" ? SHEET.peek : Math.round(areaH * SHEET[sheet]);
-  const insets = desktop ? { left: panelOpen ? GAP + PANEL_W + GAP : 0, bottom: 16 } : { left: 0, bottom: sheetH, top: 60 };
+  // The itinerary panel sits beside the side panel on a desktop, so the trail moves clear of both
+  const itinOpen = !!itineraryFor && itineraryFor === selected;
+  const itinLeft = panelOpen ? GAP + PANEL_W + 44 : GAP;
+  const insets = desktop
+    ? { left: itinOpen ? itinLeft + ITIN_W + GAP : panelOpen ? GAP + PANEL_W + GAP : 0, bottom: 16 }
+    : { left: 0, bottom: sheetH, top: 60 };
+  // When the itinerary panel opens or closes beside the side panel, move the trail into what's left
+  useEffect(() => {
+    if (!desktop || !trail || trail.slug !== selected) return;
+    const t = setTimeout(() => apiRef.current?.frameTrail(), 60);
+    return () => clearTimeout(t);
+  }, [itinOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const filtersActive = anyFilter(f);
 
@@ -498,7 +510,8 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
         pickReason={pickReasons.get(selectedAdv.slug)}
         trail={trail?.slug === selectedAdv.slug ? trail : null}
         hasTrail={hasTrail}
-        onItinerary={() => setItineraryFor(selectedAdv.slug)}
+        onItinerary={() => setItineraryFor((cur) => (cur === selectedAdv.slug ? null : selectedAdv.slug))}
+        itineraryOpen={itineraryFor === selectedAdv.slug}
         onClose={() => setSelected(null)}
       />
     </div>
@@ -607,7 +620,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
             <div className="absolute z-[1000] bottom-4 right-4"><CompareTray onFocus={select} /></div>
 
             {itineraryAdv && itineraryTrail && (
-              <div className="absolute z-[1001] tm-slide-in" style={{ top: GAP, bottom: GAP, left: panelOpen ? GAP + PANEL_W + 44 : GAP, width: "min(420px, calc(100% - " + ((panelOpen ? GAP + PANEL_W + 44 : GAP) + GAP) + "px))" }}>
+              <div className="absolute z-[1001] tm-slide-in" style={{ top: GAP, bottom: GAP, left: itinLeft, width: `min(${ITIN_W}px, calc(100% - ${itinLeft + GAP}px))` }}>
                 <ItineraryPanel adventure={itineraryAdv} trail={itineraryTrail} onClose={() => setItineraryFor(null)} />
               </div>
             )}
@@ -802,6 +815,13 @@ const PAGE_CSS = `
 
   /* clip, not hidden: hidden would make the card its own scroller and stop the action bar sticking */
   .tm-card { border-radius: 20px; overflow: clip; background: #111418; border: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; }
+  /* The card's one way into the itinerary panel */
+  .tm-itin { width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; text-align: left;
+             background: rgba(255,81,0,0.08); border: 1px solid rgba(255,125,71,0.35); transition: background .2s, border-color .2s; }
+  .tm-itin:hover:not(:disabled) { background: rgba(255,81,0,0.14); border-color: rgba(255,125,71,0.6); }
+  .tm-itin[data-on] { background: rgba(255,81,0,0.18); border-color: #ff7d47; }
+  .tm-itin:disabled { cursor: default; opacity: 0.75; }
+  .tm-itin-icon { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; color: #ff9a66; background: rgba(255,81,0,0.15); }
   .tm-card-actions { position: sticky; bottom: 0; z-index: 2; padding: 10px 12px 12px; background: rgba(17,20,24,0.96); backdrop-filter: blur(10px);
                      border-top: 1px solid rgba(255,255,255,0.07); border-radius: 0 0 20px 20px; }
   .tm-chip { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.12); }

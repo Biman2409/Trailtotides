@@ -20,7 +20,6 @@ const FIELDS: { label: string; key: keyof Adventure | "price" | "rating" | "oper
   { label: "State",       key: "state" },
   { label: "Type",        key: "type" },
   { label: "Difficulty",  key: "difficulty" },
-  { label: "Duration",    key: "duration" },
   { label: "Days",        key: "durationDays" },
   { label: "Distance",    key: "distance" },
   { label: "Max Alt",     key: "altitude" },
