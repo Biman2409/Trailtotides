@@ -206,11 +206,14 @@ export const TREKS = {
     stops: [
       { name: "Raithal", at: [30.81672, 78.60379] },
       { name: "Gui", at: [30.81448, 78.57426] },
+      // The top of the meadow the trail crosses before dropping to the camp OSM marks as Dayara
+      // Bugyal: the trek's high point, without a name of its own on the map
+      { name: "Dayara Bugyal ridge", at: [30.83403, 78.54458], exact: true },
       { name: "Dayara Bugyal", at: [30.82994, 78.54964] },
     ],
     days: [
       { to: "Gui", note: "Up from Raithal village through oak and maple to a forest clearing" },
-      { to: "Dayara Bugyal", note: "Out of the trees onto the rolling meadow, Bandarpoonch and Srikanth on the skyline" },
+      { to: "Dayara Bugyal", via: ["Dayara Bugyal ridge"], note: "Out of the trees onto the rolling meadow, Bandarpoonch and Srikanth on the skyline" },
       { rest: "A day on the meadows: walk up towards Bakaria Top for the views" },
       { to: "Raithal", note: "Down the way you came" },
     ],
@@ -356,13 +359,16 @@ export const TREKS = {
     near: "Tehri Garhwal, Uttarakhand",
     stops: [
       { name: "Ghuttu", at: [30.5289, 78.79015] },
+      // The ridge on the meadow, before the camp OSM marks as Panwali Kantha: the trek's high
+      // point, without a name of its own on the map
+      { name: "Panwali Kantha ridge", at: [30.5629, 78.86516], exact: true },
       { name: "Panwali Kantha", at: [30.56968, 78.86745] },
     ],
     // Gaurmanda, the oak-forest camp every operator uses, where the trail reaches its published 2,525 m
-    camps: { Gaurmanda: ["Ghuttu", "Panwali Kantha", 0.5, ["Gairu", "Gaur Manda"], [30.53572, 78.83476]] },
+    camps: { Gaurmanda: ["Ghuttu", "Panwali Kantha ridge", 0.5, ["Gairu", "Gaur Manda"], [30.53572, 78.83476]] },
     days: [
       { to: "Gaurmanda", note: "Up from Ghuttu through oak forest to a clearing ringed by banj oak" },
-      { to: "Panwali Kantha", note: "Onto the great meadow on the old pilgrim route to Kedarnath, the Gangotri and Kedar peaks in view" },
+      { to: "Panwali Kantha", via: ["Panwali Kantha ridge"], note: "Onto the great meadow on the old pilgrim route to Kedarnath, the Gangotri and Kedar peaks in view" },
       { rest: "A day on the meadow, walking the ridge for the views" },
       { to: "Ghuttu", note: "Down the way you came. Some groups continue to Triyuginarayan instead" },
     ],
@@ -640,14 +646,14 @@ export const TREKS = {
       { name: "Aru", at: [34.09029, 75.26244] },
       { name: "Lidderwat", at: [34.17209, 75.25476] },
       { name: "Tarsar Lake", q: "Tar Sar", at: [34.1320, 75.14] },
+      // Where the line tops out between the lake and Sundersar: the trek's high point
+      { name: "Tarsar Pass", at: [34.15163, 75.11059], exact: true },
       { name: "Sundersar", at: [34.15611, 75.11275] },
       { name: "Marsar Lake", q: "Mar Sar", at: [34.14426, 75.10983] },
     ],
     camps: {
       // OSM's Sekiwas, the shepherds' huts: 3,424 m on the elevation model (published about 3,400 m)
-      Shekwas: ["Lidderwat", "Tarsar Lake", 0.5, ["Shekwas Camp", "Shekhwas", "Homwas"], [34.16735, 75.17185]],
-      "Tarsar Pass": ["Tarsar Lake", "Sundersar", 0.5, ["Tarsar Top"]],
-    },
+      Shekwas: ["Lidderwat", "Tarsar Lake", 0.5, ["Shekwas Camp", "Shekhwas", "Homwas"], [34.16735, 75.17185]]    },
     days: [
       { to: "Lidderwat", note: "Up the Lidder river from Aru through pine and meadows" },
       { to: "Shekwas", note: "Into a side valley to a camp ringed by peaks" },
