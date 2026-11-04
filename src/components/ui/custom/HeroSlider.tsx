@@ -11,59 +11,64 @@ export type Slide = {
   mark: HeroMark;
 };
 
-// The photo now on screen is announced on window, so the altitude gauge can follow it
+// The photo now on screen is announced on window, so the altitude gauge can follow it; the
+// gauge asks for a photo the same way
 export const HERO_SLIDE_EVENT = "hero:slide";
+export const HERO_GOTO_EVENT = "hero:goto";
 
+// Each photo, described as it is, and where in India you can do what it shows (its mark): the
+// altitude gauge beside the headline sends people there. The photos are stock and not taken at
+// those places, so the gauge says "Do this", not "In this photo".
 export const HERO_SLIDES: Slide[] = [
   {
     src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1280&q=80",
-    alt: "Trekker on a high-altitude Himalayan ridge",
-    mark: { name: "Kedarkantha summit", metres: 3810, href: "/experiences/kedarkantha-trek" },
+    alt: "Two trekkers with packs on a mountain trail below snowy peaks",
+    mark: { name: "Kedarkantha", metres: 3810, href: "/experiences/kedarkantha-trek" },
   },
   {
     src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1280&q=80",
-    alt: "Kayaker paddling through vivid turquoise coastal waters",
-    mark: { name: "Sea kayaking, Andamans", metres: 0, href: "/adventurepedia/activities/kayaking" },
+    alt: "Scuba diver among a school of yellow fish on a reef wall",
+    mark: { name: "Reef dive, Havelock", metres: -18, href: "/adventurepedia/activities/diving" },
   },
   {
     src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=1280&q=80",
-    alt: "Mountaineer silhouetted against a vast snowy summit",
-    mark: { name: "Mera Peak", metres: 6476, href: "/experiences/mera-peak" },
+    alt: "Climber hanging from a sea-cliff overhang above turquoise water",
+    mark: { name: "Rock climbing, Hampi", metres: 470, href: "/adventurepedia/activities/rock-climbing" },
   },
   {
     src: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1280&q=80",
-    alt: "Surfer carving a wave at golden hour",
+    alt: "Surfer riding inside a turquoise wave",
     mark: { name: "Surfing, Kovalam", metres: 0, href: "/adventurepedia/activities/surfing" },
   },
   {
     src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1280&q=80",
-    alt: "Motorbike rider on a sweeping Himalayan mountain road",
-    mark: { name: "Tanglang La, Manali–Leh", metres: 5359, href: "/experiences/manali-leh-bike-expedition" },
+    alt: "Snow peaks above a sea of clouds at sunset",
+    mark: { name: "Mera Peak", metres: 6476, href: "/experiences/mera-peak" },
   },
   {
     src: "https://images.unsplash.com/photo-1669255664788-61c668bd6fe8?w=1280&q=80",
-    alt: "Man on a motorcycle riding through mountain terrain",
-    mark: { name: "Kunzum Pass, Spiti", metres: 4551, href: "/experiences/spiti-valley-bike" },
+    alt: "Motorcyclist riding through a Himalayan river crossing",
+    mark: { name: "Manali–Leh ride", metres: 5359, href: "/experiences/manali-leh-bike-expedition" },
   },
   {
     src: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1280&q=80",
-    alt: "Skier carving down a steep snowy mountain slope",
+    alt: "Skier carving down a groomed snow slope",
     mark: { name: "Skiing, Gulmarg", metres: 2650, href: "/adventurepedia/activities/skiing" },
   },
   {
     src: "https://images.unsplash.com/photo-1592208128295-5aaa34f1d72b?w=1280&q=80",
-    alt: "Scuba diver exploring vibrant coral reefs in the Andamans",
-    mark: { name: "Reef dive, Havelock", metres: -18, href: "/adventurepedia/activities/diving" },
+    alt: "Paraglider launching from a grassy hilltop at sunset",
+    mark: { name: "Paragliding, Bir Billing", metres: 2400, href: "/adventurepedia/activities/paragliding" },
   },
   {
     src: "https://images.unsplash.com/photo-1668936132313-2c3105eef631?w=1280&q=80",
-    alt: "Mountain biker descending a rugged trail through dense forest",
+    alt: "Mountain biker on a high ridge trail beside a stone cairn",
     mark: { name: "Spiti by bicycle", metres: 4551, href: "/experiences/spiti-valley-cycling" },
   },
   {
     src: "https://images.unsplash.com/photo-1590898428406-7b9f44b33c22?w=1280&q=80",
-    alt: "Rock climber scaling a dramatic cliff face",
-    mark: { name: "Bouldering, Hampi", metres: 470, href: "/adventurepedia/activities/rock-climbing" },
+    alt: "Two friends cliff-jumping into clear sea water",
+    mark: { name: "Cliff jumps, Rishikesh", metres: 380, href: "/experiences/rishikesh-river-rafting" },
   },
 ];
 
@@ -79,7 +84,7 @@ const panVariants = [
   { from: "scale(1.1) translate(-3%,-3%)",   to: "scale(1.18) translate(3%,3%)" },
 ];
 
-const SLIDE_DURATION = 6000;
+export const SLIDE_DURATION = 6000;
 const TRANSITION_MS  = 1200;
 
 function shuffle<T>(arr: T[]): T[] {
@@ -130,6 +135,15 @@ export default function HeroSlider({ start = 0 }: { start?: number }) {
   useEffect(() => {
     window.dispatchEvent(new CustomEvent<HeroMark>(HERO_SLIDE_EVENT, { detail: shuffled[current].mark }));
   }, [current, shuffled]);
+  // …and take it to a photo when one of the gauge's stops is clicked
+  useEffect(() => {
+    const on = (e: Event) => {
+      const i = shuffled.findIndex((sl) => sl.mark.name === (e as CustomEvent<string>).detail);
+      if (i >= 0) goTo(i, true);
+    };
+    window.addEventListener(HERO_GOTO_EVENT, on);
+    return () => window.removeEventListener(HERO_GOTO_EVENT, on);
+  }, [shuffled, goTo]);
 
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -152,6 +166,8 @@ export default function HeroSlider({ start = 0 }: { start?: number }) {
 
       <style>{`
         ${kenBurnsCSS}
+        /* Large desktops: the altitude gauge beside the headline moves through the photos */
+        @media (min-width: 1280px) and (min-height: 721px) { .hero-dots { display: none !important; } }
         @keyframes progressFill {
           from { transform: scaleX(0); }
           to   { transform: scaleX(1); }
@@ -222,7 +238,7 @@ export default function HeroSlider({ start = 0 }: { start?: number }) {
 
       {/* Progress dots */}
       <div
-        className="absolute bottom-3 left-1/2 -translate-x-1/2 hidden sm:flex items-center"
+        className="hero-dots absolute bottom-3 left-1/2 -translate-x-1/2 hidden sm:flex items-center"
         style={{ zIndex: 5 }}
       >
         {shuffled.map((_, i) => (
