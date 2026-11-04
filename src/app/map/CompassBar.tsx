@@ -78,8 +78,8 @@ export default function CompassBar({
         className="rounded-2xl p-px"
         style={{ background: active || text ? COMPASS_GRADIENT : "linear-gradient(135deg, rgba(255,81,0,0.55), rgba(255,179,122,0.35))" }}
       >
-        <div className="flex items-center gap-2 rounded-[15px] pl-3 pr-1.5 h-11 bg-[#121417]">
-          <CompassAIMark className="w-4 h-4 shrink-0 text-[#ff9a66]" />
+        <div className="flex items-center gap-2 rounded-[15px] pl-3 pr-1.5 h-11 bg-[var(--tm-card)]">
+          <CompassAIMark className="w-4 h-4 shrink-0 text-[var(--tm-peach)]" />
           <input
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -118,10 +118,10 @@ export default function CompassBar({
         <div className="mt-2 rounded-xl px-3 py-2 text-[11.5px] leading-snug bg-[rgba(255,81,0,0.06)] border border-[rgba(255,125,71,0.2)]">
           {asked && <p className="text-white/40 truncate">“{asked}”</p>}
           {reply && <p className="text-white/75 mt-0.5">{reply}</p>}
-          {error && <p className="text-[#ffb37a] mt-0.5">{error}</p>}
+          {error && <p className="text-[var(--tm-peach-2)] mt-0.5">{error}</p>}
           <div className="flex items-center gap-3 mt-1.5">
             {asked && (
-              <button type="button" onClick={() => askCompass(asked)} className="inline-flex items-center gap-1 font-semibold text-[#ff9a66] hover:underline">
+              <button type="button" onClick={() => askCompass(asked)} className="inline-flex items-center gap-1 font-semibold text-[var(--tm-peach)] hover:underline">
                 <MessageCircle className="w-3 h-3" /> Continue in chat
               </button>
             )}

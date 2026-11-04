@@ -8,7 +8,7 @@ import { adventures as allAdventures, type Adventure, type Month } from "@/lib/d
 import type { Trail } from "@/lib/trails/shared";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import {
-  BASE_LAYERS, createBaseLayer, INDIA_CENTER, INDIA_ZOOM, INDIA_BOUNDS, loadLeaflet, inSeason, esc,
+  BASE_LAYERS, LIGHT_BASE, createBaseLayer, INDIA_CENTER, INDIA_ZOOM, INDIA_BOUNDS, loadLeaflet, inSeason, esc,
   difficultyOf, difficultyColor, priceFrom, formatINR, verifiedOperators,
   type Fit, type LayerKey,
 } from "./mapShared";
@@ -62,6 +62,8 @@ interface Props {
   completed: CompletedAdventure[];
   /** The base map: the dark map or satellite imagery */
   base: LayerKey;
+  /** The site is in its light theme: the map style is the light one */
+  light?: boolean;
   apiRef: React.MutableRefObject<MapApi | null>;
   onSelect: (slug: string) => void;
   onViewChange: (inView: Set<string>) => void;
@@ -313,7 +315,7 @@ export default function MapCanvas(props: Props) {
   function setTiles() {
     const map = mapRef.current, leaflet = leafletRef.current;
     if (!map || !leaflet) return;
-    const cfg = BASE_LAYERS[live.current.base];
+    const cfg = live.current.base === "map" && live.current.light ? LIGHT_BASE : BASE_LAYERS[live.current.base];
     // The vector style loads MapLibre first, so only the latest request wins
     const token = ++tileToken.current;
     createBaseLayer(leaflet, cfg).then((base) => {
@@ -349,7 +351,7 @@ export default function MapCanvas(props: Props) {
     }
   }
 
-  useEffect(() => { setTiles(); }, [props.base]);
+  useEffect(() => { setTiles(); }, [props.base, props.light]);
 
   // The set of pins changes: rebuild. Only their look changes: swap icons in place.
   useEffect(() => { buildMarkers(); reportView(); }, [advs]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -405,8 +407,8 @@ export default function MapCanvas(props: Props) {
     if (!nearMe) return;
     if (radiusKm) {
       const ring = leaflet.circle([nearMe.lat, nearMe.lng], {
-        radius: radiusKm * 1000, color: "#38bdf8", weight: 1.5, opacity: 0.7, dashArray: "4 6",
-        fillColor: "#38bdf8", fillOpacity: 0.06, interactive: false,
+        radius: radiusKm * 1000, color: "var(--tm-sky)", weight: 1.5, opacity: 0.7, dashArray: "4 6",
+        fillColor: "var(--tm-sky)", fillOpacity: 0.06, interactive: false,
       }).addTo(layer);
       // Frame the whole ring in the uncovered part of the map
       const map = mapRef.current;
@@ -528,16 +530,16 @@ export default function MapCanvas(props: Props) {
 }
 
 const MAP_CSS = `
-  .tm-map { background: #0b0d10; }
+  .tm-map { background: var(--tm-page); }
   /* Leaflet's corner controls (zoom, ⓘ, credits) sit under the page's own overlays, so menus
      like Map style open over them instead of the ⓘ poking through */
   .tm-map .leaflet-top, .tm-map .leaflet-bottom { z-index: 990; }
   /* Map credits: hidden behind the ⓘ until tapped, then small and quiet, but readable */
-  .tm-map .leaflet-control-attribution { display: none; background: rgba(11,13,16,0.82) !important; color: rgba(255,255,255,0.55) !important; font-size: 9.5px !important; line-height: 1.4; padding: 3px 8px !important; border-radius: 8px; margin: 6px 12px 0 0 !important; max-width: min(70vw, 420px); text-align: right; }
+  .tm-map .leaflet-control-attribution { display: none; background: rgba(var(--tm-bg),0.82) !important; color: rgba(var(--tm-ink),0.55) !important; font-size: 9.5px !important; line-height: 1.4; padding: 3px 8px !important; border-radius: 8px; margin: 6px 12px 0 0 !important; max-width: min(70vw, 420px); text-align: right; }
   .tm-map.tm-credits-open .leaflet-control-attribution { display: block; }
-  .tm-map .leaflet-control-attribution a { color: rgba(255,255,255,0.75) !important; }
+  .tm-map .leaflet-control-attribution a { color: rgba(var(--tm-ink),0.75) !important; }
   .tm-credit-btn { width: 20px; height: 20px; margin: 8px 12px 0 0 !important; border-radius: 9999px; display: flex; align-items: center; justify-content: center;
-    font: italic 600 11px/1 Georgia, serif; cursor: pointer; background: rgba(11,13,16,0.6); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.14); }
+    font: italic 600 11px/1 Georgia, serif; cursor: pointer; background: rgba(var(--tm-bg),0.6); color: rgba(var(--tm-ink),0.6); border: 1px solid rgba(var(--tm-ink),0.14); }
   .tm-credit-btn:hover, .tm-map.tm-credits-open .tm-credit-btn { color: #ff5100; border-color: rgba(255,81,0,0.5); }
   /* Small to look at, finger-sized to tap */
   .tm-credit-btn { position: relative; }
@@ -549,70 +551,70 @@ const MAP_CSS = `
   .tm-pin-core { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
                  /* a light sheen only, so the white icon keeps its contrast */
                  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--g) 82%, #fff), var(--g) 70%);
-                 box-shadow: 0 0 0 2px rgba(11,13,16,0.92), 0 0 16px var(--glow), 0 4px 10px rgba(0,0,0,0.55); }
+                 box-shadow: 0 0 0 2px rgba(var(--tm-bg),0.92), 0 0 16px var(--glow), 0 4px 10px rgba(0,0,0,0.55); }
   .tm-pin.has-fit::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2.5px solid var(--ring); box-shadow: 0 0 10px color-mix(in srgb, var(--ring) 60%, transparent); }
   .tm-pin:hover, .tm-pin.sel, .tm-pin.hov { transform: scale(1.22); }
-  .tm-pin.hov .tm-pin-core { box-shadow: 0 0 0 2px rgba(255,255,255,0.85), 0 0 24px var(--glow), 0 4px 12px rgba(0,0,0,0.6); }
+  .tm-pin.hov .tm-pin-core { box-shadow: 0 0 0 2px rgba(var(--tm-ink),0.85), 0 0 24px var(--glow), 0 4px 12px rgba(0,0,0,0.6); }
   .tm-pin.off.hov { opacity: 0.9; filter: none; }
   .tm-pin.sel .tm-pin-core { box-shadow: 0 0 0 2px #fff, 0 0 22px var(--glow), 0 4px 12px rgba(0,0,0,0.6); }
   .tm-pin.off { opacity: 0.32; filter: grayscale(0.85); }
   .tm-pin.off:hover, .tm-pin.off.sel { opacity: 0.9; filter: none; }
   /* Compass picks breathe an orange halo */
-  .tm-pin.pick::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid #ff7d47; animation: tmPick 1.8s ease-out infinite; }
+  .tm-pin.pick::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--tm-orange); animation: tmPick 1.8s ease-out infinite; }
   @keyframes tmPick { from { transform: scale(0.8); opacity: 0.9; } to { transform: scale(1.6); opacity: 0; } }
-  .tm-pin-saved { position: absolute; top: 1px; right: 1px; width: 9px; height: 9px; border-radius: 50%; background: #ff5100; box-shadow: 0 0 0 1.5px #0b0d10; }
+  .tm-pin-saved { position: absolute; top: 1px; right: 1px; width: 9px; height: 9px; border-radius: 50%; background: #ff5100; box-shadow: 0 0 0 1.5px var(--tm-page); }
 
   /* Clusters: dark glass with a warm ring, so they group pins without shouting over the map */
   .tm-cluster { border-radius: 50%; display: grid; place-items: center; color: #fff; font: 800 12.5px var(--font-dm-sans, 'DM Sans'), sans-serif;
                 background: radial-gradient(circle at 35% 30%, rgba(40,44,50,0.96), rgba(17,20,24,0.96));
-                border: 2px solid var(--ring, #ff9a66);
-                box-shadow: 0 0 0 5px color-mix(in srgb, var(--ring, #ff9a66) 16%, transparent), 0 0 18px color-mix(in srgb, var(--ring, #ff9a66) 40%, transparent), 0 6px 18px rgba(0,0,0,0.55);
+                border: 2px solid var(--ring, var(--tm-peach));
+                box-shadow: 0 0 0 5px color-mix(in srgb, var(--ring, var(--tm-peach)) 16%, transparent), 0 0 18px color-mix(in srgb, var(--ring, var(--tm-peach)) 40%, transparent), 0 6px 18px rgba(0,0,0,0.55);
                 transition: transform .2s; }
   .tm-cluster:hover { transform: scale(1.08); }
-  .tm-cluster.hov { transform: scale(1.18); border-color: #fff; box-shadow: 0 0 0 6px rgba(255,255,255,0.15), 0 0 26px rgba(255,154,102,0.6), 0 6px 18px rgba(0,0,0,0.55); }
+  .tm-cluster.hov { transform: scale(1.18); border-color: #fff; box-shadow: 0 0 0 6px rgba(var(--tm-ink),0.15), 0 0 26px rgba(255,154,102,0.6), 0 6px 18px rgba(0,0,0,0.55); }
 
   .tm-me { position: relative; width: 22px; height: 22px; }
   .tm-me::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: rgba(56,189,248,0.35); animation: tmPulse 2s ease-out infinite; }
-  .tm-me i { position: absolute; inset: 5px; border-radius: 50%; background: #38bdf8; border: 2px solid #fff; }
+  .tm-me i { position: absolute; inset: 5px; border-radius: 50%; background: var(--tm-sky); border: 2px solid #fff; }
   @keyframes tmPulse { from { transform: scale(0.6); opacity: 0.8; } to { transform: scale(2.3); opacity: 0; } }
   .tm-stop { width: 18px; height: 18px; border-radius: 50%; background: #ff5100; border: 2px solid #fff; color: #fff; font: 700 9.5px/14px system-ui, sans-serif; text-align: center; box-shadow: 0 1px 5px rgba(0,0,0,0.5); }
   .tm-stop.start { background: #16a34a; }
   .tm-stop.side { background: #0e7c86; font-size: 8px; }
-  .tm-place { width: 18px; height: 18px; border-radius: 50%; background: #38bdf8; border: 3px solid #fff; box-shadow: 0 0 0 6px rgba(56,189,248,0.25), 0 3px 10px rgba(0,0,0,0.5); }
+  .tm-place { width: 18px; height: 18px; border-radius: 50%; background: var(--tm-sky); border: 3px solid #fff; box-shadow: 0 0 0 6px rgba(56,189,248,0.25), 0 3px 10px rgba(0,0,0,0.5); }
   .tm-trophy { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg,#f7cd3a,#eab308);
                box-shadow: 0 0 0 2px #fff, 0 0 18px rgba(234,179,8,0.6); }
   .tm-photo { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; border: 3px solid #ff5100; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
   .tm-photo img, .tm-pop img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-  .tm-tip { background: rgba(11,13,16,0.94) !important; border: 1px solid rgba(255,255,255,0.12) !important; color: #fff !important; border-radius: 10px !important;
+  .tm-tip { background: rgba(var(--tm-bg),0.94) !important; border: 1px solid rgba(var(--tm-ink),0.12) !important; color: rgb(var(--tm-fg)) !important; border-radius: 10px !important;
             padding: 6px 10px !important; box-shadow: 0 8px 24px rgba(0,0,0,0.45) !important; font: 600 11px var(--font-dm-sans, 'DM Sans'), sans-serif !important; }
   .tm-tip b { display: block; font-size: 12px; }
-  .tm-tip span { display: block; color: rgba(255,255,255,0.5); font-weight: 500; margin-top: 1px; }
-  .tm-tip::before { border-top-color: rgba(11,13,16,0.94) !important; }
+  .tm-tip span { display: block; color: rgba(var(--tm-ink),0.5); font-weight: 500; margin-top: 1px; }
+  .tm-tip::before { border-top-color: rgba(var(--tm-bg),0.94) !important; }
   .tm-tip-peek { padding: 0 !important; overflow: hidden; border-radius: 14px !important; }
   .tm-peek { display: flex; width: 250px; }
   .tm-peek img { width: 74px; height: 78px; object-fit: cover; flex-shrink: 0; }
   .tm-peek-body { min-width: 0; padding: 8px 10px; display: flex; flex-direction: column; justify-content: center; gap: 2px; white-space: normal; }
   .tm-peek-body b { font-size: 12.5px; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .tm-peek-body span { font-size: 10.5px; color: rgba(255,255,255,0.5); margin: 0; }
+  .tm-peek-body span { font-size: 10.5px; color: rgba(var(--tm-ink),0.5); margin: 0; }
   .tm-peek-body em { font-style: normal; font-weight: 700; }
   .tm-peek-foot { display: flex; gap: 8px; align-items: baseline; margin-top: 2px !important; }
   .tm-peek-foot strong { color: #fff; font-size: 12px; }
-  .tm-peek-foot i { font-style: normal; color: #6ff0e0; font-weight: 600; margin-left: 2px; }
+  .tm-peek-foot i { font-style: normal; color: var(--tm-mint); font-weight: 600; margin-left: 2px; }
 
-  .tm-popup .leaflet-popup-content-wrapper { padding: 0; border-radius: 16px; overflow: hidden; background: #111418; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.55); }
+  .tm-popup .leaflet-popup-content-wrapper { padding: 0; border-radius: 16px; overflow: hidden; background: var(--tm-card); border: 1px solid rgba(var(--tm-ink),0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.55); }
   .tm-popup .leaflet-popup-content { margin: 0; width: 240px !important; }
   .tm-popup .leaflet-popup-tip-container { display: none; }
   .tm-pop img { height: 140px; }
   .tm-pop-body { padding: 10px 12px 12px; font-family: var(--font-dm-sans, 'DM Sans'), sans-serif; color: #fff; }
   .tm-pop-body b { display: block; font-size: 13px; }
-  .tm-pop-body span { display: block; font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
-  .tm-pop-body button { margin-top: 10px; width: 100%; padding: 8px; border-radius: 10px; border: 0; cursor: pointer; color: #fff; font-weight: 700; font-size: 11px; background: linear-gradient(135deg,#ff5100,#ff7d47); }
+  .tm-pop-body span { display: block; font-size: 11px; color: rgba(var(--tm-ink),0.5); margin-top: 2px; }
+  .tm-pop-body button { margin-top: 10px; width: 100%; padding: 8px; border-radius: 10px; border: 0; cursor: pointer; color: #fff; font-weight: 700; font-size: 11px; background: linear-gradient(135deg,#ff5100,var(--tm-orange)); }
 
-  .tm-map .leaflet-control-zoom { border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 12px !important; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.45) !important; margin-top: 12px !important; margin-right: 12px !important; }
-  .tm-map .leaflet-control-zoom a { background: rgba(11,13,16,0.9) !important; color: rgba(255,255,255,0.75) !important; border: 0 !important; width: 32px !important; height: 32px !important; line-height: 32px !important; }
-  .tm-map .leaflet-control-zoom a:hover { background: rgba(255,81,0,0.25) !important; color: #fff !important; }
-  .tm-map .leaflet-control-zoom-in { border-bottom: 1px solid rgba(255,255,255,0.08) !important; }
+  .tm-map .leaflet-control-zoom { border: 1px solid rgba(var(--tm-ink),0.1) !important; border-radius: 12px !important; overflow: hidden; box-shadow: 0 8px 24px var(--tm-shadow, rgba(0,0,0,0.45)) !important; margin-top: 12px !important; margin-right: 12px !important; }
+  .tm-map .leaflet-control-zoom a { background: rgba(var(--tm-bg),0.92) !important; color: rgba(var(--tm-ink),0.75) !important; border: 0 !important; width: 32px !important; height: 32px !important; line-height: 32px !important; }
+  .tm-map .leaflet-control-zoom a:hover { background: rgba(255,81,0,0.25) !important; color: rgb(var(--tm-fg)) !important; }
+  .tm-map .leaflet-control-zoom-in { border-bottom: 1px solid rgba(var(--tm-ink),0.08) !important; }
 
   @media (prefers-reduced-motion: reduce) { .tm-pin.pick::after, .tm-me::before { animation: none; } }
 `;

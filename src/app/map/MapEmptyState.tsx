@@ -53,19 +53,19 @@ function EmptyArt({ kind }: { kind: "none" | "elsewhere" }) {
     <svg viewBox="0 0 120 64" className="w-28 h-auto mx-auto" aria-hidden>
       <defs>
         <linearGradient id="tm-empty-g" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#ff9a66" stopOpacity="0.55" />
-          <stop offset="1" stopColor="#ff9a66" stopOpacity="0" />
+          <stop offset="0" stopColor="var(--tm-peach)" stopOpacity="0.55" />
+          <stop offset="1" stopColor="var(--tm-peach)" stopOpacity="0" />
         </linearGradient>
       </defs>
       <path d="M4 58 L38 22 L54 36 L72 14 L116 58 Z" fill="url(#tm-empty-g)" />
-      <path d="M4 58 L38 22 L54 36 L72 14 L116 58" fill="none" stroke="#ff9a66" strokeOpacity="0.8" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M22 50 L38 34 L50 44 L72 26 L96 50" fill="none" stroke="#ff9a66" strokeOpacity="0.35" strokeWidth="1" strokeLinejoin="round" />
+      <path d="M4 58 L38 22 L54 36 L72 14 L116 58" fill="none" stroke="var(--tm-peach)" strokeOpacity="0.8" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M22 50 L38 34 L50 44 L72 26 L96 50" fill="none" stroke="var(--tm-peach)" strokeOpacity="0.35" strokeWidth="1" strokeLinejoin="round" />
       <path d="M14 60 C 34 52, 46 60, 62 54 S 92 50, 108 58" fill="none" stroke="#fff" strokeOpacity="0.35" strokeWidth="1.2" strokeDasharray="2 4" strokeLinecap="round" />
       {kind === "elsewhere" ? (
         <g transform="translate(104 10)">
-          <circle r="7" fill="#38bdf8" fillOpacity="0.18" />
-          <circle r="3.5" fill="#38bdf8" />
-          <path d="M-14 6 L-6 2" stroke="#38bdf8" strokeOpacity="0.6" strokeWidth="1.2" strokeLinecap="round" />
+          <circle r="7" fill="var(--tm-sky)" fillOpacity="0.18" />
+          <circle r="3.5" fill="var(--tm-sky)" />
+          <path d="M-14 6 L-6 2" stroke="var(--tm-sky)" strokeOpacity="0.6" strokeWidth="1.2" strokeLinecap="round" />
         </g>
       ) : (
         <g transform="translate(72 14)">

@@ -47,7 +47,7 @@ export default function LayersMenu({
             {([["map", "Map", MapIcon], ["satellite", "Satellite", Satellite]] as const).map(([k, label, Icon]) => (
               <button key={k} type="button" onClick={() => onBase(k)} aria-pressed={base === k}
                 className="h-9 rounded-lg flex items-center justify-center gap-1.5 text-[12.5px] font-semibold transition-colors"
-                style={base === k ? { background: "#ff5100", color: "#fff" } : { background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.75)" }}>
+                style={base === k ? { background: "#ff5100", color: "#fff" } : { background: "rgba(var(--tm-ink),0.06)", color: "rgba(var(--tm-ink),0.75)" }}>
                 <Icon className="w-3.5 h-3.5" />{label}
               </button>
             ))}
@@ -68,7 +68,7 @@ export default function LayersMenu({
 function Toggle({ on, onClick, icon, label, gold }: { on: boolean; onClick: () => void; icon: React.ReactNode; label: string; gold?: boolean }) {
   return (
     <button type="button" onClick={onClick} aria-pressed={on} className="tm-mrow" data-on={on || undefined}>
-      <span className="w-7 h-7 rounded-lg grid place-items-center shrink-0" style={{ background: on ? (gold ? "linear-gradient(135deg,#f7cd3a,#eab308)" : "#ff5100") : "rgba(255,255,255,0.06)", color: on && gold ? "#1a1200" : "#fff" }}>{icon}</span>
+      <span className="w-7 h-7 rounded-lg grid place-items-center shrink-0" style={{ background: on ? (gold ? "linear-gradient(135deg,#f7cd3a,#eab308)" : "#ff5100") : "rgba(var(--tm-ink),0.06)", color: on && gold ? "#1a1200" : "#fff" }}>{icon}</span>
       <span className="flex-1 text-left text-[12.5px] font-semibold text-white/80">{label}</span>
       {on && <Check className="w-3.5 h-3.5 text-white/60" />}
     </button>

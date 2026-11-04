@@ -79,9 +79,9 @@ export default function PinCard({
 
   return (
     <article className="tm-card" style={{ "--g": g.color } as React.CSSProperties}>
-      <div className="relative h-28 lg:h-36 shrink-0">
+      <div className="relative h-28 lg:h-36 shrink-0 tm-on-photo">
         <Image src={a.heroImage} alt="" fill className="object-cover" sizes="380px" unoptimized />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #111418 2%, rgba(17,20,24,0.35) 55%, rgba(0,0,0,0.25))" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, var(--tm-card) 2%, rgba(var(--tm-bg),0.35) 55%, rgba(0,0,0,0.25))" }} />
         <div className="absolute top-3 left-3 flex items-center gap-1.5">
           <span className="tm-chip" style={{ color: g.color, borderColor: `${g.color}55` }}>{a.type}</span>
           {!inSeason(a, month) && month && <span className="tm-chip text-white/60">Out of season in {month}</span>}
@@ -128,7 +128,7 @@ export default function PinCard({
               const on = a.bestMonths.includes(m);
               return (
                 <span key={m} title={m} className="h-5 rounded-[5px] grid place-items-center text-[8.5px] font-bold"
-                  style={{ background: on ? `${g.color}33` : "rgba(255,255,255,0.04)", color: on ? g.color : "rgba(255,255,255,0.25)", outline: month === m ? "1.5px solid rgba(255,255,255,0.7)" : "none" }}>
+                  style={{ background: on ? `${g.color}33` : "rgba(var(--tm-ink),0.04)", color: on ? g.color : "rgba(var(--tm-ink),0.25)", outline: month === m ? "1.5px solid rgba(var(--tm-ink),0.7)" : "none" }}>
                   {m[0]}
                 </span>
               );
@@ -141,8 +141,8 @@ export default function PinCard({
         {/* Picked for you by Compass.AI */}
         {pickReason && (
           <div className="tm-panel flex gap-2.5" style={{ borderColor: "rgba(255,125,71,0.35)", background: "rgba(255,81,0,0.07)" }}>
-            <CompassAIMark className="w-4 h-4 shrink-0 mt-0.5 text-[#ffb37a]" />
-            <p className="text-[12px] leading-snug text-white/80"><span className="font-semibold text-[#ffb37a]">Compass.AI: </span>{pickReason}</p>
+            <CompassAIMark className="w-4 h-4 shrink-0 mt-0.5 text-[var(--tm-peach-2)]" />
+            <p className="text-[12px] leading-snug text-white/80"><span className="font-semibold text-[var(--tm-peach-2)]">Compass.AI: </span>{pickReason}</p>
           </div>
         )}
 
@@ -175,8 +175,8 @@ export default function PinCard({
           </div>
         ) : !hasProfile && (
           <Link href="/matchmaker" className="tm-panel flex items-center gap-2.5 group" onClick={() => track("map_fitness_cta", { from: "card" })}>
-            <MatchmakerMark className="w-4 h-4 shrink-0 text-[#ffa576]" />
-            <span className="text-[12px] text-white/75 flex-1">Are you ready for this? <span className="text-[#ffa576] font-semibold">Take the 2-min Adventure Matchmaker</span></span>
+            <MatchmakerMark className="w-4 h-4 shrink-0 text-[var(--tm-peach-4)]" />
+            <span className="text-[12px] text-white/75 flex-1">Are you ready for this? <span className="text-[var(--tm-peach-4)] font-semibold">Take the 2-min Adventure Matchmaker</span></span>
             <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         )}
@@ -194,11 +194,11 @@ export default function PinCard({
                 <li key={o.name}>
                   <a href={o.website} target="_blank" rel="noopener noreferrer" onClick={() => track("map_operator_click", { slug: a.slug, operator: o.name })}
                     className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.035] hover:bg-white/[0.07] transition-colors group">
-                    {o.verified ? <BadgeCheck className="w-4 h-4 shrink-0 text-[#6ff0e0]" /> : <span className="w-4 h-4 shrink-0" />}
+                    {o.verified ? <BadgeCheck className="w-4 h-4 shrink-0 text-[var(--tm-mint)]" /> : <span className="w-4 h-4 shrink-0" />}
                     <span className="min-w-0 flex-1">
                       <span className="block text-[12px] font-semibold text-white/85 truncate">{o.name}</span>
                       <span className="block text-[10px] text-white/35">
-                        <Star className="inline w-2.5 h-2.5 -mt-0.5 fill-[#ffd27a] text-[#ffd27a]" /> {o.googleRating.toFixed(1)}
+                        <Star className="inline w-2.5 h-2.5 -mt-0.5 fill-[var(--tm-star)] text-[var(--tm-star)]" /> {o.googleRating.toFixed(1)}
                         {checked !== null && <> · price checked {checked === 0 ? "today" : `${checked}d ago`}</>}
                       </span>
                     </span>
@@ -225,7 +225,7 @@ export default function PinCard({
       {/* Compare or book: pinned to the bottom of the panel or sheet, so it's always in reach */}
       <div className="tm-card-actions">
         {comparing && selected.length > 1 && (
-          <button type="button" onClick={openDrawer} className="w-full mb-2 text-[11.5px] font-semibold text-[#6ff0e0] hover:underline">Compare these {selected.length} side by side →</button>
+          <button type="button" onClick={openDrawer} className="w-full mb-2 text-[11.5px] font-semibold text-[var(--tm-mint)] hover:underline">Compare these {selected.length} side by side →</button>
         )}
         <div className="grid grid-cols-2 gap-2">
           <button
@@ -233,7 +233,7 @@ export default function PinCard({
             disabled={!comparing && isFull}
             onClick={() => (comparing ? remove(a.id) : add(a))}
             className="tm-btn"
-            style={comparing ? { background: "rgba(111,240,224,0.12)", color: "#6ff0e0", borderColor: "rgba(111,240,224,0.35)" } : undefined}
+            style={comparing ? { background: "rgba(111,240,224,0.12)", color: "var(--tm-mint)", borderColor: "rgba(111,240,224,0.35)" } : undefined}
           >
             {comparing ? <Check className="w-3.5 h-3.5" /> : <GitCompareArrows className="w-3.5 h-3.5" />}
             {comparing ? "In compare" : isFull ? "Compare is full" : "Add to compare"}

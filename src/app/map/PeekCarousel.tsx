@@ -67,7 +67,7 @@ export default function PeekCarousel({ list, fits, onHover, onOpen }: {
               <span className="text-[11px] text-white/50 mt-0.5 truncate">{a.durationDays} · <b className="font-semibold" style={{ color: "var(--c)" }}>{diff}</b></span>
               <span className="flex items-center gap-2 mt-1 text-[11.5px]">
                 {price !== null && <span className="text-white/50">from <b className="text-white">{formatINR(price)}</b></span>}
-                {v > 0 && <span className="inline-flex items-center gap-0.5 text-[#6ff0e0]/85"><BadgeCheck className="w-3 h-3" />{v}</span>}
+                {v > 0 && <span className="inline-flex items-center gap-0.5 text-[var(--tm-mint)]/85"><BadgeCheck className="w-3 h-3" />{v}</span>}
               </span>
             </span>
           </button>

@@ -49,7 +49,7 @@ function Row({ a, fit, month, active, onPick, onHover }: {
           </span>
           <span className="flex items-center gap-2 mt-1 text-[11.5px]">
             {fit && <span className="font-semibold" style={{ color: fit.bucket.color }}>{fit.bucket.label}</span>}
-            {v > 0 && <span className="inline-flex items-center gap-0.5 text-[#6ff0e0]/80"><BadgeCheck className="w-3 h-3" />{v}</span>}
+            {v > 0 && <span className="inline-flex items-center gap-0.5 text-[var(--tm-mint)]/80"><BadgeCheck className="w-3 h-3" />{v}</span>}
             {price !== null && <span className="text-white/55">from <b className="text-white/85">{formatINR(price)}</b></span>}
             {off && month && <span className="text-white/30">Off-season</span>}
           </span>
@@ -101,7 +101,7 @@ export default function ResultsList({
     <div className="space-y-4">
       {picks.length > 0 && (
         <section>
-          <p className="tm-label flex items-center gap-1.5 !text-[#ffb37a]"><CompassAIMark className="w-3 h-3" /> Picked for you by Compass.AI</p>
+          <p className="tm-label flex items-center gap-1.5 !text-[var(--tm-peach-2)]"><CompassAIMark className="w-3 h-3" /> Picked for you by Compass.AI</p>
           <ul className="space-y-1.5">{picks.map(row)}</ul>
         </section>
       )}

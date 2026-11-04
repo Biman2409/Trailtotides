@@ -33,7 +33,7 @@ export default function CompareTray({ onFocus }: { onFocus: (slug: string) => vo
         onClick={openDrawer}
         disabled={selected.length < 2}
         className="h-10 px-3.5 rounded-xl text-[12px] font-bold inline-flex items-center gap-1.5 transition disabled:opacity-60"
-        style={{ background: selected.length >= 2 ? "linear-gradient(135deg,#ff5100,#ff7d47)" : "rgba(255,255,255,0.06)", color: "#fff" }}
+        style={{ background: selected.length >= 2 ? "linear-gradient(135deg,#ff5100,var(--tm-orange))" : "rgba(var(--tm-ink),0.06)", color: "#fff" }}
         title={selected.length < 2 ? "Add one more to compare" : undefined}
       >
         <GitCompareArrows className="w-3.5 h-3.5" />

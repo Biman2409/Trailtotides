@@ -42,7 +42,7 @@ export default function ItineraryPanel({ adventure: a, trail, onClose, phone }: 
         <div className="grid grid-cols-2 gap-2">
           {stats.map(([icon, v, sub]) => (
             <div key={v} className="tm-panel !py-2.5">
-              <p className="flex items-center gap-1.5 text-[14px] font-bold text-white tabular-nums"><span className="text-[#ff9a66]">{icon}</span>{v}</p>
+              <p className="flex items-center gap-1.5 text-[14px] font-bold text-white tabular-nums"><span className="text-[var(--tm-peach)]">{icon}</span>{v}</p>
               <p className="text-[11px] text-white/45 mt-0.5 truncate">{sub}</p>
             </div>
           ))}
@@ -69,8 +69,8 @@ export default function ItineraryPanel({ adventure: a, trail, onClose, phone }: 
                 {d.kind === "walk" && (
                   <p className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-[11.5px] text-white/60 tabular-nums">
                     {d.km != null && <span className="inline-flex items-center gap-1"><Route className="w-3 h-3" />{d.approx ? "about " : ""}{d.km} km</span>}
-                    {!!d.up && <span className="inline-flex items-center gap-1"><ArrowUp className="w-3 h-3 text-[#ff9a66]" />{fmt(d.up)} m up</span>}
-                    {!!d.down && <span className="inline-flex items-center gap-1"><ArrowDown className="w-3 h-3 text-[#6ff0e0]" />{fmt(d.down)} m down</span>}
+                    {!!d.up && <span className="inline-flex items-center gap-1"><ArrowUp className="w-3 h-3 text-[var(--tm-peach)]" />{fmt(d.up)} m up</span>}
+                    {!!d.down && <span className="inline-flex items-center gap-1"><ArrowDown className="w-3 h-3 text-[var(--tm-mint)]" />{fmt(d.down)} m down</span>}
                     {d.sleepEle != null && <span className="inline-flex items-center gap-1"><BedDouble className="w-3 h-3" />sleep at {fmt(d.sleepEle)} m</span>}
                   </p>
                 )}

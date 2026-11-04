@@ -110,7 +110,7 @@ function TypeMenu({ f, set }: { f: AdventureFilterState; set: (p: Partial<Advent
     <div className="p-3 max-h-[min(60vh,420px)] overflow-y-auto tm-scroll">
       <div className="flex items-center justify-between mb-2.5">
         <p className="tm-label !mb-0">Adventure type</p>
-        {f.types.length > 0 && <button type="button" onClick={() => set({ types: [] })} className="text-[11px] font-semibold text-[#ff9a66] hover:underline">All types</button>}
+        {f.types.length > 0 && <button type="button" onClick={() => set({ types: [] })} className="text-[11px] font-semibold text-[var(--tm-peach)] hover:underline">All types</button>}
       </div>
       <CategoryList kind="type" f={f} set={set} columns={1} />
     </div>
@@ -180,7 +180,7 @@ function WhereMenu({ f, set, onPlace, onAdventure }: {
 
         {/* No search yet: the regions, each with its states, as on Explore's Region button */}
         {!query && (
-          <Group title="Regions" action={f.states.length > 0 ? <button type="button" onClick={() => set({ states: [] })} className="text-[11px] font-semibold text-[#ff9a66] hover:underline">Anywhere</button> : null}>
+          <Group title="Regions" action={f.states.length > 0 ? <button type="button" onClick={() => set({ states: [] })} className="text-[11px] font-semibold text-[var(--tm-peach)] hover:underline">Anywhere</button> : null}>
             <div className="px-1.5 pb-1"><CategoryList kind="region" f={f} set={set} columns={1} /></div>
           </Group>
         )}
@@ -198,7 +198,7 @@ function WhereMenu({ f, set, onPlace, onAdventure }: {
                       <span className="text-[10.5px] text-white/40 shrink-0">{n}</span>
                     </span>
                     <span className="block h-[3px] mt-1 rounded-full bg-white/[0.06] overflow-hidden">
-                      <span className="block h-full rounded-full" style={{ width: `${(n / MAX_STATE) * 100}%`, background: on ? "#ff7d47" : "rgba(255,255,255,0.22)" }} />
+                      <span className="block h-full rounded-full" style={{ width: `${(n / MAX_STATE) * 100}%`, background: on ? "var(--tm-orange)" : "rgba(var(--tm-ink),0.22)" }} />
                     </span>
                   </span>
                 </button>
