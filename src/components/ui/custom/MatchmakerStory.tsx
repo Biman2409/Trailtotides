@@ -228,7 +228,7 @@ export default function MatchmakerStory({ you, questions, samples, train, group,
 
       {/* The radar */}
       <div className="relative -mx-3 mt-1">
-        <svg viewBox={`0 0 ${VW} ${VH}`} className="w-full h-auto block" role="img" aria-label={inGroup ? `Group match for ${group.trek.name}` : trekAce ? "Example profile compared with a trek" : "Example fitness profile"}>
+        <svg viewBox={`0 0 ${VW} ${VH}`} className="w-full h-auto block" role="img" aria-label={inGroup ? `Group match for ${group.trek.name}` : trekAce ? "Example profile compared with a trek" : "Example ACE™ profile"}>
           <defs>
             <radialGradient id="ms-you" cx="50%" cy="50%" r="60%">
               <stop offset="0%" stopColor={YOU} stopOpacity={trekAce ? 0.08 : 0.38} />

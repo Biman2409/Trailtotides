@@ -211,7 +211,7 @@ export default function HomePage() {
           }))}
         />
 
-        {/* ── PICKS: the editors' six or the Matchmaker's, one large feature, five around it ── */}
+        {/* ── PICKS: the editors' six, one large feature, five around it ── */}
         <section id="featured-adventures" className="py-6 lg:py-10 px-5 lg:px-8 t-bg-surface2 topo">
           <div className="max-w-7xl mx-auto">
             <EditorsPicks slugs={featuredAdventures.map((a) => a.slug)} editorCount={editorPickCount} />

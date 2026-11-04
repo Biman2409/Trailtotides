@@ -185,7 +185,7 @@ function FitChoices({ f, set, filterWith, score, group, groups, groupLoading, on
   return (
     <div className="mk-drop">
       <div className="mk-head">
-        <span className="mk-label">{group ? `Fit for ${group.name}` : "Your fit"}</span>
+        <span className="mk-label">{group ? `ACE™ fit for ${group.name}` : "Your ACE™ fit"}</span>
         {f.fit && <button type="button" onClick={() => set({ fit: null })} className="mk-reset">Any</button>}
       </div>
       <div className="flex flex-wrap items-center gap-1.5">

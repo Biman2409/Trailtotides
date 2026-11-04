@@ -302,13 +302,13 @@ function IntroScreen({
             </h1>
 
             <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-secondary)" }}>
-              Tell us about your fitness and experience, and we&apos;ll rate every adventure for you: ready, a stretch, or not yet.
+              Tell us about your fitness and experience. We build your ACE™ profile, eight capabilities scored 1 to 5, and rate every adventure against it: ready, a stretch, or not yet.
             </p>
 
             {/* Reminder when a saved profile is getting old */}
             {hasProfile && stale && (
               <div className="rounded-xl px-4 py-3 mb-4 text-sm" style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.25)", color: "var(--text-secondary)" }}>
-                Your profile is {Math.floor((ageDays ?? 0) / 30)} months old. Fitness changes — a quick refresh keeps your matches honest.
+                Your ACE™ profile is {Math.floor((ageDays ?? 0) / 30)} months old. Fitness changes, and a quick refresh keeps your matches honest.
               </div>
             )}
 
@@ -627,7 +627,7 @@ function CapabilityPanel({ axisLabels, axisDesc, axisColors, axisIcons, userAxes
     <div className={`${panel} p-5 sm:p-7`} style={panelStyle}>
       <SectionTexture kind="tides" color="#3fc6bd" at="0% 100%" opacity={0.12} />
       <div className="relative">
-        <SectionHead eyebrow="Capability radar" title="What your body is ready for" sub="Eight capabilities, each scored 1–5. Hover or tap a tile to see it on the radar." />
+        <SectionHead eyebrow="Your ACE™ profile" title="What your body is ready for" sub="Eight ACE™ capabilities, each scored 1 to 5. Hover or tap a tile to see it on the radar." />
         <div className="grid lg:grid-cols-[minmax(0,320px)_1fr] gap-6 lg:gap-8 items-start">
           {/* Radar */}
           <div className="flex flex-col items-center">
@@ -724,9 +724,9 @@ function MatchedAdventures({ groups, initial }: { groups: Record<BucketKey, Enri
       <SectionTexture kind="trail" color="#ff5100" at="100% 0%" opacity={0.14} />
       <div className="relative">
         <SectionHead
-          eyebrow="Matched adventures"
+          eyebrow="Matched by ACE™"
           title="Every adventure, rated for you"
-          sub="The same Ready, Stretch and Not yet you'll see on adventure cards across the site."
+          sub="Each adventure's ACE™ needs against your ACE™ profile: the same Ready, Stretch and Not yet you'll see on adventure cards across the site."
         />
 
         {/* Tabs */}
@@ -813,7 +813,7 @@ function TrainingPanel({ trainingPlan, axisColors, axisIcons, axisLabels, unlock
     <div id="training-focus" className={`${panel} p-5 sm:p-7`} style={{ ...panelStyle, scrollMarginTop: 88 }}>
       <SectionTexture kind="trail" color="#a78bfa" at="0% 100%" opacity={0.12} />
       <div className="relative">
-        <SectionHead eyebrow="Training focus" title="Build these to unlock more" sub="Ordered by how many adventures each one opens up." />
+        <SectionHead eyebrow="Raise your ACE™" title="Build these to unlock more" sub="The ACE™ capabilities that open up the most adventures, most first." />
         <div className="grid sm:grid-cols-2 gap-3">
           {visible.map((item, i) => {
             const color = axisColors[item.axis] ?? "#ff5100";
@@ -1490,7 +1490,7 @@ export default function MatchmakerClient() {
       <div className="mb-7 lg:mb-4">
         <div className="flex items-center justify-between mb-5 lg:mb-3">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: accentColor }}>
-            {isMedical ? "Health Background (Optional)" : isDecay ? "Calibration" : mode === "quick" ? "Quick match" : mode === "refine" ? "Refining your profile" : "Adventure Matchmaker"}
+            {isMedical ? "Health Background (Optional)" : isDecay ? "Calibration" : mode === "quick" ? "Quick match" : mode === "refine" ? "Refining your ACE™ profile" : "Adventure Matchmaker"}
           </p>
           <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{stepIndex + 1} / {steps.length}</span>
         </div>
@@ -1519,7 +1519,7 @@ export default function MatchmakerClient() {
           </div>
         </div>
         {isDecay && (
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Two quick questions on recency and current fitness — these fine-tune your profile.</p>
+          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Two quick questions on recency and current fitness. They fine-tune your ACE™ profile.</p>
         )}
         {isMedical && (
           <p className="text-xs" style={{ color: "var(--text-muted)" }}>Every question here is optional. A &ldquo;yes&rdquo; lowers the scores it affects (never by more than half in total) and adds safety notes on the adventures where it matters. Skipping leaves your scores as they are.</p>

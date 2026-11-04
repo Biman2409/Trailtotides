@@ -150,7 +150,7 @@ function DefaultCTA() {
             Adventures built for <span className="text-[#ff5100]">your body</span>
           </h2>
           <p className="text-sm leading-relaxed max-w-xl" style={{ color: "var(--text-secondary)" }}>
-            Answer a few quick questions, about 2 minutes, and every adventure gets rated for you: ready, a stretch, or not yet. Then see what to train to unlock more, and match a whole group.
+            Answer a few quick questions, about 2 minutes, and get your ACE™ profile: eight capabilities that every adventure is rated against, ready, a stretch, or not yet. Then see what to train to unlock more, and match a whole group.
           </p>
           {/* Desktop only: below lg the sample sits right under it with its own "Start" */}
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -164,7 +164,7 @@ function DefaultCTA() {
             </Link>
             {/* The full explanation lives on /ace */}
             <Link href="/ace" className="py-3 -my-3 text-[13px] font-medium underline underline-offset-2 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
-              How it works
+              How ACE™ works
             </Link>
           </div>
         </div>

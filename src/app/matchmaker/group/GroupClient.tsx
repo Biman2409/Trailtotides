@@ -624,7 +624,7 @@ function MemberChip({ name, ace, color, isMe, isOwner, isNew, action }: {
           {isMe && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${color}22`, color }}>You</span>}
           {isNew && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981" }}>New</span>}
         </span>
-        <span className="block text-[11px] tabular-nums" style={{ color: "var(--text-tertiary)" }}>Fitness score {total}/40</span>
+        <span className="block text-[11px] tabular-nums" style={{ color: "var(--text-tertiary)" }}>ACE™ score {total}/40</span>
       </span>
       {action}
     </li>
@@ -726,14 +726,14 @@ function GroupCapability({ members, meIndex }: { members: GroupMember[]; meIndex
 
   return (
     <section id="capability" className="mt-12 scroll-mt-24">
-      <h2 className="t-text text-2xl font-bold tracking-tight">Your group&apos;s capability</h2>
+      <h2 className="t-text text-2xl font-bold tracking-tight">Your group&apos;s ACE™</h2>
       <p className="text-sm mt-1 mb-6 max-w-2xl" style={{ color: "var(--text-secondary)" }}>
         A group moves at its least-ready member, so on each capability this is as far as all {members.length} of you can go together.
       </p>
       <div className="grid lg:grid-cols-[300px_1fr] gap-5">
         <Panel className="flex flex-col items-center text-center">
           <ACERadar ace={floor} size={230} showLabels userAce={me?.ace} userColor={SEAT_COLORS[meIndex % SEAT_COLORS.length]} />
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] mt-3" style={{ color: "var(--text-tertiary)" }}>Group rank</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] mt-3" style={{ color: "var(--text-tertiary)" }}>Group ACE™ rank</p>
           <p className="text-xl font-bold mt-0.5" style={{ color: tier.color }}>{tier.label}</p>
           <p className="text-xs tabular-nums" style={{ color: "var(--text-tertiary)" }}>{total}/40 together{me ? " · your shape is the outline" : ""}</p>
         </Panel>

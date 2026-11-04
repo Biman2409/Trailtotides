@@ -33,7 +33,7 @@ export default function MatchmakerPage() {
         <Suspense fallback={
           <div className="min-h-screen">
             <h1 className="sr-only">Adventure Matchmaker: adventures built for your body</h1>
-            <p className="sr-only">Tell us about your fitness and experience, and we&apos;ll rate every adventure for you: ready, a stretch, or not yet.</p>
+            <p className="sr-only">Tell us about your fitness and experience. We build your ACE™ profile, eight capabilities scored 1 to 5, and rate every adventure against it: ready, a stretch, or not yet.</p>
           </div>
         }>
           <MatchmakerClient />

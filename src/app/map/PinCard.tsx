@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, GitCompareArrows, Check, Users, Route, Mountain, Waves, CalendarDays, ChevronRight, Loader2 } from "lucide-react";
+import { Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, GitCompareArrows, Check, Users, Route, Mountain, Waves, CalendarDays, MapPin, ChevronRight, Loader2 } from "lucide-react";
 import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import type { Adventure, Month } from "@/lib/data";
 import { useCompare } from "@/contexts/CompareContext";
@@ -79,7 +79,7 @@ export default function PinCard({
 
   return (
     <article className="tm-card" style={{ "--g": g.color } as React.CSSProperties}>
-      <div className="relative h-28 lg:h-36 shrink-0 tm-on-photo">
+      <div className="relative h-32 lg:h-40 shrink-0 tm-on-photo">
         <Image src={a.heroImage} alt="" fill className="object-cover" sizes="380px" unoptimized />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, var(--tm-card) 2%, rgba(var(--tm-bg),0.35) 55%, rgba(0,0,0,0.25))" }} />
         <div className="absolute top-3 left-3 flex items-center gap-1.5">
@@ -101,10 +101,29 @@ export default function PinCard({
         </div>
       </div>
 
+      {/* What it costs and who runs it, first */}
+      <div className="flex items-center gap-3 px-4 py-2.5 border-b border-white/[0.06]">
+        <p className="min-w-0 flex-1 leading-tight">
+          {price !== null ? (
+            <><span className="text-[11px] text-white/50">from </span><span className="text-[17px] font-bold text-white tabular-nums">{formatINR(price)}</span><span className="text-[11px] text-white/50"> per person</span></>
+          ) : <span className="text-[12.5px] text-white/55">Price on request</span>}
+        </p>
+        {verified.length > 0 && (
+          <span className="shrink-0 inline-flex items-center gap-1 text-[11.5px] font-semibold text-white/75" title={`${verified.length} verified operator${verified.length > 1 ? "s" : ""}`}>
+            <BadgeCheck className="w-3.5 h-3.5 text-[var(--tm-mint)]" />{verified.length} verified
+          </span>
+        )}
+        {top && (
+          <span className="shrink-0 inline-flex items-center gap-1 text-[11.5px] font-semibold text-white/75" title={`${top.name}'s Google rating`}>
+            <Star className="w-3.5 h-3.5 fill-[var(--tm-star)] text-[var(--tm-star)]" />{top.googleRating.toFixed(1)}
+          </span>
+        )}
+      </div>
+
       <div className="px-4 pb-4 pt-3 space-y-4">
         <p className="text-[12.5px] leading-relaxed text-white/60">{a.tagline}</p>
 
-        {/* 1. At a glance: always the same three facts, a dash where one doesn't apply */}
+        {/* 1. At a glance: always the same four facts, a dash where one doesn't apply */}
         <Facts a={a} trail={trail ?? null} />
 
         {/* 2. The day-by-day plan and height profile open beside the card, when the trail is mapped */}
@@ -119,6 +138,15 @@ export default function PinCard({
             </span>
             <ChevronRight className="w-4 h-4 text-white/40 shrink-0" />
           </button>
+        )}
+        {!hasTrail && (
+          <div className="tm-panel flex items-center gap-2.5">
+            <span className="w-8 h-8 rounded-[10px] grid place-items-center shrink-0 bg-white/5 text-white/40"><Route className="w-4 h-4" /></span>
+            <p className="min-w-0 flex-1 text-[12px] leading-snug text-white/55">
+              <span className="block font-semibold text-white/75">Route not mapped yet</span>
+              The pin shows the area it’s in. <Link href={`/experiences/${a.slug}`} className="font-semibold underline underline-offset-2 hover:text-white">See the plan</Link>
+            </p>
+          </div>
         )}
 
         {/* 3. Best months, always here */}
@@ -137,7 +165,7 @@ export default function PinCard({
         </Section>
 
         {/* 4. Your fit, and why Compass.AI picked it */}
-        {(pickReason || fit || !hasProfile) && <p className="tm-label !-mb-2">Your fit</p>}
+        {(pickReason || fit || !hasProfile) && <p className="tm-label !-mb-2">Your ACE™ fit</p>}
         {/* Picked for you by Compass.AI */}
         {pickReason && (
           <div className="tm-panel flex gap-2.5" style={{ borderColor: "rgba(255,125,71,0.35)", background: "rgba(255,81,0,0.07)" }}>
@@ -176,7 +204,7 @@ export default function PinCard({
         ) : !hasProfile && (
           <Link href="/matchmaker" className="tm-panel flex items-center gap-2.5 group" onClick={() => track("map_fitness_cta", { from: "card" })}>
             <MatchmakerMark className="w-4 h-4 shrink-0 text-[var(--tm-peach-4)]" />
-            <span className="text-[12px] text-white/75 flex-1">Are you ready for this? <span className="text-[var(--tm-peach-4)] font-semibold">Take the 2-min Adventure Matchmaker</span></span>
+            <span className="text-[12px] text-white/75 flex-1">Are you ready for this? <span className="text-[var(--tm-peach-4)] font-semibold">Get your ACE™ profile in the 2-min Adventure Matchmaker</span></span>
             <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         )}
@@ -184,8 +212,8 @@ export default function PinCard({
         {/* 5. Run by verified operators */}
         <div>
           <div className="flex items-baseline justify-between">
-            <p className="tm-label">{verified.length ? `${verified.length} verified operator${verified.length > 1 ? "s" : ""}` : "Operators"}</p>
-            {price !== null && <p className="text-[11px] text-white/45">from <span className="text-white font-bold text-[13px]">{formatINR(price)}</span></p>}
+            <p className="tm-label">{verified.length ? "Verified operators" : "Operators"}</p>
+            <p className="text-[10.5px] text-white/40 -mt-1.5">Prices per person</p>
           </div>
           <ul className="space-y-1.5">
             {(verified.length ? verified : others).slice(0, 3).map((o) => {
@@ -265,19 +293,23 @@ function Section({ title, aside, children }: { title: string; aside?: string; ch
 /** Duration, distance and height (or depth), from the mapped trail when there is one */
 function Facts({ a, trail }: { a: Adventure; trail: Trail | null }) {
   const high = trail ? trailHighPoint(trail).ele : null;
-  const cells: [React.ReactNode, string, string][] = [
+  // "4,019m (Tarsar Pass)" reads "4,019 m" here; the full text is its tooltip
+  const height = (v: string) => v.replace(/\s*\(.*\)\s*$/, "").replace(/(\d)\s*m$/, "$1 m");
+  const start = a.baseCamp ?? a.startingPoint ?? (trail ? trail.stops[0]?.name : undefined);
+  const cells: [React.ReactNode, string, string, string?][] = [
     [<CalendarDays key="d" className="w-3.5 h-3.5" />, "Duration", a.durationDays],
     [<Route key="r" className="w-3.5 h-3.5" />, "Distance", trail ? `${trailWalkKm(trail)} km` : a.distance ?? "—"],
     a.depth
       ? [<Waves key="w" className="w-3.5 h-3.5" />, "Depth", a.depth]
-      : [<Mountain key="m" className="w-3.5 h-3.5" />, "Highest", a.altitude ? a.altitude.replace(/(\d)\s*m$/, "$1 m") : (high ? `${high.toLocaleString("en-IN")} m` : "—")],
+      : [<Mountain key="m" className="w-3.5 h-3.5" />, "Highest", a.altitude ? height(a.altitude) : (high ? `${high.toLocaleString("en-IN")} m` : "—"), a.altitude],
+    [<MapPin key="s" className="w-3.5 h-3.5" />, "Starts at", start ?? "—"],
   ];
   return (
-    <div className="grid grid-cols-3 gap-1.5">
-      {cells.map(([icon, label, v]) => (
+    <div className="grid grid-cols-2 gap-1.5">
+      {cells.map(([icon, label, v, full]) => (
         <div key={label} className="tm-panel !px-2.5 !py-2 min-w-0">
           <p className="flex items-center gap-1 text-[9.5px] font-bold uppercase tracking-[0.12em] text-white/40"><span className="text-white/50">{icon}</span>{label}</p>
-          <p className="mt-1 text-[13px] font-bold text-white truncate" title={v}>{v}</p>
+          <p className="mt-1 text-[13px] font-bold text-white truncate" title={full ?? v}>{v}</p>
         </div>
       ))}
     </div>
