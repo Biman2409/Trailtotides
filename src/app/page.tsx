@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import HeroSlider from "@/components/ui/custom/HeroSlider";
+import HeroGauge from "@/components/ui/custom/HeroGauge";
 import FindYourFormat from "@/components/ui/custom/FindYourFormat";
 import ChatBubble from "@/components/ChatBubble";
 import StatsBar from "@/components/StatsBar";
@@ -117,6 +118,8 @@ export default function HomePage() {
   const monthIdx = currentMonthIndexIST();
   const season = inSeasonNow(adventures, monthIdx);
   const closing = season.picks.filter((p) => p.monthsLeft === 1).length;
+  // The day's opening photo, shared by the slider and the gauge beside the headline
+  const heroStart = new Date().getDate();
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
@@ -125,7 +128,7 @@ export default function HomePage() {
       {/* ── HERO ─────────────────────────────────────────── */}
       <section data-hide-compass className={`${jakarta.variable} hero-motion relative h-[100svh] [@media(max-height:560px)]:h-auto flex overflow-hidden`}>
         {/* A different opening photo each day; the server picks it so its preload is the one shown */}
-        <HeroSlider start={new Date().getDate()} />
+        <HeroSlider start={heroStart} />
         <HeroOrbs />
         {/* Scrim: darker on the left where the copy sits, and a deeper band along the bottom
             (pooled behind the promise copy) so the promise and search stay legible over bright photos */}
@@ -144,7 +147,10 @@ export default function HomePage() {
         >
           {/* Headline centred in the space above the bottom band */}
           {/* min-h-0 lets this slot shrink below the headline's size; HeroHeadline then scales itself to fit */}
-          <div className="flex-1 min-h-0 flex items-center lg:items-end justify-center">
+          <div className="relative flex-1 min-h-0 flex items-center lg:items-end justify-center">
+            {/* Large desktops: the empty column left of the headline holds an altitude gauge that
+                follows the photo, from summit to reef */}
+            <HeroGauge start={heroStart} />
             <HeroHeadline />
           </div>
 

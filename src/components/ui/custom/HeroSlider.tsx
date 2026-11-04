@@ -3,51 +3,67 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 
-type Slide = {
+/** Where a photo's adventure sits between summit and seabed, for the hero's altitude gauge */
+export type HeroMark = { name: string; metres: number; href: string };
+export type Slide = {
   src: string;
   alt: string;
+  mark: HeroMark;
 };
 
-const slides: Slide[] = [
+// The photo now on screen is announced on window, so the altitude gauge can follow it
+export const HERO_SLIDE_EVENT = "hero:slide";
+
+export const HERO_SLIDES: Slide[] = [
   {
     src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1280&q=80",
     alt: "Trekker on a high-altitude Himalayan ridge",
+    mark: { name: "Kedarkantha summit", metres: 3810, href: "/experiences/kedarkantha-trek" },
   },
   {
     src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1280&q=80",
     alt: "Kayaker paddling through vivid turquoise coastal waters",
+    mark: { name: "Sea kayaking, Andamans", metres: 0, href: "/adventurepedia/activities/kayaking" },
   },
   {
     src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=1280&q=80",
     alt: "Mountaineer silhouetted against a vast snowy summit",
+    mark: { name: "Mera Peak", metres: 6476, href: "/experiences/mera-peak" },
   },
   {
     src: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1280&q=80",
     alt: "Surfer carving a wave at golden hour",
+    mark: { name: "Surfing, Kovalam", metres: 0, href: "/adventurepedia/activities/surfing" },
   },
   {
     src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1280&q=80",
     alt: "Motorbike rider on a sweeping Himalayan mountain road",
+    mark: { name: "Tanglang La, Manali–Leh", metres: 5359, href: "/experiences/manali-leh-bike-expedition" },
   },
   {
     src: "https://images.unsplash.com/photo-1669255664788-61c668bd6fe8?w=1280&q=80",
     alt: "Man on a motorcycle riding through mountain terrain",
+    mark: { name: "Kunzum Pass, Spiti", metres: 4551, href: "/experiences/spiti-valley-bike" },
   },
   {
     src: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1280&q=80",
     alt: "Skier carving down a steep snowy mountain slope",
+    mark: { name: "Skiing, Gulmarg", metres: 2650, href: "/adventurepedia/activities/skiing" },
   },
   {
     src: "https://images.unsplash.com/photo-1592208128295-5aaa34f1d72b?w=1280&q=80",
     alt: "Scuba diver exploring vibrant coral reefs in the Andamans",
+    mark: { name: "Reef dive, Havelock", metres: -18, href: "/adventurepedia/activities/diving" },
   },
   {
     src: "https://images.unsplash.com/photo-1668936132313-2c3105eef631?w=1280&q=80",
     alt: "Mountain biker descending a rugged trail through dense forest",
+    mark: { name: "Spiti by bicycle", metres: 4551, href: "/experiences/spiti-valley-cycling" },
   },
   {
     src: "https://images.unsplash.com/photo-1590898428406-7b9f44b33c22?w=1280&q=80",
     alt: "Rock climber scaling a dramatic cliff face",
+    mark: { name: "Bouldering, Hampi", metres: 470, href: "/adventurepedia/activities/rock-climbing" },
   },
 ];
 
@@ -75,12 +91,12 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-// Opens on slides[start]; the rest are shuffled after mount. The first slide stays put so the
+// Opens on HERO_SLIDES[start]; the rest are shuffled after mount. The first slide stays put so the
 // photo the server preloaded is the one on screen, with no swap after hydration.
 export default function HeroSlider({ start = 0 }: { start?: number }) {
   const [shuffled, setShuffled] = useState<Slide[]>(() => {
-    const s = start % slides.length;
-    return [...slides.slice(s), ...slides.slice(0, s)];
+    const s = start % HERO_SLIDES.length;
+    return [...HERO_SLIDES.slice(s), ...HERO_SLIDES.slice(0, s)];
   });
   const [current,     setCurrent]     = useState(0);
   const [prev,        setPrev]        = useState<number | null>(null);
@@ -109,6 +125,11 @@ export default function HeroSlider({ start = 0 }: { start?: number }) {
     setProgressKey((k) => k + 1);
     setTimeout(() => { setPrev(null); setAnimating(false); }, TRANSITION_MS);
   }, [current, animating]);
+
+  // Tell the gauge which photo is up (on mount too: it opens on the server's pick)
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent<HeroMark>(HERO_SLIDE_EVENT, { detail: shuffled[current].mark }));
+  }, [current, shuffled]);
 
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
