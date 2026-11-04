@@ -56,6 +56,7 @@ export const ACCESS: Record<string, Access> = {
   "satopanth-lake": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Badrinath, about 300 km and 11 to 12 hours. Mana village is 3 km beyond" },
   "deoriatal-chandrashila": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh or Haridwar to Sari village near Ukhimath, about 200 km and 8 to 9 hours" },
   "panch-kedar": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Guptkashi, about 7 to 8 hours" },
+  "rudranath-kalpeshwar": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Helang near Joshimath, about 250 km and 9 to 10 hours. The trek ends at Sagar, about 30 minutes from Gopeshwar" },
   "panwali-kantha": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Ghuttu, about 180 km and 7 to 8 hours" },
   "surya-top": { gateway: "Rishikesh", ...RISHIKESH, note: "The roadhead is in Chamoli district, a full day's drive from Rishikesh. Your operator confirms the pickup point" },
   // Kumaon and Chamoli via Kathgodam
@@ -74,6 +75,8 @@ export const ACCESS: Record<string, Access> = {
   "buran-ghati": { gateway: "Shimla", air: "Shimla, or Chandigarh", rail: "Shimla (toy train from Kalka) or Chandigarh", drive: "Shimla to Janglik, about 7 to 8 hours" },
   "pin-bhaba-pass": { gateway: "Shimla", air: "Shimla, or Chandigarh", rail: "Shimla or Chandigarh", drive: "Shimla to Kafnu in Kinnaur, about 8 to 9 hours. The trek exits at Mudh in Spiti" },
   "kareri-lake": { gateway: "Dharamshala", air: "Kangra (Gaggal), about 30 minutes from Dharamshala", rail: "Pathankot, about 3 hours away", drive: "Dharamshala to Ghera, about 1 hour" },
+  "triund": { gateway: "McLeod Ganj", air: "Kangra (Gaggal), about 45 minutes from McLeod Ganj", rail: "Pathankot, about 3 to 4 hours away", drive: "McLeod Ganj to Galu Devi temple above Dharamkot, about 15 minutes by taxi, or a 45-minute walk" },
+  "yulla-kanda": { gateway: "Shimla", air: "Shimla, or Chandigarh", rail: "Shimla (toy train from Kalka) or Chandigarh", drive: "Shimla to Yulla Khas via Tapri in Kinnaur, about 8 to 9 hours" },
   // Jammu & Kashmir, Ladakh
   "kashmir-great-lakes": { gateway: "Srinagar", ...SRINAGAR, drive: "Srinagar to Sonamarg, about 3 hours. The trek ends at Naranag, about 2 hours from Srinagar" },
   "tarsar-marsar-trek": { gateway: "Srinagar", ...SRINAGAR, drive: "Srinagar to Aru via Pahalgam, about 3 to 4 hours" },
@@ -120,6 +123,7 @@ const TREK_PERMITS: Record<string, string> = {
   "khopra-danda": "Annapurna Conservation Area Permit (ACAP).",
   "manaslu-circuit": "Manaslu is a restricted area: a special permit, a licensed guide and at least two trekkers are required, plus the Manaslu and Annapurna conservation area permits.",
   "markha-valley": "Hemis National Park fees are collected on the trail.",
+  "rudranath-kalpeshwar": "Rudranath is inside the Kedarnath Wildlife Sanctuary: a forest permit and fee, checked on the trail. Operators normally arrange it.",
 };
 
 export function permitNotes(a: Adventure): string[] {

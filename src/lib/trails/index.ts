@@ -39,6 +39,7 @@ import sandakphuPhalutTrek from "./sandakphu-phalut-trek.json";
 import sarPass from "./sar-pass.json";
 import satopanthLake from "./satopanth-lake.json";
 import tarsarMarsarTrek from "./tarsar-marsar-trek.json";
+import triund from "./triund.json";
 import valleyOfFlowers from "./valley-of-flowers.json";
 
 export * from "./shared";
@@ -77,6 +78,7 @@ const TRAILS: Record<string, Trail> = {
   "sar-pass": sarPass as unknown as Trail,
   "satopanth-lake": satopanthLake as unknown as Trail,
   "tarsar-marsar-trek": tarsarMarsarTrek as unknown as Trail,
+  "triund": triund as unknown as Trail,
   "valley-of-flowers": valleyOfFlowers as unknown as Trail,
 };
 

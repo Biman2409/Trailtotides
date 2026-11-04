@@ -514,6 +514,20 @@ export const TREKS = {
     ],
   },
 
+  triund: {
+    near: "Kangra, Himachal Pradesh",
+    stops: [
+      { name: "Galu Devi", q: "Galu Devi Mandir", at: [32.25459, 76.3259] },
+      { name: "Triund", at: [32.26144, 76.35455] },
+    ],
+    // The main trail past Magic View Café, not the steeper paths up from Bhagsu
+    through: [[32.25582, 76.34275]],
+    days: [
+      { to: "Triund", note: "From Galu Devi temple above Dharamkot through oak and rhododendron forest, past Magic View Café, then up the rocky switchbacks to the ridge below the Dhauladhar" },
+      { to: "Galu Devi", note: "Sunrise on the Dhauladhar, then back down the same trail" },
+    ],
+  },
+
   "sar-pass": {
     near: "Kullu, Himachal Pradesh",
     stops: [
