@@ -4,6 +4,7 @@
 //   duration      the itinerary's days (travel and rest days in it count)
 //   distance      its walking days' km added up, as the Itinerary panel's "about N km on foot"
 //   baseCamp      where day 1 starts
+//   altitude      the trail's high point, as the trail panel and elevation profile show it
 //   lat, lng      the trek's map pin, on the trail (see keyPoint)
 // Run after build-trail.mjs: node scripts/sync-trek-facts.mjs
 
@@ -61,12 +62,25 @@ for (const file of readdirSync(DIR).filter((f) => f.endsWith(".json"))) {
     else if (required) console.warn(`${trail.slug}: no ${key}`);
   };
 
+  // The page shows durationRange and distanceRange where a trek has them ("7 Days", "75 km"), so
+  // every mapped trek gets both, or its At a glance reads differently from the others'
+  if (!/\bdurationRange: /.test(entry)) entry = entry.replace(/(\bdurationDays: "[^"]*")/, `$1, durationRange: ""`);
+  if (!/\bdistanceRange: /.test(entry)) entry = entry.replace(/(\bdistance: "[^"]*")/, `$1, distanceRange: ""`);
   set("duration", bucket(days, entry.match(/\bduration: "([^"]*)"/)?.[1]));
   set("durationDays", `${days} days`);
   set("durationRange", `${days} Days`, false);
   set("distance", `${walked}km`);
   set("distanceRange", `${walked} km`, false);
   set("baseCamp", trail.days[0].from);
+  // Max altitude: the trail's high point, as its panel and profile show it (trailHighPoint in
+  // src/lib/trails/shared.ts). A note in brackets naming the point stays, in the trail's own
+  // spelling when it names it differently; no note is added where there was none
+  const named = [...trail.stops, ...trail.side].reduce((hi, s) => ((s.ele ?? 0) > (hi.ele ?? 0) ? s : hi), trail.stops[0]);
+  const peak = Math.max(...trail.line.map((p) => p[2]));
+  const high = peak > (named.ele ?? 0) + 40 ? { name: null, ele: peak } : { name: named.name, ele: named.ele ?? peak };
+  const old = entry.match(/\baltitude: "[\d,]+m(?: \(([^)]*)\))?"/)?.[1];
+  const note = old && high.name ? (high.name.toLowerCase().includes(old.toLowerCase()) ? old : high.name) : null;
+  set("altitude", `${high.ele.toLocaleString("en-IN")}m${note ? ` (${note})` : ""}`, false);
   let pin = keyPoint(trail, entry.match(/\bname: "([^"]*)"/)?.[1] ?? trail.slug);
   // A stop can sit a little off the drawn line (a campsite beside the path): the pin goes on the
   // line itself, at its nearest point. Side trips are drawn as their own points and keep theirs
