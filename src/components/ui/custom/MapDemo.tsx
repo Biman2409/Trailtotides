@@ -628,11 +628,10 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
 
   const sel = selected ? pins.find((p) => p.slug === selected) ?? null : null;
   const hasTrail = !!sel && sel.slug === tour.slug && tour.route.length > 1;
-  // The trail view is the selected trek's: leaving the trek (All India, Near me, another pin) closes it
+  // The trail view is the selected trek's: leaving the trek (Near me, another pin) closes it
   const trailOn = trail && hasTrail;
   useEffect(() => { if (!hasTrail) { setTrail(false); setOffline(false); } }, [hasTrail]);
   const selPos = sel && !flying ? screenPct(sel.x, sel.y, cam) : null;
-  const zoomed = target.scale > 1;
 
   const selectPin = (p: Pin) => {
     takeOver();
@@ -649,7 +648,6 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
     if (mode.kind === "region") { setMode({ kind: "all" }); setTarget(HOME); } else { setMode({ kind: "region", label: "Himalayas" }); setTarget(HIMALAYAS); }
   };
   const locate = () => { takeOver(); setAsked(""); setGenre(null); setSelected(null); setMode({ kind: "near" }); setTarget(NEAR); };
-  const zoomOut = () => { takeOver(); setSelected(null); setAsked(""); setMode({ kind: "all" }); setTarget(HOME); };
   const askNow = () => { takeOver(); ask(true); };
 
   const status =
@@ -768,15 +766,6 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
               <span className="truncate">{status}</span>
             </span>}
           </div>
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); zoomOut(); }}
-            className="md-hit absolute right-2 top-2 text-[10px] font-semibold px-2 py-0.5 rounded-full transition-opacity duration-300"
-            style={{ background: "rgba(0,0,0,0.55)", color: "#fff", backdropFilter: "blur(6px)", opacity: zoomed && !trailOn ? 1 : 0, pointerEvents: zoomed && !trailOn ? "auto" : "none" }}
-            tabIndex={zoomed && !trailOn ? 0 : -1}
-          >
-            All India
-          </button>
 
           {/* Region name, set large and faint along the bottom */}
           <div className="absolute inset-x-0 bottom-10 text-center pointer-events-none">
