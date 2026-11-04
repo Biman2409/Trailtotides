@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { X, Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, GitCompareArrows, Check, Clock, Users, Route, Download } from "lucide-react";
+import { X, Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, GitCompareArrows, Check, Clock, Users, Route, Download, Mountain, Waves, CalendarDays } from "lucide-react";
 import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import type { Adventure, Month } from "@/lib/data";
 import { useCompare } from "@/contexts/CompareContext";
@@ -12,7 +12,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { AXIS_LABEL } from "@/lib/fitness";
 import { MONTHS } from "@/lib/homeCuration";
 import { track } from "@/lib/analytics";
-import { trailClimbM, trailEnds, trailProfile, trailWalkKm, type Trail } from "@/lib/trails/shared";
+import { trailClimbM, trailEnds, trailHighPoint, trailProfile, trailWalkKm, type Trail } from "@/lib/trails/shared";
 import {
   genreOf, difficultyOf, difficultyColor, verifiedOperators, priceFrom, formatINR, daysAgo, inSeason, type Fit,
 } from "./mapShared";
@@ -28,6 +28,8 @@ export default function PinCard({
   month,
   pickReason,
   trail,
+  hasTrail = false,
+  onItinerary,
   onClose,
 }: {
   adventure: Adventure;
@@ -38,6 +40,10 @@ export default function PinCard({
   pickReason?: string;
   /** Drawn on the map when the adventure has one */
   trail?: Trail | null;
+  /** The adventure has a mapped trail (it may still be loading) */
+  hasTrail?: boolean;
+  /** Opens the itinerary and elevation beside the card, on the map */
+  onItinerary?: () => void;
   onClose: () => void;
 }) {
   const { isSelected, add, remove, isFull, openDrawer, selected } = useCompare();
@@ -93,12 +99,36 @@ export default function PinCard({
         </div>
       </div>
 
-      <div className="px-4 pb-4 pt-3 space-y-3">
+      <div className="px-4 pb-4 pt-3 space-y-4">
         <p className="text-[12.5px] leading-relaxed text-white/60">{a.tagline}</p>
 
-        {/* The trail, now drawn on the map */}
-        {trail && <TrailPanel trail={trail} slug={a.slug} />}
+        {/* 1. At a glance: always the same three facts, a dash where one doesn't apply */}
+        <Facts a={a} trail={trail ?? null} />
 
+        {/* 2. Best months, always here */}
+        <Section title="Best months" aside={month ? (inSeason(a, month) ? `In season in ${month}` : `Not in ${month}`) : a.bestSeason}>
+          <div className="grid grid-cols-12 gap-[3px]">
+            {MONTHS.map((m) => {
+              const on = a.bestMonths.includes(m);
+              return (
+                <span key={m} title={m} className="h-5 rounded-[5px] grid place-items-center text-[8.5px] font-bold"
+                  style={{ background: on ? `${g.color}33` : "rgba(255,255,255,0.04)", color: on ? g.color : "rgba(255,255,255,0.25)", outline: month === m ? "1.5px solid rgba(255,255,255,0.7)" : "none" }}>
+                  {m[0]}
+                </span>
+              );
+            })}
+          </div>
+        </Section>
+
+        {/* 3. The trail: drawn on the map when there is one, said plainly when there isn't */}
+        <Section title="Trail">
+          {trail ? <TrailPanel trail={trail} slug={a.slug} onItinerary={onItinerary} />
+            : hasTrail ? <div className="tm-panel h-[118px] animate-pulse" aria-label="Loading the trail" />
+            : <p className="tm-panel text-[12px] text-white/50">No mapped trail for this one yet. <Link href={`/experiences/${a.slug}`} className="font-semibold text-white/75 hover:text-white underline underline-offset-2">See the plan</Link></p>}
+        </Section>
+
+        {/* 4. Your fit, and why Compass.AI picked it */}
+        {(pickReason || fit || !hasProfile) && <p className="tm-label !-mb-2">Your fit</p>}
         {/* Picked for you by Compass.AI */}
         {pickReason && (
           <div className="tm-panel flex gap-2.5" style={{ borderColor: "rgba(255,125,71,0.35)", background: "rgba(255,81,0,0.07)" }}>
@@ -142,23 +172,7 @@ export default function PinCard({
           </Link>
         )}
 
-        {/* Best months */}
-        <div>
-          <p className="tm-label">Best months</p>
-          <div className="grid grid-cols-12 gap-[3px]">
-            {MONTHS.map((m) => {
-              const on = a.bestMonths.includes(m);
-              return (
-                <span key={m} title={m} className="h-5 rounded-[5px] grid place-items-center text-[8.5px] font-bold"
-                  style={{ background: on ? `${g.color}33` : "rgba(255,255,255,0.04)", color: on ? g.color : "rgba(255,255,255,0.25)", outline: month === m ? "1.5px solid rgba(255,255,255,0.7)" : "none" }}>
-                  {m[0]}
-                </span>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Run by verified operators */}
+        {/* 5. Run by verified operators */}
         <div>
           <div className="flex items-baseline justify-between">
             <p className="tm-label">{verified.length ? `${verified.length} verified operator${verified.length > 1 ? "s" : ""}` : "Operators"}</p>
@@ -227,7 +241,7 @@ export default function PinCard({
 }
 
 /** Length, climb and a small elevation line for the trail on the map, with the way to the full trail and GPX */
-function TrailPanel({ trail, slug }: { trail: Trail; slug: string }) {
+function TrailPanel({ trail, slug, onItinerary }: { trail: Trail; slug: string; onItinerary?: () => void }) {
   const prof = trailProfile(trail);
   const maxKm = prof[prof.length - 1].km;
   const eles = prof.map((p) => p.ele);
@@ -238,7 +252,7 @@ function TrailPanel({ trail, slug }: { trail: Trail; slug: string }) {
     <div className="tm-panel" style={{ borderColor: "rgba(255,81,0,0.35)", background: "rgba(255,81,0,0.06)" }}>
       <div className="flex items-center gap-2">
         <Route className="w-4 h-4 text-[#ff7d47] shrink-0" />
-        <p className="text-[12.5px] font-bold text-white">Trail on the map</p>
+        <p className="text-[12.5px] font-bold text-white">Drawn on the map</p>
         <p className="ml-auto text-[11px] text-white/50 tabular-nums" title={`${trailEnds(trail).from} to ${trailEnds(trail).to}, start to end`}>{trailWalkKm(trail)} km · +{trailClimbM(trail).toLocaleString("en-IN")} m · {trail.stops.length} stops</p>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-10 mt-2" aria-label={`Elevation ${lo.toLocaleString("en-IN")} to ${hi.toLocaleString("en-IN")} m`} role="img">
@@ -249,9 +263,48 @@ function TrailPanel({ trail, slug }: { trail: Trail; slug: string }) {
         <span>{trail.stops[0].name}</span><span>{trail.stops[trail.stops.length - 1].name}</span>
       </div>
       <div className="flex gap-2 mt-2.5">
-        <Link href={`/experiences/${slug}#at-a-glance`} className="flex-1 inline-flex items-center justify-center gap-1 h-8 rounded-lg text-[12px] font-semibold text-white bg-white/10 hover:bg-white/15">Itinerary &amp; elevation <ArrowRight className="w-3.5 h-3.5" /></Link>
+        {onItinerary ? (
+          <button type="button" onClick={onItinerary} className="flex-1 inline-flex items-center justify-center gap-1 h-8 rounded-lg text-[12px] font-semibold text-white bg-white/10 hover:bg-white/15">Itinerary &amp; elevation <ArrowRight className="w-3.5 h-3.5" /></button>
+        ) : (
+          <Link href={`/experiences/${slug}#at-a-glance`} className="flex-1 inline-flex items-center justify-center gap-1 h-8 rounded-lg text-[12px] font-semibold text-white bg-white/10 hover:bg-white/15">Itinerary &amp; elevation <ArrowRight className="w-3.5 h-3.5" /></Link>
+        )}
         <a href={`/experiences/${slug}/trail.gpx`} download className="inline-flex items-center justify-center gap-1 h-8 px-3 rounded-lg text-[12px] font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a1f]"><Download className="w-3.5 h-3.5" />GPX</a>
       </div>
+    </div>
+  );
+}
+
+/** A titled section of the card, so every card reads in the same order */
+function Section({ title, aside, children }: { title: string; aside?: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between gap-2">
+        <p className="tm-label">{title}</p>
+        {aside && <p className="text-[10.5px] text-white/45 truncate -mt-1.5">{aside}</p>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/** Duration, distance and height (or depth), from the mapped trail when there is one */
+function Facts({ a, trail }: { a: Adventure; trail: Trail | null }) {
+  const high = trail ? trailHighPoint(trail).ele : null;
+  const cells: [React.ReactNode, string, string][] = [
+    [<CalendarDays key="d" className="w-3.5 h-3.5" />, "Duration", a.durationDays],
+    [<Route key="r" className="w-3.5 h-3.5" />, "Distance", trail ? `${trailWalkKm(trail)} km` : a.distance ?? "—"],
+    a.depth
+      ? [<Waves key="w" className="w-3.5 h-3.5" />, "Depth", a.depth]
+      : [<Mountain key="m" className="w-3.5 h-3.5" />, "Highest", a.altitude ?? (high ? `${high.toLocaleString("en-IN")} m` : "—")],
+  ];
+  return (
+    <div className="grid grid-cols-3 gap-1.5">
+      {cells.map(([icon, label, v]) => (
+        <div key={label} className="tm-panel !px-2.5 !py-2 min-w-0">
+          <p className="flex items-center gap-1 text-[9.5px] font-bold uppercase tracking-[0.12em] text-white/40"><span className="text-white/50">{icon}</span>{label}</p>
+          <p className="mt-1 text-[13px] font-bold text-white truncate" title={v}>{v}</p>
+        </div>
+      ))}
     </div>
   );
 }

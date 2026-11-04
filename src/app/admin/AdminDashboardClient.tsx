@@ -6,7 +6,8 @@ import NextImage from "next/image";
 import {
   updateUserRole, deleteUser, banUser, unbanUser,
   sendPasswordReset, deleteMessage, updateStoryStatus, deleteStory,
-  adminDeleteReview, adminDeletePhoto,
+  adminDeleteReview, adminDeletePhoto, adminResetGroupInvite, adminRemoveGroupMember, adminDeleteGroup,
+  type AdminGroup,
 } from "./actions";
 import { approveOperatorSubmission, rejectOperatorSubmission, type OperatorProfile, type OperatorSubmission } from "@/app/auth/operator-actions";
 import { logout } from "@/app/auth/actions";
@@ -17,8 +18,9 @@ import {
   LayoutDashboard, Users, Building2, Inbox, BookOpen, Star,   Search, Download, ExternalLink, LogOut, Trash2, Ban, UserCheck, RotateCcw, Send,
   CheckCircle2, XCircle, Copy, ChevronDown, ChevronRight, Loader2, Mail, Phone, Globe,
   Image as ImageIcon, MessageSquare, FileText, Clock, Sparkles, Heart, Bookmark, Map as MapIcon,
-  MailOpen, Reply,
+  MailOpen, Reply, UsersRound, Crown, Link2, X,
 } from "lucide-react";
+import { MAX_GROUP } from "@/lib/fitness";
 import { format, parseISO, subDays, startOfDay, differenceInCalendarDays, formatDistanceToNowStrict } from "date-fns";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -64,6 +66,7 @@ const SECTIONS = [
   { key: "stories",   label: "Stories",           icon: BookOpen },
   { key: "community", label: "Reviews & photos",  icon: Star },
   { key: "operators", label: "Operators",         icon: Building2 },
+  { key: "groups",    label: "Groups",            icon: UsersRound },
 ] as const;
 type SectionKey = typeof SECTIONS[number]["key"];
 
@@ -275,7 +278,7 @@ export default function AdminDashboardClient(props: ComponentProps<typeof Dashbo
 
 function Dashboard({
   profiles, currentUserId, messages = [], storySubmissions = [], operatorProfiles = [], operatorSubmissions = [],
-  reviews = [], photos = [], counts, adventureNames,
+  reviews = [], photos = [], groups = [], counts, adventureNames,
 }: {
   profiles: Profile[];
   currentUserId: string;
@@ -285,6 +288,7 @@ function Dashboard({
   operatorSubmissions?: OperatorSubmission[];
   reviews?: Review[];
   photos?: Photo[];
+  groups?: AdminGroup[];
   counts: Counts;
   adventureNames: Record<string, string>;
 }) {
@@ -296,6 +300,7 @@ function Dashboard({
   const [subs, setSubs] = useState<OperatorSubmission[]>(operatorSubmissions);
   const [reviewList, setReviewList] = useState<Review[]>(reviews);
   const [photoList, setPhotoList] = useState<Photo[]>(photos);
+  const [groupList, setGroupList] = useState<AdminGroup[]>(groups);
   const marks = useInboxMarks();
   const { toast, show: showToast } = useToast();
   const advName = (slug: string) => adventureNames[slug] ?? slug;
@@ -366,11 +371,12 @@ function Dashboard({
       ...photoList.map((p) => ({ at: p.created_at, icon: ImageIcon, tone: "info" as const, text: `${p.username} added a photo to ${advName(p.slug)}`, sub: p.caption || undefined, to: "community" as const })),
       ...visitorInbox.map((m) => ({ at: m.created_at, icon: MessageSquare, tone: "ok" as const, text: `Message from ${m.name ?? m.email}`, sub: m.message.slice(0, 80), to: "inbox" as const })),
       ...stories.map((s) => ({ at: s.created_at, icon: BookOpen, tone: "brand" as const, text: `Story: ${s.title}`, sub: `${s.author_name} · ${s.status}`, to: "stories" as const })),
+      ...groupList.map((g) => ({ at: g.created_at, icon: UsersRound, tone: "brand" as const, text: `Group started: ${g.name}`, sub: `${g.members.length} of ${MAX_GROUP} people`, to: "groups" as const })),
       ...subs.map((s) => ({ at: s.created_at, icon: Building2, tone: "info" as const, text: `${s.company_name || s.operator_name} listed ${advName(s.adventure_slug)}`, sub: `₹${s.price_from} · ${s.status}`, to: "operators" as const })),
     ];
     return ev.filter((e) => e.at).sort((a, b) => b.at.localeCompare(a.at));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [people, reviewList, photoList, visitorInbox, stories, subs]);
+  }, [people, reviewList, photoList, visitorInbox, stories, subs, groupList]);
 
   // Signups per day for the last 30 days
   const signups30 = useMemo(() => {
@@ -390,6 +396,7 @@ function Dashboard({
     stories:   { eyebrow: "Field stories", title: "Stories", blurb: "Submitted stories waiting for review, and everything already published." },
     community: { eyebrow: "Community", title: "Reviews & photos", blurb: "What travellers post on adventure pages. Remove anything that breaks the rules." },
     operators: { eyebrow: "Partners", title: "Operators", blurb: "Operator accounts and the prices and dates they submit for approval." },
+    groups:    { eyebrow: "Group Match", title: "Groups", blurb: "Every Group Match group: who's in it, what they're shortlisting, and controls to reset a link, remove someone or delete a group." },
   };
   const meta = sectionMeta[section];
 
@@ -492,6 +499,7 @@ function Dashboard({
               photos={photoList.length}
               messages={visitorInbox.length}
               counts={counts}
+              groups={groupList}
               stories={stories}
               activity={activity}
               signups30={signups30}
@@ -522,6 +530,29 @@ function Dashboard({
               loadingId={loadingId}
               onDeleteReview={(r) => run(r.id, () => adminDeleteReview(r.id), "Review deleted", () => setReviewList((l) => l.filter((x) => x.id !== r.id)))}
               onDeletePhoto={(p) => run(p.id, () => adminDeletePhoto(p.id, p.slug, p.path), "Photo deleted", () => setPhotoList((l) => l.filter((x) => x.id !== p.id)))}
+            />
+          )}
+          {section === "groups" && (
+            <GroupsSection
+              groups={groupList}
+              people={people}
+              advName={advName}
+              loadingId={loadingId}
+              onReset={(g) => {
+                let code = "";
+                run(g.id, async () => { const res = await adminResetGroupInvite(g.id); if ("code" in res && res.code) code = res.code; return res; },
+                  "New invite link made: the old one no longer works",
+                  () => setGroupList((l) => l.map((x) => (x.id === g.id && code ? { ...x, code } : x))));
+              }}
+              onRemove={(g, m) => run(`${g.id}:${m.user_id}`, () => adminRemoveGroupMember(g.id, m.user_id), `${m.name} removed from ${g.name}`,
+                () => setGroupList((l) => l.flatMap((x) => {
+                  if (x.id !== g.id) return [x];
+                  const members = x.members.filter((y) => y.user_id !== m.user_id);
+                  // Mirrors the database: the earliest member inherits the group, and an empty one is deleted
+                  if (!members.length) return [];
+                  return [{ ...x, members, owner_id: x.owner_id === m.user_id ? members[0].user_id : x.owner_id }];
+                })))}
+              onDelete={(g) => run(g.id, () => adminDeleteGroup(g.id), `${g.name} deleted`, () => setGroupList((l) => l.filter((x) => x.id !== g.id)))}
             />
           )}
           {section === "operators" && (
@@ -557,7 +588,7 @@ function Wordmark() {
 function Overview(props: {
   go: (k: SectionKey) => void; people: Profile[]; newThisWeek: number; withAce: number; unread: number;
   pendingStories: number; pendingSubs: number; lowReviews: number;
-  reviews: number; photos: number; messages: number; counts: Counts; stories: StorySubmission[];
+  reviews: number; photos: number; messages: number; counts: Counts; stories: StorySubmission[]; groups: AdminGroup[];
   activity: { at: string; icon: typeof Users; tone: keyof typeof TONE; text: string; sub?: string; to: SectionKey }[];
   signups30: { date: Date; n: number }[];
 }) {
@@ -581,6 +612,7 @@ function Overview(props: {
     { label: "Wishlist saves", value: props.counts.wishlists, sub: "across all accounts", icon: Heart, to: "people" as const },
     { label: "Saved searches", value: props.counts.savedSearches, sub: "with alerts on", icon: Bookmark, to: "people" as const },
     { label: "Reviews", value: props.reviews, sub: `${props.photos} photo${props.photos === 1 ? "" : "s"}`, icon: Star, to: "community" as const },
+    { label: "Groups", value: props.groups.length, sub: `${props.groups.reduce((n, g) => n + g.members.length, 0)} people in them`, icon: UsersRound, to: "groups" as const },
     { label: "Messages", value: props.messages, sub: props.unread ? `${props.unread} unread` : "All read", icon: Inbox, to: "inbox" as const },
   ];
 
@@ -613,7 +645,7 @@ function Overview(props: {
       </Card>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-3">
         {kpis.map((k) => (
           <button key={k.label} onClick={() => go(k.to)} className="text-left rounded-2xl border p-4 transition-colors hover:border-[#ff5100]/40" style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}>
             <k.icon className="w-4 h-4 text-[#ff5100] mb-3" />
@@ -1112,6 +1144,130 @@ function OperatorsSection({ operators, subs, advName, loadingId, onDecide }: {
           </div>
         ) : <Card><Empty icon={Building2} title="No operator accounts yet" hint="Operators sign up at /auth/operator-signup." /></Card>}
       </section>
+    </div>
+  );
+}
+
+// ── Groups ─────────────────────────────────────────────────────────────────────
+
+function GroupsSection({ groups, people, advName, loadingId, onReset, onRemove, onDelete }: {
+  groups: AdminGroup[]; people: Profile[]; advName: (slug: string) => string; loadingId: string | null;
+  onReset: (g: AdminGroup) => void; onRemove: (g: AdminGroup, m: AdminGroup["members"][number]) => void; onDelete: (g: AdminGroup) => void;
+}) {
+  const [q, setQ] = useState("");
+  const [filter, setFilter] = useState<"all" | "active" | "solo" | "full">("all");
+  const [open, setOpen] = useState<string | null>(null);
+  const email = (id: string) => people.find((p) => p.id === id)?.email ?? null;
+  // The last time anything happened in a group: a join, a level update or a wishlist pick
+  const lastActive = (g: AdminGroup) => [g.created_at, ...g.members.flatMap((m) => [m.joined_at, m.updated_at]), ...g.picks.map((p) => p.created_at)].sort().pop()!;
+  const kind = (g: AdminGroup) => (g.members.length >= MAX_GROUP ? "full" : g.members.length < 2 ? "solo" : "active");
+  const list = groups
+    .filter((g) => (filter === "all" || kind(g) === filter)
+      && (!q || `${g.name} ${g.code} ${g.members.map((m) => `${m.name} ${email(m.user_id) ?? ""}`).join(" ")}`.toLowerCase().includes(q.toLowerCase())))
+    .sort((a, b) => lastActive(b).localeCompare(lastActive(a)));
+
+  const seats = groups.reduce((n, g) => n + g.members.length, 0);
+  const picks = groups.reduce((n, g) => n + g.picks.length, 0);
+  const decided = groups.filter((g) => g.members.length >= 2 && g.picks.some((p) => p.yes === g.members.length)).length;
+  const stats = [
+    { label: "Groups", value: groups.length, sub: `${groups.filter((g) => kind(g) === "active").length} with 2 or more people` },
+    { label: "People in groups", value: seats, sub: groups.length ? `${(seats / groups.length).toFixed(1)} per group` : "—" },
+    { label: "Wishlist picks", value: picks, sub: `${groups.filter((g) => g.picks.length).length} groups shortlisting` },
+    { label: "Agreed on a trip", value: decided, sub: "everyone voted in" },
+  ];
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {stats.map((s) => (
+          <Card key={s.label}>
+            <Eyebrow>{s.label}</Eyebrow>
+            <p className="text-[28px] font-bold t-text tabular-nums leading-none mt-1">{s.value}</p>
+            <p className="text-[12px] t-text-3 mt-1.5">{s.sub}</p>
+          </Card>
+        ))}
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <SearchBox value={q} onChange={setQ} placeholder="Search group, member, email or invite code" />
+        {([["all", "All"], ["active", "2+ people"], ["solo", "Just the owner"], ["full", "Full"]] as const).map(([k, l]) => (
+          <Chip key={k} active={filter === k} onClick={() => setFilter(k)} count={k === "all" ? groups.length : groups.filter((g) => kind(g) === k).length}>{l}</Chip>
+        ))}
+      </div>
+
+      {list.length ? list.map((g) => {
+        const isOpen = open === g.id;
+        const owner = g.members.find((m) => m.user_id === g.owner_id);
+        const top = g.picks[0];
+        return (
+          <Card key={g.id} pad={false} className="overflow-hidden">
+            <button type="button" onClick={() => setOpen(isOpen ? null : g.id)} aria-expanded={isOpen}
+              className="w-full flex items-center gap-3 p-4 text-left hover:bg-[var(--bg-surface-2)] transition-colors">
+              <Avatar name={g.name} tone={kind(g) === "solo" ? "muted" : "brand"} />
+              <span className="flex-1 min-w-0">
+                <span className="flex flex-wrap items-center gap-2">
+                  <span className="text-[14.5px] font-semibold t-text truncate">{g.name}</span>
+                  <Pill tone={kind(g) === "full" ? "warn" : kind(g) === "solo" ? "muted" : "ok"}>{g.members.length} / {MAX_GROUP}</Pill>
+                </span>
+                <span className="block text-[12px] t-text-3 mt-0.5 truncate">
+                  Owner {owner?.name ?? "—"}{email(g.owner_id) ? ` (${email(g.owner_id)})` : ""} · started {ago(g.created_at)} · active {ago(lastActive(g))}
+                </span>
+              </span>
+              <span className="hidden sm:block text-right text-[12px] t-text-3 shrink-0 max-w-[220px] truncate">
+                {top ? <>Leading: <b className="t-text-2">{advName(top.slug)}</b> ({top.yes} in)</> : "No wishlist yet"}
+              </span>
+              <ChevronDown className={`w-4 h-4 t-text-3 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            {isOpen && (
+              <div className="border-t px-4 pb-4 pt-3 grid lg:grid-cols-2 gap-5" style={{ borderColor: "var(--border-subtle)" }}>
+                <div>
+                  <Eyebrow>Members</Eyebrow>
+                  <ul className="mt-1.5">
+                    {g.members.map((m) => (
+                      <li key={m.user_id} className="flex items-center gap-2.5 py-2 border-b last:border-b-0" style={{ borderColor: "var(--border-subtle)" }}>
+                        <span className="flex-1 min-w-0">
+                          <span className="flex items-center gap-1.5 text-[13px] font-semibold t-text">
+                            {m.name}{m.user_id === g.owner_id && <Crown className="w-3 h-3 text-amber-500" aria-label="Owner" />}
+                          </span>
+                          <span className="block text-[11.5px] t-text-3 truncate">{email(m.user_id) ?? "no email"} · joined {ago(m.joined_at)} · fitness {m.ace_total}/40</span>
+                        </span>
+                        <ActionBtn icon={X} tone="danger" onClick={() => onRemove(g, m)} disabled={loadingId === `${g.id}:${m.user_id}`}
+                          confirm={g.members.length === 1 ? "Deletes the group too" : `Remove ${m.name}?`}>Remove</ActionBtn>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <Eyebrow>Wishlist</Eyebrow>
+                  {g.picks.length ? (
+                    <ul className="mt-1.5 space-y-1.5">
+                      {g.picks.map((p) => (
+                        <li key={p.slug} className="flex items-center gap-2 text-[13px]">
+                          <a href={`/experiences/${p.slug}`} target="_blank" rel="noreferrer" className="flex-1 min-w-0 truncate t-text hover:underline">{advName(p.slug)}</a>
+                          <span className="tabular-nums text-[12px] t-text-3 shrink-0">{p.yes} in{p.no ? ` · ${p.no} not for them` : ""}</span>
+                          {g.members.length >= 2 && p.yes === g.members.length && <Pill tone="ok">Everyone</Pill>}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : <p className="text-[13px] t-text-3 mt-1.5">Nothing shortlisted yet.</p>}
+
+                  <div className="mt-5 pt-4 border-t flex flex-wrap items-center gap-2" style={{ borderColor: "var(--border-subtle)" }}>
+                    <span className="inline-flex items-center gap-1 text-[12px] t-text-3 mr-auto">
+                      <Link2 className="w-3.5 h-3.5" /> <code className="t-text-2">{g.code}</code>
+                      <CopyBtn text={`${window.location.origin}/matchmaker/group/${g.code}`} />
+                    </span>
+                    <ActionBtn icon={RotateCcw} onClick={() => onReset(g)} disabled={loadingId === g.id} confirm="Old link stops working">Reset link</ActionBtn>
+                    <ActionBtn icon={Trash2} tone="danger" onClick={() => onDelete(g)} disabled={loadingId === g.id} confirm="Delete group for good?">Delete group</ActionBtn>
+                  </div>
+                </div>
+              </div>
+            )}
+          </Card>
+        );
+      }) : <Card><Empty icon={UsersRound} title={groups.length ? "No groups match" : "No groups yet"} hint={groups.length ? undefined : "Groups people start in the Adventure Matchmaker show up here."} /></Card>}
+
+      <p className="text-[11.5px] t-text-3">A group stores only its members&apos; eight capability levels, never health answers. Fitness here is each member&apos;s total out of 40.</p>
     </div>
   );
 }

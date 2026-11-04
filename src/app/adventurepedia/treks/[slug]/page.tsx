@@ -18,7 +18,8 @@ import {
 } from "@/lib/trekGuides";
 import { Rich, BlockView, serif } from "../../blocks";
 import AskCompassButton from "../../activities/AskCompassButton";
-import TrekElevation, { type DayBand } from "./TrekElevation";
+import TrailElevation from "@/components/ui/custom/TrailElevation";
+import { dayBands } from "@/lib/trails/dayBands";
 import TrekChecklist, { type ChecklistItem } from "./TrekChecklist";
 import CompareTreksButton from "./CompareTreksButton";
 
@@ -79,19 +80,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
   const walkDays = trail?.days.filter((d) => d.kind === "walk") ?? [];
   const hardest = walkDays.length ? walkDays.reduce((m, d) => ((d.up ?? 0) > (m.up ?? 0) ? d : m), walkDays[0]) : null;
 
-  // Each walking day as a stretch of the profile, from where it starts to where it sleeps
-  const bands: DayBand[] = [];
-  if (trail) {
-    let cursor = 0;
-    const kmOf = (name: string, from: number) =>
-      trail.stops.find((s) => s.name === name && s.km >= from - 0.05)?.km ?? trail.stops.find((s) => s.name === name)?.km;
-    for (const d of walkDays) {
-      const a0 = kmOf(d.from, cursor), a1 = d.to ? kmOf(d.to, a0 ?? cursor) : undefined;
-      if (a0 == null || a1 == null || Math.abs(a1 - a0) < 0.2) continue;
-      bands.push({ day: d.day, from: a0, to: a1, label: `${d.from} to ${d.to}, ${d.km} km, up ${fmt(d.up ?? 0)} m${d.note ? `. ${d.note}` : ""}` });
-      cursor = Math.max(a0, a1);
-    }
-  }
+  const bands = trail ? dayBands(trail) : [];
 
   // Daylight at each camp, in the next month the trek is in season (the 15th, India time)
   const nowMonth = new Date().getUTCMonth();
@@ -360,7 +349,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
 
             {/* ── Altitude ── */}
             <Section id="altitude" kicker="Altitude" title={trail ? "Altitude and acclimatisation" : "Altitude"}>
-              {prof && <TrekElevation pts={prof} bands={bands} />}
+              {prof && <TrailElevation pts={prof} bands={bands} />}
               {acc ? (
                 <>
                   <div className="grid grid-cols-3 gap-3 my-5">

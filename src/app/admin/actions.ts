@@ -221,3 +221,93 @@ export async function adminDeletePhoto(photoId: string, slug: string, path: stri
   return { success: true };
 }
 
+
+// ── Group Match ────────────────────────────────────────────────────────────────
+// Admins see every group (the service role reads past the members-only rules) and can step in:
+// reset a leaked invite link, remove someone, or delete a group outright.
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export type AdminGroup = {
+  id: string; name: string; code: string; created_at: string; owner_id: string;
+  members: { user_id: string; name: string; joined_at: string; updated_at: string; ace_total: number }[];
+  picks: { slug: string; added_by: string; created_at: string; yes: number; no: number }[];
+};
+
+/** Every group with its members, wishlist and votes; empty when the tables aren't there yet */
+export async function adminGetAllGroups(): Promise<{ groups: AdminGroup[] }> {
+  const authError = await requireAdmin();
+  if (authError) return { groups: [] };
+  const supabase = await createAdminClient();
+  const [g, m, p, v] = await Promise.all([
+    supabase.from("match_groups").select("id, name, invite_code, owner_id, created_at").order("created_at", { ascending: false }),
+    supabase.from("match_group_members").select("group_id, user_id, display_name, ace, joined_at, updated_at"),
+    supabase.from("match_group_picks").select("group_id, slug, added_by, created_at"),
+    supabase.from("match_group_votes").select("group_id, slug, user_id, vote"),
+  ]);
+  if (g.error || !g.data) return { groups: [] };
+  const groups = g.data.map((row) => {
+    const members = (m.data ?? []).filter((x) => x.group_id === row.id);
+    const seated = new Set(members.map((x) => x.user_id as string));
+    const votes = (v.data ?? []).filter((x) => x.group_id === row.id && seated.has(x.user_id as string));
+    return {
+      id: row.id as string, name: row.name as string, code: row.invite_code as string,
+      created_at: row.created_at as string, owner_id: row.owner_id as string,
+      members: members
+        .map((x) => ({
+          user_id: x.user_id as string, name: x.display_name as string,
+          joined_at: x.joined_at as string, updated_at: x.updated_at as string,
+          ace_total: ((x.ace as number[]) ?? []).reduce((s, n) => s + n, 0),
+        }))
+        .sort((a, b) => a.joined_at.localeCompare(b.joined_at)),
+      picks: (p.data ?? []).filter((x) => x.group_id === row.id).map((x) => ({
+        slug: x.slug as string, added_by: x.added_by as string, created_at: x.created_at as string,
+        yes: votes.filter((y) => y.slug === x.slug && y.vote === 1).length,
+        no: votes.filter((y) => y.slug === x.slug && y.vote === -1).length,
+      })).sort((a, b) => b.yes - a.yes || a.no - b.no),
+    };
+  });
+  return { groups };
+}
+
+/** A new invite link: the old one stops working, members keep their seats */
+export async function adminResetGroupInvite(groupId: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+  if (!UUID_RE.test(groupId)) return { error: "Group not found." };
+  const { randomBytes } = await import("crypto");
+  const code = randomBytes(6).toString("hex");
+  const supabase = await createAdminClient();
+  const { data, error } = await supabase.from("match_groups").update({ invite_code: code }).eq("id", groupId).select("id");
+  if (error) return { error: error.message };
+  if (!data?.length) return { error: "Group not found." };
+  revalidatePath("/admin");
+  return { success: true, code };
+}
+
+/** Takes someone out of a group. If they owned it, the longest-standing member takes over;
+ *  if they were the last, the group goes (the database does both) */
+export async function adminRemoveGroupMember(groupId: string, userId: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+  if (!UUID_RE.test(groupId) || !UUID_RE.test(userId)) return { error: "Member not found." };
+  const supabase = await createAdminClient();
+  const { data, error } = await supabase.from("match_group_members").delete().eq("group_id", groupId).eq("user_id", userId).select("user_id");
+  if (error) return { error: error.message };
+  if (!data?.length) return { error: "Member not found." };
+  revalidatePath("/admin");
+  return { success: true };
+}
+
+/** Deletes a group with its members, wishlist and votes */
+export async function adminDeleteGroup(groupId: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+  if (!UUID_RE.test(groupId)) return { error: "Group not found." };
+  const supabase = await createAdminClient();
+  const { data, error } = await supabase.from("match_groups").delete().eq("id", groupId).select("id");
+  if (error) return { error: error.message };
+  if (!data?.length) return { error: "Group not found." };
+  revalidatePath("/admin");
+  return { success: true };
+}

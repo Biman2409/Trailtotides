@@ -6,12 +6,14 @@ import { useRef, useState } from "react";
 // and moving along the chart shows the kilometre, the height and which day you're on, with
 // that day's band lit. The same chart as before for anyone not pointing at it.
 
-export interface DayBand { day: number; from: number; to: number; label: string }
+import type { DayBand } from "@/lib/trails/dayBands";
+export type { DayBand };
 
 const fmt = (n: number) => Math.round(n).toLocaleString("en-IN");
 
-export default function TrekElevation({ pts, bands }: { pts: [number, number][]; bands: DayBand[] }) {
-  const W = 1000, H = 236, PAD = { l: 44, r: 12, t: 34, b: 24 };
+/** compact: drawn on a narrower canvas, so its labels stay readable in a side panel */
+export default function TrailElevation({ pts, bands, compact = false }: { pts: [number, number][]; bands: DayBand[]; compact?: boolean }) {
+  const W = compact ? 480 : 1000, H = compact ? 220 : 236, PAD = { l: 44, r: 12, t: 34, b: 24 };
   const maxKm = pts[pts.length - 1][0] || 1;
   const eles = pts.map((p) => p[1]);
   const lo = Math.floor((Math.min(...eles) - 100) / 500) * 500;
@@ -77,7 +79,7 @@ export default function TrekElevation({ pts, bands }: { pts: [number, number][];
           <g pointerEvents="none">
             <line x1={x(at[0])} x2={x(at[0])} y1={PAD.t - 4} y2={H - PAD.b} stroke="var(--text-secondary)" strokeWidth="1" strokeDasharray="2 3" />
             <circle cx={x(at[0])} cy={y(at[1])} r="5.5" fill="#ff5100" stroke="var(--bg-surface)" strokeWidth="2" />
-            <text x={x(at[0]) + (x(at[0]) > W - 220 ? -10 : 10)} y={Math.max(PAD.t + 14, y(at[1]) - 12)} textAnchor={x(at[0]) > W - 220 ? "end" : "start"} fontSize="14" fontWeight="700" fill="var(--text-primary)">
+            <text x={x(at[0]) + (x(at[0]) > W - (compact ? 170 : 220) ? -10 : 10)} y={Math.max(PAD.t + 14, y(at[1]) - 12)} textAnchor={x(at[0]) > W - (compact ? 170 : 220) ? "end" : "start"} fontSize="14" fontWeight="700" fill="var(--text-primary)">
               {fmt(at[1])} m · km {at[0].toFixed(1)}{lit ? ` · Day ${lit.day}` : ""}
             </text>
           </g>

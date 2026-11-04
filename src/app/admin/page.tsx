@@ -3,7 +3,7 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import AdminDashboardClient from "./AdminDashboardClient";
 import { getAllOperatorProfiles, getAllOperatorSubmissions } from "@/app/auth/operator-actions";
-import { adminGetAllReviews, adminGetAllPhotos } from "./actions";
+import { adminGetAllReviews, adminGetAllPhotos, adminGetAllGroups } from "./actions";
 import { adventures } from "@/lib/data";
 import { DESTINATIONS } from "@/lib/destinations";
 
@@ -73,11 +73,12 @@ export default async function AdminPage() {
     .sort((a, b) => b.created_at.localeCompare(a.created_at));
 
   // Operator data from storage buckets
-  const [operatorProfiles, operatorSubmissions, { reviews }, { photos }] = await Promise.all([
+  const [operatorProfiles, operatorSubmissions, { reviews }, { photos }, { groups }] = await Promise.all([
     getAllOperatorProfiles(),
     getAllOperatorSubmissions(),
     adminGetAllReviews(),
     adminGetAllPhotos(),
+    adminGetAllGroups(),
   ]);
 
   // Story submissions — the `stories` table is the source of truth (it's what
@@ -143,6 +144,7 @@ export default async function AdminPage() {
       operatorSubmissions={operatorSubmissions}
       reviews={reviews}
       photos={photos}
+      groups={groups}
       counts={{ wishlists: wishlistCount, savedSearches: savedSearchCount, adventures: adventures.length, destinations: DESTINATIONS.length }}
       adventureNames={Object.fromEntries(adventures.map((a) => [a.slug, a.name]))}
     />

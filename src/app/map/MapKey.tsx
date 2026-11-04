@@ -250,7 +250,8 @@ const KEY_CSS = `
   .mk-pill[data-open] .mk-chev { transform: rotate(180deg); opacity: 0.8; }
   .mk-pill-icon { width: 32px; padding: 0; justify-content: center; position: relative; margin-left: auto; }
   /* Phones have the Filters button in the dock over the map already */
-  @media (max-width: 1023px) { .mk-pill-icon { display: none; } }
+  /* Filters sits beside Sort above the results (desktop) and beside the search row (phones) */
+  .mk-pill-icon { display: none; }
   .mk-pill-cta { color: #ffb08a; border-style: dashed; border-color: rgba(255,125,71,0.4); background: rgba(255,81,0,0.06); }
   .mk-pill-cta svg { color: #ff9a66; }
   .mk-pill-cta:hover { border-style: solid; color: #fff; }

@@ -28,6 +28,7 @@ import LayersMenu from "./LayersMenu";
 import CompassBar, { type CompassPick } from "./CompassBar";
 import ResultsList from "./ResultsList";
 import PinCard from "./PinCard";
+import ItineraryPanel from "./ItineraryPanel";
 import CompareTray from "./CompareTray";
 import { fitFor, haversineKm, BASE_KEY, type Fit, type LayerKey } from "./mapShared";
 import PeekCarousel from "./PeekCarousel";
@@ -73,6 +74,9 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const [trailDone, setTrailDone] = useState<string | null>(null);
   const trailCache = useRef(new Map<string, Trail>());
   const hasTrail = !!selected && trailSlugs.includes(selected);
+  // The itinerary and elevation, opened from the card; it belongs to one adventure
+  const [itineraryFor, setItineraryFor] = useState<string | null>(null);
+  useEffect(() => { setItineraryFor((cur) => (cur === selected ? cur : null)); }, [selected]);
   useEffect(() => {
     if (!selected || !trailSlugs.includes(selected)) { setTrail(null); return; }
     const hit = trailCache.current.get(selected);
@@ -211,6 +215,8 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
 
   const pickAdventures = useMemo(() => picks.map((p) => adventures.find((a) => a.slug === p.slug)).filter((a): a is Adventure => !!a), [picks]);
   const selectedAdv = selected ? adventures.find((a) => a.slug === selected) ?? null : null;
+  const itineraryAdv = itineraryFor && selectedAdv?.slug === itineraryFor ? selectedAdv : null;
+  const itineraryTrail = itineraryAdv && trail?.slug === itineraryAdv.slug ? trail : null;
   // An adventure opened from search gets its pin even if a filter hides it, like Compass picks;
   // the counts and the list still follow the filters
   const pinned = useMemo(() => (selectedAdv && !shown.includes(selectedAdv) ? [...shown, selectedAdv] : shown), [shown, selectedAdv]);
@@ -297,10 +303,13 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   // Escape closes the topmost thing only: an open menu closes itself, then the filters, then the card
   const filtersOpenRef = useRef(filtersOpen);
   filtersOpenRef.current = filtersOpen;
+  const itineraryRef = useRef<string | null>(null);
+  itineraryRef.current = itineraryFor;
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape" || document.querySelector(".tm-menu")) return;
       if (filtersOpenRef.current) setFiltersOpen(false);
+      else if (itineraryRef.current) setItineraryFor(null);
       else setSelected(null);
     };
     window.addEventListener("keydown", onKey);
@@ -456,6 +465,14 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
             <BookmarkPlus className="w-3.5 h-3.5" /><span className="hidden lg:inline">Save</span>
           </button>
         )}
+        {/* Filters: duration, price, editor picks and the rest, beside Sort */}
+        <button type="button" onClick={() => setFiltersOpen(true)} aria-expanded={filtersOpen}
+          className="hidden lg:inline-flex relative items-center gap-1.5 h-[30px] px-2.5 rounded-[9px] text-[12px] font-semibold text-white transition-colors"
+          style={{ background: "rgba(255,81,0,0.14)", border: "1px solid rgba(255,125,71,0.45)" }}
+          aria-label={panelCount(f) ? `Filters, ${panelCount(f)} set` : "Filters"}>
+          <SlidersHorizontal className="w-3.5 h-3.5" /> Filters
+          {panelCount(f) > 0 && <b className="min-w-4 h-4 px-1 rounded-full bg-[#ff5100] text-white text-[9px] font-bold grid place-items-center">{panelCount(f)}</b>}
+        </button>
         {/* Same sort options as Explore (phones get them in the Filters panel) */}
         <label className="hidden md:inline-flex items-center gap-1">
           <span className="sr-only">Sort</span>
@@ -480,6 +497,8 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
         month={month}
         pickReason={pickReasons.get(selectedAdv.slug)}
         trail={trail?.slug === selectedAdv.slug ? trail : null}
+        hasTrail={hasTrail}
+        onItinerary={() => setItineraryFor(selectedAdv.slug)}
         onClose={() => setSelected(null)}
       />
     </div>
@@ -586,6 +605,12 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
             </div>
 
             <div className="absolute z-[1000] bottom-4 right-4"><CompareTray onFocus={select} /></div>
+
+            {itineraryAdv && itineraryTrail && (
+              <div className="absolute z-[1001] tm-slide-in" style={{ top: GAP, bottom: GAP, left: panelOpen ? GAP + PANEL_W + 44 : GAP, width: "min(420px, calc(100% - " + ((panelOpen ? GAP + PANEL_W + 44 : GAP) + GAP) + "px))" }}>
+                <ItineraryPanel adventure={itineraryAdv} trail={itineraryTrail} onClose={() => setItineraryFor(null)} />
+              </div>
+            )}
           </>
         )}
 
@@ -615,6 +640,12 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
               {/* Collapsed, the card row stands in for the list */}
               {(sheet !== "peek" || selectedAdv) && <div className={`px-3.5 pb-6 ${selectedAdv ? "pt-0.5" : ""}`}>{body}</div>}
             </MobileSheet>
+
+            {itineraryAdv && itineraryTrail && (
+              <div className="absolute inset-0 z-[1002] tm-slide-up">
+                <ItineraryPanel adventure={itineraryAdv} trail={itineraryTrail} onClose={() => setItineraryFor(null)} phone />
+              </div>
+            )}
           </>
         )}
       </div>
@@ -679,6 +710,11 @@ const PAGE_CSS = `
   .tm-page { background: #0b0d10; color: #fff; }  .tm-glass { background: rgba(17,20,24,0.86); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2);
               border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 16px 48px rgba(0,0,0,0.45); }
   @media (prefers-reduced-transparency: reduce) { .tm-glass { background: #121519; backdrop-filter: none; } }
+  .tm-slide-in { animation: tmSlideIn .28s cubic-bezier(.2,1,.3,1) both; }
+  .tm-slide-up { animation: tmSlideUp .3s cubic-bezier(.2,1,.3,1) both; }
+  @keyframes tmSlideIn { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: none; } }
+  @keyframes tmSlideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .tm-slide-in, .tm-slide-up { animation: none; } }
   .tm-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
 
   .tm-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); color: #fff; outline: none; caret-color: #ff5100; transition: border-color .2s, background .2s; }
