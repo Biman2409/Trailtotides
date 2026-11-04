@@ -122,10 +122,10 @@ const BEATS = [
   { caption: "Clustered by difficulty", ms: 5200 },
   { caption: "Ask Compass.AI, see your matches", ms: 7000 },
   { caption: "Near you", ms: 3400 },
-  { caption: "Tap a pin: fit, season, compare", ms: 5400 },
-  { caption: "Its trail, drawn on the map", ms: 4200 },
+  { caption: "Tap a pin: its card, your fit, compare", ms: 5400 },
+  { caption: "Itinerary & elevation, trail on the map", ms: 4600 },
   { caption: "Switch to satellite", ms: 3800 },
-  { caption: "Get the GPX, follow it offline", ms: 4600 },
+  { caption: "Download the GPX, follow it offline", ms: 4600 },
   // The tour ends on the way in: the pointer taps the demo's own "Open map" button
   { caption: "Open the map", ms: 2800 },
 ];
@@ -631,7 +631,6 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
   // The trail view is the selected trek's: leaving the trek (All India, Near me, another pin) closes it
   const trailOn = trail && hasTrail;
   useEffect(() => { if (!hasTrail) { setTrail(false); setOffline(false); } }, [hasTrail]);
-  const routePts = tour.route.map(([x, y]) => `${x},${y}`).join(" ");
   const selPos = sel && !flying ? screenPct(sel.x, sel.y, cam) : null;
   const zoomed = target.scale > 1;
 
@@ -687,7 +686,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
             <LocateFixed className="w-3 h-3 shrink-0" /><span className="truncate">Near me</span>
           </button>
           <button ref={matchRef} type="button" onClick={() => { takeOver(); setMatches((m) => !m); }} className="md-chip md-hit flex-auto inline-flex items-center justify-center gap-1 min-w-0" data-on={matches || undefined} style={{ "--c": "#10b981" } as React.CSSProperties}>
-            <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ boxShadow: "inset 0 0 0 1.5px #10b981" }} /><span className="truncate">Matches</span>
+            <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ boxShadow: "inset 0 0 0 1.5px #10b981" }} /><span className="truncate">Your fit</span>
           </button>
         </div>
 
@@ -867,24 +866,44 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                 </span>
               </div>
 
-              {/* The trail file, for following it with no signal */}
-              <div className="absolute left-2 right-2 bottom-2 flex items-end justify-between gap-2">
-                <span className="md-glass min-w-0 flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full">
+              {/* The itinerary sheet: what the real map's Itinerary & elevation panel shows, in brief */}
+              <div className="md-sheet absolute left-2 right-2 bottom-2 rounded-xl p-2">
+                <span className="flex items-baseline justify-between gap-2">
+                  <span className="text-[8.5px] font-bold uppercase tracking-[0.14em] text-white/45">Itinerary &amp; elevation</span>
+                  <span className="text-[9px] text-white/60 tabular-nums">{Math.round(tour.lengthKm)} km · up to {tour.maxEleM.toLocaleString("en-IN")} m</span>
+                </span>
+                <svg viewBox="0 0 100 18" preserveAspectRatio="none" className="block w-full h-5 mt-1" aria-hidden>
+                  {(() => {
+                    const lo = Math.min(...tour.profile), hi = Math.max(...tour.profile), n = Math.max(1, tour.profile.length - 1);
+                    const pts = tour.profile.map((e, i) => `${(i / n) * 100},${17 - ((e - lo) / Math.max(1, hi - lo)) * 15}`).join(" ");
+                    return <><polygon points={`0,18 ${pts} 100,18`} fill="rgba(255,81,0,0.22)" /><polyline points={pts} fill="none" stroke="#ff7d47" strokeWidth={1.2} vectorEffect="non-scaling-stroke" /></>;
+                  })()}
+                </svg>
+                {/* Stops, numbered as on the map */}
+                <span className="flex items-center gap-1 mt-1 min-w-0 overflow-hidden whitespace-nowrap">
+                  {tv.stops.map((st, i) => (
+                    <span key={st.name} className="inline-flex items-center gap-0.5 text-[8.5px] text-white/70 min-w-0">
+                      <i className="not-italic w-3 h-3 rounded-full grid place-items-center text-[7px] font-bold text-white shrink-0" style={{ background: i === 0 ? "#16a34a" : "#ff5100" }}>{st.n}</i>
+                      {i === 0 || i === tv.stops.length - 1 ? <span className="truncate max-w-[64px]">{st.name}</span> : null}
+                    </span>
+                  ))}
+                </span>
+                <span className="flex items-center gap-2 mt-1.5">
                   <a
                     ref={gpxRef}
                     href={`/experiences/${sel.slug}/trail.gpx`}
                     download
                     onClick={() => { takeOver(); setOffline(true); }}
-                    className="md-hit shrink-0 inline-flex items-center gap-1 text-[10px] font-bold px-2 h-6 rounded-full transition-colors"
+                    className="md-hit shrink-0 inline-flex items-center gap-1 text-[10px] font-bold px-2.5 h-6 rounded-full transition-colors"
                     style={offline ? { background: "rgba(16,185,129,0.92)", color: "#03140d" } : { background: "#ff5100", color: "#fff" }}
                   >
-                    {offline ? <WifiOff className="w-3 h-3" /> : <Download className="w-3 h-3" />}{offline ? "GPS on" : "GPX"}
+                    {offline ? <WifiOff className="w-3 h-3" /> : <Download className="w-3 h-3" />}{offline ? "GPS on" : "Download GPX"}
                   </a>
-                  <span key={String(offline)} className="md-badge text-[9.5px] text-white/75 truncate tabular-nums">
-                    {offline ? "No signal, still on the trail" : `${tour.lengthKm} km · ${tv.stops.length} stops · up to ${tour.maxEleM.toLocaleString("en-IN")} m`}
+                  <span key={String(offline)} className="md-badge text-[9px] text-white/60 truncate">
+                    {offline ? "No signal, still on the trail" : "Follow it offline"}
                   </span>
+                  <span className="ml-auto shrink-0 text-[7px] text-white/40">{sat ? "Imagery" : "Relief"} © Esri</span>
                 </span>
-                {<span className="shrink-0 text-[7.5px] text-white/60 px-1 pb-0.5" style={{ textShadow: "0 1px 2px #000" }}>{sat ? "Imagery" : "Relief"} © Esri</span>}
               </div>
             </div>
           )}
@@ -915,14 +934,19 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                 )}
               </Link>
               <span className="block px-2.5 pb-2.5 pt-1.5">
-                <span className="flex items-center justify-between gap-2 text-[10px]">
-                  <span className="text-white/60 truncate">{sel.meta}</span>
-                  {sel.fit && (
-                    <span className="inline-flex items-center gap-1 font-semibold shrink-0" style={{ color: FIT_COLOR[sel.fit] }}>
-                      <i className="w-1.5 h-1.5 rounded-full" style={{ background: FIT_COLOR[sel.fit] }} />{FIT_LABEL[sel.fit]}
+                <span className="block text-[10px] text-white/60 truncate">{sel.meta}</span>
+                {/* As on the real card: one button opens the day-by-day plan and height profile */}
+                {hasTrail && (
+                  <button ref={trailBtnRef} type="button" onClick={() => { takeOver(); openTrail(); }}
+                    className="md-hit md-itin w-full flex items-center gap-2 mt-1.5 px-2 py-1.5 rounded-lg text-left">
+                    <span className="w-6 h-6 rounded-md grid place-items-center shrink-0" style={{ background: "rgba(255,81,0,0.18)", color: "#ff9a66" }}><Route className="w-3 h-3" /></span>
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-[10.5px] font-bold text-white leading-tight">Itinerary &amp; elevation</span>
+                      <span className="block text-[9px] text-white/50 truncate tabular-nums">{Math.round(tour.lengthKm)} km · up to {tour.maxEleM.toLocaleString("en-IN")} m</span>
                     </span>
-                  )}
-                </span>
+                    <ArrowRight className="w-3 h-3 text-white/40 shrink-0" />
+                  </button>
+                )}
                 {/* Best months, as on the real card */}
                 {sel.months.length > 0 && (
                   <span className="grid grid-cols-12 gap-[2px] mt-1.5" title={`Best: ${sel.months.join(", ")}`}>
@@ -932,27 +956,10 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                     })}
                   </span>
                 )}
-                {/* The trail and its climb, for the trek the tour opens: tap to draw it on the map */}
-                {hasTrail && (
-                  <button ref={trailBtnRef} type="button" onClick={() => { takeOver(); openTrail(); }}
-                    className="md-hit w-full flex items-center gap-2 mt-2 p-1 -mx-1 rounded-lg text-left transition-colors hover:bg-white/[0.05]">
-                    <svg viewBox="-0.08 -0.08 1.16 1.16" className="w-9 h-9 shrink-0 rounded-md" style={{ background: "rgba(255,255,255,0.04)" }} aria-hidden>
-                      <polyline points={routePts} fill="none" stroke={AI_COLOR} strokeWidth={0.06} strokeLinejoin="round" strokeLinecap="round" pathLength={1} className="md-draw" />
-                    </svg>
-                    <span className="flex-1 min-w-0">
-                      <svg viewBox="0 0 100 24" preserveAspectRatio="none" className="block w-full h-5" aria-hidden>
-                        {(() => {
-                          const lo = Math.min(...tour.profile), hi = Math.max(...tour.profile), n = Math.max(1, tour.profile.length - 1);
-                          const pts = tour.profile.map((e, i) => `${(i / n) * 100},${22 - ((e - lo) / Math.max(1, hi - lo)) * 20}`).join(" ");
-                          return <><polygon points={`0,24 ${pts} 100,24`} fill="rgba(255,179,122,0.18)" /><polyline points={pts} fill="none" stroke={AI_COLOR} strokeWidth={1.2} vectorEffect="non-scaling-stroke" /></>;
-                        })()}
-                      </svg>
-                      <span className="flex items-center gap-1 text-[9.5px] text-white/50 mt-0.5 tabular-nums whitespace-nowrap">
-                        <span className="truncate">{tour.lengthKm} km · {tour.maxEleM.toLocaleString("en-IN")} m</span>
-                        <span className="ml-auto shrink-0 inline-flex items-center gap-0.5 font-semibold text-[#ffb37a]"><Route className="w-2.5 h-2.5" />On map</span>
-                      </span>
-                    </span>
-                  </button>
+                {sel.fit && (
+                  <span className="flex items-center gap-1 mt-1.5 text-[10px] font-semibold" style={{ color: FIT_COLOR[sel.fit] }}>
+                    <i className="w-1.5 h-1.5 rounded-full" style={{ background: FIT_COLOR[sel.fit] }} />{FIT_LABEL[sel.fit]}
+                  </span>
                 )}
                 <span className="flex items-center justify-between gap-2 mt-2">
                   {sel.price ? (
@@ -976,7 +983,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                       ref={compareRef}
                       type="button"
                       onClick={() => { takeOver(); setCompared((c) => (c === sel.slug ? null : sel.slug)); }}
-                      aria-label={compared === sel.slug ? "Remove from compare" : "Add to compare"}
+                      aria-label={compared === sel.slug ? "In compare" : "Add to compare"} title={compared === sel.slug ? "In compare" : "Add to compare"}
                       className="md-hit w-6 h-6 rounded-full grid place-items-center transition-colors"
                       style={compared === sel.slug ? { background: "#ff5100", color: "#fff" } : { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.75)" }}
                     >
@@ -1034,6 +1041,10 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
         .md-shell { background: linear-gradient(165deg, #121a18 0%, #0b100f 100%);
                     border: 1px solid rgba(255,255,255,0.07);
                     box-shadow: 0 30px 70px rgba(0,0,0,0.35), 0 0 0 1px rgba(126,220,150,0.04), inset 0 1px 0 rgba(255,255,255,0.05); }
+        .md-itin { background: rgba(255,81,0,0.1); border: 1px solid rgba(255,125,71,0.35); transition: background .2s; }
+        .md-itin:hover { background: rgba(255,81,0,0.18); }
+        .md-sheet { background: rgba(11,14,13,0.88); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(8px); animation: mdSheet .4s cubic-bezier(.2,1,.3,1) both; }
+        @keyframes mdSheet { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
         .md-ask { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); transition: border-color .35s, box-shadow .35s; }
         .md-ask:hover { border-color: rgba(255,179,122,0.4); }
         .md-ask[data-on] { border-color: rgba(255,179,122,0.6); box-shadow: 0 0 18px rgba(255,125,71,0.25); }

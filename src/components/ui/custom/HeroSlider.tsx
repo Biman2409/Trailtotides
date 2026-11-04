@@ -167,7 +167,7 @@ export default function HeroSlider({ start = 0 }: { start?: number }) {
       <style>{`
         ${kenBurnsCSS}
         /* Large desktops: the altitude gauge beside the headline moves through the photos */
-        @media (min-width: 1280px) and (min-height: 561px) { .hero-dots { display: none !important; } }
+        @media (min-width: 1024px) and (min-height: 561px) { .hero-dots { display: none !important; } }
         @keyframes progressFill {
           from { transform: scaleX(0); }
           to   { transform: scaleX(1); }

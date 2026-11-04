@@ -11,7 +11,7 @@ import { HERO_SLIDES, HERO_SLIDE_EVENT, HERO_GOTO_EVENT, SLIDE_DURATION, type He
 // It is also the slider's control on these screens: every photo is a stop on the scale (click
 // one to show that photo), and a ring round the marker fills while its photo is up.
 // The sea is drawn to a larger scale than the land, with a break at sea level, so a dive
-// still reads below the line. Large desktops only: the column it sits in only exists there.
+// still reads below the line. Desktops only (1024px and wider): the column it sits in only exists there.
 
 const TOP_M = 7000, DEEP_M = 40;
 const SEA = 0.8; // sea level sits 80% of the way down
@@ -62,7 +62,7 @@ export default function HeroGauge({ start = 0 }: { start?: number }) {
   const clear = (y: number) => ({ opacity: Math.abs(y - at(mark.metres)) < 0.06 ? 0 : 1 });
 
   return (
-    <div className="hg absolute inset-y-0 left-0 w-[240px] hidden xl:block" aria-label="Where in India to do what the photo shows, and how high">
+    <div className="hg absolute inset-y-0 left-0 w-[240px] hidden lg:block" aria-label="Where in India to do what the photo shows, and how high">
       {/* The scale: trail orange fading to tide teal, with its ticks */}
       <div className="absolute inset-y-0 left-[10px] w-px hg-track" aria-hidden />
       <div className="hg-fill" aria-hidden data-deep={below || undefined}
