@@ -8,11 +8,18 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import ChatBubble from "@/components/ChatBubble";
 import { getACE, ACE_AXES, ACE_AXIS_LABELS, ACE_AXIS_COLORS } from "@/lib/ace";
+import { adventures } from "@/lib/data";
+import { haversineKm } from "@/lib/geo";
+import { sunTimes, clock } from "@/lib/sun";
 import {
   trekAdventures, trekGuide, trekGuideHref, MONTHS, seasonNotes, acclimatisation, profile, packingNotes, permitNotes, priceRange, splitList,
 } from "@/lib/trekGuides";
 import { Rich, BlockView, serif } from "../../blocks";
+import AskCompassButton from "../../activities/AskCompassButton";
+import TrekElevation, { type DayBand } from "./TrekElevation";
+import TrekChecklist, { type ChecklistItem } from "./TrekChecklist";
 
 const SITE = "https://www.trailtotides.com";
 const fmt = (n: number) => Math.round(n).toLocaleString("en-IN");
@@ -71,6 +78,68 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
   const walkDays = trail?.days.filter((d) => d.kind === "walk") ?? [];
   const hardest = walkDays.length ? walkDays.reduce((m, d) => ((d.up ?? 0) > (m.up ?? 0) ? d : m), walkDays[0]) : null;
 
+  // Each walking day as a stretch of the profile, from where it starts to where it sleeps
+  const bands: DayBand[] = [];
+  if (trail) {
+    let cursor = 0;
+    const kmOf = (name: string, from: number) =>
+      trail.stops.find((s) => s.name === name && s.km >= from - 0.05)?.km ?? trail.stops.find((s) => s.name === name)?.km;
+    for (const d of walkDays) {
+      const a0 = kmOf(d.from, cursor), a1 = d.to ? kmOf(d.to, a0 ?? cursor) : undefined;
+      if (a0 == null || a1 == null || Math.abs(a1 - a0) < 0.2) continue;
+      bands.push({ day: d.day, from: a0, to: a1, label: `${d.from} to ${d.to}, ${d.km} km, up ${fmt(d.up ?? 0)} m${d.note ? `. ${d.note}` : ""}` });
+      cursor = Math.max(a0, a1);
+    }
+  }
+
+  // Daylight at each camp, in the next month the trek is in season (the 15th, India time)
+  const nowMonth = new Date().getUTCMonth();
+  const seasonMonth = [...Array(12).keys()].map((i) => (nowMonth + i) % 12).find((m) => a.bestMonths.includes(MONTHS[m])) ?? nowMonth;
+  const seasonDate = new Date(Date.UTC(new Date().getUTCFullYear() + (seasonMonth < nowMonth ? 1 : 0), seasonMonth, 15));
+  const camps = (trail?.sleepPlaces ?? []).map((p) => ({ ...p, sun: sunTimes(p.lat, p.lng, seasonDate) })).filter((p) => p.sun);
+  const sameSun = camps.length > 1 && camps.every((c) => Math.abs(c.sun!.rise - camps[0].sun!.rise) < 3 && Math.abs(c.sun!.set - camps[0].sun!.set) < 3);
+  const daylen = (t: { rise: number; set: number }) => { const m = Math.round(t.set - t.rise); return `${Math.floor(m / 60)} h ${m % 60} m`; };
+
+  // Before you leave: what to have sorted, from this trek's own facts
+  const checklist: ChecklistItem[] = [
+    { id: "id", text: "Original photo ID, and two photocopies." },
+    ...(permitNotes(a).length ? [{ id: "permits", text: "Permits confirmed with your operator.", href: "#permits", link: "What's needed" }] : []),
+    { id: "insurance", text: alt >= 3000 ? `Insurance that names trekking up to ${fmt(alt)} m, with helicopter evacuation.` : "Travel insurance that names trekking.", href: "/adventurepedia/insurance-and-emergencies", link: "What to check" },
+    ...(trail ? [{ id: "gpx", text: "The GPX downloaded and opened offline on your phone.", href: "#offline", link: "Get it" }] : []),
+    { id: "home", text: "Your itinerary and your operator's emergency number sent to someone at home." },
+    ...(access?.gateway ? [{ id: "cash", text: `Cash from ${access.gateway}: cards and ATMs thin out past it.` }] : []),
+    { id: "spare", text: "A spare day at the end, for weather or roads." },
+    { id: "boots", text: "Boots worn in on two or three long walks." },
+    { id: "fit", text: "Your fitness checked against this trek.", href: `/matchmaker?from=${a.slug}`, link: "Adventure Matchmaker" },
+    { id: "weather", text: "The forecast checked the day before you leave." },
+  ];
+
+  // The mistakes that catch people out on this trek, worked out from its numbers and season
+  const winter = a.bestMonths.some((m) => ["Dec", "Jan", "Feb"].includes(m));
+  const monsoon = a.bestMonths.some((m) => ["Jul", "Aug"].includes(m));
+  const mistakes = [
+    ...(hardest && (hardest.up ?? 0) >= 700 ? [`**Starting day ${hardest.day} late.** It climbs ${fmt(hardest.up ?? 0)} m: leave early, while it's cool and before afternoon weather.`] : []),
+    ...(acc && acc.jumps.length ? [`**Pushing on with a headache on day ${acc.jumps[0].day}.** It's the biggest jump in sleeping height, up ${fmt(acc.jumps[0].gain)} m to ${fmt(acc.jumps[0].to)} m. Tell your leader early.`] : []),
+    ...(winter ? ["**Cotton layers and smooth soles on snow.** Wet cotton chills fast, and boots without grip slip: wear wool or synthetics, and put microspikes on early."] : []),
+    ...(monsoon ? ["**No spare day in the rains.** One landslide can close the road for a day or more."] : []),
+    ...(alt >= 3500 ? ["**Drinking only when thirsty.** At height you lose more water than you feel: aim for 3 to 4 litres a day."] : []),
+    "**Walking in new boots.** Blisters on day one make every day after it harder.",
+    "**Packing heavy.** Over about 10 kg, the steep days get much harder. Offload with your operator if they offer it.",
+  ].slice(0, 5);
+
+  // Treks most like this one: closest in what they ask of you, nearest first on a tie
+  const similar = trekAdventures().filter((t) => t.slug !== a.slug)
+    .map((t) => {
+      const ta = getACE(t);
+      return { t, d: ACE_AXES.reduce((s, k) => s + Math.abs(ta[k] - ace[k]), 0) + (t.state === a.state ? 0 : 1), km: haversineKm(a.lat, a.lng, t.lat, t.lng) };
+    })
+    .sort((p, q) => p.d - q.d || p.km - q.km).slice(0, 3);
+  // Something else nearby to add on: other kinds of adventure, three days or less, within 200 km
+  // in a straight line (mountain roads make the drive longer)
+  const nearby = adventures.filter((x) => x.type !== "Trekking" && x.type !== "Mountaineering")
+    .map((x) => ({ x, km: haversineKm(a.lat, a.lng, x.lat, x.lng) })).filter((n) => n.km <= 200 && (parseInt(n.x.durationDays, 10) || 99) <= 3)
+    .sort((p, q) => p.km - q.km).slice(0, 3);
+
   const acclimVerdict = acc
     ? acc.jumps.length === 0
       ? `The itinerary gains height gently: no night above 3,000 m is more than 500 m higher than the one before${acc.restDays ? `, with ${acc.restDays} rest ${acc.restDays === 1 ? "day" : "days"} built in` : ""}.`
@@ -98,7 +167,8 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
     ["short-version", "The short version"], ["overview", "Overview"], ["when", "When to go"], ["getting-there", "Getting there"],
     ...(trail ? [["itinerary", "Day by day"], ["altitude", "Altitude and acclimatisation"]] as [string, string][] : [["altitude", "Altitude"]] as [string, string][]),
     ["fitness", "How fit you need to be"], ["permits", "Permits and paperwork"], ["packing", "What to pack"], ["safety", "Safety"],
-    ["booking", "Booking and cost"], ...(trail ? [["offline", "Offline map and GPX"]] as [string, string][] : []), ["faq", "Questions"],
+    ["ready", "Before you leave"], ["booking", "Booking and cost"], ...(trail ? [["offline", "Offline map and GPX"]] as [string, string][] : []),
+    ["more", "Similar treks, and nearby"], ["faq", "Questions"],
   ];
 
   const jsonLd = {
@@ -260,12 +330,36 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
                     );
                   })}
                 </ol>
+
+                {/* Daylight at each camp, so a day's walk can be timed to it */}
+                {camps.length > 0 && (
+                  <div className="mt-6 rounded-2xl overflow-hidden" style={card}>
+                    <p className="px-4 pt-3.5 pb-2 text-[14px] font-semibold t-text">Daylight at camp in {MONTHS[seasonMonth]}</p>
+                    {/* Camps close together share one sunrise and sunset: say it once */}
+                    {sameSun ? (
+                      <p className="flex items-center gap-3 px-4 py-2.5 text-[13.5px] tabular-nums" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                        <span className="flex-1 min-w-0 t-text-2">At every camp, {camps.map((c) => c.name).join(", ")}</span>
+                        <span className="t-text-2">{clock(camps[0].sun!.rise)} to {clock(camps[0].sun!.set)}</span>
+                        <span className="w-16 text-right t-text-3">{daylen(camps[0].sun!)}</span>
+                      </p>
+                    ) : <ul>
+                      {camps.map((c) => (
+                        <li key={c.name} className="flex items-center gap-3 px-4 py-2.5 text-[13.5px] tabular-nums" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                          <span className="flex-1 min-w-0 truncate font-semibold t-text">{c.name}{c.ele != null && <span className="font-normal t-text-3"> · {fmt(c.ele)} m</span>}</span>
+                          <span className="t-text-2">{clock(c.sun!.rise)} to {clock(c.sun!.set)}</span>
+                          <span className="w-16 text-right t-text-3">{daylen(c.sun!)}</span>
+                        </li>
+                      ))}
+                    </ul>}
+                    <p className="px-4 py-2.5 text-[12px] t-text-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>For the 15th, on a flat horizon. In a valley the sun goes behind the ridges sooner, so plan to reach camp an hour before sunset.</p>
+                  </div>
+                )}
               </Section>
             )}
 
             {/* ── Altitude ── */}
             <Section id="altitude" kicker="Altitude" title={trail ? "Altitude and acclimatisation" : "Altitude"}>
-              {prof && <ElevationChart pts={prof} />}
+              {prof && <TrekElevation pts={prof} bands={bands} />}
               {acc ? (
                 <>
                   <div className="grid grid-cols-3 gap-3 my-5">
@@ -330,6 +424,15 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
                 "Signal is scarce beyond the roadhead. Share your itinerary and your operator's emergency number with someone at home.",
               ] }} />
               <p className="text-[14px] t-text-3">See also <Link href="/adventurepedia/trail-craft" className="font-semibold underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>Trail craft</Link> and <Link href="/adventurepedia/insurance-and-emergencies" className="font-semibold underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>Insurance and emergencies</Link>.</p>
+
+              <h3 className="text-[18px] t-text mt-8 mb-2" style={serif}>Mistakes people make here</h3>
+              <BlockView block={{ list: mistakes }} />
+            </Section>
+
+            {/* ── Before you leave ── */}
+            <Section id="ready" kicker="Checklist" title="Before you leave">
+              <p className="text-[15px] leading-[1.7] t-text-2 mb-4">Tick these off as you sort them; they stay ticked on this device.</p>
+              <TrekChecklist slug={a.slug} items={checklist} />
             </Section>
 
             {/* ── Booking ── */}
@@ -377,6 +480,40 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
               </Section>
             )}
 
+            {/* ── Similar treks, and something else nearby ── */}
+            <Section id="more" kicker="Also consider" title="Similar treks, and more nearby">
+              <div className="grid sm:grid-cols-3 gap-3">
+                {similar.map(({ t }) => (
+                  <Link key={t.slug} href={trekGuideHref(t.slug)} className="group rounded-2xl p-4 transition-colors hover:border-[#ff5100]/50" style={card}>
+                    <span className="block text-[15px] font-semibold t-text leading-snug group-hover:text-[#ff5100]">{t.name}</span>
+                    <span className="block text-[12.5px] t-text-3 mt-1">{t.state} · {t.durationDays} · {t.difficulty}</span>
+                  </Link>
+                ))}
+              </div>
+              <Link href={`/adventurepedia/treks/compare?a=${a.slug}${similar[0] ? `&b=${similar[0].t.slug}` : ""}`} className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-semibold" style={{ color: "var(--accent-ink)" }}>
+                Compare {a.name} with another trek <ArrowRight className="w-4 h-4" />
+              </Link>
+              {nearby.length > 0 && (
+                <>
+                  <h3 className="text-[18px] t-text mt-7 mb-2" style={serif}>Make a week of it</h3>
+                  <p className="text-[14.5px] t-text-2 mb-3">Something different to add on, three days or less (distances in a straight line):</p>
+                  <ul className="space-y-2">
+                    {nearby.map(({ x, km }) => (
+                      <li key={x.slug}>
+                        <Link href={`/experiences/${x.slug}`} className="group flex items-center justify-between gap-3 rounded-2xl px-4 py-3" style={card}>
+                          <span className="min-w-0">
+                            <span className="block text-[14.5px] font-semibold t-text truncate group-hover:text-[#ff5100]">{x.name}</span>
+                            <span className="block text-[12.5px] t-text-3">{x.type} · {x.durationDays}</span>
+                          </span>
+                          <span className="shrink-0 text-[13px] tabular-nums t-text-3">{fmt(km)} km away</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </Section>
+
             {/* ── FAQ ── */}
             <Section id="faq" kicker="FAQ" title="Questions people ask">
               <div className="space-y-2.5">
@@ -390,11 +527,21 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
                   </details>
                 ))}
               </div>
+              {/* Anything else: Compass.AI, already asked about this trek */}
+              <div className="mt-5 flex flex-wrap items-center gap-3">
+                <AskCompassButton prompt={`Tell me about the ${a.name}: is it right for me, and what should I know before I book?`} label={`Ask Compass.AI about ${a.name}`} />
+                <span className="text-[13px] t-text-3">It knows this trek and every other on the site.</span>
+              </div>
             </Section>
 
             <div className="mt-12 rounded-2xl p-5 flex gap-3" style={card}>
               <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 t-text-3" />
-              <p className="text-[13px] leading-[1.6] t-text-3">This guide is built from Trail to Tides&apos; trek data, mapped trails and operator listings, and checked by our team. Conditions change with weather and seasons: your trek leader&apos;s call on the day always comes first.</p>
+              <p className="text-[13px] leading-[1.6] t-text-3">
+                This guide is built from Trail to Tides&apos; trek data, mapped trails and operator listings, and checked by our team.
+                {trail && <> Trail data last rebuilt {new Date(trail.builtAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}.</>}
+                {" "}Conditions change with weather and seasons: your trek leader&apos;s call on the day always comes first.
+                {" "}Spotted something out of date? <Link href="/contact" className="font-semibold underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>Tell us</Link> and we&apos;ll check it.
+              </p>
             </div>
           </article>
 
@@ -429,46 +576,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
         </div>
       </main>
       <Footer />
+      <ChatBubble />
     </div>
-  );
-}
-
-/** Elevation along the trail, with the start, high point and finish labelled */
-function ElevationChart({ pts }: { pts: [number, number][] }) {
-  const W = 1000, H = 220, PAD = { l: 44, r: 12, t: 24, b: 24 };
-  const maxKm = pts[pts.length - 1][0] || 1;
-  const eles = pts.map((p) => p[1]);
-  const lo = Math.floor((Math.min(...eles) - 100) / 500) * 500;
-  const hi = Math.ceil((Math.max(...eles) + 100) / 500) * 500;
-  const x = (km: number) => PAD.l + (km / maxKm) * (W - PAD.l - PAD.r);
-  const y = (e: number) => PAD.t + (1 - (e - lo) / (hi - lo)) * (H - PAD.t - PAD.b);
-  const line = pts.map(([k, e], i) => `${i ? "L" : "M"}${x(k).toFixed(1)},${y(e).toFixed(1)}`).join("");
-  const top = pts.reduce((m, p) => (p[1] > m[1] ? p : m), pts[0]);
-  const ticks: number[] = [];
-  for (let e = lo; e <= hi; e += hi - lo > 2000 ? 1000 : 500) ticks.push(e);
-  return (
-    <figure className="rounded-2xl p-3 sm:p-4" style={card}>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" role="img" aria-label={`Elevation from ${fmt(eles[0])} m, highest ${fmt(top[1])} m, over ${maxKm.toFixed(0)} km`}>
-        <defs>
-          <linearGradient id="tg-elev" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0" stopColor="#ff5100" stopOpacity="0.32" />
-            <stop offset="1" stopColor="#ff5100" stopOpacity="0.02" />
-          </linearGradient>
-        </defs>
-        {ticks.map((e) => (
-          <g key={e}>
-            <line x1={PAD.l} x2={W - PAD.r} y1={y(e)} y2={y(e)} stroke="var(--border-subtle)" strokeDasharray="3 4" />
-            <text x={PAD.l - 6} y={y(e) + 4} textAnchor="end" fontSize="13" fill="var(--text-tertiary)">{fmt(e)}</text>
-          </g>
-        ))}
-        <path d={`${line}L${x(maxKm)},${H - PAD.b}L${x(0)},${H - PAD.b}Z`} fill="url(#tg-elev)" />
-        <path d={line} fill="none" stroke="#ff5100" strokeWidth="2.5" strokeLinejoin="round" />
-        <circle cx={x(top[0])} cy={y(top[1])} r="5" fill="#ff5100" stroke="var(--bg-surface)" strokeWidth="2" />
-        {/* Keep the label inside the chart when the high point sits at either end */}
-        <text x={x(top[0])} y={y(top[1]) - 10} textAnchor={x(top[0]) > W - 80 ? "end" : x(top[0]) < PAD.l + 60 ? "start" : "middle"} fontSize="14" fontWeight="700" fill="var(--text-primary)">{fmt(top[1])} m</text>
-        <text x={PAD.l} y={H - 6} fontSize="13" fill="var(--text-tertiary)">0 km</text>
-        <text x={W - PAD.r} y={H - 6} textAnchor="end" fontSize="13" fill="var(--text-tertiary)">{maxKm.toFixed(0)} km</text>
-      </svg>
-    </figure>
   );
 }

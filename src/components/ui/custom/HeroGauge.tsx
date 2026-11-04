@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { HERO_SLIDES, HERO_SLIDE_EVENT, HERO_GOTO_EVENT, SLIDE_DURATION, type HeroMark } from "./HeroSlider";
 
@@ -20,7 +21,7 @@ const depthTicks = [-20, -40];
 // Photos at the same height (the surf and the kayak at sea level) sit side by side on the scale
 const STOPS = HERO_SLIDES.map((s, i) => {
   const same = HERO_SLIDES.filter((x) => x.mark.metres === s.mark.metres);
-  return { ...s.mark, x: 10 - (same.length - 1) * 5 + same.findIndex((x) => x.src === s.src) * 10, key: s.src, i };
+  return { ...s.mark, src: s.src, x: 10 - (same.length - 1) * 5 + same.findIndex((x) => x.src === s.src) * 10, key: s.src, i };
 });
 const RING = 2 * Math.PI * 9;
 
@@ -64,8 +65,10 @@ export default function HeroGauge({ start = 0 }: { start?: number }) {
     <div className="hg absolute inset-y-0 left-0 w-[240px] hidden xl:block" aria-label="Where in India to do what the photo shows, and how high">
       {/* The scale: trail orange fading to tide teal, with its ticks */}
       <div className="absolute inset-y-0 left-[10px] w-px hg-track" aria-hidden />
+      <div className="hg-fill" aria-hidden data-deep={below || undefined}
+        style={{ top: `${Math.min(pos, SEA * 100)}%`, height: `${Math.abs(pos - SEA * 100)}%` }} />
       {ticks.map((m) => (
-        <span key={m} className="hg-tick" style={{ top: `${at(m) * 100}%`, ...clear(at(m)) }} aria-hidden>{m.toLocaleString("en-IN")}</span>
+        <span key={m} className="hg-tick" style={{ top: `${at(m) * 100}%`, ...clear(at(m)) }} aria-hidden>{m.toLocaleString("en-IN")} m</span>
       ))}
       {/* Every photo, as a stop at its height: hover to see it, click to show it */}
       {STOPS.map((st) => {
@@ -76,7 +79,10 @@ export default function HeroGauge({ start = 0 }: { start?: number }) {
             aria-label={`Show the ${st.name} photo, ${fmt(st.metres)}`}
             style={{ top: `${at(st.metres) * 100}%`, left: st.x, "--c": st.metres <= 0 ? "#5fe0d4" : "#ff9a66" } as React.CSSProperties}>
             <i />
-            <span className="hg-tip">{st.name}<b>{fmt(st.metres)}</b></span>
+            <span className="hg-tip">
+              <Image src={st.src} alt="" width={104} height={72} sizes="52px" />
+              <span>{st.name}<b>{fmt(st.metres)}</b></span>
+            </span>
           </button>
         );
       })}
@@ -103,38 +109,49 @@ export default function HeroGauge({ start = 0 }: { start?: number }) {
         /* Short screens: the headline needs the room, so the gauge steps aside */
         @media (max-height: 720px) { .hg { display: none !important; } }
         .hg-track { background: linear-gradient(to bottom, rgba(255,125,71,0.55), rgba(255,125,71,0.2) 70%, rgba(95,224,212,0.5) ${SEA * 100}%, rgba(95,224,212,0.25)); }
+        .hg-fill { position: absolute; left: 9px; width: 3px; border-radius: 3px; pointer-events: none;
+                   background: linear-gradient(to bottom, #ff7d47, rgba(255,125,71,0.35)); box-shadow: 0 0 12px rgba(255,125,71,0.45);
+                   transition: top 1.2s cubic-bezier(0.65, 0, 0.35, 1), height 1.2s cubic-bezier(0.65, 0, 0.35, 1); }
+        .hg-fill[data-deep] { background: linear-gradient(to bottom, rgba(95,224,212,0.35), #5fe0d4); box-shadow: 0 0 12px rgba(95,224,212,0.45); }
         .hg-tick { position: absolute; left: 0; transform: translateY(-50%); display: flex; align-items: center; gap: 8px;
-                   font: 500 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: rgba(255,255,255,0.38); letter-spacing: 0.04em; transition: opacity .5s; }
-        .hg-tick::before { content: ""; width: 7px; height: 1px; margin-left: 7px; background: rgba(255,255,255,0.35); }
+                   font: 500 10.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: rgba(255,255,255,0.55); text-shadow: 0 1px 6px rgba(0,0,0,0.6); letter-spacing: 0.04em; transition: opacity .5s; }
+        .hg-tick::before { content: ""; width: 7px; height: 1px; margin-left: 7px; background: rgba(255,255,255,0.45); }
         .hg-tick-deep { color: rgba(95,224,212,0.5); }
         .hg-tick-deep::before { background: rgba(95,224,212,0.45); }
         .hg-stop { position: absolute; width: 20px; height: 20px; margin: -10px 0 0 -10px; display: grid; place-items: center; cursor: pointer; z-index: 2; }
-        .hg-stop i { width: 6px; height: 6px; border-radius: 50%; background: var(--c); opacity: 0.45; transition: opacity .2s, transform .2s; }
+        .hg-stop i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); opacity: 0.75; box-shadow: 0 0 0 2px rgba(5,8,12,0.5); transition: opacity .2s, transform .2s; }
         .hg-stop:hover i, .hg-stop:focus-visible i { opacity: 1; transform: scale(1.5); }
         .hg-stop[data-on] { pointer-events: none; }
         .hg-stop[data-on] i { opacity: 0; }
         .hg-stop:focus-visible { outline: none; }
-        .hg-tip { position: absolute; left: 22px; top: 50%; transform: translate(-4px, -50%); white-space: nowrap; pointer-events: none; opacity: 0;
-                  padding: 4px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 600; color: #fff; background: rgba(5,8,12,0.78);
-                  border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(6px); transition: opacity .2s, transform .2s; }
-        .hg-tip b { margin-left: 6px; font: 600 10.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--c); }
+        .hg-tip { position: absolute; left: 24px; top: 50%; transform: translate(-4px, -50%); white-space: nowrap; pointer-events: none; opacity: 0;
+                  display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px; border-radius: 10px; font-size: 12px; font-weight: 600; color: #fff;
+                  background: rgba(5,8,12,0.8); border: 1px solid rgba(255,255,255,0.14); backdrop-filter: blur(8px); transition: opacity .2s, transform .2s; z-index: 3; }
+        .hg-tip img { width: 52px; height: 36px; object-fit: cover; border-radius: 7px; }
+        .hg-tip > span { display: flex; flex-direction: column; gap: 3px; }
+        .hg-tip b { font: 600 10.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--c); }
         .hg-stop:hover .hg-tip, .hg-stop:focus-visible .hg-tip { opacity: 1; transform: translate(0, -50%); }
         .hg-sea { position: absolute; left: 0; right: 40px; transform: translateY(-50%); display: flex; align-items: center; gap: 8px;
-                  font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(95,224,212,0.75); transition: opacity .5s; }
+                  font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(95,224,212,0.85); text-shadow: 0 1px 6px rgba(0,0,0,0.6); transition: opacity .5s; }
         .hg-sea i { display: block; width: 22px; height: 0; border-top: 1px dashed rgba(95,224,212,0.7); }
         .hg-mark { position: absolute; left: 0; right: 0; display: flex; align-items: center; transform: translateY(-50%);
                    transition: top 1.2s cubic-bezier(0.65, 0, 0.35, 1); }
-        .hg-dot { position: relative; flex-shrink: 0; width: 11px; height: 11px; margin-left: 5px; border-radius: 50%; background: var(--c);
+        .hg-dot { position: relative; flex-shrink: 0; width: 12px; height: 12px; margin-left: 4.5px; border-radius: 50%; background: var(--c);
                   box-shadow: 0 0 0 3px rgba(5,8,12,0.55), 0 0 16px var(--c); transition: background .6s; }
-        .hg-ring { position: absolute; left: -6.5px; top: -6.5px; width: 24px; height: 24px; transform: rotate(-90deg); overflow: visible; }
+        .hg-ring { position: absolute; left: -6px; top: -6px; width: 24px; height: 24px; transform: rotate(-90deg); overflow: visible; }
         .hg-ring circle { fill: none; stroke: var(--c); stroke-width: 1.5; stroke-linecap: round; stroke-dashoffset: ${RING};
                           animation-name: hgFill; animation-timing-function: linear; animation-fill-mode: forwards; opacity: 0.85; }
         @keyframes hgFill { to { stroke-dashoffset: 0; } }
-        .hg-lead { width: 22px; height: 1px; margin: 0 8px; background: linear-gradient(to right, var(--c), transparent); transition: background .6s; }
-        .hg-eyebrow { font: 600 9.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
-        .hg-label { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 4px 0; color: #fff; text-decoration: none; }
-        .hg-name { font-size: 13px; font-weight: 600; line-height: 1.2; text-shadow: 0 1px 10px rgba(0,0,0,0.6); animation: hgIn .6s ease both; }
-        .hg-m { font: 600 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--c); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; transition: color .6s; }
+        .hg-lead { width: 18px; height: 1px; margin: 0 6px 0 8px; background: linear-gradient(to right, var(--c), transparent); transition: background .6s; }
+        .hg-eyebrow { font: 600 9.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+        .hg-label { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 8px 12px 9px; border-radius: 12px; color: #fff; text-decoration: none;
+                    background: rgba(5,8,12,0.42); border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+                    box-shadow: 0 8px 24px rgba(0,0,0,0.25); transition: background .2s, border-color .2s; }
+        .hg-label:hover { background: rgba(5,8,12,0.6); border-color: color-mix(in srgb, var(--c) 55%, transparent); }
+        .hg-label::after { content: "Explore →"; font: 600 10.5px/1 system-ui, sans-serif; color: rgba(255,255,255,0.55); margin-top: 2px; transition: color .2s; }
+        .hg-label:hover::after { color: var(--c); }
+        .hg-name { font-size: 15px; font-weight: 600; line-height: 1.2; text-shadow: 0 1px 10px rgba(0,0,0,0.6); animation: hgIn .6s ease both; }
+        .hg-m { font: 600 13px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--c); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; transition: color .6s; }
         .hg-label:hover .hg-name { text-decoration: underline; text-underline-offset: 3px; }
         .hg-label:focus-visible { outline: 2px solid #ff7d47; outline-offset: 4px; border-radius: 4px; }
         @keyframes hgIn { from { opacity: 0; transform: translateX(-4px); } to { opacity: 1; transform: none; } }

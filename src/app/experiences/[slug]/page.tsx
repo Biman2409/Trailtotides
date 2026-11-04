@@ -39,6 +39,7 @@ import ScreenOnly from "@/components/ui/custom/ScreenOnly";
 import { getTrail } from "@/lib/trails";
 import NearbyAdventuresMap from "./NearbyAdventuresMap";
 import BookingSidebarCard from "./BookingSidebarCard";
+import StickySidebar from "./StickySidebar";
 import { haversineKm } from "@/lib/geo";
 import { destinationFor, lowestPrice } from "@/lib/destinations";
 import { SITE_URL, absoluteUrl, routeLabel, experienceTitle, experienceDescription, experienceFaq, faqStructuredData } from "@/lib/seo";
@@ -602,7 +603,7 @@ export default async function ExperiencePage({ params }: Props) {
             </div>
 
             {/* ── RIGHT SIDEBAR — desktop-only: booking and the nearby map ── */}
-            <div className="hidden lg:block space-y-3 lg:sticky lg:top-28 lg:self-start">
+            <StickySidebar className="hidden lg:block space-y-3 lg:sticky lg:self-start">
 
               {/* Book Now */}
               <BookingSidebarCard
@@ -624,7 +625,7 @@ export default async function ExperiencePage({ params }: Props) {
                 </ScreenOnly>
               )}
 
-            </div>
+            </StickySidebar>
           </div>
         </FadeInSection>
 

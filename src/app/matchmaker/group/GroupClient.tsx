@@ -371,7 +371,7 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
     return () => { clearInterval(t); document.removeEventListener("visibilitychange", refresh); };
   }, [router]);
 
-  const picks = useGroupPicks(group.code);
+  const picks = useGroupPicks(group.code, viewer.id);
 
   const isNew = (joinedAt: string, userId: string) => !!lastSeen && userId !== viewer.id && joinedAt > lastSeen;
   const newcomers = group.members.filter((m) => isNew(m.joinedAt, m.userId)).map((m) => m.name);
@@ -383,7 +383,8 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
 
   const leave = () => {
     const heir = group.members.find((m) => m.userId !== viewer.id);
-    const msg = isOwner && heir ? `Leave ${group.name}? ${heir.name} will become its owner.` : `Leave ${group.name}?`;
+    const msg = !heir ? `Leave ${group.name}? You're its only member, so the group and its wishlist will be deleted.`
+      : isOwner ? `Leave ${group.name}? ${heir.name} will become its owner.` : `Leave ${group.name}?`;
     if (!window.confirm(msg)) return;
     return ctx.run(async () => {
       await api(`/api/match-groups/${group.code}/me`, "DELETE");
@@ -410,14 +411,28 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
     });
   };
 
+  async function copy() {
+    try { await navigator.clipboard.writeText(inviteUrl); setCopied("copied"); } catch { setCopied("failed"); }
+    setTimeout(() => setCopied(null), 2500);
+  }
   async function share() {
     const text = `Join "${group.name}" on Trail to Tides: sign in, take the 2-minute quick match, and we'll see which adventures we can all do together.`;
     if (navigator.share) {
       try { await navigator.share({ title: "Group Match", text, url: inviteUrl }); return; } catch { /* dismissed — fall through to copy */ }
     }
-    try { await navigator.clipboard.writeText(inviteUrl); setCopied("copied"); } catch { setCopied("failed"); }
-    setTimeout(() => setCopied(null), 2500);
+    copy();
   }
+
+  const [renaming, setRenaming] = useState<string | null>(null);
+  const rename = () => {
+    const next = renaming?.trim();
+    if (!next || next === group.name) { setRenaming(null); return; }
+    return ctx.run(async () => {
+      await api(`/api/match-groups/${group.code}`, "PATCH", { name: next });
+      setRenaming(null);
+      router.refresh();
+    });
+  };
 
   return (
     <Shell title={group.name} step={group.members.length < 2 ? 2 : 3} subtitle="A private group: only its members can see anyone's levels. Only the eight capability levels are shared — never health answers.">
@@ -456,7 +471,12 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
           </ul>
 
           <div className="mt-5 pt-5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-            {!ctx.ready ? <Skeleton /> : outdated ? (
+            {!ctx.ready ? <Skeleton /> : !ace ? (
+              <p className="flex items-center gap-2 text-sm" style={{ color: "var(--text-secondary)" }}>
+                <Check className="w-4 h-4 text-emerald-400" /> You&apos;re in this group.
+                <button type="button" onClick={ctx.quizThenReturn} className="font-semibold text-[#ff7d47] hover:underline">Retake the quick match</button> to update your levels.
+              </p>
+            ) : outdated ? (
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <TextInput value={ctx.name} onChange={ctx.setName} placeholder="Your first name" label="Your name in this group" max={24} />
                 <PrimaryButton onClick={updateLevels} disabled={ctx.busy}><RefreshCw className="w-4 h-4" /> Update my levels</PrimaryButton>
@@ -483,19 +503,26 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
               ? `The group is full (${MAX_GROUP} people).`
               : "Send this link. Each friend signs in, takes the 2-minute quick match, and joins. They appear here as soon as they do."}
           </p>
+          {group.members.length < MAX_GROUP && (
+            <div className="mt-4 flex items-center gap-1.5 rounded-xl pl-3 pr-1 py-1" style={{ background: "var(--bg-card-hover)", border: "1px solid var(--border-default)" }}>
+              <input readOnly value={inviteUrl} onFocus={(e) => e.currentTarget.select()} aria-label="Invite link"
+                className="flex-1 min-w-0 bg-transparent text-xs outline-none" style={{ color: "var(--text-secondary)" }} />
+              <button type="button" onClick={copy} className="shrink-0 inline-flex items-center gap-1 h-8 px-2.5 rounded-lg text-xs font-semibold transition-colors hover:bg-[var(--bg-card)]" style={{ color: "var(--text-primary)" }}>
+                {copied === "copied" ? <><Check className="w-3.5 h-3.5 text-emerald-400" /> Copied</> : <><Link2 className="w-3.5 h-3.5" /> Copy</>}
+              </button>
+            </div>
+          )}
           <button
             onClick={share}
             disabled={group.members.length >= MAX_GROUP}
-            className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[var(--bg-card-hover)]"
+            className="mt-2 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[var(--bg-card-hover)]"
             style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
           >
-            {copied === "copied" ? <><Check className="w-4 h-4 text-emerald-400" /> Link copied</> : <><Share2 className="w-4 h-4" /> Share the invite link</>}
+            <Share2 className="w-4 h-4" /> Share the invite link
           </button>
           {copied === "failed" && (
             <div className="mt-3">
-              <p className="text-xs mb-1.5" style={{ color: "var(--text-tertiary)" }}>Couldn&apos;t copy automatically — copy it from here:</p>
-              <input readOnly value={inviteUrl} onFocus={(e) => e.currentTarget.select()}
-                className="w-full px-3 py-2 rounded-lg text-xs" style={{ background: "var(--bg-card-hover)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }} />
+              <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>Couldn&apos;t copy automatically. Select the link above and copy it.</p>
             </div>
           )}
           <p className="flex items-start gap-2 text-[11px] mt-4" style={{ color: "var(--text-tertiary)" }}>
@@ -503,9 +530,20 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
             The link lets people join; it doesn&apos;t show anyone&apos;s levels until they do.
           </p>
           {isOwner && (
-            <button onClick={resetLink} disabled={ctx.busy} className="mt-3 text-[11px] font-semibold text-[#ff7d47] hover:underline disabled:opacity-40">
-              Reset invite link
-            </button>
+            <div className="mt-4 pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+              {renaming !== null ? (
+                <form className="flex items-center gap-2" onSubmit={(e) => { e.preventDefault(); rename(); }}>
+                  <TextInput value={renaming} onChange={setRenaming} placeholder="Group name" label="New group name" max={40} full />
+                  <button type="submit" disabled={ctx.busy} className="shrink-0 h-10 px-3 rounded-xl text-xs font-semibold text-white bg-[#ff5100] disabled:opacity-50">Save</button>
+                  <IconButton onClick={() => setRenaming(null)} label="Cancel renaming"><X className="w-3.5 h-3.5" /></IconButton>
+                </form>
+              ) : (
+                <p className="flex flex-wrap gap-x-4 gap-y-1 text-[11.5px] font-semibold">
+                  <button type="button" onClick={() => setRenaming(group.name)} className="text-[#ff7d47] hover:underline">Rename group</button>
+                  <button type="button" onClick={resetLink} disabled={ctx.busy} className="text-[#ff7d47] hover:underline disabled:opacity-40">Reset invite link</button>
+                </p>
+              )}
+            </div>
           )}
         </aside>
       </div>
@@ -736,7 +774,7 @@ function GroupCapability({ members, meIndex }: { members: GroupMember[]; meIndex
 type Picks = ReturnType<typeof useGroupPicks>;
 
 /** The group's shared wishlist: load it, keep it fresh while the page is open, and change it */
-function useGroupPicks(code: string) {
+function useGroupPicks(code: string, viewerId: string) {
   const [list, setList] = useState<GroupPick[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const url = `/api/match-groups/${code}/picks`;
@@ -754,19 +792,29 @@ function useGroupPicks(code: string) {
   }, [url]);
 
   const slugs = useMemo(() => new Set((list ?? []).map((p) => p.slug)), [list]);
-  const change = (method: string, body?: unknown, query = "") => {
+  // Each change shows straight away, then settles on the server's list; if it fails, the list
+  // goes back to how it was and says why
+  const change = (method: string, guess: (l: GroupPick[]) => GroupPick[], body?: unknown, query = "") => {
     setError(null);
+    const before = list;
+    if (before) setList(guess(before));
     return api(url + query, method, body)
       .then((d: { picks: GroupPick[] }) => setList(d.picks))
-      .catch((e) => setError(e instanceof Error ? e.message : String(e)));
+      .catch((e) => { setList(before); setError(e instanceof Error ? e.message : String(e)); });
+  };
+  const withVote = (p: GroupPick, vote: 1 | -1 | 0): GroupPick => {
+    const votes = { ...p.votes };
+    if (vote === 0) delete votes[viewerId]; else votes[viewerId] = vote;
+    return { ...p, votes };
   };
   return {
     list,
     error,
     slugs,
-    add: (slug: string) => { change("POST", { slug }); },
-    vote: (slug: string, vote: 1 | -1 | 0) => { change("PATCH", { slug, vote }); },
-    remove: (slug: string) => { change("DELETE", undefined, `?slug=${encodeURIComponent(slug)}`); },
+    add: (slug: string) => { change("POST", (l) => l.some((p) => p.slug === slug) ? l
+      : [...l, { slug, addedBy: viewerId, createdAt: new Date().toISOString(), votes: { [viewerId]: 1 } }], { slug }); },
+    vote: (slug: string, vote: 1 | -1 | 0) => { change("PATCH", (l) => l.map((p) => (p.slug === slug ? withVote(p, vote) : p)), { slug, vote }); },
+    remove: (slug: string) => { change("DELETE", (l) => l.filter((p) => p.slug !== slug), undefined, `?slug=${encodeURIComponent(slug)}`); },
   };
 }
 
@@ -949,7 +997,10 @@ function GroupWishlist({ group, viewerId, members, picks }: { group: StoredGroup
                   <VoteButton on={checking === r.p.slug} onClick={() => check(checking === r.p.slug ? null : r.p.slug, true)} tone="#60a5fa"><Users className="w-3.5 h-3.5" /> Compare</VoteButton>
                   <VoteButton on={r.mine === 1} onClick={() => picks.vote(r.p.slug, r.mine === 1 ? 0 : 1)} tone="#10b981"><ThumbsUp className="w-3.5 h-3.5" /> I&apos;m in</VoteButton>
                   <VoteButton on={r.mine === -1} onClick={() => picks.vote(r.p.slug, r.mine === -1 ? 0 : -1)} tone="#f87171"><ThumbsDown className="w-3.5 h-3.5" /> Not for me</VoteButton>
-                  {canRemove && <IconButton onClick={() => picks.remove(r.p.slug)} label={`Remove ${r.adventure.name}`}><X className="w-3.5 h-3.5" /></IconButton>}
+                  {canRemove && <IconButton onClick={() => {
+                    const others = r.yes.length + r.no.length - (r.mine ? 1 : 0);
+                    if (others === 0 || window.confirm(`Remove ${r.adventure.name} from the wishlist? ${others} other vote${others === 1 ? "" : "s"} on it will go too.`)) picks.remove(r.p.slug);
+                  }} label={`Remove ${r.adventure.name}`}><X className="w-3.5 h-3.5" /></IconButton>}
                 </span>
               </li>
             );
