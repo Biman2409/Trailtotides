@@ -107,7 +107,7 @@ export default function HeroGauge({ start = 0 }: { start?: number }) {
 
       <style>{`
         /* Short screens: the headline needs the room, so the gauge steps aside */
-        @media (max-height: 720px) { .hg { display: none !important; } }
+        @media (max-height: 560px) { .hg { display: none !important; } }
         .hg-track { background: linear-gradient(to bottom, rgba(255,125,71,0.55), rgba(255,125,71,0.2) 70%, rgba(95,224,212,0.5) ${SEA * 100}%, rgba(95,224,212,0.25)); }
         .hg-fill { position: absolute; left: 9px; width: 3px; border-radius: 3px; pointer-events: none;
                    background: linear-gradient(to bottom, #ff7d47, rgba(255,125,71,0.35)); box-shadow: 0 0 12px rgba(255,125,71,0.45);
