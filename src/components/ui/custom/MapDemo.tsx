@@ -86,7 +86,11 @@ const GENRE_IMAGE: Record<DemoGenre, string> = {
 };
 const sampleDifficulty = (name: string) => DIFFS[[...name].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % 4];
 
-const W = PROJ.W, H = PROJ.H;
+// The demo's frame: as wide as the shared projection but shorter, trimming the empty sea and sky
+// above and below India (it spans y ≈ 44–436 of the projection's 480), so the section sits lower
+const W = PROJ.W, H = 410;
+/** India's middle in projection units, where the home view centres */
+const INDIA_MID_Y = PROJ.offY + ((PROJ.maxLat - PROJ.minLat) * PROJ.scale) / 2;
 const toXY = (lng: number, lat: number) => ({
   x: (lng - PROJ.minLng) * PROJ.scale + PROJ.offX,
   y: (PROJ.maxLat - lat) * PROJ.scale + PROJ.offY,
@@ -99,7 +103,7 @@ const kmBetween = (a: { lat: number; lng: number }, b: { lat: number; lng: numbe
 };
 
 type Camera = { x: number; y: number; scale: number };
-const HOME: Camera = { x: W / 2, y: H / 2, scale: 1 };
+const HOME: Camera = { x: W / 2, y: INDIA_MID_Y, scale: 1 };
 const HIMALAYAS: Camera = { ...toXY(78.2, 31.6), scale: 2.6 };
 // "Near you" uses a stand-in location so the preview never asks for permission: Delhi, whose
 // ring takes in real listings (Rishikesh rafting at ~200 km, then the Uttarakhand treks)
