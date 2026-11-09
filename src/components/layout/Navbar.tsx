@@ -99,14 +99,11 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Escape closes search; Ctrl/⌘ K opens it from anywhere
+  // Escape closes search
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
         setSearchOpen(false);
-      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setSearchOpen(true);
       }
     }
     document.addEventListener("keydown", handleKeyDown);
@@ -167,8 +164,6 @@ export default function Navbar() {
     ro.observe(wrap);
     return () => ro.disconnect();
   }, [pathname]);
-  const [isMac, setIsMac] = useState(false);
-  useEffect(() => { setIsMac(/Mac|iPhone|iPad/.test(navigator.platform)); }, []);
 
   return (
     <nav
@@ -273,7 +268,6 @@ export default function Navbar() {
               <span className="text-xs whitespace-nowrap font-medium" style={{ color: "var(--text-tertiary)" }}>
                 Search
               </span>
-              <kbd className="ml-1 text-[10px] font-semibold px-1.5 py-px rounded-md" style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-default)" }}>{isMac ? "⌘K" : "Ctrl K"}</kbd>
             </button>
 
             {/* ── Search icon — where the search bar isn't shown: below xl, or while the navbar is transparent ── */}
