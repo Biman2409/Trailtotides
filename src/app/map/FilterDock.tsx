@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Shapes, MapPin, LocateFixed, Loader2, Check, Search, X, Navigation } from "lucide-react";
+import { Shapes, MapPin, LocateFixed, Loader2, Check, Search, X, Navigation, Minus, Plus, Building2 } from "lucide-react";
 import { adventures, type Adventure } from "@/lib/data";
 import { toggleSelection } from "@/lib/filterOptions";
 import { STATE_COUNTS, CategoryList, categoryLabel, type AdventureFilterState } from "@/components/ui/custom/AdventureFilters";
@@ -13,17 +13,28 @@ import { STATE_COUNTS, CategoryList, categoryLabel, type AdventureFilterState } 
 type Menu = "type" | "where" | "near" | null;
 type Place = { place_id: number; display_name: string; lat: string; lon: string };
 
-export const RADII = [100, 250, 500] as const;
+// Near me's radius stops: fine steps close in, wider ones further out (km)
+export const RADII = [50, 100, 150, 200, 250, 300, 400, 500, 600, 800, 1000, 1250, 1500, 2000] as const;
+// Quick picks for "From": the cities most trips start from
+const CITIES: [string, number, number][] = [
+  ["Delhi", 28.6139, 77.209], ["Mumbai", 19.076, 72.8777], ["Bengaluru", 12.9716, 77.5946], ["Kolkata", 22.5726, 88.3639],
+  ["Chennai", 13.0827, 80.2707], ["Hyderabad", 17.385, 78.4867], ["Pune", 18.5204, 73.8567], ["Chandigarh", 30.7333, 76.7794],
+  ["Dehradun", 30.3165, 78.0322], ["Ahmedabad", 23.0225, 72.5714],
+];
+type Near = { lat: number; lng: number; name: string | null };
 const MAX_STATE = STATE_COUNTS[0]?.[1] ?? 1;
 
 export default function FilterDock({
   f,
   set,
-  nearMe,
+  near,
   nearLoading,
   radius,
-  onNearMe,
+  onLocate,
+  onNearCity,
+  onNearOff,
   onRadius,
+  countWithin,
   onPlace,
   onAdventure,
   trailing,
@@ -31,12 +42,19 @@ export default function FilterDock({
 }: {
   f: AdventureFilterState;
   set: (patch: Partial<AdventureFilterState>) => void;
-  nearMe: boolean;
+  /** Near me's centre (your location, or a city), or null when Near me is off */
+  near: Near | null;
   nearLoading: boolean;
   /** km, or null for no limit */
   radius: number | null;
-  onNearMe: () => void;
+  /** Centre Near me on where you are */
+  onLocate: () => void;
+  /** Centre Near me on a city */
+  onNearCity: (lat: number, lng: number, name: string) => void;
+  onNearOff: () => void;
   onRadius: (km: number | null) => void;
+  /** How many adventures match within km of the centre (null: any distance) */
+  countWithin: (km: number | null) => number;
   onPlace: (lat: number, lng: number, name: string) => void;
   onAdventure: (a: Adventure) => void;
   /** The Filters button, so it sits at the end of the same row */
@@ -61,7 +79,7 @@ export default function FilterDock({
 
   const typeLabel = categoryLabel("type", f);
   const whereLabel = categoryLabel("region", f);
-  const nearLabel = nearMe ? (radius ? `${radius} km` : "Near me") : "Near me";
+  const nearLabel = near ? `${near.name ?? "Near me"} · ${radius ? `${radius} km` : "any"}` : "Near me";
 
   return (
     <div ref={wrapRef} className={`relative ${floating ? "tm-dock-float" : ""}`}>
@@ -71,9 +89,10 @@ export default function FilterDock({
         <DockPill
           icon={nearLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LocateFixed className="w-3.5 h-3.5" />}
           label={nearLabel}
-          on={nearMe}
+          on={!!near}
           open={open === "near"}
-          onClick={() => { if (!nearMe) onNearMe(); toggle("near"); }}
+          // Your location is the default centre: asked for as the menu opens
+          onClick={() => { if (!near && !nearLoading && open !== "near") onLocate(); toggle("near"); }}
           tone="sky"
         />
         {trailing && <div className="flex items-center gap-1.5">{trailing}</div>}
@@ -83,7 +102,10 @@ export default function FilterDock({
         <div className="tm-menu absolute left-0 right-0 top-full mt-2 z-[1100]" role="dialog" aria-label={open === "type" ? "Adventure type" : open === "where" ? "Region" : "Near me"}>
           {open === "type" && <TypeMenu f={f} set={set} />}
           {open === "where" && <WhereMenu f={f} set={set} onPlace={(...a) => { onPlace(...a); setOpen(null); }} onAdventure={(a) => { onAdventure(a); setOpen(null); }} />}
-          {open === "near" && <NearMenu nearMe={nearMe} loading={nearLoading} radius={radius} onRadius={onRadius} onToggle={() => { onNearMe(); if (nearMe) setOpen(null); }} />}
+          {open === "near" && (
+            <NearMenu near={near} loading={nearLoading} radius={radius} onRadius={onRadius} countWithin={countWithin}
+              onLocate={onLocate} onCity={onNearCity} onOff={() => { onNearOff(); setOpen(null); }} />
+          )}
         </div>
       )}
     </div>
@@ -238,29 +260,99 @@ function Group({ title, action, children }: { title: string; action?: React.Reac
   );
 }
 
-/* ── Near me: a radius, drawn on the map as a ring ── */
+/* ── Near me: from your location or a city, within a radius drawn on the map as a ring ── */
 
-function NearMenu({ nearMe, loading, radius, onRadius, onToggle }: {
-  nearMe: boolean; loading: boolean; radius: number | null; onRadius: (km: number | null) => void; onToggle: () => void;
+function NearMenu({ near, loading, radius, onRadius, countWithin, onLocate, onCity, onOff }: {
+  near: Near | null; loading: boolean; radius: number | null; onRadius: (km: number | null) => void;
+  countWithin: (km: number | null) => number; onLocate: () => void; onCity: (lat: number, lng: number, name: string) => void; onOff: () => void;
 }) {
+  const [q, setQ] = useState("");
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [searching, setSearching] = useState(false);
+  const query = q.trim();
+
+  // Towns and cities in India, from OpenStreetMap, as you type
+  useEffect(() => {
+    if (query.length < 2) { setPlaces([]); return; }
+    const t = setTimeout(() => {
+      setSearching(true);
+      fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&countrycodes=in&addressdetails=0&featuretype=settlement`, { headers: { "Accept-Language": "en" } })
+        .then((r) => r.json()).then((d: Place[]) => setPlaces(d)).catch(() => setPlaces([])).finally(() => setSearching(false));
+    }, 400);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  const pick = (lat: number, lng: number, name: string) => { onCity(lat, lng, name); setQ(""); setPlaces([]); };
+  const quick = CITIES.filter(([n]) => !query || n.toLowerCase().includes(query.toLowerCase()));
+
+  // The slider moves through RADII; Any distance sits past the last stop
+  const found = radius == null ? -1 : RADII.findIndex((r) => r >= radius);
+  const idx = radius == null ? RADII.length : found < 0 ? RADII.length - 1 : found;
+  const setIdx = (i: number) => onRadius(i >= RADII.length ? null : RADII[Math.max(0, Math.min(RADII.length - 1, i))]);
+  const n = near ? countWithin(radius) : null;
+  const fromMe = !!near && near.name === null;
+
   return (
-    <div className="p-3">
-      <p className="tm-label">How far will you go?</p>
-      <div className="grid grid-cols-4 gap-1.5">
-        {[...RADII, null].map((r) => (
-          <button key={r ?? "any"} type="button" disabled={!nearMe} aria-pressed={radius === r} onClick={() => onRadius(r)}
-            className="tm-radius" data-on={(nearMe && radius === r) || undefined}>
-            {r ? <><b>{r}</b><span>km</span></> : <><b>Any</b><span>sorted</span></>}
-          </button>
-        ))}
+    <div className="p-3 space-y-3.5">
+      {/* From: your location by default, or any city */}
+      <div>
+        <p className="tm-label">From</p>
+        <button type="button" onClick={onLocate} aria-pressed={fromMe} className="tm-mrow" data-on={fromMe || undefined}>
+          {loading ? <Loader2 className="w-4 h-4 animate-spin text-[var(--tm-sky)] shrink-0" /> : <LocateFixed className="w-4 h-4 text-[var(--tm-sky)] shrink-0" />}
+          <span className="flex-1 text-left text-[12.5px] font-semibold text-white/85">{loading ? "Finding you…" : "My location"}</span>
+          {fromMe && <Check className="w-3.5 h-3.5 text-[var(--tm-sky)]" />}
+        </button>
+        <div className="relative mt-1.5">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40 pointer-events-none" />
+          {searching && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 animate-spin text-white/40" />}
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={near?.name ? `From ${near.name} · search another city` : "Or search a city"}
+            aria-label="Search a city to search near" className="tm-input w-full h-10 pl-8 pr-8 rounded-xl text-[16px] lg:text-[13px]" />
+        </div>
+        {places.length > 0 ? (
+          <div className="mt-1 space-y-0.5">
+            {places.map((p) => {
+              const name = p.display_name.split(",")[0];
+              return (
+                <button key={p.place_id} type="button" onClick={() => pick(parseFloat(p.lat), parseFloat(p.lon), name)} className="tm-mrow">
+                  <Building2 className="w-4 h-4 text-white/40 shrink-0" />
+                  <span className="text-[12.5px] text-white/75 line-clamp-1 text-left">{p.display_name}</span>
+                </button>
+              );
+            })}
+          </div>
+        ) : quick.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {quick.map(([name, lat, lng]) => (
+              <button key={name} type="button" onClick={() => pick(lat, lng, name)} aria-pressed={near?.name === name}
+                className="tm-near-city" data-on={near?.name === name || undefined}>{name}</button>
+            ))}
+          </div>
+        )}
       </div>
-      <p className="mt-2.5 text-[11px] text-white/45 leading-snug">
-        {loading ? "Finding you…" : nearMe
-          ? radius ? `Showing adventures within ${radius} km, nearest first.` : "Showing every adventure, nearest first."
-          : "Allow location to see what's around you."}
+
+      {/* How far: a slider with − and + for single steps, the count updating as it moves */}
+      <div>
+        <div className="flex items-baseline justify-between">
+          <p className="tm-label !mb-0">How far will you go?</p>
+          <p className="text-[13px] font-bold text-white tabular-nums">{radius ? `${radius.toLocaleString("en-IN")} km` : "Any distance"}</p>
+        </div>
+        <div className="mt-2 flex items-center gap-2">
+          <button type="button" onClick={() => setIdx(idx - 1)} disabled={!near || idx <= 0} aria-label="Closer" className="tm-near-step"><Minus className="w-3.5 h-3.5" /></button>
+          <input type="range" min={0} max={RADII.length} step={1} value={idx} disabled={!near}
+            onChange={(e) => setIdx(Number(e.target.value))} aria-label="Search radius"
+            aria-valuetext={radius ? `${radius} kilometres` : "Any distance"} className="tm-near-range flex-1" />
+          <button type="button" onClick={() => setIdx(idx + 1)} disabled={!near || idx >= RADII.length} aria-label="Further" className="tm-near-step"><Plus className="w-3.5 h-3.5" /></button>
+        </div>
+        <div className="mt-1 flex justify-between text-[10px] text-white/40 tabular-nums px-9"><span>50 km</span><span>2,000 km · Any</span></div>
+      </div>
+
+      <p className="text-[11px] text-white/50 leading-snug">
+        {loading ? "Finding you…" : near
+          ? <><b className="text-white/85">{n} {n === 1 ? "adventure" : "adventures"}</b> {radius ? `within ${radius.toLocaleString("en-IN")} km` : "at any distance"} of {near.name ?? "you"}, nearest first.</>
+          : "Allow location, or pick a city, to see what's around it."}
       </p>
-      {nearMe && (
-        <button type="button" onClick={onToggle} className="mt-2 text-[11.5px] font-semibold text-white/55 hover:text-white">Turn off Near me</button>
+      {near && (
+        <button type="button" onClick={onOff} className="text-[11.5px] font-semibold text-white/55 hover:text-white">Turn off Near me</button>
       )}
     </div>
   );

@@ -55,7 +55,8 @@ interface Props {
   hovered: string | null;
   wishlist: Set<string>;
   insets: Insets;
-  nearMe: { lat: number; lng: number } | null;
+  /** Near me's centre: your location, or a city you picked (name) */
+  nearMe: { lat: number; lng: number; name?: string | null } | null;
   /** Near me radius in km, drawn as a ring around you */
   radiusKm: number | null;
   userPhotos: UserPhoto[];
@@ -400,10 +401,13 @@ export default function MapCanvas(props: Props) {
 
   // ── You are here ────────────────────────────────────────────────────────────
 
+  // The ring follows the radius slider as it moves; the camera reframes it once the slider rests
+  const ringFly = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     const leaflet = leafletRef.current, layer = meRef.current;
     if (!leaflet || !layer) return;
     layer.clearLayers();
+    if (ringFly.current) clearTimeout(ringFly.current);
     if (!nearMe) return;
     if (radiusKm) {
       const ring = leaflet.circle([nearMe.lat, nearMe.lng], {
@@ -411,13 +415,15 @@ export default function MapCanvas(props: Props) {
         fillColor: "var(--tm-sky)", fillOpacity: 0.06, interactive: false,
       }).addTo(layer);
       // Frame the whole ring in the uncovered part of the map
-      const map = mapRef.current;
-      const { left, bottom } = live.current.insets;
-      map?.flyToBounds(ring.getBounds(), { paddingTopLeft: [left + 24, 24], paddingBottomRight: [24, bottom + 24], duration: 0.9 });
+      ringFly.current = setTimeout(() => {
+        const map = mapRef.current;
+        const { left, bottom, top = 0 } = live.current.insets;
+        map?.flyToBounds(ring.getBounds(), { paddingTopLeft: [left + 24, top + 24], paddingBottomRight: [24, bottom + 24], duration: 0.9 });
+      }, 350);
     }
     const icon = leaflet.divIcon({ className: "", html: '<div class="tm-me"><i></i></div>', iconSize: [22, 22], iconAnchor: [11, 11] });
     leaflet.marker([nearMe.lat, nearMe.lng], { icon, zIndexOffset: 2000 })
-      .bindTooltip("You are here", { direction: "top", offset: [0, -10], className: "tm-tip" })
+      .bindTooltip(nearMe.name ? esc(nearMe.name) : "You are here", { direction: "top", offset: [0, -10], className: "tm-tip" })
       .addTo(layer);
   }, [nearMe, radiusKm]);
 

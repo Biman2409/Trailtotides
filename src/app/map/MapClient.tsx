@@ -70,7 +70,8 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const monthIdx = currentMonthIndexIST();
   // A single month picked under Filters is outlined on cards and rows
   const month: Month | null = f.months.length === 1 ? f.months[0] : null;
-  const [radius, setRadius] = useState<number | null>(250);
+  // Near me's search radius in km (null: any distance, nearest first); 300 km to start
+  const [radius, setRadius] = useState<number | null>(300);
   const [picks, setPicks] = useState<CompassPick[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   // The selected adventure's trail, fetched only when one is opened (most adventures have none yet)
@@ -108,7 +109,8 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const { saved } = useWishlist();
   const { log: tripLog } = useTripLog();
   const [loggedIn, setLoggedIn] = useState(false);
-  const [nearMe, setNearMe] = useState<{ lat: number; lng: number } | null>(null);
+  // The centre of Near me: your location (name null) or a city you picked
+  const [nearMe, setNearMe] = useState<{ lat: number; lng: number; name: string | null } | null>(null);
   const [nearMeLoading, setNearMeLoading] = useState(false);
   const [shotsOn, setShotsOn] = useState(false);
   const [shotsLoading, setShotsLoading] = useState(false);
@@ -193,12 +195,21 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const sortKey: SortKey = sort ?? (canFit ? "match" : "recommended");
 
   // Explore's filters, then the Near me radius (a map-only filter). The map key counts with it too.
-  const filterWith = useCallback((ff: AdventureFilterState) => {
-    let rows = filterAdventures(adventures, ff, { score });
+  // Everything but distance: Explore's filters and a group's picks
+  const filterNoNear = useCallback((ff: AdventureFilterState) => {
+    const rows = filterAdventures(adventures, ff, { score });
     // The group's suggestions: the same 55% floor as Group Match's "ready" and "stretch" lists
-    if (groupOnly && group) rows = rows.filter((a) => (fits.get(a.slug)?.score ?? 0) >= 55);
+    return groupOnly && group ? rows.filter((a) => (fits.get(a.slug)?.score ?? 0) >= 55) : rows;
+  }, [score, groupOnly, group, fits]);
+  const filterWith = useCallback((ff: AdventureFilterState) => {
+    const rows = filterNoNear(ff);
     return nearMe && radius ? rows.filter((a) => haversineKm(nearMe.lat, nearMe.lng, a.lat, a.lng) <= radius) : rows;
-  }, [score, nearMe, radius, groupOnly, group, fits]);
+  }, [filterNoNear, nearMe, radius]);
+  // How many would match within km of the Near me centre: the radius slider's live count
+  const countWithin = useCallback((km: number | null) => {
+    const rows = filterNoNear(f);
+    return nearMe && km ? rows.filter((a) => haversineKm(nearMe.lat, nearMe.lng, a.lat, a.lng) <= km).length : rows.length;
+  }, [filterNoNear, f, nearMe]);
   const filtered = useMemo(() => filterWith(f), [filterWith, f]);
 
   // Compass picks stay on the map even when a filter would hide them
@@ -282,7 +293,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
     if (params.get("sort") && params.get("sort")! in SORT_LABELS) setSort(params.get("sort") as SortKey);
     // A saved search can carry Near me (near=lat,lng&r=km)
     const near = nearFrom(params);
-    if (near) { setNearMe({ lat: near.lat, lng: near.lng }); setRadius(near.radius); }
+    if (near) { setNearMe({ lat: near.lat, lng: near.lng, name: params.get("nn") }); setRadius(near.radius); }
     const slug = params.get("a");
     // Wait a beat for Leaflet to load before flying there
     if (slug && adventures.some((a) => a.slug === slug)) setTimeout(() => select(slug), 400);
@@ -374,21 +385,26 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   // Near me is the only thing emptying the map: offer to drop the distance
   const nearIsTheCause = !!nearMe && !!radius && shown.length === 0 && filterAdventures(adventures, f, { score }).length > 0;
 
-  function handleNearMe() {
-    if (nearMe) { setNearMe(null); return; }
-    if (!navigator.geolocation) { toast.error("Location isn't supported on this device."); return; }
+  // Near me from where you are; a city can be picked instead (nearCity)
+  function locateMe() {
+    if (!navigator.geolocation) { toast.error("Location isn't supported on this device. Pick a city instead."); return; }
     setNearMeLoading(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setNearMe({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setNearMe({ lat: pos.coords.latitude, lng: pos.coords.longitude, name: null });
         // With a radius the map frames the ring itself
         if (!radius) apiRef.current?.flyTo(pos.coords.latitude, pos.coords.longitude, 7);
         setNearMeLoading(false);
         track("map_near_me", { radius: radius ?? 0 });
       },
-      () => { setNearMeLoading(false); toast.error("Location access denied — enable it in your browser settings to see nearby adventures."); },
+      () => { setNearMeLoading(false); toast.error("Location is off for this site. Pick a city instead, or allow location in your browser settings."); },
       { timeout: 8000, enableHighAccuracy: false },
     );
+  }
+  function nearCity(lat: number, lng: number, name: string) {
+    setNearMe({ lat, lng, name });
+    if (!radius) apiRef.current?.flyTo(lat, lng, 7);
+    track("map_near_city", { radius: radius ?? 0 });
   }
 
   // Saving a search needs an account: it's kept for you and can email you new matches
@@ -401,8 +417,11 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
     }
     const p = new URLSearchParams();
     writeFilterParams(p, f);
-    if (nearMe && radius) { p.set("near", `${nearMe.lat.toFixed(2)},${nearMe.lng.toFixed(2)}`); p.set("r", String(radius)); }
-    const parts = [f.types.join(", "), f.states.join(", "), f.months.join(", "), f.diffs.join(", "), f.search && `“${f.search}”`, nearMe && radius ? `within ${radius} km` : ""].filter(Boolean);
+    if (nearMe && radius) {
+      p.set("near", `${nearMe.lat.toFixed(2)},${nearMe.lng.toFixed(2)}`); p.set("r", String(radius));
+      if (nearMe.name) p.set("nn", nearMe.name);
+    }
+    const parts = [f.types.join(", "), f.states.join(", "), f.months.join(", "), f.diffs.join(", "), f.search && `“${f.search}”`, nearMe && radius ? `within ${radius} km${nearMe.name ? ` of ${nearMe.name}` : ""}` : ""].filter(Boolean);
     const res = await fetch("/api/saved-searches", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: (parts.join(" · ") || "My map search").slice(0, 60), query: p.toString() }),
@@ -436,8 +455,8 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const dock = (floating: boolean) => (
     <FilterDock
       f={f} set={set}
-      nearMe={!!nearMe} nearLoading={nearMeLoading} radius={radius}
-      onNearMe={handleNearMe} onRadius={setRadius}
+      near={nearMe} nearLoading={nearMeLoading} radius={radius}
+      onLocate={locateMe} onNearCity={nearCity} onNearOff={() => setNearMe(null)} onRadius={setRadius} countWithin={countWithin}
       onPlace={(lat, lng, name) => { apiRef.current?.flyTo(lat, lng, 9); apiRef.current?.placePin(lat, lng, name); }}
       onAdventure={(a) => select(a.slug)}
       floating={floating}
@@ -817,13 +836,24 @@ const PAGE_CSS = `
   .tm-mrow:hover { background: rgba(var(--tm-ink),0.05); }
   .tm-mrow[data-on] { background: rgba(255,81,0,0.08); }
 
-  .tm-radius { display: flex; flex-direction: column; align-items: center; padding: 8px 0; border-radius: 12px; line-height: 1.1;
-               background: rgba(var(--tm-ink),0.04); border: 1px solid rgba(var(--tm-ink),0.08); color: rgba(var(--tm-ink),0.75); transition: all .2s; }
-  .tm-radius b { font-size: 15px; }
-  .tm-radius span { font-size: 9.5px; opacity: 0.55; text-transform: uppercase; letter-spacing: 0.1em; }
-  .tm-radius:hover:not(:disabled) { border-color: rgba(56,189,248,0.4); }
-  .tm-radius[data-on] { color: rgb(var(--tm-fg)); background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.6); }
-  .tm-radius:disabled { opacity: 0.4; cursor: default; }
+  /* Near me: city quick picks, − / + steps and the radius slider, in the ring's sky blue */
+  .tm-near-city { height: 28px; padding: 0 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; color: rgba(var(--tm-ink),0.72);
+                  background: rgba(var(--tm-ink),0.04); border: 1px solid rgba(var(--tm-ink),0.1); transition: all .2s; }
+  .tm-near-city:hover { color: rgb(var(--tm-fg)); border-color: rgba(56,189,248,0.45); }
+  .tm-near-city[data-on] { color: rgb(var(--tm-fg)); background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.6); }
+  .tm-near-step { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; flex-shrink: 0; color: rgba(var(--tm-ink),0.75);
+                  background: rgba(var(--tm-ink),0.05); border: 1px solid rgba(var(--tm-ink),0.1); transition: all .2s; }
+  .tm-near-step:hover:not(:disabled) { color: rgb(var(--tm-fg)); border-color: rgba(56,189,248,0.5); }
+  .tm-near-step:disabled { opacity: 0.35; cursor: default; }
+  .tm-near-range { -webkit-appearance: none; appearance: none; height: 28px; background: transparent; cursor: pointer; accent-color: var(--tm-sky); }
+  .tm-near-range:disabled { opacity: 0.4; cursor: default; }
+  .tm-near-range::-webkit-slider-runnable-track { height: 4px; border-radius: 999px; background: rgba(var(--tm-ink),0.14); }
+  .tm-near-range::-moz-range-track { height: 4px; border-radius: 999px; background: rgba(var(--tm-ink),0.14); }
+  .tm-near-range::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%;
+                                         background: var(--tm-sky); border: 3px solid rgb(var(--tm-bg)); box-shadow: 0 0 0 1px rgba(56,189,248,0.6), 0 2px 8px rgba(0,0,0,0.35); }
+  .tm-near-range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--tm-sky); border: 3px solid rgb(var(--tm-bg));
+                                     box-shadow: 0 0 0 1px rgba(56,189,248,0.6), 0 2px 8px rgba(0,0,0,0.35); }
+  .tm-near-range:focus-visible { outline: 2px solid var(--tm-sky); outline-offset: 4px; border-radius: 8px; }
 
   .tm-toggle { display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px; border-radius: 9px; font-size: 11.5px; font-weight: 600;
                color: rgba(var(--tm-ink),0.6); background: rgba(var(--tm-ink),0.04); border: 1px solid rgba(var(--tm-ink),0.07); transition: all .2s; cursor: pointer; }
