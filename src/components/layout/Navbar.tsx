@@ -16,14 +16,14 @@ import ThemeToggleButton from "@/components/ui/custom/ThemeToggleButton";
 import SearchModal from "@/components/ui/custom/SearchModal";
 
 const navLinks = [
-  { href: "/", label: "Home", icon: Home, iconOnly: true },
-  { href: "/explore", label: "Explore", icon: Compass },
-  { href: "/map", label: "Map", icon: MapIcon },
+  { href: "/", label: "Home", icon: Home, iconOnly: true, sub: "Start here" },
+  { href: "/explore", label: "Explore", icon: Compass, sub: `All ${adventures.length} adventures` },
+  { href: "/map", label: "Map", icon: MapIcon, sub: "Across India" },
   // Same icons as the hero's Fitness match / Verified operators pop-outs
-  { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark },
-  { href: "/operators", label: "Operators", icon: BadgeCheck },
+  { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark, sub: "Your ACE™ profile" },
+  { href: "/operators", label: "Operators", icon: BadgeCheck, sub: "Verified and rated" },
   // Guides goes straight to Adventurepedia, the guides library
-  { href: "/adventurepedia", label: "Guides", icon: Library },
+  { href: "/adventurepedia", label: "Guides", icon: Library, sub: "Plan and prepare" },
 ];
 
 // Active on the page itself and anything under it (/adventurepedia/altitude-sickness lights Guides)
@@ -99,11 +99,14 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Escape closes search
+  // Escape closes search; Ctrl/⌘ K opens it from anywhere
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
         setSearchOpen(false);
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
       }
     }
     document.addEventListener("keydown", handleKeyDown);
@@ -149,6 +152,24 @@ export default function Navbar() {
 
   const isTransparent = isHome && !scrolled && !menuOpen;
 
+  // The orange pill sits under the active link and slides to the next one
+  const linksRef = useRef<HTMLDivElement>(null);
+  const [pill, setPill] = useState<{ left: number; width: number } | null>(null);
+  useEffect(() => {
+    const wrap = linksRef.current;
+    if (!wrap) return;
+    const place = () => {
+      const el = wrap.querySelector<HTMLElement>("[data-active]");
+      setPill(el ? { left: el.offsetLeft, width: el.offsetWidth } : null);
+    };
+    place();
+    const ro = new ResizeObserver(place);
+    ro.observe(wrap);
+    return () => ro.disconnect();
+  }, [pathname]);
+  const [isMac, setIsMac] = useState(false);
+  useEffect(() => { setIsMac(/Mac|iPhone|iPad/.test(navigator.platform)); }, []);
+
   return (
     <nav
       ref={menuRef}
@@ -160,7 +181,7 @@ export default function Navbar() {
       }
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-        <div className="flex lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-3 items-center justify-between h-16 lg:h-20">
+        <div className={`flex lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-3 items-center justify-between h-16 transition-[height] duration-300 ${scrolled ? "lg:h-16" : "lg:h-20"}`}>
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group lg:justify-self-start">
@@ -185,7 +206,11 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav links — centered on the page via the grid column, not just optically balanced */}
-          <div className="hidden lg:flex items-center justify-self-center gap-1 p-1 rounded-full" style={{ position: "relative", background: isTransparent ? "rgba(0,0,0,0.25)" : "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
+          <div ref={linksRef} className="hidden lg:flex items-center justify-self-center gap-0.5 p-1 rounded-full" style={{ position: "relative", background: isTransparent ? "rgba(0,0,0,0.28)" : "var(--bg-surface-2)", border: `1px solid ${isTransparent ? "rgba(255,255,255,0.12)" : "var(--border-subtle)"}`, backdropFilter: isTransparent ? "blur(10px)" : undefined }}>
+            {pill && (
+              <span aria-hidden className="absolute top-1 bottom-1 rounded-full transition-[left,width] duration-300 ease-out"
+                style={{ left: pill.left, width: pill.width, background: "#ff5100", boxShadow: "0 4px 14px rgba(255,81,0,0.35)" }} />
+            )}
             {navLinks.map((link) => {
               const isActive = isActiveLink(pathname, link.href);
               const Icon = link.icon;
@@ -197,12 +222,10 @@ export default function Navbar() {
                     href={link.href}
                     aria-label={link.label}
                     title={link.label}
-                    className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200"
-                    style={{
-                      color: isActive ? "#fff" : isTransparent ? "rgba(255,255,255,0.75)" : "var(--nav-text)",
-                      background: isActive ? "#ff5100" : "transparent",
-                      boxShadow: isActive ? "0 4px 14px rgba(255,81,0,0.35)" : "none",
-                    }}
+                    data-active={isActive || undefined}
+                    aria-current={isActive ? "page" : undefined}
+                    className="relative flex items-center justify-center w-9 h-9 rounded-full transition-colors duration-200"
+                    style={{ color: isActive ? "#fff" : isTransparent ? "rgba(255,255,255,0.75)" : "var(--nav-text)", background: "transparent" }}
                     onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = "var(--nav-active-bg)"; }}
                     onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = "transparent"; }}
                   >
@@ -215,16 +238,14 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200"
-                  style={{
-                    color: isActive ? "#fff" : isTransparent ? "rgba(255,255,255,0.75)" : "var(--nav-text)",
-                    background: isActive ? "#ff5100" : "transparent",
-                    boxShadow: isActive ? "0 4px 14px rgba(255,81,0,0.35)" : "none",
-                  }}
+                  data-active={isActive || undefined}
+                  aria-current={isActive ? "page" : undefined}
+                  className="relative flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-full transition-colors duration-200"
+                  style={{ color: isActive ? "#fff" : isTransparent ? "rgba(255,255,255,0.78)" : "var(--nav-text)", background: "transparent" }}
                   onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = "var(--nav-active-bg)"; }}
                   onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = "transparent"; }}
                 >
-                  {isActive && <Icon className="w-3.5 h-3.5" />}
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? "" : "opacity-70"}`} />
                   {link.label}
                 </Link>
               );
@@ -252,6 +273,7 @@ export default function Navbar() {
               <span className="text-xs whitespace-nowrap font-medium" style={{ color: "var(--text-tertiary)" }}>
                 Search
               </span>
+              <kbd className="ml-1 text-[10px] font-semibold px-1.5 py-px rounded-md" style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-default)" }}>{isMac ? "⌘K" : "Ctrl K"}</kbd>
             </button>
 
             {/* ── Search icon — where the search bar isn't shown: below xl, or while the navbar is transparent ── */}
@@ -523,33 +545,44 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
-        className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}
+        className={`lg:hidden overflow-y-auto transition-all duration-300 ease-out ${menuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"}`}
+        style={{ maxHeight: menuOpen ? "calc(100dvh - 64px)" : 0 }}
+        aria-hidden={!menuOpen || undefined}
       >
-        <div className="px-6 py-4 space-y-1" style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}>
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="flex items-center py-3 px-3 text-base font-medium rounded-xl transition-colors"
-              style={{
-                color: isActiveLink(pathname, link.href) ? "var(--text-primary)" : "var(--nav-text)",
-                background: isActiveLink(pathname, link.href) ? "var(--nav-active-bg)" : "transparent",
-                borderBottom: "1px solid var(--border-subtle)",
-              }}
-            >
-              {link.label}
-            </Link>
-          ))}
-          {/* Mobile search */}
-          <div className="flex items-center gap-2 py-2 px-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-            <button
-              onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all flex-1 justify-center"
-              style={{ color: "var(--nav-text)", background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}
-            >
-              <Search className="w-3.5 h-3.5" />
-              Search
-            </button>
+        <div className="px-4 pt-3 pb-5 space-y-3" style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}>
+          {/* Search first: it's the quickest way anywhere */}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="w-full flex items-center gap-2.5 h-11 px-3.5 rounded-xl text-sm text-left"
+            style={{ color: "var(--text-tertiary)", background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}
+          >
+            <Search className="w-4 h-4" />
+            Search adventures, places, guides
+          </button>
+
+          {/* The sections, as tiles: what each is, at a glance */}
+          <div className="grid grid-cols-2 gap-2">
+            {navLinks.map((link) => {
+              const on = isActiveLink(pathname, link.href);
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={on ? "page" : undefined}
+                  className="flex items-center gap-2.5 p-2.5 rounded-xl transition-colors"
+                  style={{ background: on ? "rgba(255,81,0,0.1)" : "var(--bg-surface-2)", border: `1px solid ${on ? "rgba(255,81,0,0.4)" : "var(--border-subtle)"}` }}
+                >
+                  <span className="w-9 h-9 rounded-lg grid place-items-center shrink-0" style={{ background: on ? "#ff5100" : "rgba(255,81,0,0.1)", color: on ? "#fff" : "var(--accent-ink)" }}>
+                    <Icon className="w-4 h-4" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[14px] font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>{link.label}</span>
+                    <span className="block text-[11.5px] leading-tight mt-0.5 truncate" style={{ color: "var(--text-tertiary)" }}>{link.sub}</span>
+                  </span>
+                </Link>
+              );
+            })}
           </div>
 
           {/* Mobile wishlist row */}

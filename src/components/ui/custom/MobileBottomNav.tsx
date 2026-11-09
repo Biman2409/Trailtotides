@@ -3,15 +3,16 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Compass, Map, User, Home } from "lucide-react";
+import { Compass, Map, User, Home, Library } from "lucide-react";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 
-// The Matchmaker is the product's main differentiator, so it gets a tab; Stories stays in the menu
+// The same sections as the navbar (Operators stays in the menu); Home sits in the middle
 const links = [
   { href: "/explore", label: "Explore", icon: Compass },
   { href: "/map", label: "Map", icon: Map },
-  { href: "/", label: "Home", icon: Home, isHome: true },
   { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark },
+  { href: "/", label: "Home", icon: Home, isHome: true },
+  { href: "/adventurepedia", label: "Guides", icon: Library },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
@@ -46,7 +47,7 @@ export default function MobileBottomNav() {
           boxShadow: "0 -4px 24px rgba(0,0,0,0.1), 0 8px 32px rgba(0,0,0,0.12)",
         }}
       >
-        <div className="flex items-center justify-around px-2 py-1">
+        <div className="grid grid-cols-6 px-1 py-1">
           {links.map(({ href, label, icon: Icon, isHome }) => {
             const isActive = isHome
               ? pathname === "/"
@@ -56,7 +57,7 @@ export default function MobileBottomNav() {
               <Link
                 key={href}
                 href={href}
-                className="relative flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-all min-w-0 group"
+                className="relative flex flex-col items-center gap-0.5 px-0.5 py-1.5 rounded-xl transition-all min-w-0 group"
               >
                 <div
                   className="flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-200"
@@ -72,7 +73,7 @@ export default function MobileBottomNav() {
                   />
                 </div>
                 <span
-                  className="text-[10px] font-medium leading-tight whitespace-nowrap transition-colors duration-200"
+                  className="text-[10px] font-medium leading-tight whitespace-nowrap max-w-full truncate transition-colors duration-200"
                   style={{
                     color: isActive ? "var(--accent-ink)" : "var(--nav-text)",
                   }}
