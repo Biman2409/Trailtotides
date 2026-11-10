@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
 import {
-  SlidersHorizontal, Loader2, Compass, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen, BookmarkPlus, X,
+  SlidersHorizontal, Loader2, Compass, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen, BookmarkPlus, X, Download,
 } from "lucide-react";
 import { nearFrom } from "@/lib/alerts";
 import { EMAIL_ALERTS } from "@/lib/features";
@@ -231,6 +231,8 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
 
   const pickAdventures = useMemo(() => picks.map((p) => adventures.find((a) => a.slug === p.slug)).filter((a): a is Adventure => !!a), [picks]);
   const selectedAdv = selected ? adventures.find((a) => a.slug === selected) ?? null : null;
+  // While an adventure's trail is on the map, the map itself offers it as a GPX file
+  const gpxFor = selectedAdv && trail?.slug === selectedAdv.slug ? selectedAdv : null;
   const itineraryAdv = itineraryFor && selectedAdv?.slug === itineraryFor ? selectedAdv : null;
   const itineraryTrail = itineraryAdv && trail?.slug === itineraryAdv.slug ? trail : null;
   // An adventure opened from search gets its pin even if a filter hides it, like Compass picks;
@@ -626,6 +628,13 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
             </aside>
 
             <div className="absolute z-[1000] top-3 flex items-center gap-1.5" style={{ right: 56 }}>
+              {gpxFor && (
+                <a href={`/experiences/${gpxFor.slug}/trail.gpx`} download onClick={() => track("map_gpx_download", { slug: gpxFor.slug, from: "map" })}
+                  className="tm-gpx tm-glass rounded-xl h-10 px-3 text-[11.5px] font-semibold inline-flex items-center gap-1.5"
+                  title={`Download the ${gpxFor.name} trail as a GPX file, for offline maps and GPS watches`}>
+                  <Download className="w-3.5 h-3.5" /> GPX
+                </a>
+              )}
               <button type="button" onClick={() => apiRef.current?.reset()} className="tm-glass rounded-xl h-10 px-3 text-[11.5px] font-semibold text-white/70 hover:text-white inline-flex items-center gap-1.5" title="Back to the whole of India">
                 <Compass className="w-3.5 h-3.5" /> Reset View
               </button>
@@ -646,6 +655,13 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
           <>
             <div className="absolute z-[1000] top-2 inset-x-2">{dock(true)}</div>
             <div className="absolute z-[999] right-2" style={{ top: 56 }}>{layersMenu}</div>
+            {gpxFor && (
+              <a href={`/experiences/${gpxFor.slug}/trail.gpx`} download onClick={() => track("map_gpx_download", { slug: gpxFor.slug, from: "map" })}
+                aria-label={`Download the ${gpxFor.name} trail as a GPX file`}
+                className="tm-gpx tm-glass absolute z-[999] h-10 px-2.5 rounded-xl inline-flex items-center gap-1 text-[11px] font-bold" style={{ top: 56, right: 56 }}>
+                <Download className="w-3.5 h-3.5" />GPX
+              </a>
+            )}
 
             <MobileSheet height={sheetH} state={sheet} onState={setSheet} areaH={areaH}>
               {/* An open adventure gets the whole sheet: on a phone the card is the point, so
@@ -835,6 +851,11 @@ const PAGE_CSS = `
   .tm-mrow { width: 100%; display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 10px; transition: background .15s; }
   .tm-mrow:hover { background: rgba(var(--tm-ink),0.05); }
   .tm-mrow[data-on] { background: rgba(255,81,0,0.08); }
+
+  /* The map's GPX button, in the drawn trail's orange */
+  .tm-gpx { color: var(--tm-peach); border-color: rgba(255,125,71,0.45); }
+  .tm-gpx:hover { color: rgb(var(--tm-fg)); border-color: rgba(255,125,71,0.8); }
+  .tm-gpx:focus-visible { outline: 2px solid var(--tm-orange); outline-offset: 2px; }
 
   /* Near me: city quick picks, − / + steps and the radius slider, in the ring's sky blue */
   .tm-near-city { height: 28px; padding: 0 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; color: rgba(var(--tm-ink),0.72);
