@@ -16,14 +16,14 @@ import ThemeToggleButton from "@/components/ui/custom/ThemeToggleButton";
 import SearchModal from "@/components/ui/custom/SearchModal";
 
 const navLinks = [
-  { href: "/", label: "Home", icon: Home, iconOnly: true, sub: "Start here" },
+  { href: "/", label: "Home", icon: Home, iconOnly: true, sub: "Editors’ picks" },
   { href: "/explore", label: "Explore", icon: Compass, sub: `All ${adventures.length} adventures` },
-  { href: "/map", label: "Map", icon: MapIcon, sub: "Across India" },
+  { href: "/map", label: "Map", icon: MapIcon, sub: "Routes and trails" },
   // Same icons as the hero's Fitness match / Verified operators pop-outs
-  { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark, sub: "Your ACE™ profile" },
+  { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark, sub: "Matched to your fitness" },
   { href: "/operators", label: "Operators", icon: BadgeCheck, sub: "Verified and rated" },
   // Guides goes straight to Adventurepedia, the guides library
-  { href: "/adventurepedia", label: "Guides", icon: Library, sub: "Plan and prepare" },
+  { href: "/adventurepedia", label: "Guides", icon: Library, sub: "Treks and activities" },
 ];
 
 // Active on the page itself and anything under it (/adventurepedia/altitude-sickness lights Guides)

@@ -608,17 +608,14 @@ const panelStyle: React.CSSProperties = {
 
 // ─── Capabilities: radar + eight tiles ───────────────────────────────────────
 
-function CapabilityPanel({ axisLabels, axisDesc, axisColors, axisIcons, userAxes, rawAxes, decayNotes }: {
+function CapabilityPanel({ axisLabels, axisDesc, axisColors, axisIcons, userAxes }: {
   axisLabels: Record<string, string>;
   axisDesc: Record<string, string>;
   axisColors: Record<string, string>;
   axisIcons: Record<string, React.ReactNode>;
   userAxes: ACE;
-  rawAxes?: Record<string, number>;
-  decayNotes?: string[];
 }) {
   const [hovered, setHovered] = useState<AceAxis | null>(null);
-  const hasCalibration = !!rawAxes && !!decayNotes?.length;
   const sorted = [...AXIS_ORDER].sort((a, b) => userAxes[b as AceAxis] - userAxes[a as AceAxis]);
   const strongest = sorted.slice(0, 2);
   const weakest = sorted.slice(-2).reverse();
@@ -634,8 +631,6 @@ function CapabilityPanel({ axisLabels, axisDesc, axisColors, axisIcons, userAxes
             <div className="rounded-[20px] w-full flex justify-center py-3" style={{ background: "rgba(var(--fg-rgb, 255,255,255), 0.025)", border: "1px solid var(--border-subtle)" }}>
               <ACERadar
                 ace={userAxes}
-                userAce={hasCalibration ? (rawAxes as unknown as ACE) : undefined}
-                userColor="var(--accent-green)"
                 size={300}
                 showLabels
                 highlightAxis={hovered}
@@ -651,13 +646,6 @@ function CapabilityPanel({ axisLabels, axisDesc, axisColors, axisIcons, userAxes
                 <p className="text-[12px] font-semibold mt-0.5 truncate t-text">{weakest.map((a) => axisLabels[a]).join(" · ")}</p>
               </div>
             </div>
-            {hasCalibration && (
-              <div className="w-full rounded-xl px-3 py-2.5 mt-2 space-y-1" style={{ background: "var(--accent-green-soft)", border: "1px solid var(--accent-green-border)" }}>
-                <p className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent-green)" }}>Adjusted</p>
-                <p className="text-[11px] leading-snug" style={{ color: "var(--text-tertiary)" }}>Solid = after calibration and health answers, dashed = what you reported.</p>
-                {decayNotes!.map((note, i) => <p key={i} className="text-[11px] leading-snug" style={{ color: "var(--text-tertiary)" }}>{note}</p>)}
-              </div>
-            )}
           </div>
 
           {/* Tiles */}
@@ -685,10 +673,6 @@ function CapabilityPanel({ axisLabels, axisDesc, axisColors, axisIcons, userAxes
                   <div className="flex items-center gap-2.5 mb-2.5">
                     <span className="w-7 h-7 rounded-lg grid place-items-center shrink-0" style={{ background: `${color}1c`, color }}>{axisIcons[axis]}</span>
                     <span className="flex-1 min-w-0 text-[13px] font-bold t-text">{axisLabels[axis]}</span>
-                    {/* Adjusted by calibration or health: what you reported → what counts */}
-                    {hasCalibration && rawAxes && rawAxes[axis] !== undefined && rawAxes[axis] !== val && (
-                      <span className="text-[11px] font-semibold tabular-nums line-through" style={{ color: "var(--text-muted)" }} title="What you reported">{rawAxes[axis]}</span>
-                    )}
                     <span className="text-[13px] font-black tabular-nums" style={{ color }}>{val}<span className="text-[10px] font-bold" style={{ color: "var(--text-muted)" }}>/5</span></span>
                   </div>
                   <LevelMeter value={val} color={color} size="sm" />
@@ -874,7 +858,7 @@ function ResultsScreen({
   onRefine?: () => void;
   profileAgeDays?: number | null;
 }) {
-  const { userAxes, adventures: enriched, trainingPlan, rawAxes, decayNotes } = result;
+  const { userAxes, adventures: enriched, trainingPlan } = result;
 
   // Reached from a trek page (?from=slug): offer the way back
   const searchParams = useSearchParams();
@@ -1075,8 +1059,6 @@ function ResultsScreen({
           axisColors={AXIS_COLORS}
           axisIcons={AXIS_ICONS}
           userAxes={resultAce}
-          rawAxes={rawAxes}
-          decayNotes={decayNotes}
         />
       </FadeInSection>
 

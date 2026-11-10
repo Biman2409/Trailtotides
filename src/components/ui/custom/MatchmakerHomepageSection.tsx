@@ -288,28 +288,31 @@ function ProfileSummary({ profile, ace, credits, stale }: { profile: StoredProfi
             </p>
           )}
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-3 mt-5">
+          {/* Three actions: your full results, a group match, a retake */}
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 mt-5">
             <Link
-              href="/explore?ace=ready"
-              className="group inline-flex items-center gap-2 bg-[#ff5100] text-white font-semibold px-5 h-11 rounded-xl text-[14px] hover:bg-[#ff6a24] transition-colors"
+              href="/matchmaker"
+              className="col-span-2 group inline-flex items-center justify-center gap-2 bg-[#ff5100] text-white font-semibold px-5 h-11 rounded-xl text-[14px] hover:bg-[#ff6a24] transition-colors"
               style={{ boxShadow: "0 6px 20px rgba(255,81,0,0.25)" }}
             >
-              See your matches
+              See your results
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
             <Link
               href="/matchmaker/group"
-              className="inline-flex items-center gap-2 font-semibold px-4 h-11 rounded-xl text-[14px] transition-colors hover:bg-[var(--bg-card-hover)]"
+              className="inline-flex items-center justify-center gap-2 font-semibold px-4 h-11 rounded-xl text-[14px] transition-colors hover:bg-[var(--bg-card-hover)]"
               style={{ color: "var(--text-primary)", border: "1px solid var(--border-default)" }}
             >
               <Users className="w-4 h-4" />
               Match a group
             </Link>
-            <Link href="/matchmaker" className="py-3 -my-3 px-1 text-[13px] font-medium underline underline-offset-2 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
-              Full results
-            </Link>
-            <Link href="/matchmaker?retake=1" className="py-3 -my-3 px-1 inline-flex items-center gap-1 text-[13px] font-medium underline underline-offset-2 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
-              <RotateCcw className="w-3 h-3" />Retake
+            <Link
+              href="/matchmaker?retake=1"
+              className="inline-flex items-center justify-center gap-2 font-semibold px-4 h-11 rounded-xl text-[14px] transition-colors hover:bg-[var(--bg-card-hover)]"
+              style={{ color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}
+            >
+              <RotateCcw className="w-4 h-4" />
+              Retake
             </Link>
           </div>
         </div>

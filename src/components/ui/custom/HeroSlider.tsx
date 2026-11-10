@@ -18,12 +18,13 @@ export const HERO_GOTO_EVENT = "hero:goto";
 
 // Each photo, described as it is, and where in India you can do what it shows (its mark): the
 // altitude gauge beside the headline sends people there. The photos are stock and not taken at
-// those places, so the gauge says "Do this", not "In this photo".
+// those places, so the gauge says "Do this", not "In this photo". The marks are picked to sit
+// roughly evenly up the gauge (about every 900 m), so no two stops crowd each other.
 export const HERO_SLIDES: Slide[] = [
   {
     src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1280&q=80",
     alt: "Two trekkers with packs on a mountain trail below snowy peaks",
-    mark: { name: "Kedarkantha", metres: 3810, href: "/experiences/kedarkantha-trek" },
+    mark: { name: "Sandakphu", metres: 3636, href: "/experiences/sandakphu-phalut-trek" },
   },
   {
     src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1280&q=80",
@@ -33,7 +34,7 @@ export const HERO_SLIDES: Slide[] = [
   {
     src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=1280&q=80",
     alt: "Climber hanging from a sea-cliff overhang above turquoise water",
-    mark: { name: "Rock climbing, Hampi", metres: 470, href: "/adventurepedia/activities/rock-climbing" },
+    mark: { name: "Rock climbing, Ramanagara", metres: 750, href: "/adventurepedia/activities/rock-climbing" },
   },
   {
     src: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1280&q=80",
@@ -58,17 +59,12 @@ export const HERO_SLIDES: Slide[] = [
   {
     src: "https://images.unsplash.com/photo-1592208128295-5aaa34f1d72b?w=1280&q=80",
     alt: "Paraglider launching from a grassy hilltop at sunset",
-    mark: { name: "Paragliding, Bir Billing", metres: 2400, href: "/adventurepedia/activities/paragliding" },
+    mark: { name: "Paragliding, Kalimpong", metres: 1704, href: "/adventurepedia/activities/paragliding" },
   },
   {
     src: "https://images.unsplash.com/photo-1668936132313-2c3105eef631?w=1280&q=80",
     alt: "Mountain biker on a high ridge trail beside a stone cairn",
     mark: { name: "Spiti by bicycle", metres: 4551, href: "/experiences/spiti-valley-cycling" },
-  },
-  {
-    src: "https://images.unsplash.com/photo-1590898428406-7b9f44b33c22?w=1280&q=80",
-    alt: "Two friends cliff-jumping into clear sea water",
-    mark: { name: "Cliff jumps, Rishikesh", metres: 380, href: "/experiences/rishikesh-river-rafting" },
   },
 ];
 
