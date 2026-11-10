@@ -18,23 +18,23 @@ export const HERO_GOTO_EVENT = "hero:goto";
 
 // Each photo, described as it is, and where in India you can do what it shows (its mark): the
 // altitude gauge beside the headline sends people there. The photos are stock and not taken at
-// those places, so the gauge says "Do this", not "In this photo". The marks are picked to sit
+// those places, so the gauge names the adventure, not the photo. The marks are picked to sit
 // roughly evenly up the gauge (about every 900 m), so no two stops crowd each other.
 export const HERO_SLIDES: Slide[] = [
   {
     src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1280&q=80",
     alt: "Two trekkers with packs on a mountain trail below snowy peaks",
-    mark: { name: "Sandakphu", metres: 3636, href: "/experiences/sandakphu-phalut-trek" },
+    mark: { name: "Beas Kund", metres: 3615, href: "/experiences/beas-kund" },
   },
   {
     src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1280&q=80",
     alt: "Scuba diver among a school of yellow fish on a reef wall",
-    mark: { name: "Reef dive, Havelock", metres: -18, href: "/adventurepedia/activities/diving" },
+    mark: { name: "Reef dive, Havelock", metres: -30, href: "/adventurepedia/activities/diving" },
   },
   {
     src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=1280&q=80",
     alt: "Climber hanging from a sea-cliff overhang above turquoise water",
-    mark: { name: "Rock climbing, Ramanagara", metres: 750, href: "/adventurepedia/activities/rock-climbing" },
+    mark: { name: "Rock climbing, Mount Abu", metres: 1220, href: "/adventurepedia/activities/rock-climbing" },
   },
   {
     src: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1280&q=80",
@@ -59,7 +59,7 @@ export const HERO_SLIDES: Slide[] = [
   {
     src: "https://images.unsplash.com/photo-1592208128295-5aaa34f1d72b?w=1280&q=80",
     alt: "Paraglider launching from a grassy hilltop at sunset",
-    mark: { name: "Paragliding, Kalimpong", metres: 1704, href: "/adventurepedia/activities/paragliding" },
+    mark: { name: "Paragliding, Kamshet", metres: 857, href: "/adventurepedia/activities/paragliding" },
   },
   {
     src: "https://images.unsplash.com/photo-1668936132313-2c3105eef631?w=1280&q=80",

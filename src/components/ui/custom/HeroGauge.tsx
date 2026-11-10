@@ -79,9 +79,13 @@ export default function HeroGauge({ start = 0 }: { start?: number }) {
             aria-label={`Show the ${st.name} photo, ${fmt(st.metres)}`}
             style={{ top: `${at(st.metres) * 100}%`, left: st.x, "--c": st.metres <= 0 ? "#5fe0d4" : "#ff9a66" } as React.CSSProperties}>
             <i />
+            {/* The same card as the marker's label, with this adventure's hero photo: click to show it */}
             <span className="hg-tip">
-              <Image src={st.src} alt="" width={104} height={72} sizes="52px" />
-              <span>{st.name}<b>{fmt(st.metres)}</b></span>
+              <Image src={st.src} alt="" width={360} height={200} sizes="180px" />
+              <span className="hg-tip-body">
+                <span className="hg-tip-name">{st.name}</span>
+                <b>{fmt(st.metres)}</b>
+              </span>
             </span>
           </button>
         );
@@ -98,8 +102,7 @@ export default function HeroGauge({ start = 0 }: { start?: number }) {
           <svg viewBox="0 0 24 24" className="hg-ring"><circle key={mark.name} cx="12" cy="12" r="9" strokeDasharray={RING} style={{ animationDuration: `${SLIDE_DURATION}ms` }} /></svg>
         </span>
         <span className="hg-lead" aria-hidden />
-        <Link href={mark.href} className="hg-label" aria-label={`Do this: ${mark.name}, ${fmt(mark.metres)}`}>
-          <span className="hg-eyebrow">Do this</span>
+        <Link href={mark.href} className="hg-label" aria-label={`${mark.name}, ${fmt(mark.metres)}`}>
           <span key={mark.name} className="hg-name">{mark.name}</span>
           <span className="hg-m">{fmt(shown)}</span>
         </Link>
@@ -124,13 +127,18 @@ export default function HeroGauge({ start = 0 }: { start?: number }) {
         .hg-stop[data-on] { pointer-events: none; }
         .hg-stop[data-on] i { opacity: 0; }
         .hg-stop:focus-visible { outline: none; }
-        .hg-tip { position: absolute; left: 24px; top: 50%; transform: translate(-4px, -50%); white-space: nowrap; pointer-events: none; opacity: 0;
-                  display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px; border-radius: 10px; font-size: 12px; font-weight: 600; color: #fff;
-                  background: rgba(5,8,12,0.8); border: 1px solid rgba(255,255,255,0.14); backdrop-filter: blur(8px); transition: opacity .2s, transform .2s; z-index: 3; }
-        .hg-tip img { width: 52px; height: 36px; object-fit: cover; border-radius: 7px; }
-        .hg-tip > span { display: flex; flex-direction: column; gap: 3px; }
-        .hg-tip b { font: 600 10.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--c); }
-        .hg-stop:hover .hg-tip, .hg-stop:focus-visible .hg-tip { opacity: 1; transform: translate(0, -50%); }
+        /* Hover card: the marker label's glass card, with the photo on top; it stays clickable */
+        .hg-tip { position: absolute; left: 22px; top: 50%; transform: translate(-4px, -50%); width: 180px; pointer-events: none; opacity: 0; text-align: left;
+                  display: flex; flex-direction: column; overflow: hidden; border-radius: 12px; color: #fff;
+                  background: rgba(5,8,12,0.42); border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+                  box-shadow: 0 8px 24px rgba(0,0,0,0.25); transition: opacity .2s, transform .2s, border-color .2s; z-index: 3; }
+        .hg-tip img { display: block; width: 100%; height: 100px; object-fit: cover; }
+        .hg-tip-body { display: flex; flex-direction: column; gap: 4px; padding: 8px 12px 9px; }
+        .hg-tip-name { font-size: 15px; font-weight: 600; line-height: 1.2; text-shadow: 0 1px 10px rgba(0,0,0,0.6); }
+        .hg-tip b { font: 600 13px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--c); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+        .hg-stop:hover .hg-tip, .hg-stop:focus-visible .hg-tip { opacity: 1; transform: translate(0, -50%); pointer-events: auto; border-color: color-mix(in srgb, var(--c) 55%, transparent); }
+        /* The open card sits above the marker's own label */
+        .hg-stop:hover, .hg-stop:focus-visible { z-index: 4; }
         .hg-sea { position: absolute; left: 0; right: 40px; transform: translateY(-50%); display: flex; align-items: center; gap: 8px;
                   font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(95,224,212,0.85); text-shadow: 0 1px 6px rgba(0,0,0,0.6); transition: opacity .5s; }
         .hg-sea i { display: block; width: 22px; height: 0; border-top: 1px dashed rgba(95,224,212,0.7); }
@@ -143,13 +151,10 @@ export default function HeroGauge({ start = 0 }: { start?: number }) {
                           animation-name: hgFill; animation-timing-function: linear; animation-fill-mode: forwards; opacity: 0.85; }
         @keyframes hgFill { to { stroke-dashoffset: 0; } }
         .hg-lead { width: 18px; height: 1px; margin: 0 6px 0 8px; background: linear-gradient(to right, var(--c), transparent); transition: background .6s; }
-        .hg-eyebrow { font: 600 9.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
         .hg-label { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 8px 12px 9px; border-radius: 12px; color: #fff; text-decoration: none;
                     background: rgba(5,8,12,0.42); border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
                     box-shadow: 0 8px 24px rgba(0,0,0,0.25); transition: background .2s, border-color .2s; }
         .hg-label:hover { background: rgba(5,8,12,0.6); border-color: color-mix(in srgb, var(--c) 55%, transparent); }
-        .hg-label::after { content: "Explore →"; font: 600 10.5px/1 system-ui, sans-serif; color: rgba(255,255,255,0.55); margin-top: 2px; transition: color .2s; }
-        .hg-label:hover::after { color: var(--c); }
         .hg-name { font-size: 15px; font-weight: 600; line-height: 1.2; text-shadow: 0 1px 10px rgba(0,0,0,0.6); animation: hgIn .6s ease both; }
         .hg-m { font: 600 13px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--c); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; transition: color .6s; }
         .hg-label:hover .hg-name { text-decoration: underline; text-underline-offset: 3px; }
