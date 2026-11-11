@@ -10,6 +10,7 @@ import { updateProfile, changePassword } from "./actions";
 import { AVATARS } from "@/lib/avatars";
 import { AvatarPickerModal, useAvatarState, AceBadge } from "./AvatarPicker";
 import { USERNAME_RE, USERNAME_RULE_TEXT, checkUsernameAvailability } from "@/lib/username";
+import { tm } from "@/lib/tm";
 
 type Profile = {
   id: string;
@@ -27,7 +28,7 @@ export function Section({ title, subtitle, children }: { title: string; subtitle
     <div className="rounded-2xl p-6" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
       <div className="mb-5">
         <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>{title}</h2>
-        {subtitle && <p className="text-xs mt-0.5" style={{ color: "var(--text-tertiary)" }}>{subtitle}</p>}
+        {subtitle && <p className="text-xs mt-0.5" style={{ color: "var(--text-tertiary)" }}>{tm(subtitle)}</p>}
       </div>
       {children}
     </div>
@@ -313,7 +314,7 @@ function AvatarSection() {
 
         <div className="flex-1">
           <p className="text-sm font-semibold" style={{ color: "var(--text-secondary)" }}>
-            {avatarUrl ? "Your photo" : selected ? selected.label : `${rankName} — ACE™ Rank`}
+            {avatarUrl ? "Your photo" : selected ? selected.label : tm(`${rankName} — ACE™ Rank`)}
           </p>
           {!selected && !avatarUrl && (
             <p className="text-xs mt-0.5 mb-3" style={{ color: "var(--text-muted)" }}>

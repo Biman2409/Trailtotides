@@ -1,22 +1,28 @@
 import React from "react";
 
-// Paragliding icon
+// Paragliding: canopy with lines down to the pilot
 const Paraglider = ({ size = 14 }: { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 19a3 3 0 1 1-6 0A11 11 0 0 0 5 8a3 3 0 1 1 0-6 17 17 0 0 1 17 17"/>
-    <path d="M12.8 11.2 2 22"/>
-    <path d="m9.2 8.8-2.5 2.5a3.1 3.1 0 0 0 0 4.2l1.8 1.8a3.1 3.1 0 0 0 4.2 0l2.5-2.5"/>
+    <path d="M3 9C6 3.5 18 3.5 21 9l-2.2 1C16 6.5 8 6.5 5.2 10z" />
+    <path d="M5.2 10 11 18" />
+    <path d="M18.8 10 13 18" />
+    <path d="M9.5 7.6 11.4 18" />
+    <path d="M14.5 7.6 12.6 18" />
+    <circle cx="12" cy="19.6" r="1.6" />
   </svg>
 );
 
-// Balloon icon for Hot Air Balloon
+// Hot Air Balloon: striped envelope with a basket
 const Balloon = ({ size = 14 }: { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 16v1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v1"/>
-    <path d="M12 6a2 2 0 0 1 2 2"/>
-    <path d="M18 8c0 4-3.5 8-6 8s-6-4-6-8a6 6 0 0 1 12 0"/>
+    <path d="M12 2a7 7 0 0 0-7 7c0 3.5 3 6 5 8h4c2-2 5-4.5 5-8a7 7 0 0 0-7-7z" />
+    <path d="M12 2c-2 2-3 4.5-3 7s.6 5.5 1 8" />
+    <path d="M12 2c2 2 3 4.5 3 7s-.6 5.5-1 8" />
+    <path d="M10 17l.3 2.5" />
+    <path d="M14 17l-.3 2.5" />
+    <path d="M10.4 19.5h3.2a.6.6 0 0 1 .6.6v1.4a.6.6 0 0 1-.6.6h-3.2a.6.6 0 0 1-.6-.6v-1.4a.6.6 0 0 1 .6-.6z" />
   </svg>
 );
 
@@ -101,6 +107,17 @@ const MaskSnorkel = ({ size = 14 }: { size?: number }) => (
   </svg>
 );
 
+// A raft paddle dipping into the waves, for River Rafting
+const RaftPaddle = ({ size = 14 }: { size?: number }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={size} height={size}
+    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 3l9 9" />
+    <path d="M13 12l2.5-.5 3 3a2.1 2.1 0 0 1-3 3l-3-3z" />
+    <path d="M2 17c2 0 2-1.5 4-1.5S8 17 10 17" />
+    <path d="M2 21c2 0 2-1.5 4-1.5s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5" />
+  </svg>
+);
+
 // Climbing wall with holds, for Rock Climbing
 const ClimbingWall = ({ size = 14 }: { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={size} height={size}
@@ -123,7 +140,6 @@ import {
   Flashlight,
   Building2,
   Kayak,
-  Ship,
   PlaneLanding,
   Triangle,
 } from "lucide-react";
@@ -143,7 +159,7 @@ export const ADVENTURE_TYPE_ICONS: Record<string, (size?: number) => React.React
   Diving:            (s = 14) => <DivingHelmet  size={s} />,
   Kayaking:          (s = 14) => <Kayak         style={{ width: s, height: s }} />,
   Surfing:           (s = 14) => <Surfboard      size={s} />,
-  "River Rafting":   (s = 14) => <Ship          style={{ width: s, height: s }} />,
+  "River Rafting":   (s = 14) => <RaftPaddle    size={s} />,
   Snorkelling:       (s = 14) => <MaskSnorkel   size={s} />,
   Skiing:            (s = 14) => <Skis           size={s} />,
   Snowboarding:      (s = 14) => <Snowboard      size={s} />,

@@ -513,3 +513,6 @@ button:not([class*="transition"]) {
   .badge-shine { animation: none; display: none; }
 }
 
+
+/* The ™ after ACE: small and raised like a real trademark mark, without opening up the line */
+sup.tm { font-size: 0.5em; vertical-align: super; line-height: 0; margin-left: 0.05em; font-weight: inherit; letter-spacing: 0; }

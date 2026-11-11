@@ -36,7 +36,7 @@ const MOVES = ["hpFloat", "hpSway", "hpPulse", "hpOrbit", "hpSpin", "hpBob"];
 type Box = { l: number; t: number; r: number; b: number };
 const hits = (a: Box, b: Box) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
 const ICON_PX = 30; // an icon's size before --s
-const LABEL_PX = 10.5; // the name under each icon
+const LABEL_PX = 14; // the name under each icon, in the same script as "Adventures"
 const LABEL_GAP = 5;
 
 const CLEARANCE = 14;
@@ -78,7 +78,7 @@ function scatterWords(hero: HTMLElement): ScatterWord[] {
   const area = hero.getBoundingClientRect();
   // Measure each name in the label font, so a long one ("Urban Adventure") gets the room it needs
   const ctx = document.createElement("canvas").getContext("2d");
-  if (ctx) ctx.font = `600 ${LABEL_PX}px ${getComputedStyle(document.body).fontFamily}`;
+  if (ctx) ctx.font = `500 ${LABEL_PX}px ${getComputedStyle(hero.querySelector(".hp-adv") ?? hero).fontFamily}`;
   const labelWidth = (t: string) => (ctx ? ctx.measureText(t).width * 1.06 : t.length * LABEL_PX * 0.62) + LABEL_PX * 0.05 * t.length;
   const taken = heroObstacles(hero, area);
   const centers: { x: number; y: number }[] = [];
@@ -258,7 +258,7 @@ export default function HeroPromise() {
         .hp-scatter span > i { display: grid; place-items: center; transform: rotate(var(--r));
                                filter: drop-shadow(0 0 10px color-mix(in srgb, var(--c) 55%, transparent)) drop-shadow(0 1px 6px rgba(0,0,0,0.5)); }
         .hp-scatter span svg { stroke-width: 1.75; }
-        .hp-scatter span > small { font: 600 ${LABEL_PX}px/1.2 var(--font-dm-sans, 'DM Sans'), sans-serif; letter-spacing: 0.05em; white-space: nowrap;
+        .hp-scatter span > small { font: 500 ${LABEL_PX}px/1.2 var(--font-script), cursive; white-space: nowrap; padding: 0 0.12em;
                                    opacity: 0.85; text-shadow: 0 1px 6px rgba(0,0,0,0.7); }
         .hp-scatter.is-on span { opacity: 0.92; transform: translate(-50%, -50%) scale(1); }
         .hp-scatter.is-on span > i { animation: var(--anim) var(--dur) ease-in-out var(--off) infinite; }

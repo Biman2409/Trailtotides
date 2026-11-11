@@ -24,7 +24,7 @@ export default function TrainForThis({ slug }: { slug: string }) {
       <div className="mt-4 rounded-xl px-4 py-3 flex items-center gap-2.5" style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.25)" }}>
         <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
         <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-          <span className="font-semibold text-emerald-400">You&apos;re ready for this ({score}% match).</span> Your ACE™ profile meets what {adventure.name} asks for.
+          <span className="font-semibold text-emerald-400">You&apos;re ready for this ({score}% match).</span> Your ACE<sup className="tm">™</sup> profile meets what {adventure.name} asks for.
         </p>
       </div>
     );

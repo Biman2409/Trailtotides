@@ -8,6 +8,7 @@ import { adventures } from "@/lib/data";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { currentMonthIndexIST, pickedForProfile, similarToSaved } from "@/lib/homeCuration";
+import { tm } from "@/lib/tm";
 
 type Mode = { kind: "profile"; items: RailItem[] } | { kind: "saved"; items: RailItem[] } | null;
 
@@ -43,7 +44,7 @@ export default function PickedForYou() {
       backdrop={backdrop}
       eyebrow={<><Sparkles className="w-3.5 h-3.5" /> Picked for you</>}
       title="Your best fitness matches"
-      subtitle="Ranked by how well each adventure fits your ACE™ profile."
+      subtitle={tm("Ranked by how well each adventure fits your ACE™ profile.")}
       action={{ href: "/explore?ace=ready", label: "See all matches" }}
       items={mode.items}
     />

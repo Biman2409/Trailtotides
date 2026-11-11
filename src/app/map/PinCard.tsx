@@ -13,6 +13,7 @@ import { AXIS_LABEL } from "@/lib/fitness";
 import { MONTHS } from "@/lib/homeCuration";
 import { track } from "@/lib/analytics";
 import { trailClimbM, trailHighPoint, trailWalkKm, type Trail } from "@/lib/trails/shared";
+import { tm } from "@/lib/tm";
 import {
   genreOf, difficultyOf, difficultyColor, verifiedOperators, priceFrom, formatINR, daysAgo, inSeason, type Fit,
 } from "./mapShared";
@@ -165,7 +166,7 @@ export default function PinCard({
         </Section>
 
         {/* 4. Your fit, and why Compass.AI picked it */}
-        {(pickReason || fit || !hasProfile) && <p className="tm-label !-mb-2">Your ACE™ fit</p>}
+        {(pickReason || fit || !hasProfile) && <p className="tm-label !-mb-2">Your ACE<sup className="tm">™</sup> fit</p>}
         {/* Picked for you by Compass.AI */}
         {pickReason && (
           <div className="tm-panel flex gap-2.5" style={{ borderColor: "rgba(255,125,71,0.35)", background: "rgba(255,81,0,0.07)" }}>
@@ -186,7 +187,7 @@ export default function PinCard({
                 <p className="text-[11px] text-white/45">
                   {group && fit.weakest && fit.bucket.key !== "ready"
                     ? <>Waiting on {fit.weakest}{fit.weeks > 0 ? ` · ~${fit.weeks} weeks of training` : ""}</>
-                    : fit.weeks > 0 ? <>About {fit.weeks} weeks of training to be ready</> : <>Matched to {group ? `“${group}”` : "your ACE™ profile"}</>}
+                    : fit.weeks > 0 ? <>About {fit.weeks} weeks of training to be ready</> : <>Matched to {group ? `“${group}”` : tm("your ACE™ profile")}</>}
                 </p>
               </div>
               {group && <Users className="w-4 h-4 ml-auto text-white/30 shrink-0" />}
@@ -204,7 +205,7 @@ export default function PinCard({
         ) : !hasProfile && (
           <Link href="/matchmaker" className="tm-panel flex items-center gap-2.5 group" onClick={() => track("map_fitness_cta", { from: "card" })}>
             <MatchmakerMark className="w-4 h-4 shrink-0 text-[var(--tm-peach-4)]" />
-            <span className="text-[12px] text-white/75 flex-1">Are you ready for this? <span className="text-[var(--tm-peach-4)] font-semibold">Get your ACE™ profile in the 2-min Adventure Matchmaker</span></span>
+            <span className="text-[12px] text-white/75 flex-1">Are you ready for this? <span className="text-[var(--tm-peach-4)] font-semibold">Get your ACE<sup className="tm">™</sup> profile in the 2-min Adventure Matchmaker</span></span>
             <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         )}

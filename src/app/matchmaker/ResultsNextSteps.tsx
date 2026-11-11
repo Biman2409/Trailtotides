@@ -56,14 +56,14 @@ export default function ResultsNextSteps({
         <Card tone="orange" icon={<Sparkles className="w-4 h-4" />}
           title="This is a quick estimate"
           body="It's based on 6 answers, with the rest estimated. Answer 6 more for a profile you can rely on — everything you've answered is kept."
-          action={<button onClick={onRefine} className={primaryBtn}>Refine my ACE™ profile <ArrowRight className="w-3.5 h-3.5" /></button>} />
+          action={<button onClick={onRefine} className={primaryBtn}>Refine my ACE<sup className="tm">™</sup> profile <ArrowRight className="w-3.5 h-3.5" /></button>} />
       )}
 
       {top && !isQuick && stale && (
         <Card tone="amber" icon={<RefreshCw className="w-4 h-4" />}
           title={`Your profile is ${Math.floor((ageDays ?? 0) / 30)} months old`}
           body="Fitness changes. A refresh takes about 3 minutes and keeps your matches honest."
-          action={<button onClick={onRetake} className={primaryBtn}>Refresh my ACE™ profile <ArrowRight className="w-3.5 h-3.5" /></button>} />
+          action={<button onClick={onRetake} className={primaryBtn}>Refresh my ACE<sup className="tm">™</sup> profile <ArrowRight className="w-3.5 h-3.5" /></button>} />
       )}
 
       {!top && loggedIn === false && (

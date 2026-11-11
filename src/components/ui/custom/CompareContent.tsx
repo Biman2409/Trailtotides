@@ -289,7 +289,7 @@ export default function CompareContent({ fixed }: { fixed?: Adventure[] } = {}) 
                 <td colSpan={selected.length + 1} className="px-3 pt-4 pb-1.5">
                   <div className="flex items-center gap-2">
                     <div className="w-0.5 h-3.5 rounded-full" style={{ background: "#ff5100" }} />
-                    <p className="text-[9px] uppercase tracking-widest font-black" style={{ color: "var(--text-tertiary)" }}>ACE<sup>™</sup> Profile</p>
+                    <p className="text-[9px] uppercase tracking-widest font-black" style={{ color: "var(--text-tertiary)" }}>ACE<sup className="tm">™</sup> Profile</p>
                   </div>
                 </td>
               </tr>
@@ -305,7 +305,7 @@ export default function CompareContent({ fixed }: { fixed?: Adventure[] } = {}) 
                   ) : (
                     <div className="flex flex-col items-center justify-center gap-1.5 rounded-xl py-6 px-3 text-center"
                       style={{ border: "1px dashed var(--border-subtle)" }}>
-                      <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>No ACE<sup>™</sup> profile</p>
+                      <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>No ACE<sup className="tm">™</sup> profile</p>
                       <a href="/ace" className="text-[#ff5100]/60 text-[10px] hover:text-[#ff5100] transition-colors underline underline-offset-2">Take it →</a>
                     </div>
                   )}

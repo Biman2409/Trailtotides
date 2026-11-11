@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Instagram, Youtube, Twitter, Mail, Linkedin } from "lucide-react";
 import { Mountain } from "@/lib/localIcons";
 import { motion } from "framer-motion";
+import { tm } from "@/lib/tm";
 
 export default function Footer() {
   return (
@@ -59,7 +60,7 @@ export default function Footer() {
                           href={link.href}
                           className="text-[14px] font-bold hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]" style={{ color: "var(--text-tertiary)" }}
                         >
-                          {link.label}
+                          {tm(link.label)}
                         </Link>
                       </li>
                     ))}
@@ -83,7 +84,7 @@ export default function Footer() {
                           href={link.href}
                           className="text-[14px] font-bold hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]" style={{ color: "var(--text-tertiary)" }}
                         >
-                          {link.label}
+                          {tm(link.label)}
                         </Link>
                       </li>
                     ))}

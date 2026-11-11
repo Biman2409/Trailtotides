@@ -34,7 +34,7 @@ export default function DeleteAceDataButton() {
           <div className="flex-1">
             <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Delete my capability &amp; health data</p>
             <p className="text-xs mt-1 mb-4 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
-              Permanently removes your ACE™ capability profile and any health information you shared in the Adventure Matchmaker, on this device and from our servers. This doesn&apos;t delete your account.
+              Permanently removes your ACE<sup className="tm">™</sup> capability profile and any health information you shared in the Adventure Matchmaker, on this device and from our servers. This doesn&apos;t delete your account.
             </p>
             {!confirming ? (
               <button

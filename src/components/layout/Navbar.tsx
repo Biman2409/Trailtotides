@@ -16,14 +16,14 @@ import ThemeToggleButton from "@/components/ui/custom/ThemeToggleButton";
 import SearchModal from "@/components/ui/custom/SearchModal";
 
 const navLinks = [
-  { href: "/", label: "Home", icon: Home, iconOnly: true, sub: "Editors’ picks" },
-  { href: "/explore", label: "Explore", icon: Compass, sub: `All ${adventures.length} adventures` },
-  { href: "/map", label: "Map", icon: MapIcon, sub: "Routes and trails" },
+  { href: "/", label: "Home", icon: Home, iconOnly: true },
+  { href: "/explore", label: "Explore", icon: Compass },
+  { href: "/map", label: "Map", icon: MapIcon },
   // Same icons as the hero's Fitness match / Verified operators pop-outs
-  { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark, sub: "Matched to your fitness" },
-  { href: "/operators", label: "Operators", icon: BadgeCheck, sub: "Verified and rated" },
+  { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark },
+  { href: "/operators", label: "Operators", icon: BadgeCheck },
   // Guides goes straight to Adventurepedia, the guides library
-  { href: "/adventurepedia", label: "Guides", icon: Library, sub: "Treks and activities" },
+  { href: "/adventurepedia", label: "Guides", icon: Library },
 ];
 
 // Active on the page itself and anything under it (/adventurepedia/altitude-sickness lights Guides)
@@ -570,10 +570,7 @@ export default function Navbar() {
                   <span className="w-9 h-9 rounded-lg grid place-items-center shrink-0" style={{ background: on ? "#ff5100" : "rgba(255,81,0,0.1)", color: on ? "#fff" : "var(--accent-ink)" }}>
                     <Icon className="w-4 h-4" />
                   </span>
-                  <span className="min-w-0">
-                    <span className="block text-[14px] font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>{link.label}</span>
-                    <span className="block text-[11.5px] leading-tight mt-0.5 truncate" style={{ color: "var(--text-tertiary)" }}>{link.sub}</span>
-                  </span>
+                  <span className="min-w-0 text-[14px] font-semibold leading-tight truncate" style={{ color: "var(--text-primary)" }}>{link.label}</span>
                 </Link>
               );
             })}

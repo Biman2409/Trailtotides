@@ -11,6 +11,7 @@ import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { durationLabel } from "@/components/ui/custom/AdventureFilters";
 import { track } from "@/lib/analytics";
 import { difficultyColor, difficultyOf, formatINR } from "./mapShared";
+import { tm } from "@/lib/tm";
 
 // The map's key, folded: one row of pills (Difficulty, Season, Fit, More) that says what's set at
 // a glance and opens its chart on tap, so the list keeps the room. Opened, Difficulty and Season
@@ -185,7 +186,7 @@ function FitChoices({ f, set, filterWith, score, group, groups, groupLoading, on
   return (
     <div className="mk-drop">
       <div className="mk-head">
-        <span className="mk-label">{group ? `ACE™ fit for ${group.name}` : "Your ACE™ fit"}</span>
+        <span className="mk-label">{tm(group ? `ACE™ fit for ${group.name}` : "Your ACE™ fit")}</span>
         {f.fit && <button type="button" onClick={() => set({ fit: null })} className="mk-reset">Any</button>}
       </div>
       <div className="flex flex-wrap items-center gap-1.5">

@@ -251,7 +251,7 @@ export default function HomePage() {
                   India&apos;s Adventures, <span className="text-[#5fb873]">Mapped</span>
                 </h2>
                 <p className="text-sm leading-relaxed w-full max-w-lg" style={{ color: "var(--text-secondary)" }}>
-                  Every trail, summit and coast on one map. Filter, zoom in, tap a pin.
+                  Find adventures near you or any city. Tap a pin to see its route, elevation and your ACE<sup className="tm">™</sup> fit.
                 </p>
                 {/* Desktop only: below lg the demo sits right under it with its own "Open map" */}
                 <Link

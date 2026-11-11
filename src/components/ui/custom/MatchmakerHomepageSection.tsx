@@ -150,10 +150,13 @@ function DefaultCTA() {
             Adventures built for <span className="text-[#ff5100]">your body</span>
           </h2>
           <p className="text-sm leading-relaxed max-w-xl" style={{ color: "var(--text-secondary)" }}>
-            Answer a few quick questions, about 2 minutes, and get your ACE™ profile: eight capabilities that every adventure is rated against, ready, a stretch, or not yet. Then see what to train to unlock more, and match a whole group.
+            {/* "ACE™ profile" opens the full explanation on /ace */}
+            Two minutes of questions gives you your{" "}
+            <Link href="/ace" className="font-semibold underline decoration-1 underline-offset-2 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-primary)" }}>ACE<sup className="tm">™</sup> profile</Link>.
+            See which adventures you’re ready for, what to train next, and how your group matches up.
           </p>
           {/* Desktop only: below lg the sample sits right under it with its own "Start" */}
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <div className="mt-4 hidden lg:flex flex-wrap items-center gap-x-4 gap-y-2">
             <Link
               href="/matchmaker"
               className="group hidden lg:inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors"
@@ -161,10 +164,6 @@ function DefaultCTA() {
             >
               Take the Matchmaker
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-            {/* The full explanation lives on /ace */}
-            <Link href="/ace" className="py-3 -my-3 text-[13px] font-medium underline underline-offset-2 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
-              How ACE™ works
             </Link>
           </div>
         </div>
@@ -324,7 +323,7 @@ function ProfileSummary({ profile, ace, credits, stale }: { profile: StoredProfi
               <span className="scale-125">{tier.icon}</span>
             </span>
             <span className="flex-1 min-w-0">
-              <span className="block text-[10px] uppercase tracking-[0.2em] font-semibold" style={{ color: "var(--text-tertiary)" }}>Your ACE™ rank</span>
+              <span className="block text-[10px] uppercase tracking-[0.2em] font-semibold" style={{ color: "var(--text-tertiary)" }}>Your ACE<sup className="tm">™</sup> rank</span>
               <span className="block text-lg font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</span>
             </span>
             <span className="text-right shrink-0 text-[11px] leading-snug" style={{ color: "var(--text-tertiary)" }}>

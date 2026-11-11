@@ -178,7 +178,7 @@ function Hero({ profiles }: { profiles: Profile[] }) {
               <span className="ace-ping-dot absolute inset-0 rounded-full" style={{ background: "var(--ace-accent)" }} />
               <span className="relative w-2 h-2 rounded-full" style={{ background: "var(--ace-accent)" }} />
             </span>
-            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: "var(--ace-accent)" }}>ACE<sup>™</sup> · Adventure Capability Engine</span>
+            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: "var(--ace-accent)" }}>ACE<sup className="tm">™</sup> · Adventure Capability Engine</span>
           </div>
           <h1 className="text-[2.6rem] sm:text-5xl lg:text-[3.6rem] leading-[1.02] mb-5" style={{ color: "var(--ace-ink)" }}>
             {words.map((w, k) => (
@@ -188,7 +188,7 @@ function Hero({ profiles }: { profiles: Profile[] }) {
           {/* A page that explains ACE: no buttons up here, the page itself is the explanation
               and the closing panel leads into the Matchmaker */}
           <p className="ace-in text-base sm:text-[17px] leading-relaxed max-w-xl" style={{ color: "var(--ace-soft)", animationDelay: "520ms" }}>
-            &ldquo;Easy&rdquo; and &ldquo;hard&rdquo; hide too much. ACE™ scores every adventure on <strong style={{ color: "var(--ace-ink)" }}>eight things it asks of your body and mind</strong>. Answer a few questions and we score you the same way, so you can see what you&apos;re ready for before you book.
+            &ldquo;Easy&rdquo; and &ldquo;hard&rdquo; hide too much. ACE<sup className="tm">™</sup> scores every adventure on <strong style={{ color: "var(--ace-ink)" }}>eight things it asks of your body and mind</strong>. Answer a few questions and we score you the same way, so you can see what you&apos;re ready for before you book.
           </p>
         </div>
 

@@ -33,6 +33,7 @@ import AceRadar, { AXIS_KEYS as ACE_AXIS_KEYS } from "@/app/ace/AceRadar";
 import { ACE_THEME_CSS } from "@/app/ace/aceTheme";
 import { profileAgeDays, bucketFor } from "@/lib/fitness";
 import ResultsNextSteps, { GroupMatchPromo } from "./ResultsNextSteps";
+import { tm } from "@/lib/tm";
 
 // ─── Sample radar animation ───────────────────────────────────────────────────
 
@@ -302,13 +303,13 @@ function IntroScreen({
             </h1>
 
             <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-secondary)" }}>
-              Tell us about your fitness and experience. We build your ACE™ profile, eight capabilities scored 1 to 5, and rate every adventure against it: ready, a stretch, or not yet.
+              Tell us about your fitness and experience. We build your ACE<sup className="tm">™</sup> profile, eight capabilities scored 1 to 5, and rate every adventure against it: ready, a stretch, or not yet.
             </p>
 
             {/* Reminder when a saved profile is getting old */}
             {hasProfile && stale && (
               <div className="rounded-xl px-4 py-3 mb-4 text-sm" style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.25)", color: "var(--text-secondary)" }}>
-                Your ACE™ profile is {Math.floor((ageDays ?? 0) / 30)} months old. Fitness changes, and a quick refresh keeps your matches honest.
+                Your ACE<sup className="tm">™</sup> profile is {Math.floor((ageDays ?? 0) / 30)} months old. Fitness changes, and a quick refresh keeps your matches honest.
               </div>
             )}
 
@@ -482,7 +483,7 @@ function LoadingScreen() {
         <Loader2 className="w-8 h-8 text-[#ff5100] animate-spin" />
       </div>
       <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-4 inline-flex items-center gap-1.5"><MatchmakerMark className="w-3.5 h-3.5" />Adventure Matchmaker</p>
-      <h2 className="t-text text-2xl font-bold mb-8">Building your ACE™ profile</h2>
+      <h2 className="t-text text-2xl font-bold mb-8">Building your ACE<sup className="tm">™</sup> profile</h2>
       <div className="space-y-3">
         {steps.map((s, i) => (
           <div
@@ -590,9 +591,9 @@ function SectionHead({ eyebrow, title, sub, right }: { eyebrow: string; title: s
   return (
     <div className="flex flex-wrap items-end justify-between gap-3 mb-5 sm:mb-6">
       <div className="min-w-0">
-        <p className="text-[#ff5100] text-[11px] font-semibold tracking-[0.22em] uppercase mb-1.5">{eyebrow}</p>
+        <p className="text-[#ff5100] text-[11px] font-semibold tracking-[0.22em] uppercase mb-1.5">{tm(eyebrow)}</p>
         <h2 className="t-text text-xl sm:text-2xl font-bold tracking-tight">{title}</h2>
-        {sub && <p className="text-[13px] mt-1 max-w-xl" style={{ color: "var(--text-secondary)" }}>{sub}</p>}
+        {sub && <p className="text-[13px] mt-1 max-w-xl" style={{ color: "var(--text-secondary)" }}>{tm(sub)}</p>}
       </div>
       {right}
     </div>
@@ -949,7 +950,7 @@ function ResultsScreen({
                     <span className="scale-[1.6]">{tier.icon}</span>
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: "var(--text-tertiary)" }}>Your ACE™ rank</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: "var(--text-tertiary)" }}>Your ACE<sup className="tm">™</sup> rank</p>
                     <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-[1.05]" style={{ color: tier.color }}>{tier.label}</h1>
                   </div>
                 </div>
@@ -1472,7 +1473,7 @@ export default function MatchmakerClient() {
       <div className="mb-7 lg:mb-4">
         <div className="flex items-center justify-between mb-5 lg:mb-3">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: accentColor }}>
-            {isMedical ? "Health Background (Optional)" : isDecay ? "Calibration" : mode === "quick" ? "Quick match" : mode === "refine" ? "Refining your ACE™ profile" : "Adventure Matchmaker"}
+            {tm(isMedical ? "Health Background (Optional)" : isDecay ? "Calibration" : mode === "quick" ? "Quick match" : mode === "refine" ? "Refining your ACE™ profile" : "Adventure Matchmaker")}
           </p>
           <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{stepIndex + 1} / {steps.length}</span>
         </div>
@@ -1501,7 +1502,7 @@ export default function MatchmakerClient() {
           </div>
         </div>
         {isDecay && (
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Two quick questions on recency and current fitness. They fine-tune your ACE™ profile.</p>
+          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Two quick questions on recency and current fitness. They fine-tune your ACE<sup className="tm">™</sup> profile.</p>
         )}
         {isMedical && (
           <p className="text-xs" style={{ color: "var(--text-muted)" }}>Every question here is optional. A &ldquo;yes&rdquo; lowers the scores it affects (never by more than half in total) and adds safety notes on the adventures where it matters. Skipping leaves your scores as they are.</p>

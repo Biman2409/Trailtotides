@@ -92,22 +92,23 @@ export const TYPE_ICON_DEFS: Record<string, IconDef> = {
   // Wind icon
   Paragliding: {
     paths: [
-      "M12.8 19.6A2 2 0 1 0 14 16H2",
-      "M17.5 8a2.5 2.5 0 1 1 2 4H2",
-      "M9.8 4.4A2 2 0 1 1 11 8H2",
+      "M3 9C6 3.5 18 3.5 21 9l-2.2 1C16 6.5 8 6.5 5.2 10z",
+      "M5.2 10 11 18",
+      "M18.8 10 13 18",
+      "M9.5 7.6 11.4 18",
+      "M14.5 7.6 12.6 18",
     ],
+    circles: [{ cx: "12", cy: "19.6", r: "1.6" }],
   },
-  // Sunrise icon
+  // Striped balloon with basket
   "Hot Air Balloon": {
     paths: [
-      "M12 2v8",
-      "m4.93 10.93 1.41 1.41",
-      "M2 18h2",
-      "M20 18h2",
-      "m19.07 10.93-1.41 1.41",
-      "M22 22H2",
-      "m8 6 4-4 4 4",
-      "M16 18a4 4 0 0 0-8 0",
+      "M12 2a7 7 0 0 0-7 7c0 3.5 3 6 5 8h4c2-2 5-4.5 5-8a7 7 0 0 0-7-7z",
+      "M12 2c-2 2-3 4.5-3 7s.6 5.5 1 8",
+      "M12 2c2 2 3 4.5 3 7s-.6 5.5-1 8",
+      "M10 17l.3 2.5",
+      "M14 17l-.3 2.5",
+      "M10.4 19.5h3.2a.6.6 0 0 1 .6.6v1.4a.6.6 0 0 1-.6.6h-3.2a.6.6 0 0 1-.6-.6v-1.4a.6.6 0 0 1 .6-.6z",
     ],
   },
   // Anchor icon
@@ -118,6 +119,15 @@ export const TYPE_ICON_DEFS: Record<string, IconDef> = {
       "M9 11h6",
     ],
     circles: [{ cx: "12", cy: "4", r: "2" }],
+  },
+  // Raft paddle in the water
+  "River Rafting": {
+    paths: [
+      "M4 3l9 9",
+      "M13 12l2.5-.5 3 3a2.1 2.1 0 0 1-3 3l-3-3z",
+      "M2 17c2 0 2-1.5 4-1.5S8 17 10 17",
+      "M2 21c2 0 2-1.5 4-1.5s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5",
+    ],
   },
   // Waves icon
   Kayaking: {

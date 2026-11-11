@@ -110,8 +110,8 @@ export default async function ActivityPage({ params }: { params: Promise<{ slug:
             )}
             <div className="mt-4 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center gap-4" style={{ background: "rgba(255,81,0,0.05)", border: "1px solid rgba(255,81,0,0.2)" }}>
               <p className="flex-1 text-[14.5px] leading-[1.6] t-text-2">
-                {a.body.length > 0 ? <>These are capabilities on the <Link href="/ace" className="font-semibold t-text underline underline-offset-2 decoration-[#ff5100]/50">ACE™ scale</Link>. </> : null}
-                The Adventure Matchmaker builds your ACE™ profile in 2 minutes and rates every adventure for you: ready, a stretch, or not yet.
+                {a.body.length > 0 ? <>These are capabilities on the <Link href="/ace" className="font-semibold t-text underline underline-offset-2 decoration-[#ff5100]/50">ACE<sup className="tm">™</sup> scale</Link>. </> : null}
+                The Adventure Matchmaker builds your ACE<sup className="tm">™</sup> profile in 2 minutes and rates every adventure for you: ready, a stretch, or not yet.
               </p>
               <Link href="/matchmaker" className="shrink-0 inline-flex items-center gap-1.5 h-11 px-5 rounded-full text-[14px] font-semibold text-white" style={{ background: "#ff5100" }}>
                 Take the Matchmaker <ArrowRight className="w-4 h-4" />
