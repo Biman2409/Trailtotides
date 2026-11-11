@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { BadgeCheck, ArrowRight } from "lucide-react";
 import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { GENRE_GROUPS } from "@/lib/filterOptions";
+import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 
 // The hero's promise reads as one sentence: "Find · compare · book Adventures …" and the line
 // below finishes it three ways, taking turns. Each ending is lowercase so it continues the
@@ -22,16 +23,21 @@ const PROMISES: PromiseItem[] = [
 
 const TURN_MS = 3400;
 
-// Hovering "Adventures" scatters every adventure type across the hero, tinted by genre.
+// Hovering "Adventures" scatters every adventure type's icon across the hero, at random sizes, tinted by genre.
 // The genre colours in filterOptions are for light panels, so the hero gets pale, airy tints.
 const GENRE_TINTS: Record<string, string> = { Earth: "#ffd6c2", Water: "#bdfbf3", Snow: "#e0e5ff", Air: "#ffecc4" };
-const ADVENTURE_TYPES = GENRE_GROUPS.flatMap((g) => g.types.map((t) => ({ t, color: GENRE_TINTS[g.label] ?? "#fff" })));
+const ADVENTURE_TYPES = GENRE_GROUPS.flatMap((g) => g.types.filter((t) => ADVENTURE_TYPE_ICONS[t]).map((t) => ({ t, color: GENRE_TINTS[g.label] ?? "#fff" })));
 
-type ScatterWord = { t: string; color: string; x: number; y: number; r: number; s: number; d: number };
+type ScatterWord = { t: string; color: string; x: number; y: number; r: number; s: number; d: number; anim: string; dur: number; off: number };
+
+// Each icon gets one of these moves at random, at its own pace and out of step with the rest
+const MOVES = ["hpFloat", "hpSway", "hpPulse", "hpOrbit", "hpSpin", "hpBob"];
 
 type Box = { l: number; t: number; r: number; b: number };
 const hits = (a: Box, b: Box) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
-const WORD_PX = 19.2; // 1.2rem, the scatter font size before --s
+const ICON_PX = 30; // an icon's size before --s
+const LABEL_PX = 10.5; // the name under each icon
+const LABEL_GAP = 5;
 
 const CLEARANCE = 14;
 
@@ -65,28 +71,25 @@ function heroObstacles(hero: HTMLElement, area: DOMRect): Box[] {
 }
 
 // Random spots across the hero clear of all hero text and of each other, spread evenly:
-// each word samples many clear spots and takes the one farthest from the words already
+// each icon samples many clear spots and takes the one farthest from the words already
 // placed (best-candidate sampling), so they cover the screen instead of clumping. A word
 // with no clear spot tries smaller, and is left out rather than overlap anything.
 function scatterWords(hero: HTMLElement): ScatterWord[] {
   const area = hero.getBoundingClientRect();
+  // Measure each name in the label font, so a long one ("Urban Adventure") gets the room it needs
+  const ctx = document.createElement("canvas").getContext("2d");
+  if (ctx) ctx.font = `600 ${LABEL_PX}px ${getComputedStyle(document.body).fontFamily}`;
+  const labelWidth = (t: string) => (ctx ? ctx.measureText(t).width * 1.06 : t.length * LABEL_PX * 0.62) + LABEL_PX * 0.05 * t.length;
   const taken = heroObstacles(hero, area);
   const centers: { x: number; y: number }[] = [];
   const words: ScatterWord[] = [];
-  // Script glyphs vary a lot in width, so measure each word in the real font
-  const ctx = document.createElement("canvas").getContext("2d");
-  const family = getComputedStyle(hero.querySelector(".hp-adv") ?? hero).fontFamily;
-  const textWidth = (t: string, px: number) => {
-    if (!ctx) return t.length * px * 0.5;
-    ctx.font = `500 ${px}px ${family}`;
-    return ctx.measureText(t).width;
-  };
   for (const a of [...ADVENTURE_TYPES].sort(() => Math.random() - 0.5)) {
-    const base = 0.85 + Math.random() * 0.45;
+    // From small to bold: roughly 22 px to 50 px
+    const base = 0.72 + Math.random() * 0.95;
     for (const shrink of [1, 0.85, 0.7]) {
       const s = base * shrink;
-      const w = textWidth(a.t, WORD_PX * s) * 1.08 + 10;
-      const h = WORD_PX * s * 1.2;
+      const w = Math.max(ICON_PX * s + 12, labelWidth(a.t) + 8);
+      const h = ICON_PX * s + LABEL_GAP + LABEL_PX * 1.3 + 10;
       let best: { x: number; y: number; box: Box; far: number } | null = null;
       for (let tries = 0; tries < 120; tries++) {
         const x = w / 2 + Math.random() * (area.width - w);
@@ -101,7 +104,8 @@ function scatterWords(hero: HTMLElement): ScatterWord[] {
       // Words keep a little space between each other too
       taken.push({ l: box.l - 8, t: box.t - 8, r: box.r + 8, b: box.b + 8 });
       centers.push({ x, y });
-      words.push({ ...a, x: (x / area.width) * 100, y: (y / area.height) * 100, r: Math.random() * 10 - 5, s, d: Math.random() * 0.35 });
+      words.push({ ...a, x: (x / area.width) * 100, y: (y / area.height) * 100, r: Math.random() * 24 - 12, s, d: Math.random() * 0.35,
+        anim: MOVES[Math.floor(Math.random() * MOVES.length)], dur: 3 + Math.random() * 4, off: -Math.random() * 6 });
       break;
     }
   }
@@ -202,9 +206,10 @@ export default function HeroPromise() {
           {words.list.map((w) => (
             <span
               key={`${words.id}-${w.t}`}
-              style={{ left: `${w.x}%`, top: `${w.y}%`, transitionDelay: wordsOn ? `${w.d}s` : "0s", "--c": w.color, "--r": `${w.r}deg`, "--s": w.s } as React.CSSProperties}
+              style={{ left: `${w.x}%`, top: `${w.y}%`, transitionDelay: wordsOn ? `${w.d}s` : "0s", "--c": w.color, "--r": `${w.r}deg`, "--s": w.s, "--anim": w.anim, "--dur": `${w.dur}s`, "--off": `${w.off}s` } as React.CSSProperties}
             >
-              {w.t}
+              <i>{ADVENTURE_TYPE_ICONS[w.t](Math.round(ICON_PX * w.s))}</i>
+              <small>{w.t}</small>
             </span>
           ))}
         </div>,
@@ -245,22 +250,31 @@ export default function HeroPromise() {
         .hp-scatter.is-on::before { opacity: 1; }
         .hp-hero :is(h1, .hp-kicker, .hp-line, form, a[href='/explore'], .hero-scroll) { transition: opacity .5s ease; }
         .hp-hero.hp-dim-on :is(h1, .hp-kicker, .hp-line, form, a[href='/explore'], .hero-scroll) { opacity: 0.15; }
-        /* Handwritten like "Adventures": each word writes itself in left to right, in a
-           white-to-genre gradient with a soft genre glow, then drifts gently while shown */
-        .hp-scatter span { position: absolute; white-space: nowrap; opacity: 0; padding: 0 0.12em;
-                           /* 1.2rem matches WORD_PX, which the layout uses to size each word */
-                           font: 500 calc(1.2rem * var(--s)) var(--font-script), cursive; line-height: 1.1;
-                           background: linear-gradient(100deg, #fff 15%, var(--c) 85%); -webkit-background-clip: text; background-clip: text; color: transparent;
-                           filter: drop-shadow(0 0 10px color-mix(in srgb, var(--c) 50%, transparent)) drop-shadow(0 1px 6px rgba(0,0,0,0.5));
-                           clip-path: inset(-30% 100% -30% -10%);
-                           transform: translate(-50%, -50%) rotate(var(--r));
-                           transition: opacity .35s ease, clip-path .9s cubic-bezier(.3,.7,.2,1); }
-        .hp-scatter.is-on span { opacity: 0.92; clip-path: inset(-30% -15% -30% -10%);
-                                 animation: hpDrift 5s ease-in-out infinite alternate; }
-        .hp-scatter.is-on span:nth-child(odd) { animation-direction: alternate-reverse; animation-duration: 6.5s; }
-        @keyframes hpDrift { from { translate: 0 -3px; } to { translate: 0 4px; } }
+        /* Each type's icon with its name underneath, in its genre tint with a soft glow: they pop in
+           one by one, then each icon makes its own move while the name stays level and still */
+        .hp-scatter span { position: absolute; display: flex; flex-direction: column; align-items: center; gap: ${LABEL_GAP}px; opacity: 0; color: var(--c);
+                           transform: translate(-50%, -50%) scale(0.4);
+                           transition: opacity .35s ease, transform .6s cubic-bezier(.3,1.6,.5,1); }
+        .hp-scatter span > i { display: grid; place-items: center; transform: rotate(var(--r));
+                               filter: drop-shadow(0 0 10px color-mix(in srgb, var(--c) 55%, transparent)) drop-shadow(0 1px 6px rgba(0,0,0,0.5)); }
+        .hp-scatter span svg { stroke-width: 1.75; }
+        .hp-scatter span > small { font: 600 ${LABEL_PX}px/1.2 var(--font-dm-sans, 'DM Sans'), sans-serif; letter-spacing: 0.05em; white-space: nowrap;
+                                   opacity: 0.85; text-shadow: 0 1px 6px rgba(0,0,0,0.7); }
+        .hp-scatter.is-on span { opacity: 0.92; transform: translate(-50%, -50%) scale(1); }
+        .hp-scatter.is-on span > i { animation: var(--anim) var(--dur) ease-in-out var(--off) infinite; }
+        .hp-scatter.is-on span:nth-child(odd) > i { animation-direction: reverse; }
+        /* The moves: they animate translate / rotate / scale, which stack on the icon's own placement and tilt */
+        @keyframes hpFloat { 0%, 100% { translate: 0 -5px; } 50% { translate: 0 6px; } }
+        @keyframes hpSway  { 0%, 100% { rotate: -10deg; } 50% { rotate: 10deg; } }
+        @keyframes hpPulse { 0%, 100% { scale: 0.88; } 50% { scale: 1.14; } }
+        @keyframes hpOrbit { 0% { translate: 6px 0; } 25% { translate: 0 6px; } 50% { translate: -6px 0; } 75% { translate: 0 -6px; } 100% { translate: 6px 0; } }
+        @keyframes hpSpin  { from { rotate: 0deg; } to { rotate: 360deg; } }
+        @keyframes hpBob   { 0%, 100% { translate: 0 0; rotate: -6deg; } 50% { translate: 0 -7px; rotate: 6deg; } }
+        /* A spin is slow and steady */
+        .hp-scatter.is-on span[style*="hpSpin"] > i { animation-duration: calc(var(--dur) * 2.5); animation-timing-function: linear; }
         @media (prefers-reduced-motion: reduce) {
-          .hp-scatter span, .hp-scatter.is-on span { clip-path: none; animation: none; transition: opacity .4s ease; }
+          .hp-scatter span, .hp-scatter.is-on span { transition: opacity .4s ease; transform: translate(-50%, -50%); }
+          .hp-scatter.is-on span > i { animation: none; }
         }
         @keyframes hpUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
         @keyframes hpPop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: none; } }

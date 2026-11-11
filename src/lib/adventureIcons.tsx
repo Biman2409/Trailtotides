@@ -101,17 +101,15 @@ const MaskSnorkel = ({ size = 14 }: { size?: number }) => (
   </svg>
 );
 
-// Custom sport-shoe SVG for Scrambling (no Lucide equivalent)
-const SportShoe = ({ size = 14 }: { size?: number }) => (
+// Climbing wall with holds, for Rock Climbing
+const ClimbingWall = ({ size = 14 }: { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={size} height={size}
-    fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-    {/* sole */}
-    <path d="M2 17.5Q2 19.5 5 19.5h14q3 0 3-2v-1H2v1Z" />
-    {/* upper body of shoe */}
-    <path d="M2 16.5V14Q2 10 6 9.5l3-0.5 2-3.5Q12 4 14 4.5l1 1.5-3 4.5h9l.5 2.5q.5 2-1.5 4H2Z" />
-    {/* laces */}
-    <line x1="10" y1="11" x2="13" y2="11" />
-    <line x1="11" y1="13" x2="15" y2="13" />
+    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M7 2h10l3 20H4z" />
+    <circle cx="10" cy="7" r="1.2" />
+    <circle cx="14.5" cy="10" r="1.2" />
+    <circle cx="9.5" cy="14" r="1.2" />
+    <circle cx="15" cy="17.5" r="1.2" />
   </svg>
 );
 
@@ -133,7 +131,7 @@ import {
 export const ADVENTURE_TYPE_ICONS: Record<string, (size?: number) => React.ReactNode> = {
   Trekking:          (s = 14) => <Tent          style={{ width: s, height: s }} />,
   Mountaineering:    (s = 14) => <MountainSnow  style={{ width: s, height: s }} />,
-  "Rock Climbing":   (s = 14) => <SportShoe     size={s} />,
+  "Rock Climbing":   (s = 14) => <ClimbingWall  size={s} />,
   Scrambling:        (s = 14) => <Footprints    style={{ width: s, height: s }} />,
   Motorcycling:      (s = 14) => <Motorbike     style={{ width: s, height: s }} />,
   Cycling:           (s = 14) => <Bike          style={{ width: s, height: s }} />,
