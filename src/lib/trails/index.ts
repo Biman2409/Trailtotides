@@ -19,6 +19,8 @@ import dayaraBugyal from "./dayara-bugyal.json";
 import deoriatalChandrashila from "./deoriatal-chandrashila.json";
 import doditalDarwaPass from "./dodital-darwa-pass.json";
 import everestBaseCamp from "./everest-base-camp.json";
+import everestBaseCampGokyoLakes from "./everest-base-camp-gokyo-lakes.json";
+import everestThreePasses from "./everest-three-passes.json";
 import gaumukhTapovan from "./gaumukh-tapovan.json";
 import goechala from "./goechala.json";
 import gokyoLakes from "./gokyo-lakes.json";
@@ -58,6 +60,8 @@ const TRAILS: Record<string, Trail> = {
   "deoriatal-chandrashila": deoriatalChandrashila as unknown as Trail,
   "dodital-darwa-pass": doditalDarwaPass as unknown as Trail,
   "everest-base-camp": everestBaseCamp as unknown as Trail,
+  "everest-base-camp-gokyo-lakes": everestBaseCampGokyoLakes as unknown as Trail,
+  "everest-three-passes": everestThreePasses as unknown as Trail,
   "gaumukh-tapovan": gaumukhTapovan as unknown as Trail,
   "goechala": goechala as unknown as Trail,
   "gokyo-lakes": gokyoLakes as unknown as Trail,
