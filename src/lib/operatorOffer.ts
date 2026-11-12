@@ -17,6 +17,8 @@ export type OperatorOffer = {
   priceNote?: string;
   /** Months with open batches on the collection date, e.g. "Nov 2026" */
   batches: string[];
+  /** Start date of every listed batch (ISO), when the operator's page lists exact dates */
+  departures?: string[];
   startEnd?: string;
   groupSize?: number;
   addOns: { offloading?: number; transport?: number; insurance?: number; singleTent?: number };

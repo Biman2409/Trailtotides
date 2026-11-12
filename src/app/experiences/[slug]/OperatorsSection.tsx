@@ -54,9 +54,10 @@ function transportNote(op: OperatorCardData): string {
 /** True when we know the full price from the operator's own page, not just a headline fee */
 const knownFull = (op: OperatorCardData) => !!op.offer && fullTripCost(op.offer) !== undefined;
 
-/** "Nov, Dec, Jan +5" from the batch months, or the operator's own exact dates */
+/** The next exact start dates when the operator lists them ("5 Dec, 12 Dec +15"), else the batch months */
 function datesOf(op: OperatorCardData): React.ReactNode {
-  const exact = op.departureDates ?? [];
+  const today = new Date().toISOString().slice(0, 10);
+  const exact = op.departureDates?.length ? op.departureDates : (op.offer?.departures ?? []).filter((d) => d >= today);
   if (exact.length) return <>{exact.slice(0, 2).map(formatDate).join(", ")}{exact.length > 2 && <span style={muted}> +{exact.length - 2}</span>}</>;
   const months = op.offer?.batches ?? [];
   if (months.length) return <>{months.slice(0, 3).map((m) => m.slice(0, 3)).join(", ")}{months.length > 3 && <span style={muted}> +{months.length - 3}</span>}</>;
