@@ -29,6 +29,17 @@ export default async function AdminPage() {
     const { count: n } = await adminClient.from(table).select("*", { count: "exact", head: true });
     return n ?? 0;
   };
+  // Wishlists aren't a table: each account's saves are <user id>.json (a list of slugs) in the
+  // "wishlists" bucket, beside triplog-<id>.json files. Total saves = all those lists added up.
+  const wishlistSaves = async () => {
+    const { data: files } = await adminClient.storage.from("wishlists").list("", { limit: 1000 });
+    const owners = (files ?? []).filter((f) => /^[0-9a-f-]{36}\.json$/.test(f.name));
+    const sizes = await Promise.all(owners.map(async (f) => {
+      const { data } = await adminClient.storage.from("wishlists").download(f.name);
+      try { const slugs: unknown = JSON.parse((await data?.text()) ?? "[]"); return Array.isArray(slugs) ? slugs.length : 0; } catch { return 0; }
+    }));
+    return sizes.reduce((a, b) => a + b, 0);
+  };
 
   const [
     { data: profiles },
@@ -40,7 +51,7 @@ export default async function AdminPage() {
     adminClient.from("profiles").select("*").order("created_at", { ascending: false }),
     adminClient.from("contact_messages").select("*").order("created_at", { ascending: false }),
     adminClient.auth.admin.listUsers({ perPage: 1000 }),
-    count("wishlists"),
+    wishlistSaves(),
     count("saved_searches"),
   ]);
 
