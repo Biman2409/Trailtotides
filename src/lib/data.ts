@@ -1674,9 +1674,9 @@ export const adventures: Adventure[] = [
     galleryImages: ["https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/sar-pass.jpeg"],
     lat: 31.96247, lng: 77.38869,
     description: "Sar Pass (4,200m) is one of India's most popular **first Himalayan pass treks** — 5 days from Kasol through the Parvati Valley to a snow pass with **excellent Kullu mountain panoramas**. The far side is famous for **its snow descent — a glissade down a steep snowfield** on your back or sitting — one of the most purely joyful moments in Himalayan trekking.",
-    whoFor: "You're new to trekking and want one snowy pass, starting from Kasol · You'd enjoy sliding down the snow on the descent · You can walk 5–6 hours a day, with one long pass day · You're happy in a big organised group: most go with YHAI",
+    whoFor: "You're new to trekking and want one snowy pass, starting from Kasol · You'd enjoy sliding down the snow on the descent · You can walk 5–6 hours a day, with one long pass day · You're happy in a big organised group: most people cross it with one",
     whoNot: "You want solitude: it's a popular, busy trail · You're going after June: the snow, and the slide, are gone",
-    safetyNotes: "Sar Pass is managed by YHAI — most trekkers go with their organised groups. Snow conditions vary year to year — call ahead for May snowpack. High pass crossing requires warm layers even in June.",
+    safetyNotes: "Most trekkers cross Sar Pass in an organised group. Snow conditions vary year to year — call ahead for May snowpack. High pass crossing requires warm layers even in June.",
     ace: { stamina:4, power:2, strength:3, agility:3, water:2, altitude:4, focus:3, nerve:2 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹12,000", googleRating: 4.7, website: "https://www.bikatadventures.com/Home/Itinerary/Sar-Pass-Trek" },
