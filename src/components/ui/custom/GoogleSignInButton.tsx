@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-// Off until Google is switched on in Supabase (Authentication → Providers → Google, with a
-// Google Cloud OAuth client) and NEXT_PUBLIC_GOOGLE_AUTH=on is set in Vercel. Without both,
-// a click would only show Supabase's "provider is not enabled" error.
-export const GOOGLE_AUTH_ON = process.env.NEXT_PUBLIC_GOOGLE_AUTH === "on";
+// On: Google is set up in Supabase (Authentication → Providers → Google) with the OAuth client
+// "Trail to Tides website (Supabase)" in Google Cloud project TTTCompassAI. Set
+// NEXT_PUBLIC_GOOGLE_AUTH=off in Vercel to hide the button without a code change.
+export const GOOGLE_AUTH_ON = process.env.NEXT_PUBLIC_GOOGLE_AUTH !== "off";
 
 /** "Continue with Google", returning to `next` through /auth/callback (which exchanges the code) */
 export default function GoogleSignInButton({ next = "/", label = "Continue with Google" }: { next?: string; label?: string }) {
