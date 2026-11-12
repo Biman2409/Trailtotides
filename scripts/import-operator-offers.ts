@@ -4,7 +4,7 @@
  * Reads the operator research spreadsheet (Treks + Services + Sources sheets) and writes:
  *   src/lib/operatorOffers.json   full offer per adventure × operator, for the comparison
  *   src/lib/operatorPrices.json   just the headline fee per adventure × operator, read by data.ts
- *   src/lib/operatorListings.json operators added from the sheet (all but NOT_FROM_SHEET), read by data.ts
+ *   src/lib/operatorListings.json operators added from the sheet, read by data.ts
  *
  * Operators already listed on an adventure in data.ts get an offer. Every other sheet operator
  * is also listed on every adventure the sheet has it for, as long as the page gave a price.
@@ -30,9 +30,6 @@ const ALIASES: Record<string, { trek: string; prefer?: RegExp }> = {
   "panch-kedar": { trek: "Panchkedar Trek & Drive" },
 };
 
-// Every operator in the sheet is listed on each adventure the sheet has them for, not only where
-// data.ts names them, except these
-const NOT_FROM_SHEET = ["YHAI"];
 
 const norm = (s: string) => s.toLowerCase().replace(/\b(trek|the|and)\b/g, "").replace(/[^a-z0-9]/g, "");
 const num = (v: unknown): number | undefined => {
@@ -129,7 +126,8 @@ for (const a of adventures) {
   const days = parseInt(a.durationDays, 10);
   // Operators written into data.ts by hand; the ones a previous run added come back from the sheet
   const listed = new Set(a.operators.filter((o) => !o.fromSheet).map((o) => norm(o.name)));
-  const fromSheet = [...new Set(rows.map((r) => str(r.Operator)))].filter((n) => n && !NOT_FROM_SHEET.includes(n));
+  // Every operator in the sheet is listed on each adventure it runs, not only where data.ts names it
+  const fromSheet = [...new Set(rows.map((r) => str(r.Operator)))].filter(Boolean);
   const names = [...a.operators.filter((o) => !o.fromSheet).map((o) => o.name), ...fromSheet.filter((n) => !listed.has(norm(n)))];
   for (const opName of names) {
     const op = { name: opName };
