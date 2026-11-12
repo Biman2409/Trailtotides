@@ -6,37 +6,99 @@
    "priceFrom": "₹5,499",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/kedarkantha-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "sandakphu-phalut-trek": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹13,400",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/sandakphu-trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹12,000",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/sandakphu-phalut-trek-93853",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "tarsar-marsar-trek": [
+  {
+   "name": "WhiteMagic Adventure",
+   "verified": false,
+   "priceFrom": "₹69,520",
+   "googleRating": 0,
+   "website": "https://whitemagicadventure.com/trek-walking-holidays/tarsar-marsar-trek",
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
+  },
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹17,250",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/tarsar-marsar-trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹16,499",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/tarsar-marsar-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
+  }
+ ],
+ "ali-bedni-bugyal": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹11,250",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/ali-bedni-bugyal-trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
   }
  ],
  "annapurna-base-camp": [
+  {
+   "name": "WhiteMagic Adventure",
+   "verified": false,
+   "priceFrom": "₹76,000",
+   "googleRating": 0,
+   "website": "https://whitemagicadventure.com/trek-walking-holidays/annapurna-base-camp",
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹45,000",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/annapurna-base-camp-trek-8-days",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
+  }
+ ],
+ "annapurna-circuit": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹80,000",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/Annapurna-Circuit-Trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
   }
  ],
  "buran-ghati": [
@@ -46,7 +108,8 @@
    "priceFrom": "₹17,499",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/buran-ghati-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "beas-kund": [
@@ -56,77 +119,159 @@
    "priceFrom": "₹5,500",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/beas-kund-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "bhrigu-lake": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹7,500",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/bhrigu-lake-trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹5,500",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/bhrigu-lake-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "brahmatal": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹10,500",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/brahmatal-trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹9,500",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/brahmatal-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "dayara-bugyal": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹10,500",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/Dayara-Bugyal-Trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹4,999",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/dayara-bugyal-trek-from-dehradun",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "deoriatal-chandrashila": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹9,500",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/Chopta-chandrashila-trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹6,499",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/chopta-tungnath-chandrashila-deoriatal-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "everest-base-camp": [
+  {
+   "name": "WhiteMagic Adventure",
+   "verified": false,
+   "priceFrom": "₹1,12,000",
+   "googleRating": 0,
+   "website": "https://whitemagicadventure.com/trek-walking-holidays/everest-base-camp",
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹48,300",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/everest-base-camp-trek-ebc-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "gaumukh-tapovan": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹17,500",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/gaumukh-tapovan-trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹15,000",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/gaumukh-tapovan-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
+  }
+ ],
+ "goechala": [
+  {
+   "name": "WhiteMagic Adventure",
+   "verified": false,
+   "priceFrom": "₹1,18,900",
+   "googleRating": 0,
+   "website": "https://whitemagicadventure.com/trek-walking-holidays/dzongri-goecha-la-trek",
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "hampta-pass": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹13,500",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/Hampta-Pass-Chandratal-Lake-Trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹6,499",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/hampta-pass-trek-chandratal-lake",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "har-ki-dun": [
@@ -136,27 +281,57 @@
    "priceFrom": "₹9,999",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/har-ki-dun-valley-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "kashmir-great-lakes": [
+  {
+   "name": "WhiteMagic Adventure",
+   "verified": false,
+   "priceFrom": "₹89,900",
+   "googleRating": 0,
+   "website": "https://whitemagicadventure.com/trek-walking-holidays/kashmir-great-lakes-trek",
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
+  },
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹21,000",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/kashmir-great-lakes-trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹17,999",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/kashmir-great-lakes-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "kedartal": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹18,000",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/kedar-taal-trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹14,000",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/kedar-tal",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "kuari-pass": [
@@ -166,7 +341,19 @@
    "priceFrom": "₹6,999",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/kuari-pass-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
+  }
+ ],
+ "markha-valley": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹29,500",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/markha-valley-trek-zanskar-rafting",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
   }
  ],
  "rupin-pass": [
@@ -176,7 +363,8 @@
    "priceFrom": "₹16,500",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/rupin-pass-trek-48511",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "valley-of-flowers": [
@@ -186,17 +374,39 @@
    "priceFrom": "₹8,999",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/valley-of-flowers-trek-uttarakhand",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
+  }
+ ],
+ "chandrakhani-pass": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹9,200",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/Chandrakhani-Pass-Trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
   }
  ],
  "dodital-darwa-pass": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹11,600",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/dodital-Trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹10,000",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/dodital-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "kareri-lake": [
@@ -206,17 +416,94 @@
    "priceFrom": "₹4,000",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/kareri-lake-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
+  }
+ ],
+ "khopra-danda": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹24,800",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/khopra-ridge-trek-nepal",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  }
+ ],
+ "lobuche-peak": [
+  {
+   "name": "WhiteMagic Adventure",
+   "verified": false,
+   "priceFrom": "₹2,45,000",
+   "googleRating": 0,
+   "website": "https://whitemagicadventure.com/climb-trekking-peaks/lobuche-east-6119m-gokyo",
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
+  }
+ ],
+ "manaslu-circuit": [
+  {
+   "name": "WhiteMagic Adventure",
+   "verified": false,
+   "priceFrom": "₹98,900",
+   "googleRating": 0,
+   "website": "https://whitemagicadventure.com/trek-walking-holidays/manaslu-circuit-trek",
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
+  }
+ ],
+ "pangarchulla-peak": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹13,400",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/pangarchulla-peak-trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  }
+ ],
+ "phulara-ridge": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹11,500",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/phulara-ridge-trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  }
+ ],
+ "pin-bhaba-pass": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹18,500",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/Pin-Bhaba-Pass-Trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
   }
  ],
  "pindari-glacier": [
+  {
+   "name": "Bikat Adventures",
+   "verified": false,
+   "priceFrom": "₹14,500",
+   "googleRating": 0,
+   "website": "https://www.bikatadventures.com/Home/Itinerary/pindari-glacier-trek",
+   "priceCheckedAt": "2026-11-11",
+   "fromSheet": true
+  },
   {
    "name": "Treks and Trails India",
    "verified": false,
    "priceFrom": "₹16,500",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/pindari-glacier-trek-48348",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "roopkund": [
@@ -226,7 +513,8 @@
    "priceFrom": "₹14,900",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/roopkund-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ],
  "sar-pass": [
@@ -236,7 +524,8 @@
    "priceFrom": "₹6,999",
    "googleRating": 0,
    "website": "https://www.treksandtrails.org/tours/sar-pass-trek",
-   "priceCheckedAt": "2026-11-12"
+   "priceCheckedAt": "2026-11-12",
+   "fromSheet": true
   }
  ]
 }

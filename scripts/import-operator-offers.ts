@@ -4,10 +4,10 @@
  * Reads the operator research spreadsheet (Treks + Services + Sources sheets) and writes:
  *   src/lib/operatorOffers.json   full offer per adventure × operator, for the comparison
  *   src/lib/operatorPrices.json   just the headline fee per adventure × operator, read by data.ts
- *   src/lib/operatorListings.json operators added from the sheet (ADD_FROM_SHEET), read by data.ts
+ *   src/lib/operatorListings.json operators added from the sheet (all but NOT_FROM_SHEET), read by data.ts
  *
- * Operators already listed on an adventure in data.ts get an offer. Operators in ADD_FROM_SHEET
- * are also listed on every adventure the sheet has them for, as long as the page gave a price.
+ * Operators already listed on an adventure in data.ts get an offer. Every other sheet operator
+ * is also listed on every adventure the sheet has it for, as long as the page gave a price.
  * Re-run whenever the spreadsheet is refreshed.
  */
 import * as XLSX from "xlsx";
@@ -30,8 +30,9 @@ const ALIASES: Record<string, { trek: string; prefer?: RegExp }> = {
   "panch-kedar": { trek: "Panchkedar Trek & Drive" },
 };
 
-// Operators listed on every adventure the sheet has them for, not only where data.ts names them
-const ADD_FROM_SHEET = ["Treks and Trails India"];
+// Every operator in the sheet is listed on each adventure the sheet has them for, not only where
+// data.ts names them, except these
+const NOT_FROM_SHEET = ["YHAI"];
 
 const norm = (s: string) => s.toLowerCase().replace(/\b(trek|the|and)\b/g, "").replace(/[^a-z0-9]/g, "");
 const num = (v: unknown): number | undefined => {
@@ -120,14 +121,16 @@ function toOffer(r: Row, operator: string): OperatorOffer {
 
 const offers: Record<string, Record<string, OperatorOffer>> = {};
 const prices: Record<string, Record<string, { priceFrom: string; checkedAt?: string }>> = {};
-const listings: Record<string, { name: string; verified: false; priceFrom: string; googleRating: 0; website?: string; priceCheckedAt?: string }[]> = {};
+const listings: Record<string, { name: string; verified: false; priceFrom: string; googleRating: 0; website?: string; priceCheckedAt?: string; fromSheet: true }[]> = {};
 let count = 0;
 for (const a of adventures) {
   const alias = ALIASES[a.slug];
   const target = norm(alias?.trek ?? a.name);
   const days = parseInt(a.durationDays, 10);
-  const listed = new Set(a.operators.map((o) => norm(o.name)));
-  const names = [...a.operators.map((o) => o.name), ...ADD_FROM_SHEET.filter((n) => !listed.has(norm(n)))];
+  // Operators written into data.ts by hand; the ones a previous run added come back from the sheet
+  const listed = new Set(a.operators.filter((o) => !o.fromSheet).map((o) => norm(o.name)));
+  const fromSheet = [...new Set(rows.map((r) => str(r.Operator)))].filter((n) => n && !NOT_FROM_SHEET.includes(n));
+  const names = [...a.operators.filter((o) => !o.fromSheet).map((o) => o.name), ...fromSheet.filter((n) => !listed.has(norm(n)))];
   for (const opName of names) {
     const op = { name: opName };
     const added = !listed.has(norm(opName));
@@ -148,7 +151,7 @@ for (const a of adventures) {
     const offer = toOffer(pick, op.name);
     // An added operator needs a price to be worth listing
     if (added && !offer.feeBase) continue;
-    if (added) (listings[a.slug] ??= []).push({ name: op.name, verified: false, priceFrom: `₹${offer.feeBase!.toLocaleString("en-IN")}`, googleRating: 0, website: offer.url, priceCheckedAt: offer.checkedAt });
+    if (added) (listings[a.slug] ??= []).push({ name: op.name, verified: false, priceFrom: `₹${offer.feeBase!.toLocaleString("en-IN")}`, googleRating: 0, website: offer.url, priceCheckedAt: offer.checkedAt, fromSheet: true });
     (offers[a.slug] ??= {})[op.name] = offer;
     if (offer.feeBase) (prices[a.slug] ??= {})[op.name] = { priceFrom: `₹${offer.feeBase.toLocaleString("en-IN")}`, checkedAt: offer.checkedAt };
     count++;

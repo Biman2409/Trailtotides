@@ -18,6 +18,10 @@
    "priceFrom": "₹15,750",
    "checkedAt": "2026-11-11"
   },
+  "Bikat Adventures": {
+   "priceFrom": "₹13,400",
+   "checkedAt": "2026-11-11"
+  },
   "Treks and Trails India": {
    "priceFrom": "₹12,000",
    "checkedAt": "2026-11-12"
@@ -28,6 +32,14 @@
    "priceFrom": "₹17,000",
    "checkedAt": "2026-11-11"
   },
+  "WhiteMagic Adventure": {
+   "priceFrom": "₹69,520",
+   "checkedAt": "2026-11-12"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹17,250",
+   "checkedAt": "2026-11-11"
+  },
   "Treks and Trails India": {
    "priceFrom": "₹16,499",
    "checkedAt": "2026-11-12"
@@ -36,6 +48,10 @@
  "ali-bedni-bugyal": {
   "Trek The Himalayas": {
    "priceFrom": "₹11,500",
+   "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹11,250",
    "checkedAt": "2026-11-11"
   }
  },
@@ -48,6 +64,10 @@
    "priceFrom": "₹41,500",
    "checkedAt": "2026-11-11"
   },
+  "WhiteMagic Adventure": {
+   "priceFrom": "₹76,000",
+   "checkedAt": "2026-11-12"
+  },
   "Treks and Trails India": {
    "priceFrom": "₹45,000",
    "checkedAt": "2026-11-12"
@@ -56,6 +76,10 @@
  "annapurna-circuit": {
   "Trek The Himalayas": {
    "priceFrom": "₹82,500",
+   "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹80,000",
    "checkedAt": "2026-11-11"
   }
  },
@@ -108,6 +132,10 @@
    "priceFrom": "₹7,800",
    "checkedAt": "2026-11-11"
   },
+  "Bikat Adventures": {
+   "priceFrom": "₹7,500",
+   "checkedAt": "2026-11-11"
+  },
   "Treks and Trails India": {
    "priceFrom": "₹5,500",
    "checkedAt": "2026-11-12"
@@ -116,6 +144,10 @@
  "brahmatal": {
   "Trek The Himalayas": {
    "priceFrom": "₹11,250",
+   "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹10,500",
    "checkedAt": "2026-11-11"
   },
   "Treks and Trails India": {
@@ -128,6 +160,10 @@
    "priceFrom": "₹11,500",
    "checkedAt": "2026-11-11"
   },
+  "Bikat Adventures": {
+   "priceFrom": "₹10,500",
+   "checkedAt": "2026-11-11"
+  },
   "Treks and Trails India": {
    "priceFrom": "₹4,999",
    "checkedAt": "2026-11-12"
@@ -136,6 +172,10 @@
  "deoriatal-chandrashila": {
   "Trek The Himalayas": {
    "priceFrom": "₹10,500",
+   "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹9,500",
    "checkedAt": "2026-11-11"
   },
   "Treks and Trails India": {
@@ -152,6 +192,10 @@
    "priceFrom": "₹83,500",
    "checkedAt": "2026-11-11"
   },
+  "WhiteMagic Adventure": {
+   "priceFrom": "₹1,12,000",
+   "checkedAt": "2026-11-12"
+  },
   "Treks and Trails India": {
    "priceFrom": "₹48,300",
    "checkedAt": "2026-11-12"
@@ -160,6 +204,10 @@
  "gaumukh-tapovan": {
   "Trek The Himalayas": {
    "priceFrom": "₹18,500",
+   "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹17,500",
    "checkedAt": "2026-11-11"
   },
   "Treks and Trails India": {
@@ -175,11 +223,19 @@
   "Trek The Himalayas": {
    "priceFrom": "₹22,000",
    "checkedAt": "2026-11-11"
+  },
+  "WhiteMagic Adventure": {
+   "priceFrom": "₹1,18,900",
+   "checkedAt": "2026-11-12"
   }
  },
  "hampta-pass": {
   "Trek The Himalayas": {
    "priceFrom": "₹12,850",
+   "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹13,500",
    "checkedAt": "2026-11-11"
   },
   "Treks and Trails India": {
@@ -206,6 +262,14 @@
    "priceFrom": "₹21,000",
    "checkedAt": "2026-11-11"
   },
+  "WhiteMagic Adventure": {
+   "priceFrom": "₹89,900",
+   "checkedAt": "2026-11-12"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹21,000",
+   "checkedAt": "2026-11-11"
+  },
   "Treks and Trails India": {
    "priceFrom": "₹17,999",
    "checkedAt": "2026-11-12"
@@ -214,6 +278,10 @@
  "kedartal": {
   "Trek The Himalayas": {
    "priceFrom": "₹18,500",
+   "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹18,000",
    "checkedAt": "2026-11-11"
   },
   "Treks and Trails India": {
@@ -238,6 +306,10 @@
  "markha-valley": {
   "Trek The Himalayas": {
    "priceFrom": "₹22,500",
+   "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹29,500",
    "checkedAt": "2026-11-11"
   }
  },
@@ -279,11 +351,19 @@
   "Trek The Himalayas": {
    "priceFrom": "₹11,200",
    "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹9,200",
+   "checkedAt": "2026-11-11"
   }
  },
  "dodital-darwa-pass": {
   "Trek The Himalayas": {
    "priceFrom": "₹11,400",
+   "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹11,600",
    "checkedAt": "2026-11-11"
   },
   "Treks and Trails India": {
@@ -321,18 +401,30 @@
   "Trek The Himalayas": {
    "priceFrom": "₹42,000",
    "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹24,800",
+   "checkedAt": "2026-11-11"
   }
  },
  "lobuche-peak": {
   "Trek The Himalayas": {
    "priceFrom": "₹1,85,000",
    "checkedAt": "2026-11-11"
+  },
+  "WhiteMagic Adventure": {
+   "priceFrom": "₹2,45,000",
+   "checkedAt": "2026-11-12"
   }
  },
  "manaslu-circuit": {
   "Trek The Himalayas": {
    "priceFrom": "₹94,500",
    "checkedAt": "2026-11-11"
+  },
+  "WhiteMagic Adventure": {
+   "priceFrom": "₹98,900",
+   "checkedAt": "2026-11-12"
   }
  },
  "panch-kedar": {
@@ -344,6 +436,10 @@
  "pangarchulla-peak": {
   "Trek The Himalayas": {
    "priceFrom": "₹14,500",
+   "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹13,400",
    "checkedAt": "2026-11-11"
   }
  },
@@ -357,16 +453,28 @@
   "Trek The Himalayas": {
    "priceFrom": "₹11,250",
    "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹11,500",
+   "checkedAt": "2026-11-11"
   }
  },
  "pin-bhaba-pass": {
   "Trek The Himalayas": {
    "priceFrom": "₹18,500",
    "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
+   "priceFrom": "₹18,500",
+   "checkedAt": "2026-11-11"
   }
  },
  "pindari-glacier": {
   "Trek The Himalayas": {
+   "priceFrom": "₹14,500",
+   "checkedAt": "2026-11-11"
+  },
+  "Bikat Adventures": {
    "priceFrom": "₹14,500",
    "checkedAt": "2026-11-11"
   },

@@ -107,6 +107,8 @@ export interface Operator {
   website?: string;
   /** ISO date the price was last checked on the operator's site — shown as a trust signal on Explore. */
   priceCheckedAt?: string;
+  /** Added from the operator research sheet (operatorListings.json), not written here by hand */
+  fromSheet?: boolean;
 }
 
 export interface SeedReview {
@@ -1841,12 +1843,16 @@ export const adventures: Adventure[] = [
 // same price and rating for an operator.
 (function syncOperators() {
   // Operators added from the research sheet where they run the trek (scripts/import-operator-offers.ts)
+  // An operator listed by hand elsewhere keeps its verified badge on the treks it's added to
   const extra = operatorListings as Record<string, Operator[]>;
+  const handListed = new Map<string, Operator>();
+  for (const a of adventures) for (const o of a.operators) if (!handListed.has(o.name.toLowerCase())) handListed.set(o.name.toLowerCase(), o);
   for (const a of adventures) {
     const add = extra[a.slug];
     if (!add) continue;
     const have = new Set(a.operators.map((o) => o.name.toLowerCase()));
-    a.operators.push(...add.filter((o) => !have.has(o.name.toLowerCase())).map((o) => ({ ...o })));
+    a.operators.push(...add.filter((o) => !have.has(o.name.toLowerCase()))
+      .map((o) => ({ ...o, verified: handListed.get(o.name.toLowerCase())?.verified ?? false })));
   }
   // The latest fee read from the operator's own page (scripts/import-operator-offers.ts)
   // replaces the hand-entered one
