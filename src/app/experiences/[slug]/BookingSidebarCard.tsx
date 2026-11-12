@@ -3,11 +3,13 @@
 import { ChevronRight, Clock3, Sparkles } from "lucide-react";
 import type { SeasonUrgency } from "@/lib/seasonUrgency";
 import QuoteRequestButton from "./QuoteRequestButton";
+import { openOperator } from "@/lib/outbound";
 
 interface Props {
   priceFrom?: string;
   operatorCount: number;
   operatorWebsite?: string;
+  slug?: string;
   operatorName?: string;
   hasVerifiedOperator?: boolean;
   seasonUrgency: SeasonUrgency | null;
@@ -37,7 +39,7 @@ function UrgencyNote({ urgency }: { urgency: SeasonUrgency }) {
   return null;
 }
 
-export default function BookingSidebarCard({ priceFrom, operatorCount, operatorWebsite, operatorName, hasVerifiedOperator, seasonUrgency, nextDeparture, quote }: Props) {
+export default function BookingSidebarCard({ slug, priceFrom, operatorCount, operatorWebsite, operatorName, hasVerifiedOperator, seasonUrgency, nextDeparture, quote }: Props) {
   // The primary CTA stays neutral when there's a choice: it leads to the
   // comparison, not to whichever operator happens to be cheapest. Only a
   // sole operator gets booked directly.
@@ -45,7 +47,7 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, operatorW
 
   const handleBook = () => {
     if (bookDirect) {
-      window.open(operatorWebsite, "_blank", "noopener noreferrer");
+      openOperator({ url: operatorWebsite!, operator: operatorName ?? "Operator", source: "sidebar", slug });
     } else {
       document.getElementById("book-this-adventure")?.scrollIntoView({ behavior: "smooth" });
     }

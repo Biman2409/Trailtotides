@@ -347,6 +347,7 @@ export default async function ExperiencePage({ params }: Props) {
         difficulty={difficulty}
         duration={adventure.durationDays ?? adventure.duration}
         operatorWebsite={featuredOp?.website}
+        slug={adventure.slug}
         operatorName={featuredOp?.name}
         operatorCount={allOperators.length}
         seasonUrgency={seasonUrgency}
@@ -610,6 +611,7 @@ export default async function ExperiencePage({ params }: Props) {
                 priceFrom={priceFrom}
                 operatorCount={allOperators.length}
                 operatorWebsite={featuredOp?.website}
+                slug={adventure.slug}
                 operatorName={featuredOp?.name}
                 hasVerifiedOperator={!!featuredOp?.verified}
                 seasonUrgency={seasonUrgency}

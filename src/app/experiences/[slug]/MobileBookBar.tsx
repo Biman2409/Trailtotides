@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ChevronRight, AlertTriangle, Clock3 } from "lucide-react";
 import { loadProfileFromServer, isProfileStale } from "@/lib/matchmaker";
 import type { SeasonUrgency } from "@/lib/seasonUrgency";
+import { openOperator } from "@/lib/outbound";
 
 interface Props {
   adventureName: string;
@@ -11,13 +12,14 @@ interface Props {
   difficulty: string;
   duration: string;
   operatorWebsite?: string;
+  slug?: string;
   operatorName?: string;
   operatorCount: number;
   seasonUrgency?: SeasonUrgency | null;
   nextDeparture?: string | null;
 }
 
-export default function MobileBookBar({ adventureName, priceFrom, difficulty, duration, operatorWebsite, operatorName, operatorCount, seasonUrgency, nextDeparture }: Props) {
+export default function MobileBookBar({ slug, adventureName, priceFrom, difficulty, duration, operatorWebsite, operatorName, operatorCount, seasonUrgency, nextDeparture }: Props) {
   const [visible, setVisible] = useState(false);
   const [staleProfile, setStaleProfile] = useState(false);
 
@@ -44,7 +46,7 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
 
   const handleBook = () => {
     if (bookDirect) {
-      window.open(operatorWebsite, "_blank", "noopener noreferrer");
+      openOperator({ url: operatorWebsite!, operator: operatorName ?? "Operator", source: "mobile_bar", slug });
     } else {
       const el = document.getElementById("operators-section");
       if (el) el.scrollIntoView({ behavior: "smooth" });

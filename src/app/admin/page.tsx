@@ -44,6 +44,13 @@ export default async function AdminPage() {
     count("saved_searches"),
   ]);
 
+  // Book clicks out to operators in the last 30 days, and the operator that got the most
+  const since30 = new Date(Date.now() - 30 * 86400_000).toISOString();
+  const { data: clickRows } = await adminClient.from("outbound_clicks").select("operator").gte("created_at", since30).limit(10000);
+  const byOperator = new Map<string, number>();
+  for (const r of clickRows ?? []) byOperator.set(r.operator as string, (byOperator.get(r.operator as string) ?? 0) + 1);
+  const topBookOperator = [...byOperator.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+
   // Accounts are the source of truth: a profile row outlives a deleted account, and an account
   // can exist without a profile row. Start from the accounts and add profile details where there
   // are some. Auth metadata adds sign-in, ban and ACE state.
@@ -145,7 +152,7 @@ export default async function AdminPage() {
       reviews={reviews}
       photos={photos}
       groups={groups}
-      counts={{ wishlists: wishlistCount, savedSearches: savedSearchCount, adventures: adventures.length, destinations: DESTINATIONS.length }}
+      counts={{ wishlists: wishlistCount, savedSearches: savedSearchCount, adventures: adventures.length, destinations: DESTINATIONS.length, bookClicks30: clickRows?.length ?? 0, topBookOperator }}
       adventureNames={Object.fromEntries(adventures.map((a) => [a.slug, a.name]))}
     />
   );

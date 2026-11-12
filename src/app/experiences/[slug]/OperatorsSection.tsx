@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { X, Star, ExternalLink, ArrowUpDown } from "lucide-react";
 import { type OperatorCardData } from "./OperatorCard";
 import { parsePrice } from "@/lib/price";
+import { openOperator } from "@/lib/outbound";
 
 interface ComputedRating {
   avg: number;
@@ -39,7 +40,7 @@ const muted = { color: "var(--text-tertiary)" };
  * best value in each row is highlighted, and the labels column stays put if the table scrolls
  * sideways (four or more operators).
  */
-function CompareTable({ operators, computedRatings }: { operators: OperatorCardData[]; computedRatings: Record<string, ComputedRating> }) {
+function CompareTable({ operators, computedRatings, slug }: { operators: OperatorCardData[]; computedRatings: Record<string, ComputedRating>; slug: string }) {
   const ops = [...operators].sort((a, b) => parsePrice(a.priceFrom) - parsePrice(b.priceFrom));
   const prices = ops.map((o) => parsePrice(o.priceFrom));
   const minPrice = Math.min(...prices);
@@ -96,7 +97,7 @@ function CompareTable({ operators, computedRatings }: { operators: OperatorCardD
             {ops.map((op) => (
               <td key={op.name} className="px-2 py-3">
                 <button
-                  onClick={() => op.website && window.open(op.website, "_blank", "noopener,noreferrer")}
+                  onClick={() => op.website && openOperator({ url: op.website, operator: op.name, source: "compare", slug })}
                   disabled={!op.website}
                   className="w-full h-9 inline-flex items-center justify-center gap-1 rounded-full text-[12.5px] font-semibold text-white disabled:opacity-40"
                   style={{ background: "#ff5100" }}
@@ -115,10 +116,12 @@ function CompareTable({ operators, computedRatings }: { operators: OperatorCardD
 function CompareDrawer({
   operators,
   computedRatings,
+  slug,
   onClose,
 }: {
   operators: OperatorCardData[];
   computedRatings: Record<string, ComputedRating>;
+  slug: string;
   onClose: () => void;
 }) {
   const prices = operators.map(o => parsePrice(o.priceFrom));
@@ -175,7 +178,7 @@ function CompareDrawer({
 
         {/* Phones: one table, operators side by side */}
         <div className="sm:hidden overflow-y-auto flex-1">
-          <CompareTable operators={operators} computedRatings={computedRatings} />
+          <CompareTable operators={operators} computedRatings={computedRatings} slug={slug} />
           <p className="px-3 pb-3 text-[11.5px]" style={{ color: "var(--text-tertiary)" }}>Highlighted: the best value in each row.{hasTraveller ? " Travellers: ratings from Trail to Tides users." : ""}</p>
         </div>
 
@@ -194,7 +197,7 @@ function CompareDrawer({
                     {isBestPrice && <span className="text-[12px] text-[#ff5100]">· lowest price</span>}
                   </div>
                   <button
-                    onClick={() => op.website && window.open(op.website, "_blank", "noopener,noreferrer")}
+                    onClick={() => op.website && openOperator({ url: op.website, operator: op.name, source: "compare", slug })}
                     disabled={!op.website}
                     className="shrink-0 h-9 px-4 inline-flex items-center gap-1.5 rounded-full text-[13px] font-medium text-[#ff5100] transition-colors hover:bg-[rgba(255,81,0,0.06)] disabled:opacity-40"
                     style={{ border: "1px solid rgba(255,81,0,0.55)" }}
@@ -282,7 +285,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
           </div>
         </div>
         <button
-          onClick={() => op.website && window.open(op.website, "_blank", "noopener,noreferrer")}
+          onClick={() => op.website && openOperator({ url: op.website, operator: op.name, source: "compare", slug })}
           disabled={!op.website}
           className="mt-3 w-full h-11 flex items-center justify-center gap-1.5 rounded-full text-[14px] font-medium text-[#ff5100] transition-colors hover:bg-[rgba(255,81,0,0.06)] disabled:opacity-40"
           style={{ border: "1px solid rgba(255,81,0,0.55)" }}
@@ -308,6 +311,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
     <>
       {drawerOpen && (
         <CompareDrawer
+          slug={slug}
           operators={operators}
           computedRatings={computedRatings}
           onClose={() => setDrawerOpen(false)}

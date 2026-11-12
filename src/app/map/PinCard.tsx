@@ -12,6 +12,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { AXIS_LABEL } from "@/lib/fitness";
 import { MONTHS } from "@/lib/homeCuration";
 import { track } from "@/lib/analytics";
+import { openOperator, operatorHref, recordOutbound } from "@/lib/outbound";
 import { trailClimbM, trailHighPoint, trailWalkKm, type Trail } from "@/lib/trails/shared";
 import { tm } from "@/lib/tm";
 import {
@@ -75,7 +76,7 @@ export default function PinCard({
 
   function book() {
     track("map_book_click", { slug: a.slug, operator: top?.name ?? "" });
-    if (top?.website) window.open(top.website, "_blank", "noopener,noreferrer");
+    if (top?.website) openOperator({ url: top.website, operator: top.name, source: "map", slug: a.slug });
   }
 
   return (
@@ -221,7 +222,7 @@ export default function PinCard({
               const checked = daysAgo(o.priceCheckedAt);
               return (
                 <li key={o.name}>
-                  <a href={o.website} target="_blank" rel="noopener noreferrer" onClick={() => track("map_operator_click", { slug: a.slug, operator: o.name })}
+                  <a href={o.website ? operatorHref(o.website, a.slug) : undefined} target="_blank" rel="noopener" onClick={() => { track("map_operator_click", { slug: a.slug, operator: o.name }); if (o.website) recordOutbound({ url: o.website, operator: o.name, source: "map", slug: a.slug }); }}
                     className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.035] hover:bg-white/[0.07] transition-colors group">
                     {o.verified ? <BadgeCheck className="w-4 h-4 shrink-0 text-[var(--tm-mint)]" /> : <span className="w-4 h-4 shrink-0" />}
                     <span className="min-w-0 flex-1">

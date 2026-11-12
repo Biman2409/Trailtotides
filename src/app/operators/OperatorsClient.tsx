@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence, MotionConfig, LayoutGroup, animate, useInView, useMotionValue, useTransform } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Search, ShieldCheck, Star, X, ChevronDown } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
+import { operatorHref, recordOutbound } from "@/lib/outbound";
 
 export type OperatorCardData = {
   id: string;
@@ -340,7 +341,7 @@ function OperatorCard({ op }: { op: OperatorCardData }) {
             </button>
           ) : <span />}
           {op.website && (
-            <a href={op.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[13.5px] font-semibold transition-colors hover:text-[#ff5100]" style={{ color: "var(--text-secondary)" }}>
+            <a href={operatorHref(op.website)} target="_blank" rel="noopener" onClick={() => recordOutbound({ url: op.website!, operator: op.company_name, source: "operators_list" })} className="inline-flex items-center gap-1 text-[13.5px] font-semibold transition-colors hover:text-[#ff5100]" style={{ color: "var(--text-secondary)" }}>
               Website <ArrowUpRight className="w-4 h-4" />
             </a>
           )}

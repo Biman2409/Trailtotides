@@ -30,6 +30,10 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // Resizing goes to Supabase / Unsplash instead of Vercel's optimizer, whose
+    // Hobby quota ran out (uncached sizes returned 402). See src/lib/imageLoader.ts.
+    loader: "custom",
+    loaderFile: "./src/lib/imageLoader.ts",
     // Serve WebP (with AVIF fallback) for all Next.js Image components
     formats: ["image/webp", "image/avif"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],

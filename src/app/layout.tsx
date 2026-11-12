@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import VerifiedToast from "@/components/VerifiedToast";
 import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";
+import { Analytics } from "@vercel/analytics/next";
 
 const greatVibes = Great_Vibes({
   variable: "--font-cursive",
@@ -245,6 +246,8 @@ export default function RootLayout({
           <Toaster position="bottom-center" richColors />
           <VerifiedToast />
         </ThemeProvider>
+        {/* Page views (Vercel Web Analytics). Book clicks are recorded separately in outbound_clicks. */}
+        <Analytics />
       </body>
     </html>
   );

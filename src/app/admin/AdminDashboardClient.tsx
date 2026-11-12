@@ -18,8 +18,7 @@ import {
   LayoutDashboard, Users, Building2, Inbox, BookOpen, Star,   Search, Download, ExternalLink, LogOut, Trash2, Ban, UserCheck, RotateCcw, Send,
   CheckCircle2, XCircle, Copy, ChevronDown, ChevronRight, Loader2, Mail, Phone, Globe,
   Image as ImageIcon, MessageSquare, FileText, Clock, Sparkles, Heart, Bookmark, Map as MapIcon,
-  MailOpen, Reply, UsersRound, Crown, Link2, X,
-} from "lucide-react";
+  MailOpen, Reply, UsersRound, Crown, Link2, X, MousePointerClick } from "lucide-react";
 import { MAX_GROUP } from "@/lib/fitness";
 import { format, parseISO, subDays, startOfDay, differenceInCalendarDays, formatDistanceToNowStrict } from "date-fns";
 
@@ -57,7 +56,7 @@ type Review = { id: string; adventure_slug: string; user_id: string; username: s
 
 type Photo = { id: string; slug: string; user_id: string; username: string; avatar_id: number | null; caption: string; url: string; path: string; created_at: string };
 
-type Counts = { wishlists: number; savedSearches: number; adventures: number; destinations: number };
+type Counts = { wishlists: number; savedSearches: number; adventures: number; destinations: number; bookClicks30: number; topBookOperator: string | null };
 
 const SECTIONS = [
   { key: "overview",  label: "Overview",          icon: LayoutDashboard },
@@ -613,6 +612,7 @@ function Overview(props: {
     { label: "Saved searches", value: props.counts.savedSearches, sub: "with alerts on", icon: Bookmark, to: "people" as const },
     { label: "Reviews", value: props.reviews, sub: `${props.photos} photo${props.photos === 1 ? "" : "s"}`, icon: Star, to: "community" as const },
     { label: "Groups", value: props.groups.length, sub: `${props.groups.reduce((n, g) => n + g.members.length, 0)} people in them`, icon: UsersRound, to: "groups" as const },
+    { label: "Book clicks", value: props.counts.bookClicks30, sub: props.counts.topBookOperator ? `30 days · most: ${props.counts.topBookOperator}` : "last 30 days", icon: MousePointerClick, to: "operators" as const },
     { label: "Messages", value: props.messages, sub: props.unread ? `${props.unread} unread` : "All read", icon: Inbox, to: "inbox" as const },
   ];
 
