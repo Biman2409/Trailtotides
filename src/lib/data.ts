@@ -1,4 +1,5 @@
 import operatorPrices from "./operatorPrices.json";
+import operatorListings from "./operatorListings.json";
 
 export type AdventureType =
   | "Trekking"
@@ -1839,6 +1840,14 @@ export const adventures: Adventure[] = [
 // Runs once when this module loads, so every page (cards, comparison, directory, map) sees the
 // same price and rating for an operator.
 (function syncOperators() {
+  // Operators added from the research sheet where they run the trek (scripts/import-operator-offers.ts)
+  const extra = operatorListings as Record<string, Operator[]>;
+  for (const a of adventures) {
+    const add = extra[a.slug];
+    if (!add) continue;
+    const have = new Set(a.operators.map((o) => o.name.toLowerCase()));
+    a.operators.push(...add.filter((o) => !have.has(o.name.toLowerCase())).map((o) => ({ ...o })));
+  }
   // The latest fee read from the operator's own page (scripts/import-operator-offers.ts)
   // replaces the hand-entered one
   const latest = operatorPrices as Record<string, Record<string, { priceFrom: string; checkedAt?: string }>>;

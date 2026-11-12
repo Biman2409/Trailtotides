@@ -5,7 +5,7 @@ import { X, Star, ExternalLink, ArrowUpDown, Check, Minus, ChevronDown, BadgeChe
 import { type OperatorCardData } from "./OperatorCard";
 import { parsePrice } from "@/lib/price";
 import { openOperator } from "@/lib/outbound";
-import { SERVICE_LABELS, serviceStates, inr, type ServiceKey, type ServiceState } from "@/lib/operatorOffer";
+import { SERVICE_LABELS, serviceStates, inr, fullTripCost, transportExtra, finePrint, type ServiceKey, type ServiceState } from "@/lib/operatorOffer";
 
 /** Other parts of the page (the sidebar and the mobile Book bar) open the comparison with this event */
 export const OPEN_COMPARE_EVENT = "ttt:open-compare";
@@ -32,10 +32,27 @@ const best = { color: "var(--accent-ink)", fontWeight: 600 } as const;
 const star = <Star className="w-3 h-3 text-[#ff8a4c] fill-[#ff8a4c] shrink-0" />;
 const none = <span style={muted}>—</span>;
 
-/** What a visitor actually pays per person: the GST-inclusive fee when the operator states it */
+/** What the trip costs per person from the pick-up city: fee with GST plus paid transport */
 function totalOf(op: OperatorCardData): number {
-  return op.offer?.feeTotal ?? op.offer?.feeBase ?? parsePrice(op.priceFrom);
+  return (op.offer && fullTripCost(op.offer)) ?? parsePrice(op.priceFrom);
 }
+
+/** Where the full price starts from: "Dehradun" out of "Dehradun to Sankri & return" */
+function fromCity(op: OperatorCardData): string | undefined {
+  const s = (op.offer?.transportRoute ?? op.offer?.startEnd)?.replace(/^\(|\)$/g, "");
+  // "…cost from Rishikesh" names the city outright; otherwise it's the first place in the route
+  const from = s?.match(/\bfrom ([A-Z][A-Za-z]+)/)?.[1];
+  return from ?? (s?.split(/\s+(?:to|–|-)\s+|\s*\(/)[0]?.trim() || undefined);
+}
+
+/** How a transport cell reads when transport isn't a priced extra */
+function transportNote(op: OperatorCardData): string {
+  const t = op.offer ? serviceStates(op.offer).transport : "unknown";
+  return t === "included" ? "In the fee" : t === "not-included" ? "Own travel" : "Not stated";
+}
+
+/** True when we know the full price from the operator's own page, not just a headline fee */
+const knownFull = (op: OperatorCardData) => !!op.offer && fullTripCost(op.offer) !== undefined;
 
 /** "Nov, Dec, Jan +5" from the batch months, or the operator's own exact dates */
 function datesOf(op: OperatorCardData): React.ReactNode {
@@ -46,9 +63,9 @@ function datesOf(op: OperatorCardData): React.ReactNode {
   return null;
 }
 
-function ServiceCell({ state, price, plusGst }: { state: ServiceState; price?: number; plusGst?: boolean }) {
+function ServiceCell({ state, price, plusGst, perDay }: { state: ServiceState; price?: number; plusGst?: boolean; perDay?: boolean }) {
   if (state === "included") return <span className="inline-flex items-center gap-1" style={{ color: "#3fa877" }}><Check className="w-3.5 h-3.5" />Included</span>;
-  if (state === "extra") return <span>{price ? `${inr(price)}${plusGst ? " + GST" : ""}` : "Extra"}</span>;
+  if (state === "extra") return <span>{price ? `${inr(price)}${perDay ? " a day" : ""}${plusGst ? " + GST" : ""}` : "Extra"}</span>;
   if (state === "not-included") return <span className="inline-flex items-center gap-1" style={muted}><Minus className="w-3.5 h-3.5" />Not included</span>;
   return none;
 }
@@ -63,9 +80,12 @@ type Group = { title: string; rows: Row[] };
  */
 function CompareTable({ operators, computedRatings, slug }: { operators: OperatorCardData[]; computedRatings: Record<string, ComputedRating>; slug: string }) {
   const [showLists, setShowLists] = useState(false);
-  const ops = [...operators].sort((a, b) => totalOf(a) - totalOf(b));
+  // Operators whose full price we know come first, cheapest first; the ones with only a headline
+  // fee follow, since that fee can leave out GST and transport
+  const ops = [...operators].sort((a, b) => Number(knownFull(b)) - Number(knownFull(a)) || totalOf(a) - totalOf(b));
   const totals = ops.map(totalOf);
-  const minTotal = Math.min(...totals.filter((n) => Number.isFinite(n) && n > 0));
+  const anyKnown = ops.some(knownFull);
+  const minTotal = Math.min(...totals.filter((n, i) => Number.isFinite(n) && n > 0 && (!anyKnown || knownFull(ops[i]))));
   const google = ops.map((o) => o.googleRating ?? 0);
   const bestGoogle = Math.max(...google);
   const travellers = ops.map((o) => travellerRating(o, computedRatings));
@@ -74,6 +94,9 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
   const svc = (i: number, k: ServiceKey): ServiceState => services[i]?.[k] ?? "unknown";
   const groupSizes = ops.map((o) => o.offer?.groupSize ?? Infinity);
   const smallestGroup = Math.min(...groupSizes);
+  const perDay = ops.map((o) => (o.offer?.days && o.offer && fullTripCost(o.offer) ? fullTripCost(o.offer)! / o.offer.days : Infinity));
+  const minPerDay = Math.min(...perDay);
+  const fine = ops.map((o) => (o.offer ? finePrint(o.offer) : []));
 
   const allGroups: Group[] = [
     {
@@ -81,7 +104,24 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
       rows: [
         { key: "fee", label: "trek fee", has: () => true, cell: (op) => op.offer?.feeBase ? inr(op.offer.feeBase) : op.priceFrom || none },
         { key: "gst", label: "gst", has: (op) => op.offer?.gstRate !== undefined, cell: (op) => op.offer?.gstRate !== undefined ? `+${Math.round(op.offer.gstRate * 100)}%` : none },
-        { key: "total", label: "you pay", has: (op) => !!op.offer?.feeTotal, cell: (op, i) => op.offer?.feeTotal ? <span style={totals[i] === minTotal ? best : undefined}>{inr(op.offer.feeTotal)}</span> : none },
+        { key: "total", label: "with gst", has: (op) => !!op.offer?.feeTotal, cell: (op) => op.offer?.feeTotal ? inr(op.offer.feeTotal) : none },
+        { key: "transport", label: "+ transport", has: (op) => !!op.offer && transportExtra(op.offer) !== undefined, cell: (op) => !op.offer ? none : transportExtra(op.offer) !== undefined ? inr(transportExtra(op.offer)!) : <span style={muted}>{transportNote(op)}</span> },
+        {
+          key: "full", label: "full trip", has: (op) => !!op.offer && fullTripCost(op.offer) !== undefined,
+          cell: (op, i) => {
+            const full = op.offer && fullTripCost(op.offer);
+            if (!full) return none;
+            const note = transportExtra(op.offer!) === undefined ? transportNote(op) : "";
+            const where = note === "Own travel" ? "own travel to the start" : note === "Not stated" ? "transport not stated" : fromCity(op) ? `from ${fromCity(op)}` : "";
+            return (
+              <span className="flex flex-col">
+                <span className="text-[14px] font-semibold" style={totals[i] === minTotal ? best : { color: "var(--text-primary)" }}>{inr(full)}</span>
+                <span className="text-[11.5px]" style={muted}>{where}</span>
+              </span>
+            );
+          },
+        },
+        { key: "perday", label: "per day", has: (op) => !!op.offer?.days && !!op.offer && fullTripCost(op.offer) !== undefined, cell: (op, i) => Number.isFinite(perDay[i]) ? <span style={perDay[i] === minPerDay && ops.length > 1 ? best : undefined}>{inr(perDay[i])}</span> : none },
       ],
     },
     {
@@ -99,14 +139,15 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
       rows: (Object.keys(SERVICE_LABELS) as ServiceKey[]).map((k) => ({
         key: k,
         label: SERVICE_LABELS[k].toLowerCase(),
-        has: (op: OperatorCardData) => !!op.offer || (k === "cloakroom" && !!op.cloakroom) || (k === "offloading" && !!op.offloading),
+        // Shown when someone states it either way; a row of dashes says nothing
+        has: (op: OperatorCardData) => (!!op.offer && serviceStates(op.offer)[k] !== "unknown") || (k === "cloakroom" && !!op.cloakroom) || (k === "offloading" && !!op.offloading),
         cell: (op: OperatorCardData, i: number) => {
           // Operators who listed themselves state cloakroom and offloading directly
           // A "no" here usually means nobody filled it in, so only a stated yes is shown
           if (!op.offer && k === "cloakroom") return op.cloakroom ? (op.cloakroom_charge ? `₹${op.cloakroom_charge}` : <ServiceCell state="included" />) : none;
           if (!op.offer && k === "offloading") return op.offloading ? (op.offloading_charge ? `₹${op.offloading_charge}/kg` : <ServiceCell state="included" />) : none;
           const price = k === "transport" ? op.offer?.addOns.transport : k === "offloading" ? op.offer?.addOns.offloading : undefined;
-          return <ServiceCell state={svc(i, k)} price={price} plusGst={op.offer?.addOnsPlusGst} />;
+          return <ServiceCell state={svc(i, k)} price={price} plusGst={op.offer?.addOnsPlusGst} perDay={k === "offloading" && op.offer?.offloadingPerDay} />;
         },
       })),
     },
@@ -115,6 +156,13 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
       rows: [
         { key: "insurance", label: "insurance", has: (op) => !!op.offer?.addOns.insurance, cell: (op) => op.offer?.addOns.insurance ? `${inr(op.offer.addOns.insurance)}${op.offer.addOnsPlusGst ? " + GST" : ""}` : none },
         { key: "single", label: "single tent / room", has: (op) => !!op.offer?.addOns.singleTent, cell: (op) => op.offer?.addOns.singleTent ? `${inr(op.offer.addOns.singleTent)}${op.offer.addOnsPlusGst ? " + GST" : ""}` : none },
+      ],
+    },
+    {
+      title: "Worth knowing",
+      rows: [
+        { key: "fine", label: "fine print", has: () => fine.some((f) => f.length > 0), cell: (_op, i) => fine[i].length
+          ? <ul className="space-y-1.5 text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>{fine[i].map((l, k) => <li key={k}>{l}</li>)}</ul> : none },
       ],
     },
     {
@@ -157,7 +205,7 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
               <th className={labelCell} style={labelStyle} />
               {ops.map((op, i) => (
                 <th key={op.name} scope="col" className="px-2.5 pt-3 pb-2 text-left align-bottom font-normal" style={{ minWidth: colW }}>
-                  {totals[i] === minTotal && ops.length > 1 && <span className="block text-[10px] font-bold uppercase tracking-wider text-[#ff5100] mb-0.5">Lowest price</span>}
+                  {totals[i] === minTotal && ops.length > 1 && (!anyKnown || knownFull(op)) && <span className="block text-[10px] font-bold uppercase tracking-wider text-[#ff5100] mb-0.5">{knownFull(op) ? "Lowest full price" : "Lowest price"}</span>}
                   <span className="block text-[14px] font-semibold leading-tight line-clamp-2" style={{ color: "var(--text-primary)" }}>{op.name}</span>
                   {op.verified
                     ? <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: "#3fa877" }}><BadgeCheck className="w-3 h-3" />verified</span>
@@ -217,7 +265,7 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
           </button>
         )}
         <p className="text-[11.5px] leading-relaxed" style={muted}>
-          Highlighted: the best value in each row. &ldquo;You pay&rdquo; adds the GST each operator states.
+          Highlighted: the best value in each row. &ldquo;Full trip&rdquo; is the fee with the GST each operator states, plus their transport from the pick-up city when it&apos;s a paid extra; columns run cheapest first.
           {checked ? ` Prices and inclusions read from each operator's own page, last checked ${formatDate(checked)}; confirm with them before you book.` : " Confirm prices and dates with the operator before you book."}
           {travellers.some(Boolean) ? " Travellers: ratings from Trail to Tides users who went with that operator." : ""}
         </p>

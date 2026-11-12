@@ -4,9 +4,11 @@
  * Reads the operator research spreadsheet (Treks + Services + Sources sheets) and writes:
  *   src/lib/operatorOffers.json   full offer per adventure × operator, for the comparison
  *   src/lib/operatorPrices.json   just the headline fee per adventure × operator, read by data.ts
+ *   src/lib/operatorListings.json operators added from the sheet (ADD_FROM_SHEET), read by data.ts
  *
- * Only operators already listed on an adventure in data.ts get an offer: this fills in what we
- * show, it never adds an operator. Re-run whenever the spreadsheet is refreshed.
+ * Operators already listed on an adventure in data.ts get an offer. Operators in ADD_FROM_SHEET
+ * are also listed on every adventure the sheet has them for, as long as the page gave a price.
+ * Re-run whenever the spreadsheet is refreshed.
  */
 import * as XLSX from "xlsx";
 import { readFileSync, writeFileSync } from "fs";
@@ -27,6 +29,9 @@ const ALIASES: Record<string, { trek: string; prefer?: RegExp }> = {
   "bagini-glacier": { trek: "Bagini Glacier & Changbang Base Camp" },
   "panch-kedar": { trek: "Panchkedar Trek & Drive" },
 };
+
+// Operators listed on every adventure the sheet has them for, not only where data.ts names them
+const ADD_FROM_SHEET = ["Treks and Trails India"];
 
 const norm = (s: string) => s.toLowerCase().replace(/\b(trek|the|and)\b/g, "").replace(/[^a-z0-9]/g, "");
 const num = (v: unknown): number | undefined => {
@@ -104,6 +109,7 @@ function toOffer(r: Row, operator: string): OperatorOffer {
     // TTH prices its add-ons before GST (Sources sheet); others don't say
     addOnsPlusGst: /trek the himalayas/i.test(operator),
     transportRoute: route || undefined,
+    offloadingPerDay: /Offloading basis:[^\n]*per (bag per )?day/i.test(terms) || undefined,
     cloakroom: cloak ? cloak.toLowerCase() === "yes" : undefined,
     included: lines.get(id)?.included ?? [],
     notIncluded: lines.get(id)?.notIncluded ?? [],
@@ -114,12 +120,17 @@ function toOffer(r: Row, operator: string): OperatorOffer {
 
 const offers: Record<string, Record<string, OperatorOffer>> = {};
 const prices: Record<string, Record<string, { priceFrom: string; checkedAt?: string }>> = {};
+const listings: Record<string, { name: string; verified: false; priceFrom: string; googleRating: 0; website?: string; priceCheckedAt?: string }[]> = {};
 let count = 0;
 for (const a of adventures) {
   const alias = ALIASES[a.slug];
   const target = norm(alias?.trek ?? a.name);
   const days = parseInt(a.durationDays, 10);
-  for (const op of a.operators) {
+  const listed = new Set(a.operators.map((o) => norm(o.name)));
+  const names = [...a.operators.map((o) => o.name), ...ADD_FROM_SHEET.filter((n) => !listed.has(norm(n)))];
+  for (const opName of names) {
+    const op = { name: opName };
+    const added = !listed.has(norm(opName));
     const candidates = rows.filter((r) => norm(str(r.Trek)) === target && norm(str(r.Operator)) === norm(op.name));
     if (!candidates.length) continue;
     // Several versions from one operator: the preferred listing, else the length closest to ours, else the cheapest
@@ -135,6 +146,9 @@ for (const a of adventures) {
       return (num(x["Base fee (₹)"]) ?? Infinity) - (num(y["Base fee (₹)"]) ?? Infinity);
     })[0];
     const offer = toOffer(pick, op.name);
+    // An added operator needs a price to be worth listing
+    if (added && !offer.feeBase) continue;
+    if (added) (listings[a.slug] ??= []).push({ name: op.name, verified: false, priceFrom: `₹${offer.feeBase!.toLocaleString("en-IN")}`, googleRating: 0, website: offer.url, priceCheckedAt: offer.checkedAt });
     (offers[a.slug] ??= {})[op.name] = offer;
     if (offer.feeBase) (prices[a.slug] ??= {})[op.name] = { priceFrom: `₹${offer.feeBase.toLocaleString("en-IN")}`, checkedAt: offer.checkedAt };
     count++;
@@ -143,4 +157,6 @@ for (const a of adventures) {
 
 writeFileSync("src/lib/operatorOffers.json", JSON.stringify(offers) + "\n");
 writeFileSync("src/lib/operatorPrices.json", JSON.stringify(prices, null, 1) + "\n");
-console.log(`${count} offers across ${Object.keys(offers).length} adventures`);
+writeFileSync("src/lib/operatorListings.json", JSON.stringify(listings, null, 1) + "\n");
+const addedCount = Object.values(listings).reduce((n, l) => n + l.length, 0);
+console.log(`${count} offers across ${Object.keys(offers).length} adventures; ${addedCount} operator listings added from the sheet`);

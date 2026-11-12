@@ -23,6 +23,8 @@ export type OperatorOffer = {
   /** True when the add-on prices above are before GST */
   addOnsPlusGst?: boolean;
   transportRoute?: string;
+  /** Offloading is priced per bag per day, not for the whole trek */
+  offloadingPerDay?: boolean;
   cloakroom?: boolean;
   included: string[];
   notIncluded: string[];
@@ -32,7 +34,7 @@ export type OperatorOffer = {
   checkedAt?: string;
 };
 
-export type ServiceKey = "meals" | "stay" | "leader" | "permits" | "transport" | "cloakroom" | "offloading" | "safety";
+export type ServiceKey = "meals" | "stay" | "leader" | "permits" | "transport" | "gear" | "cloakroom" | "offloading" | "safety";
 
 export const SERVICE_LABELS: Record<ServiceKey, string> = {
   meals: "Meals on the trek",
@@ -40,6 +42,7 @@ export const SERVICE_LABELS: Record<ServiceKey, string> = {
   leader: "Trek leader & guides",
   permits: "Permits & entry fees",
   transport: "Transport to base",
+  gear: "Microspikes & gaiters",
   cloakroom: "Cloakroom",
   offloading: "Backpack offloading",
   safety: "First aid & oxygen",
@@ -52,6 +55,7 @@ const MATCH: Record<ServiceKey, RegExp> = {
   leader: /leader|guide|instructor|trek lead/i,
   permits: /permit|entry fee|forest fee|park fee/i,
   transport: /transport|pick ?up|drop\b|tempo|cab\b|vehicle/i,
+  gear: /microspike|gaiter|crampon/i,
   cloakroom: /cloak ?room/i,
   offloading: /offload|porter|mule/i,
   safety: /first ?aid|oxygen|medical kit|oximeter/i,
@@ -68,7 +72,7 @@ export function serviceStates(o: OperatorOffer): Record<ServiceKey, ServiceState
   for (const key of Object.keys(MATCH) as ServiceKey[]) {
     const re = MATCH[key];
     // Exclusions win over inclusions: "Transport (if not booked with us)" is listed as not included
-    const notIncl = o.notIncluded.some((l) => re.test(l) && !/personal|transit|during the transit|any kind/i.test(l));
+    const notIncl = o.notIncluded.some((l) => re.test(l) && !/personal|transit|during the transit|any kind|foreign|non-indian|\bNRI\b/i.test(l));
     let incl = o.included.some((l) => re.test(l));
     // Porters/mules for the group's kit are included by many; personal-bag offloading is the extra
     if (key === "offloading") incl = o.included.some((l) => /offload/i.test(l) && !/personal/i.test(l));
@@ -80,6 +84,27 @@ export function serviceStates(o: OperatorOffer): Record<ServiceKey, ServiceState
     else out[key] = "unknown";
   }
   return out;
+}
+
+/** Transport to the start, with GST where the operator adds it; undefined when it isn't a priced extra */
+export function transportExtra(o: OperatorOffer): number | undefined {
+  if (serviceStates(o).transport !== "extra" || !o.addOns.transport) return undefined;
+  return o.addOns.transport * (o.addOnsPlusGst ? 1 + (o.gstRate ?? 0.05) : 1);
+}
+
+/** Fee with GST plus paid transport: what the trip costs from the operator's pick-up city */
+export function fullTripCost(o: OperatorOffer): number | undefined {
+  const fee = o.feeTotal ?? o.feeBase;
+  if (!fee) return undefined;
+  return fee + (transportExtra(o) ?? 0);
+}
+
+/** Lines worth reading before booking: the operator's own price caveats and conditions */
+export function finePrint(o: OperatorOffer): string[] {
+  const out: string[] = [];
+  if (o.priceNote) out.push(o.priceNote);
+  for (const l of o.notIncluded) if (/foreign national|membership|medical certificate|fitness certificate|age limit|\bage\b \d/i.test(l)) out.push(l);
+  return [...new Set(out)];
 }
 
 /** "₹1,600" */

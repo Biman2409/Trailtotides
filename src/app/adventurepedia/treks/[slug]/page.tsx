@@ -438,7 +438,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
                           {o.verified && <BadgeCheck className="w-4 h-4 shrink-0" style={{ color: "var(--accent-ink)" }} aria-label="Verified" />}
                         </span>
                         <span className="flex items-center gap-4 shrink-0 text-[13.5px] tabular-nums">
-                          <span className="inline-flex items-center gap-1 t-text-3"><Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />{o.googleRating.toFixed(1)}</span>
+                          {o.googleRating > 0 && <span className="inline-flex items-center gap-1 t-text-3"><Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />{o.googleRating.toFixed(1)}</span>}
                           <span className="font-semibold t-text">{o.priceFrom}</span>
                         </span>
                       </li>
