@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { loginHref, signupHref } from "@/lib/loginHref";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, BadgeCheck, ArrowRight, Library } from "lucide-react";
@@ -501,11 +502,11 @@ export default function Navbar() {
               </div>
             ) : (
               <>
-                <Link href="/auth/login" className="text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors duration-200" style={{ color: isTransparent ? "rgba(255,255,255,0.85)" : "var(--nav-text)" }}>
+                <Link href={loginHref(pathname)} className="text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors duration-200" style={{ color: isTransparent ? "rgba(255,255,255,0.85)" : "var(--nav-text)" }}>
                   Log In
                 </Link>
                 <Link
-                  href="/auth/signup"
+                  href={signupHref(pathname)}
                   className="group flex items-center gap-2.5 pl-4 pr-1.5 py-1.5 rounded-full hover:-translate-y-0.5 transition-all duration-200"
                   style={{ background: "#ff5100", boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}
                 >
@@ -640,10 +641,10 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="pt-2 flex flex-col gap-2">
-              <Link href="/auth/login" className="block w-full text-center font-semibold py-3 rounded-xl transition-colors text-sm" style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
+              <Link href={loginHref(pathname)} className="block w-full text-center font-semibold py-3 rounded-xl transition-colors text-sm" style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
                 Log In
               </Link>
-              <Link href="/auth/signup" className="block w-full text-center bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold py-3 rounded-xl transition-colors text-sm">
+              <Link href={signupHref(pathname)} className="block w-full text-center bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold py-3 rounded-xl transition-colors text-sm">
                 Sign Up
               </Link>
             </div>

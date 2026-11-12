@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { loginHref } from "@/lib/loginHref";
 import { useRouter } from "next/navigation";
 import { MessageSquare, Send, LogIn, Clock } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -135,7 +136,7 @@ export default function StoryComments({ slug }: Props) {
             </p>
           </div>
           <button
-            onClick={() => router.push("/auth/login")}
+            onClick={() => router.push(loginHref())}
             className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full transition-all hover:brightness-110 shrink-0"
             style={{ background: "#ff5100", color: "white" }}
           >

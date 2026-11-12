@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, TrendingUp } from "lucide-react";
 import type { ACE, AceAxis } from "@/lib/ace";
+import { QUICK_QUESTION_COUNT } from "@/lib/matchmakerScoring";
 
 // The home page's Matchmaker preview, told with one radar that never cuts away, in the order the
 // real Matchmaker goes:
@@ -94,7 +95,8 @@ const Q_STEP_MS = BEATS[ANSWER].ms / 6;
 const CYCLE_MS = BEATS[RATED].ms / 3;
 // Train beat: the gap shows, then the level goes up
 const TRAIN_AT = 1700;
-const QUESTION_COUNT = 12;
+// The sample plays the quick match, so it counts the quick match's questions
+const QUESTION_COUNT = QUICK_QUESTION_COUNT;
 
 /** `cta` is the way in — it sits in the card's footer and lights up as each run of the story finishes */
 export default function MatchmakerStory({ you, questions, samples, train, group, cta }: {

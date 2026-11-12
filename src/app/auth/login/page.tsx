@@ -7,6 +7,7 @@ import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import Logo from "@/components/ui/custom/Logo";
 import { ResendButton } from "@/app/auth/ResendVerification";
 import AuthContextNote, { intentFor } from "@/app/auth/AuthContextNote";
+import GoogleSignInButton from "@/components/ui/custom/GoogleSignInButton";
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -98,6 +99,8 @@ function LoginForm() {
           )}
         </div>
       )}
+
+      <div className="mb-5"><GoogleSignInButton next={next ?? "/"} /></div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

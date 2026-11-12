@@ -28,7 +28,7 @@ import {
   CAPABILITY_QUESTIONS, DECAY_QUESTIONS, MEDICAL_QUESTIONS, buildMedicalFlags,
   type CapabilityQuestion, type DecayQuestion, type MedicalQuestion,
 } from "@/lib/matchmakerQuestions";
-import { computeAceFromAnswers, estimateQuickAnswers, liveAxisScores, NOT_SURE, QUICK_KEYS } from "@/lib/matchmakerScoring";
+import { computeAceFromAnswers, estimateQuickAnswers, liveAxisScores, NOT_SURE, QUICK_KEYS, QUICK_QUESTION_COUNT, FULL_QUESTION_COUNT } from "@/lib/matchmakerScoring";
 import AceRadar, { AXIS_KEYS as ACE_AXIS_KEYS } from "@/app/ace/AceRadar";
 import { ACE_THEME_CSS } from "@/app/ace/aceTheme";
 import { profileAgeDays, bucketFor } from "@/lib/fitness";
@@ -339,13 +339,13 @@ function IntroScreen({
                     ? { background: "#ff5100", color: "#fff", boxShadow: "0 4px 20px rgba(255,81,0,0.3)" }
                     : { background: "var(--bg-surface-2)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
                   <span className="text-sm font-bold">Quick match</span>
-                  <span className="text-[11px] opacity-75">14 questions · 2 min</span>
+                  <span className="text-[11px] opacity-75">{QUICK_QUESTION_COUNT} questions · 2 min</span>
                 </button>
                 <button onClick={onStart}
                   className="flex flex-col items-start gap-0.5 px-4 py-3 rounded-xl text-left transition-all hover:brightness-110"
                   style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
                   <span className="text-sm font-bold">{hasProfile ? "Retake full" : "Full assessment"}</span>
-                  <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>Most accurate · 3 min</span>
+                  <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>{FULL_QUESTION_COUNT} questions · 3 min</span>
                 </button>
               </div>
 
@@ -398,7 +398,7 @@ function ConsentScreen({ onAccept, onBack }: { onAccept: () => void; onBack: () 
         <p className="text-[11px] font-bold uppercase tracking-[0.24em] mb-3" style={{ color: "var(--accent-ink)" }}>Before you start</p>
         <h1 className="text-3xl font-bold tracking-tight mb-2" style={{ color: "var(--text-primary)" }}>Three ground rules</h1>
         <p className="text-sm leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
-          A few minutes of honest answers, and every adventure gets rated for your body.
+          Ten seconds, and only the first time: we remember it. Then a few minutes of honest answers, and every adventure gets rated for your body.
         </p>
       </div>
 

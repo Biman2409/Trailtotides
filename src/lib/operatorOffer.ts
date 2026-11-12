@@ -1,0 +1,86 @@
+// One operator's offer for one adventure, as collected from the operator's own trek page.
+// Written by scripts/import-operator-offers.ts; every field is optional because operators
+// publish different things. The comparison shows a row only when someone has a value for it.
+export type OperatorOffer = {
+  listedAs: string;
+  days?: number;
+  maxAltM?: number;
+  distanceKm?: number;
+  /** The operator's own grade, as written (e.g. "Easy · BRS 2") */
+  difficulty?: string;
+  /** Per person, before GST */
+  feeBase?: number;
+  /** e.g. 0.05 */
+  gstRate?: number;
+  /** Per person, GST included */
+  feeTotal?: number;
+  priceNote?: string;
+  /** Months with open batches on the collection date, e.g. "Nov 2026" */
+  batches: string[];
+  startEnd?: string;
+  groupSize?: number;
+  addOns: { offloading?: number; transport?: number; insurance?: number; singleTent?: number };
+  /** True when the add-on prices above are before GST */
+  addOnsPlusGst?: boolean;
+  transportRoute?: string;
+  cloakroom?: boolean;
+  included: string[];
+  notIncluded: string[];
+  /** The operator's page for this trek */
+  url?: string;
+  /** ISO date the page was read */
+  checkedAt?: string;
+};
+
+export type ServiceKey = "meals" | "stay" | "leader" | "permits" | "transport" | "cloakroom" | "offloading" | "safety";
+
+export const SERVICE_LABELS: Record<ServiceKey, string> = {
+  meals: "Meals on the trek",
+  stay: "Tents / stays",
+  leader: "Trek leader & guides",
+  permits: "Permits & entry fees",
+  transport: "Transport to base",
+  cloakroom: "Cloakroom",
+  offloading: "Backpack offloading",
+  safety: "First aid & oxygen",
+};
+
+// Words that put an inclusion line under each service
+const MATCH: Record<ServiceKey, RegExp> = {
+  meals: /\bmeals?\b|breakfast|dinner|veg\b|food\b/i,
+  stay: /accommodation|tent|camping|guest ?house|homestay|stay\b|hotel|lodge/i,
+  leader: /leader|guide|instructor|trek lead/i,
+  permits: /permit|entry fee|forest fee|park fee/i,
+  transport: /transport|pick ?up|drop\b|tempo|cab\b|vehicle/i,
+  cloakroom: /cloak ?room/i,
+  offloading: /offload|porter|mule/i,
+  safety: /first ?aid|oxygen|medical kit|oximeter/i,
+};
+
+export type ServiceState = "included" | "extra" | "not-included" | "unknown";
+
+/**
+ * Reads the inclusion and exclusion lists into a yes / paid extra / no per service, so operators
+ * line up row by row. "extra" means a priced add-on exists; unknown means the page doesn't say.
+ */
+export function serviceStates(o: OperatorOffer): Record<ServiceKey, ServiceState> {
+  const out = {} as Record<ServiceKey, ServiceState>;
+  for (const key of Object.keys(MATCH) as ServiceKey[]) {
+    const re = MATCH[key];
+    // Exclusions win over inclusions: "Transport (if not booked with us)" is listed as not included
+    const notIncl = o.notIncluded.some((l) => re.test(l) && !/personal|transit|during the transit|any kind/i.test(l));
+    let incl = o.included.some((l) => re.test(l));
+    // Porters/mules for the group's kit are included by many; personal-bag offloading is the extra
+    if (key === "offloading") incl = o.included.some((l) => /offload/i.test(l) && !/personal/i.test(l));
+    if (key === "cloakroom" && o.cloakroom !== undefined) { out[key] = o.cloakroom ? "included" : "not-included"; continue; }
+    const paid = (key === "transport" && o.addOns.transport) || (key === "offloading" && o.addOns.offloading);
+    if (paid && !incl) out[key] = "extra";
+    else if (incl && !(notIncl && (key === "transport" || key === "offloading"))) out[key] = "included";
+    else if (notIncl) out[key] = paid ? "extra" : "not-included";
+    else out[key] = "unknown";
+  }
+  return out;
+}
+
+/** "₹1,600" */
+export const inr = (n: number) => `₹${Math.round(n).toLocaleString("en-IN")}`;

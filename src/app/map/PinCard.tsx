@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { loginHref } from "@/lib/loginHref";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -67,7 +68,7 @@ export default function PinCard({
   function save() {
     if (!signedIn) {
       toast.error("Log in to wishlist this adventure.", {
-        action: { label: "Log in", onClick: () => router.push("/auth/login") },
+        action: { label: "Log in", onClick: () => router.push(loginHref()) },
       });
       return;
     }

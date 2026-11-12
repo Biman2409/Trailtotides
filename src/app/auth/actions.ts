@@ -26,8 +26,9 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const country_code = formData.get("country_code") as string;
-  const phone_number = formData.get("phone") as string;
-  const phone = `${country_code}${phone_number.replace(/\s+/g, "")}`;
+  // Optional: saved only when they typed a number
+  const phone_number = String(formData.get("phone") ?? "").replace(/\s+/g, "");
+  const phone = phone_number ? `${country_code}${phone_number}` : null;
   const avatar_id_raw = formData.get("avatar_id");
   const avatar_id = avatar_id_raw ? Number(avatar_id_raw) : null;
 
@@ -62,7 +63,7 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
     type: "signup",
     email,
     password,
-    options: { data: { full_name, username, phone, ...(avatar_id !== null ? { avatar_id } : {}) } },
+    options: { data: { full_name, username, ...(phone ? { phone } : {}), ...(avatar_id !== null ? { avatar_id } : {}) } },
   });
 
   if (signUpError || !data?.properties?.hashed_token) {

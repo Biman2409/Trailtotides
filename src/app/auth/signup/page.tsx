@@ -12,6 +12,7 @@ import { AVATARS } from "@/lib/avatars";
 import { CheckInbox } from "@/app/auth/ResendVerification";
 import AuthContextNote from "@/app/auth/AuthContextNote";
 import { USERNAME_RE, USERNAME_RULE_TEXT, checkUsernameAvailability } from "@/lib/username";
+import GoogleSignInButton from "@/components/ui/custom/GoogleSignInButton";
 
 const MIN_PASSWORD = 8;
 
@@ -169,6 +170,8 @@ export default function SignUpPage() {
             </div>
           )}
 
+          <div className="mb-3"><GoogleSignInButton next={next ?? "/"} label="Sign up with Google" /></div>
+
           <form onSubmit={handleSubmit} className="space-y-2.5">
 
             <div>
@@ -248,7 +251,7 @@ export default function SignUpPage() {
             </div>
 
             <div>
-              <label htmlFor="signup-phone" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Phone Number</label>
+              <label htmlFor="signup-phone" className="block text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1 ml-1">Phone <span className="normal-case tracking-normal text-white/40">(optional)</span></label>
               <div className="flex gap-2">
                 <div className="relative">
                   <select
@@ -277,14 +280,13 @@ export default function SignUpPage() {
                   id="signup-phone"
                   name="phone"
                   type="tel"
-                  required
                   autoComplete="tel-national"
                   placeholder="9876543210"
                   aria-describedby="signup-phone-hint"
                   className="flex-1 min-w-0 bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
-              <p id="signup-phone-hint" className="ml-1 mt-1 text-[11px] text-white/50">For booking updates from operators. Never shown on your profile.</p>
+              <p id="signup-phone-hint" className="ml-1 mt-1 text-[11px] text-white/50">Only if you&apos;d like an operator to call you about a trip you ask about. Never shown on your profile.</p>
             </div>
 
             <div>

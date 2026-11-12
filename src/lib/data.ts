@@ -1,3 +1,5 @@
+import operatorPrices from "./operatorPrices.json";
+
 export type AdventureType =
   | "Trekking"
   | "Motorcycling"
@@ -334,7 +336,7 @@ export const adventures: Adventure[] = [
   lng: 78.17253,
   description:
     "Kedarkantha is India's most popular winter summit trek — and **for many trekkers, the first summit of their lives**. From the village of Sankri in the Govind Wildlife Sanctuary, the trail climbs through **pine and oak forests dusted in snow** before breaking into open meadows below the summit cone. It's **one of the most accessible winter snow experiences in India**, and the **360° panorama from 3,800m** takes in Swargarohini and Bandarpunch to Gangotri and Kedarnath.",
-  whoFor: "First Himalayan trek: no technical skill or previous altitude needed · You can climb steadily for 4–5 hours with a daypack, and start summit day around 3am · Tent camping in snow is fine: nights around −10°C in Jan–Feb · You can take 6 days off: 4 on the trail and a day's drive each way between Dehradun and Sankri",
+  whoFor: "A fit first-timer's Himalayan trek: no technical skill or previous altitude needed · You can climb steadily for 4–5 hours with a daypack, and start summit day around 3am · Tent camping in snow is fine: nights around −10°C in Jan–Feb · You can take 6 days off: 4 on the trail and a day's drive each way between Dehradun and Sankri",
   whoNot: "Long mountain drives make you sick: Dehradun to Sankri is 8–10 hours each way · You hate being cold: winter nights in tents are well below freezing · You're going after mid-April and want snow: by then most of it has melted",
   safetyNotes:
     "Start the summit push around 3am to top out at sunrise, before clouds build. Carry microspikes in January–February. Turn back from the summit cone in high wind.",
@@ -668,7 +670,7 @@ export const adventures: Adventure[] = [
     galleryImages: ["https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/beas-kund.jpeg"],
     lat: 32.36058, lng: 77.08136,
     description: "Beas Kund is **the glacial lake that gives birth to the Beas River**, in a high bowl above the Solang Valley. The kund itself — **a perfectly still tarn reflecting Shitidhar peak, framed by the Dhauladhar and Pir Panjal ranges** — is one of the most serene spots in Himachal, and **the short trail through alpine meadows makes it ideal for beginners** stepping into the Himalaya for the first time.",
-    whoFor: "First Himalayan trek: 3 days on the trail, starting from Manali · You can walk 5–6 hours a day with a daypack · You want Hanuman Tibba and Friendship Peak right above camp · A good warm-up before a harder trek in the area",
+    whoFor: "A fit first-timer's Himalayan trek: 3 days on the trail, starting from Manali · You can walk 5–6 hours a day with a daypack · You want Hanuman Tibba and Friendship Peak right above camp · A good warm-up before a harder trek in the area",
     whoNot: "Rain gets you down: Jul–Aug is wet and the Solang road can close · You want solitude: it's one of Manali's most popular short treks · Loose ground worries you: the last stretch to the lake is moraine",
     safetyNotes: "Solang Valley to Dhundi road sometimes closed in heavy rain. Stay on trail near the kund — loose moraine underfoot.",
     ace: { stamina:2, power:2, strength:2, agility:3, water:2, altitude:3, focus:3, nerve:2 },
@@ -755,7 +757,7 @@ export const adventures: Adventure[] = [
     galleryImages: ["https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/dayara-bugyal.jpeg"],
     lat: 30.82994, lng: 78.54964,
     description: "Dayara Bugyal is one of **the widest high-altitude meadows in the Garhwal Himalaya** — a grassland plateau so vast **you can see the horizon curve**, with unobstructed 360° views of Bandarpunch, Srikanth and the Gangotri group. The approach from Raithal through forest is equally beautiful, and **every season is a different world**: amber and rust in October, under snow by December.",
-    whoFor: "First-time trekker: wide meadows, a well-marked trail, nothing technical · You can walk 4–5 hours a day with a daypack · Tent camping is fine: nights near or below freezing · You can take 6 days off: 4 on the trail and a day's drive each way between Dehradun and Raithal",
+    whoFor: "A fit first-time trekker: wide meadows, a well-marked trail, nothing technical, but steady climbing to 3,600m · You can walk 4–5 hours a day with a daypack · Tent camping is fine: nights near or below freezing · You can take 6 days off: 4 on the trail and a day's drive each way between Dehradun and Raithal",
     whoNot: "You want solitude: it's one of Uttarakhand's busiest beginner treks · Long drives make you sick: Dehradun to Raithal is 6–7 hours each way",
     safetyNotes: "Trail is well-marked from Raithal. Afternoon clouds build quickly — reach bugyal campsite by 2pm. Stick to designated camping zones.",
     ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
@@ -784,7 +786,7 @@ export const adventures: Adventure[] = [
     galleryImages: ["https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/deoriatal-chandrashila-hero.jpeg"],
     lat: 30.48642, lng: 79.22123,
     description: "This compact 4-day route combines **Deoria Tal, famous for its mirror reflections of Chaukhamba**, with the Chandrashila summit and extraordinary altitude gain. **At dawn on Chandrashila, Kedarnath, Chaukhamba, Nanda Devi, Trishul and Bandarpunch are all visible at once** — one of the finest summit panoramas on **a moderate Himalayan trek**.",
-    whoFor: "First Himalayan trek with a summit: no technical terrain · You can walk 5–6 hours with a daypack, and start the summit climb at 4–5am · You'd like Tungnath, the world's highest Shiva temple, on the way up · You want a 270° view of Chaukhamba, Nanda Devi and Kedarnath peaks",
+    whoFor: "A fit first-timer's Himalayan summit: no technical terrain · You can walk 5–6 hours with a daypack, and start the summit climb at 4–5am · You'd like Tungnath, the world's highest Shiva temple, on the way up · You want a 270° view of Chaukhamba, Nanda Devi and Kedarnath peaks",
     whoNot: "You want solitude: Tungnath is crowded with pilgrims in May–Jun and on weekends · Long drives make you sick: Rishikesh to Sari is about 8 hours · You're going in Jul–Aug: monsoon landslides block the roads",
     safetyNotes: "Chandrashila summit (3,690m) can be windy and cold even in April. Start summit attempt by 5am for clear views before cloud builds.",
     ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
@@ -1191,7 +1193,7 @@ export const adventures: Adventure[] = [
     galleryImages: ["https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/chandrakhani-pass.jpeg"],
     lat: 32.06970, lng: 77.24295,
     description: "Chandrakhani Pass climbs steeply through deodar forest and alpine pasture from the Kullu Valley, with **panoramic views of Deo Tibba, Indrasan and the Parvati Valley peaks** and across the whole Kullu Valley from the top. It then descends into **Malana, a village with its own distinct language, customs and self-governance** — one of India's most isolated and culturally unique settlements, unlike anywhere else in the Himalaya.",
-    whoFor: "First Himalayan trek with one steep climb to 3,648m · You can walk 5–6 hours a day with a daypack · You're curious about Malana, a village with its own laws and customs · You want Deo Tibba and the Pir Panjal from the pass",
+    whoFor: "A fit first-timer's Himalayan trek, with one steep climb to 3,648m · You can walk 5–6 hours a day with a daypack · You're curious about Malana, a village with its own laws and customs · You want Deo Tibba and the Pir Panjal from the pass",
     whoNot: "You can't follow strict local rules: in Malana you must not touch walls, temples or people, and fines apply · You're going in Jul–Aug: monsoon fog often hides the views · You want high altitude or snow",
     safetyNotes: "Malana has strict cultural customs — follow all local rules about touching village structures or entering certain areas. Pass can be foggy in July–August monsoon. Carry extra rain gear.",
     ace: { stamina:3, power:2, strength:3, agility:3, water:1, altitude:3, focus:3, nerve:3 },
@@ -1832,6 +1834,51 @@ export const adventures: Adventure[] = [
     ],
   },
 ];
+
+// ── Operator facts that must read the same on every page ─────────────────────────────────────
+// Runs once when this module loads, so every page (cards, comparison, directory, map) sees the
+// same price and rating for an operator.
+(function syncOperators() {
+  // The latest fee read from the operator's own page (scripts/import-operator-offers.ts)
+  // replaces the hand-entered one
+  const latest = operatorPrices as Record<string, Record<string, { priceFrom: string; checkedAt?: string }>>;
+  for (const a of adventures) {
+    const byOp = latest[a.slug];
+    if (!byOp) continue;
+    for (const o of a.operators) {
+      const hit = byOp[o.name];
+      if (!hit) continue;
+      o.priceFrom = hit.priceFrom;
+      if (hit.checkedAt) o.priceCheckedAt = hit.checkedAt;
+    }
+  }
+  // One Google rating per operator: the value most listings carry (ties go to the higher one)
+  const seen = new Map<string, Map<number, number>>();
+  for (const a of adventures) for (const o of a.operators) {
+    if (!o.googleRating) continue;
+    const m = seen.get(o.name) ?? new Map<number, number>();
+    m.set(o.googleRating, (m.get(o.googleRating) ?? 0) + 1);
+    seen.set(o.name, m);
+  }
+  const rating = new Map<string, number>();
+  for (const [name, m] of seen) rating.set(name, [...m.entries()].sort((x, y) => y[1] - x[1] || y[0] - x[0])[0][0]);
+  for (const a of adventures) for (const o of a.operators) if (rating.has(o.name)) o.googleRating = rating.get(o.name)!;
+})();
+
+/** One entry per operator listed anywhere on the site. The homepage count and the directory both read this. */
+export const allListedOperators = (() => {
+  const byName = new Map<string, { name: string; verified: boolean; website?: string; googleRating: number }>();
+  for (const a of adventures) for (const o of a.operators) {
+    const prev = byName.get(o.name);
+    byName.set(o.name, {
+      name: o.name,
+      verified: (prev?.verified ?? false) || o.verified,
+      website: prev?.website ?? o.website,
+      googleRating: o.googleRating,
+    });
+  }
+  return [...byName.values()];
+})();
 
 export const stories: Story[] = [
   {

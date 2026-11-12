@@ -35,7 +35,7 @@ export default async function ProfilePage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) redirect("/auth/login");
+  if (!user) redirect("/auth/login?next=%2Fprofile");
 
   // Fetch profile
   let { data: profile } = await supabase

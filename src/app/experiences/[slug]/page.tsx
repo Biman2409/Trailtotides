@@ -50,6 +50,8 @@ import { parsePrice } from "@/lib/price";
 import { getNextDeparture } from "@/lib/nextDeparture";
 import SectionNav from "./SectionNav";
 import { hasTrekGuide } from "@/lib/trekGuides";
+import operatorOffers from "@/lib/operatorOffers.json";
+import type { OperatorOffer } from "@/lib/operatorOffer";
 
 // The page's body copy is small and calm, so its secondary and tertiary tones are
 // raised (from 60% / 35% of the text colour) to keep it easy to read in both themes
@@ -164,7 +166,9 @@ export default async function ExperiencePage({ params }: Props) {
   const approvedOps = await getApprovedOperatorsForAdventure(slug);
   const existingNames = new Set(adventure.operators.map((o) => o.name.toLowerCase()));
   const newOps = approvedOps.filter((o) => !existingNames.has(o.name.toLowerCase()));
-  const allOperators: OperatorCardData[] = [...adventure.operators, ...newOps];
+  // Each operator's offer for this trek (fee with GST, dates, inclusions, extras), when we have it
+  const offers = (operatorOffers as Record<string, Record<string, OperatorOffer>>)[slug] ?? {};
+  const allOperators: OperatorCardData[] = [...adventure.operators, ...newOps].map((o) => (offers[o.name] ? { ...o, offer: offers[o.name] } : o));
 
   const PAGE_SIZE = 12;
   const adventureIndex = adventures.findIndex((a) => a.slug === slug);

@@ -5,6 +5,7 @@ import type { AdventureType } from "@/lib/data";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { getACE, computeDifficulty, computeMatchScore, type ACE } from "@/lib/ace";
 import { stripEmphasis } from "@/lib/emphasis";
+import { parseTrip, applyTrip, hasTrip, fitsTrip, failingChecks, tripPhrase, relaxedNote, kmFrom, type Check, type TripAsk } from "@/lib/tripAsk";
 
 // Gemini's free tier via its OpenAI-compatible endpoint — no billing required.
 // https://ai.google.dev/gemini-api/docs/openai
@@ -106,6 +107,7 @@ ${CATALOG_STR}
 - Difficulty is the catalog's "difficulty" field (Easy, Moderate, Hard, Advanced, Extreme) and nothing else. Never call an adventure easier or harder than that field says.
 - When the user asks for a difficulty ("moderate", "easy", "challenging"…), recommend ONLY adventures whose "difficulty" field is that level. If none fit the rest of the request, say so and offer the nearest level, naming it.
 - Never recommend a coming-soon type — say it's coming soon instead.
+- When the user names a month or season, recommend ONLY adventures whose "season" includes it. When they give a trip length ("weekend", "5 days", "a week"), recommend ONLY adventures whose "days" is within a day of it (a weekend is 1–3 days). When they name a city to start from, prefer adventures near it.
 - Keep text responses concise (1–3 sentences max before any recommendations).
 - Don't say "I" awkwardly. Speak as Compass.AI, not a generic bot.
 - When you mention <suggest_ace/> in your own words, call it the "Adventure Matchmaker", not "ACE" — ACE is the fitness engine behind it, Matchmaker is the thing users actually take.`;
@@ -344,7 +346,8 @@ function pickByDifficulty(query: string, wanted: string[], exclude: Set<string>,
     (types.length === 0 || types.includes(a.type)) &&
     (places.length === 0 || places.some((p) => a.state.includes(p)));
   const ranked = keywordSearch(query, adventures.length);
-  const pool = [...ranked, ...adventures.filter((a) => !ranked.includes(a))].filter(fits);
+  // When, how long and from where are hard limits as well (relaxed only if nothing fits)
+  const pool = applyTrip([...ranked, ...adventures.filter((a) => !ranked.includes(a))].filter(fits), parseTrip(query)).list;
   const exact = pool.filter((a) => wanted.includes(computeDifficulty(getACE(a))));
   if (exact.length > 0) return { picks: exact.slice(0, limit), nearest: null as string | null };
   if (pool.length === 0) return { picks: [], nearest: null as string | null };
@@ -355,8 +358,9 @@ function pickByDifficulty(query: string, wanted: string[], exclude: Set<string>,
 }
 
 /** A factual one-liner from the site's own data, for picks the model got wrong or didn't explain. */
-function factualReason(a: typeof adventures[0]): string {
-  return `${computeDifficulty(getACE(a))} ${a.type.toLowerCase()} in ${a.state}, ${a.durationDays}${a.bestSeason ? `. Best ${a.bestSeason}` : ""}.`;
+function factualReason(a: typeof adventures[0], trip?: TripAsk): string {
+  const km = trip?.city ? ` About ${Math.round(kmFrom(trip, a) / 10) * 10} km from ${trip.city.name}.` : "";
+  return `${computeDifficulty(getACE(a))} ${a.type.toLowerCase()} in ${a.state}, ${a.durationDays}${a.bestSeason ? `. Best ${a.bestSeason}` : ""}.${km}`;
 }
 
 const DIFFICULTY_WORD = /\b(easy|moderate|hard|advanced|extreme|gentle|beginner[- ]friendly|challenging|tough|strenuous)\b/gi;
@@ -392,6 +396,12 @@ Rules: recommend READY adventures first. Only suggest a STRETCH one if it fits t
 function pickFallback(query: string, ace: ACE | null, limit = 3) {
   const wanted = requestedDifficulty(query);
   let list = wanted ? pickByDifficulty(query, wanted, new Set(), 15).picks : keywordSearch(query, 15);
+  const trip = parseTrip(query);
+  if (!wanted && hasTrip(trip)) {
+    const { types, places } = requestLimits(query);
+    const inScope = (a: typeof adventures[0]) => (types.length === 0 || types.includes(a.type)) && (places.length === 0 || places.some((p) => a.state.includes(p)));
+    list = applyTrip([...list, ...adventures.filter((a) => !list.includes(a))].filter(inScope), trip).list;
+  }
   if (BEGINNER_WORDS.test(query)) {
     const gentle = list.filter((a) => LEVEL[computeDifficulty(getACE(a))] <= 2);
     list = gentle.length > 0 ? gentle : list.filter((a) => LEVEL[computeDifficulty(getACE(a))] <= 3);
@@ -485,13 +495,20 @@ function keywordAnswer(query: string, ace: ACE | null) {
       ? `Here's ${named[0].name}${more ? `, plus ${more} more like it` : ""}.`
       : `Here are the ones you named${more ? `, plus ${more} more like them` : ""}.`;
   }
+  const trip = parseTrip(query);
+  if (!text && picks.length && hasTrip(trip)) {
+    const missed = [...new Set(picks.flatMap((a) => failingChecks(a, trip)))] as Check[];
+    const phrase = tripPhrase(trip);
+    text = missed.length ? relaxedNote(trip, missed)
+      : picks.length === 1 ? `Here's the one ${phrase}: ${picks[0].name}.` : `Here are ${picks.length} ${what}${where} ${phrase}.`;
+  }
   if (!text && picks.length) {
     text = picks.length === 1 ? `Here's the best match${where ? where : ""}: ${picks[0].name}.` : `Here are ${picks.length} ${what}${where} that fit what you asked.`;
   }
   return {
     text,
     picks,
-    recommendations: picks.map((a) => ({ slug: a.slug, name: a.name, reason: ace ? fallbackReason(a, query, ace) : factualReason(a) })),
+    recommendations: picks.map((a) => ({ slug: a.slug, name: a.name, reason: ace ? fallbackReason(a, query, ace) : factualReason(a, hasTrip(trip) ? trip : undefined) })),
   };
 }
 
@@ -645,9 +662,20 @@ export async function POST(req: NextRequest) {
         recommendations = [...kept, ...extra.map((a) => ({ slug: a.slug, name: a.name, reason: factualReason(a) }))];
       }
     }
+    const askedTrip = parseTrip(askedQuery);
+    if (hasTrip(askedTrip) && recommendations.length > 0) {
+      const kept = recommendations.filter((r) => { const a = adventures.find((x) => x.slug === r.slug); return a && fitsTrip(a, askedTrip); });
+      if (kept.length < recommendations.length) {
+        replacedPicks = true;
+        const extra = pickFallback(askedQuery, userAce, 3).filter((a) => !kept.some((k) => k.slug === a.slug)).slice(0, 3 - kept.length);
+        recommendations = [...kept, ...extra.map((a) => ({ slug: a.slug, name: a.name, reason: factualReason(a, askedTrip) }))];
+        const missed = [...new Set(recommendations.flatMap((r) => failingChecks(adventures.find((x) => x.slug === r.slug)!, askedTrip)))] as Check[];
+        nearestNote = missed.length ? relaxedNote(askedTrip, missed) : `Here are ${recommendations.length} adventures ${tripPhrase(askedTrip)}.`;
+      }
+    }
     recommendations = recommendations.map((r) => {
       const a = adventures.find((x) => x.slug === r.slug)!;
-      return !r.reason || misstatesDifficulty(r.reason, r.slug) ? { ...r, name: a.name, reason: factualReason(a) } : r;
+      return !r.reason || misstatesDifficulty(r.reason, r.slug) ? { ...r, name: a.name, reason: factualReason(a, hasTrip(askedTrip) ? askedTrip : undefined) } : r;
     });
     const cards = recommendations
       .map((r) => adventures.find((a) => a.slug === r.slug))

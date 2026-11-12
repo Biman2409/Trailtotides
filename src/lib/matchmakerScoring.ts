@@ -3,7 +3,7 @@
 // than half in total. Health answers arrive only as MedicalFlags, never as raw answers.
 
 import type { ACE, AceAxis } from "./ace";
-import { CAPABILITY_QUESTIONS, DECAY_QUESTIONS, type CapabilityOption, type MedicalFlags } from "./matchmakerQuestions";
+import { CAPABILITY_QUESTIONS, DECAY_QUESTIONS, MEDICAL_QUESTIONS, type CapabilityOption, type MedicalFlags } from "./matchmakerQuestions";
 
 const LETTER_SCORE: Record<CapabilityOption["v"], number> = { A: 1, B: 2, C: 3, D: 4, E: 5 };
 
@@ -14,6 +14,11 @@ export const NOT_SURE = "U";
 // inferred from anything else and gates whole adventure types, so it's always asked. The other
 // answers are estimated from these (see estimateQuickAnswers) until the person refines their profile.
 export const QUICK_KEYS = ["stamina-1", "strength-1", "agility-1", "water-1", "altitude-1", "nerve-1"];
+
+// How many questions each way in asks (health questions included; they can be skipped).
+// Every page that quotes a count reads these, so they stay in step with the quiz.
+export const QUICK_QUESTION_COUNT = QUICK_KEYS.length + DECAY_QUESTIONS.length + MEDICAL_QUESTIONS.length;
+export const FULL_QUESTION_COUNT = CAPABILITY_QUESTIONS.length + DECAY_QUESTIONS.length + MEDICAL_QUESTIONS.length;
 
 /** Fills unanswered capability questions from related quick answers. */
 export function estimateQuickAnswers(answers: Partial<Record<string, string>>): Partial<Record<string, string>> {

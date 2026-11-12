@@ -13,13 +13,6 @@ export function askCompass(text: string) {
   window.dispatchEvent(new CustomEvent<string>(COMPASS_ASK_EVENT, { detail: text }));
 }
 
-// Phrased the way people actually describe a trip, not as search keywords.
-export const STARTER_PROMPTS = [
-  "Something remote and challenging",
-  "Beginner-friendly trek in Himachal",
-  "A short trek for a long weekend",
-];
-
 export interface CompassMessage {
   role: "user" | "assistant";
   content: string;

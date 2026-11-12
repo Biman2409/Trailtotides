@@ -73,6 +73,23 @@ export function searchSuggestions(all: Adventure[], query: string, limit = 3): s
     .map((x) => x.t);
 }
 
+// Searches for places and activities that aren't on the site yet
+const COMING_SOON: [RegExp, string, string][] = [
+  [/\b(goa|gokarna|konkan|coast|coastal|beach|beaches|surf|surfing|kerala|varkala|kovalam|andaman|havelock|lakshadweep|island|islands|dive|diving|scuba|snorkel|snorkelling|kayak|kayaking)\b/, "Coast and island adventures", "🌊"],
+  [/\b(paraglid\w*|bir|billing|skydiv\w*|balloon|hang ?glid\w*)\b/, "Air adventures", "🪂"],
+  [/\b(ski|skiing|gulmarg|auli|snowboard\w*|ice skat\w*|ice climb\w*)\b/, "Snow sports", "⛷️"],
+  [/\b(western ghats|sahyadri|maharashtra|karnataka|coorg|munnar|ooty|nilgiris?|tamil nadu)\b/, "Western Ghats adventures", "🌿"],
+  [/\b(meghalaya|northeast|north east|arunachal|nagaland|assam|shillong|cherrapunji|tawang)\b/, "Northeast adventures", "🌧️"],
+  [/\b(rajasthan|desert|thar|jaisalmer|rann|kutch)\b/, "Desert adventures", "🏜️"],
+  [/\b(rock climb\w*|bouldering|caving|cave|caves|jeep safari|safari)\b/, "Those adventures", "🧗"],
+];
+
+export function comingSoonFor(query: string): { label: string; icon: string } | null {
+  const q = query.toLowerCase();
+  const hit = COMING_SOON.find(([re]) => re.test(q));
+  return hit ? { label: hit[1], icon: hit[2] } : null;
+}
+
 // ─── Sorting ─────────────────────────────────────────────────────────────────
 
 export type SortKey = "recommended" | "match" | "price" | "shortest" | "highest" | "az";
@@ -87,7 +104,8 @@ export const SORT_LABELS: Record<SortKey, string> = {
 };
 
 /**
- * "Recommended": in season now first, then easier before harder (so the list doesn't open on a
+ * "Recommended": bookable first (an operator and a price, so the list never opens on a trek
+ * nobody runs), then in season now, then easier before harder (so the list doesn't open on a
  * wall of Extreme treks), then Editor's Choice, then the most bookable (more operators).
  */
 export function sortAdventures(list: Adventure[], key: SortKey, opts: { monthIdx: number; score?: (a: Adventure) => number }): Adventure[] {
@@ -104,6 +122,7 @@ export function sortAdventures(list: Adventure[], key: SortKey, opts: { monthIdx
     case "az": return out.sort((x, y) => x.name.localeCompare(y.name));
     default:
       return out.sort((x, y) =>
+        Number(getLowestPrice(y) !== null) - Number(getLowestPrice(x) !== null) ||
         Number(y.bestMonths.includes(month)) - Number(x.bestMonths.includes(month)) ||
         difficultyLevel(x) - difficultyLevel(y) ||
         Number(!!y.editorChoice) - Number(!!x.editorChoice) ||

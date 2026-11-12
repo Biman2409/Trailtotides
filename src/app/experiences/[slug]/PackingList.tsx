@@ -5,11 +5,10 @@ import {
   Backpack, Check, ChevronDown, IdCard, HeartPulse,
   Shirt, Pickaxe, Bike, Waves, Mountain,
   Snowflake, Zap, Satellite, Smartphone, Thermometer, CloudRain,
-  Anchor, Wind, LogIn, Lock, Plus, Share2, X, Copy, CheckCheck,
+  Anchor, Wind, Plus, Share2, X, Copy, CheckCheck,
 } from "lucide-react";
 import type { AdventureType } from "@/lib/data";
 import { loadProfile } from "@/lib/matchmaker";
-import { useCurrentUserId } from "@/lib/useCurrentUserId";
 import type { ACE } from "@/lib/ace";
 
 interface Item {
@@ -534,7 +533,7 @@ export default function PackingList({
   adventureAce: ACE;
   slug: string;
 }) {
-  const loggedIn = !!useCurrentUserId();
+  // Ticks and custom items live in this browser (localStorage), so the list needs no account
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [open, setOpen] = useState(false);
   const [userAce, setUserAce] = useState<ACE | null>(null);
@@ -636,25 +635,20 @@ export default function PackingList({
             buttons can't nest (that was a hydration error) */}
         <div className="flex items-center gap-3 px-4 py-3.5 hover:bg-black/[0.015] dark:hover:bg-white/[0.02] transition-colors">
           <button
-            onClick={() => loggedIn && setOpen((v) => !v)}
-            disabled={!loggedIn}
-            aria-expanded={loggedIn ? open : undefined}
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
             className="flex-1 min-w-0 flex items-center gap-2.5 text-left disabled:cursor-default"
           >
             <Backpack className="w-4 h-4 text-amber-400 shrink-0" />
             <div className="min-w-0">
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-black/55 dark:text-white/50">Smart Packing List</p>
               <p className="text-black/35 dark:text-white/30 text-[10px] mt-0.5 flex items-center gap-1">
-                {loggedIn ? (
-                  <>{checkedCount}/{allItems.length} packed · {essentialCount} essentials</>
-                ) : (
-                  <><Lock className="w-2.5 h-2.5 shrink-0" />{allItems.length} items · {essentialCount} essentials</>
-                )}
+                <>{checkedCount}/{allItems.length} packed · {essentialCount} essentials</>
               </p>
             </div>
           </button>
           <div className="flex items-center gap-3 shrink-0">
-            {loggedIn ? (
+            {(
               <>
                 {/* Share button */}
                 <button
@@ -688,21 +682,12 @@ export default function PackingList({
                 <ChevronDown className={`w-4 h-4 text-black/30 dark:text-white/25 transition-transform ${open ? "rotate-180" : ""}`} />
                 </button>
               </>
-            ) : (
-              <a
-                href={`/auth/login?next=${encodeURIComponent(`/experiences/${slug}`)}`}
-                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-medium text-[#ff5100] transition-colors hover:bg-[rgba(255,81,0,0.06)]"
-                style={{ border: "1px solid rgba(255,81,0,0.55)" }}
-              >
-                <LogIn className="w-3 h-3" />
-                Log in
-              </a>
             )}
           </div>
         </div>
 
         {/* Progress bar */}
-        {loggedIn && (
+        {(
           <div className="h-0.5 mx-4" style={{ background: "rgba(var(--fg-rgb),0.05)" }}>
             <div
               className="h-full transition-all duration-500 rounded-full"
@@ -712,7 +697,7 @@ export default function PackingList({
         )}
 
         {/* ── Body ── */}
-        {open && loggedIn && (() => {
+        {open && (() => {
           const safeTab = Math.min(activeTab, allCats.length - 1);
           const cat = allCats[safeTab];
           const CatIcon = cat.Icon;

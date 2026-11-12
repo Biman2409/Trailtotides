@@ -5,6 +5,7 @@ import { ChevronRight, AlertTriangle, Clock3 } from "lucide-react";
 import { loadProfileFromServer, isProfileStale } from "@/lib/matchmaker";
 import type { SeasonUrgency } from "@/lib/seasonUrgency";
 import { openOperator } from "@/lib/outbound";
+import { OPEN_COMPARE_EVENT } from "./OperatorsSection";
 
 interface Props {
   adventureName: string;
@@ -48,8 +49,9 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, difficul
     if (bookDirect) {
       openOperator({ url: operatorWebsite!, operator: operatorName ?? "Operator", source: "mobile_bar", slug });
     } else {
-      const el = document.getElementById("operators-section");
-      if (el) el.scrollIntoView({ behavior: "smooth" });
+      // Straight into the side-by-side comparison, with the section scrolled into view behind it
+      document.getElementById("operators-section")?.scrollIntoView({ behavior: "smooth" });
+      window.dispatchEvent(new Event(OPEN_COMPARE_EVENT));
     }
   };
 

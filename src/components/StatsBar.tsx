@@ -2,21 +2,21 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { adventures } from "@/lib/data";
+import { adventures, allListedOperators } from "@/lib/data";
 
 const totalAdventures = adventures.length;
-const totalStates = new Set(adventures.map((a) => a.state)).size;
+// Areas as the "Discover by region" section counts them: "Himachal Pradesh / Ladakh" is two
+const totalAreas = new Set(adventures.flatMap((a) => a.state.split(/\s*[/,]\s*/).map((s) => s.trim()).filter(Boolean))).size;
 const totalTypes = new Set(adventures.map((a) => a.type)).size;
-const totalUniqueOperators = new Set(
-  adventures.flatMap((a) => a.operators.map((o) => o.name.trim().toLowerCase()))
-).size;
+// The same list the Operators page shows
+const totalOperators = allListedOperators.length;
 
 // Each stat links to where that number lives on the site
 const STATS = [
-  { value: totalAdventures,      label: "Adventures", href: "/explore" },
-  { value: totalStates,          label: "Regions",    href: "#regions" },
-  { value: totalTypes,           label: "Genres",     href: "#styles" },
-  { value: totalUniqueOperators, label: "Operators",  href: "/operators" },
+  { value: totalAdventures, label: "Adventures", href: "/explore" },
+  { value: totalAreas,      label: "Areas",      href: "#regions" },
+  { value: totalTypes,      label: "Activities", href: "#styles" },
+  { value: totalOperators,  label: "Operators",  href: "/operators" },
 ];
 
 function useCountUp(target: number, duration = 1600, started = false) {

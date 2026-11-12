@@ -394,7 +394,10 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-[13px] leading-none truncate" style={{ color: "var(--text-primary)" }}>{r.username}</p>
-                      <p className="text-[12px] mt-1" style={{ color: "var(--text-tertiary)" }}>{timeAgo(r.created_at)}</p>
+                      {/* Reviews that came with the listing (no account behind them) say so, rather than pass as a member's */}
+                      <p className="text-[12px] mt-1" style={{ color: "var(--text-tertiary)" }} title={r.user_id ? undefined : "Added to this listing by the Trail to Tides team, not posted from a member account"}>
+                        {r.user_id ? timeAgo(r.created_at) : "Added by Trail to Tides"}
+                      </p>
                     </div>
                     {currentUserId === r.user_id && (
                       <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id} className="transition-colors shrink-0" style={{ color: "var(--text-muted)" }}>

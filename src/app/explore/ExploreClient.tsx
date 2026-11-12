@@ -21,13 +21,14 @@ import { bucketFor } from "@/lib/fitness";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
 import { currentMonthIndexIST } from "@/lib/homeCuration";
 import {
-  SORT_LABELS, formatAltitude, latestPriceCheck, searchSuggestions, sortAdventures,
+  SORT_LABELS, MONTHS, comingSoonFor, formatAltitude, latestPriceCheck, searchSuggestions, sortAdventures,
   type SortKey,
 } from "@/lib/exploreHelpers";
 import {
   NO_FILTERS, filtersFromParams, writeFilterParams, filterAdventures, anyFilter,
   CategoryBar, FilterPanel, type AdventureFilterState,
 } from "@/components/ui/custom/AdventureFilters";
+import { askCompass } from "@/lib/compass";
 
 type View = "grid" | "list";
 
@@ -95,6 +96,21 @@ export default function ExploreClient() {
   const anyActive = anyFilter(f) || !!region;
   const search = f.search;
   const suggestions = results.length === 0 && search ? searchSuggestions(adventures, search) : [];
+
+  // A misspelt search ("kedarkanta") shows the likely adventure straight away, and says so
+  const corrected = useMemo(() => {
+    // Not for places we don't run yet: "goa" isn't a typo for "Ghati"
+    if (results.length > 0 || !search || comingSoonFor(search)) return null;
+    for (const term of suggestions) {
+      const filtered = filterAdventures(adventures, { ...f, search: term }, { region, score: fitAce ? score : undefined });
+      if (filtered.length) return { term, list: sortAdventures(filtered, sortKey, { monthIdx, score: fitAce ? score : undefined }) };
+    }
+    return null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [results.length, search, suggestions.join("|"), f, region, fitAce, sortKey, monthIdx]);
+  const list = corrected?.list ?? results;
+  // Places and activities we don't run yet get an honest "coming soon" instead of a bare "nothing"
+  const comingSoon = list.length === 0 && search ? comingSoonFor(search) : null;
 
   function clearAll() {
     setF(NO_FILTERS);
@@ -241,8 +257,15 @@ export default function ExploreClient() {
         {anyActive && (
           <div className="flex items-center justify-between gap-3 mb-5">
             <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              {results.length} {results.length === 1 ? "match" : "matches"}
-              {search && <> for &ldquo;<span style={{ color: "var(--text-primary)" }}>{search}</span>&rdquo;</>}
+              {corrected ? (
+                <>No exact match for &ldquo;{search}&rdquo;. Showing {corrected.list.length} for{" "}
+                  <span className="font-semibold" style={{ color: "var(--text-primary)" }}>{corrected.term}</span></>
+              ) : (
+                <>
+                  {results.length} {results.length === 1 ? "match" : "matches"}
+                  {search && <> for &ldquo;<span style={{ color: "var(--text-primary)" }}>{search}</span>&rdquo;</>}
+                </>
+              )}
             </p>
             <button onClick={clearAll} className="inline-flex items-center gap-1.5 text-sm font-medium hover:text-[var(--text-primary)] transition-colors" style={{ color: "var(--text-tertiary)" }}>
               <RotateCcw className="w-3.5 h-3.5" /> Clear all
@@ -250,7 +273,30 @@ export default function ExploreClient() {
           </div>
         )}
 
-        {results.length === 0 ? (
+        {list.length === 0 && search ? (
+          <div className="text-center py-16 max-w-xl mx-auto">
+            <p className="text-4xl mb-4" aria-hidden>{comingSoon ? comingSoon.icon : "🗺️"}</p>
+            <h2 className="text-xl font-bold t-text mb-2">
+              {comingSoon ? `${comingSoon.label} are coming soon` : `Nothing on Trail to Tides matches “${search}” yet`}
+            </h2>
+            <p className="text-sm mb-6" style={{ color: "var(--text-secondary)" }}>
+              {comingSoon
+                ? `We're adding ${comingSoon.label.toLowerCase()} next. Today everything we list is in the Himalayas. Ask Compass.AI for the closest thing, or see what's at its best right now.`
+                : "Try a trek, a place or an activity, or describe the trip and let Compass.AI pick."}
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              <button onClick={() => askCompass(comingSoon ? `Something like ${search}` : search)} className="h-10 px-4 rounded-full text-sm font-semibold text-white" style={{ background: "#ff5100" }}>
+                Ask Compass.AI
+              </button>
+              <Link href={`/explore?month=${MONTHS[monthIdx]}`} onClick={() => setF({ ...NO_FILTERS, months: [MONTHS[monthIdx]] })} className="h-10 px-4 inline-flex items-center rounded-full text-sm font-semibold" style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
+                In season now
+              </Link>
+              <button onClick={clearAll} className="h-10 px-4 rounded-full text-sm font-semibold" style={{ border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}>
+                Clear search
+              </button>
+            </div>
+          </div>
+        ) : list.length === 0 ? (
           <div>
             <EmptyState icon="🗺️" heading="No adventures found" subtext="Try fewer filters or a different search." actionLabel="Clear all filters" onAction={clearAll} size="lg" />
             {suggestions.length > 0 && (
@@ -267,18 +313,18 @@ export default function ExploreClient() {
           </div>
         ) : view === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-            {results.slice(0, shown).map((a, i) => (
+            {list.slice(0, shown).map((a, i) => (
               <div key={a.id} id={`card-${a.slug}`}>
                 <AdventureCard adventure={a} badge={false} priority={i < 3} />
               </div>
             ))}
           </div>
         ) : (
-          <ListView items={results.slice(0, shown)} monthIdx={monthIdx} score={fitAce ? score : undefined} />
+          <ListView items={list.slice(0, shown)} monthIdx={monthIdx} score={fitAce ? score : undefined} />
         )}
 
         {/* ── Show more ── */}
-        {results.length > shown && (
+        {list.length > shown && (
           <div className="mt-10 flex flex-col items-center gap-2">
             {/* A real link for crawlers; people get the cards added in place */}
             <a
@@ -287,7 +333,7 @@ export default function ExploreClient() {
               className="px-6 py-3 rounded-xl text-sm font-semibold transition-colors hover:bg-[var(--bg-card-hover)]"
               style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
             >
-              Show {Math.min(PAGE, results.length - shown)} more
+              Show {Math.min(PAGE, list.length - shown)} more
             </a>
             <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>Showing {shown} of {results.length}</p>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { loginHref } from "@/lib/loginHref";
 import Link from "next/link";
 import { X, ArrowRight, GitCompare, Heart, Plus, ChevronDown, Search, LogIn, Share2 } from "lucide-react";
 import { toast } from "sonner";
@@ -207,7 +208,7 @@ export default function CompareContent({ fixed }: { fixed?: Adventure[] } = {}) 
     <div>
       {!fixed && !selected.length && loggedIn === false && (
         <button
-          onClick={() => router.push("/auth/login")}
+          onClick={() => router.push(loginHref())}
           className="mb-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:opacity-80"
           style={{ background: "#ff5100" }}
         >

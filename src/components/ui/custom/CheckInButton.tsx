@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { loginHref } from "@/lib/loginHref";
 import { CheckCircle2 } from "lucide-react";
 import { useTripLog } from "@/contexts/TripLogContext";
 import { createClient } from "@/lib/supabase/client";
@@ -32,7 +33,7 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
     e.stopPropagation();
     if (loggedIn === false) {
       toast.error("Log in to log completed adventures.", {
-        action: { label: "Log in", onClick: () => router.push("/auth/login") },
+        action: { label: "Log in", onClick: () => router.push(loginHref()) },
       });
       return;
     }

@@ -4,6 +4,7 @@ import { ChevronRight, Clock3, Sparkles } from "lucide-react";
 import type { SeasonUrgency } from "@/lib/seasonUrgency";
 import QuoteRequestButton from "./QuoteRequestButton";
 import { openOperator } from "@/lib/outbound";
+import { OPEN_COMPARE_EVENT } from "./OperatorsSection";
 
 interface Props {
   priceFrom?: string;
@@ -49,7 +50,9 @@ export default function BookingSidebarCard({ slug, priceFrom, operatorCount, ope
     if (bookDirect) {
       openOperator({ url: operatorWebsite!, operator: operatorName ?? "Operator", source: "sidebar", slug });
     } else {
+      // Straight into the side-by-side comparison, with the section scrolled into view behind it
       document.getElementById("book-this-adventure")?.scrollIntoView({ behavior: "smooth" });
+      window.dispatchEvent(new Event(OPEN_COMPARE_EVENT));
     }
   };
 

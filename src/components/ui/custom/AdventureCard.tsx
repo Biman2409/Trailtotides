@@ -44,10 +44,22 @@ const bestFor = (whoFor: string) => whoFor.split(" · ")[0];
 
 const MONTHS: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+// Runs of consecutive months, so a split season reads "May–Jun, Sep–Nov" (not "May–Nov"),
+// and a winter one that wraps the year reads "Dec–Mar"
+const MONTH_ORDER: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 function formatSeasonShort(bestMonths: Month[]): string {
   if (!bestMonths || bestMonths.length === 0) return "";
-  if (bestMonths.length === 1) return bestMonths[0];
-  return `${bestMonths[0]}–${bestMonths[bestMonths.length - 1]}`;
+  if (bestMonths.length >= 12) return "Year-round";
+  const on = MONTH_ORDER.map((m) => bestMonths.includes(m));
+  // Start each run at a month whose previous month is off (wrapping December → January)
+  const runs: string[] = [];
+  for (let i = 0; i < 12; i++) {
+    if (!on[i] || on[(i + 11) % 12]) continue;
+    let j = i;
+    while (on[(j + 1) % 12] && (j + 1) % 12 !== i) j = (j + 1) % 12;
+    runs.push(i === j ? MONTH_ORDER[i] : `${MONTH_ORDER[i]}–${MONTH_ORDER[j]}`);
+  }
+  return runs.join(", ");
 }
 
 
@@ -104,9 +116,9 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
   const seasonLabel = formatSeasonShort(adventure.bestMonths);
   const operatorCount = adventure.operators?.length ?? 0;
 
-  const verifiedCount = adventure.operators?.filter(o => o.verified).length ?? 0;
   const lowestPrice = getLowestPrice(adventure);
-  const displayCount = verifiedCount > 0 ? verifiedCount : operatorCount;
+  // Every listed operator, the same number the adventure page and its comparison show
+  const displayCount = operatorCount;
 
   return (
     <div className={`flex flex-col ${fill ? "h-full" : ""}`}>

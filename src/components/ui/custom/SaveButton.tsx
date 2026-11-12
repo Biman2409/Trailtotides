@@ -1,6 +1,7 @@
 "use client";
 
 import { Heart, LogIn } from "lucide-react";
+import { loginHref } from "@/lib/loginHref";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -34,7 +35,7 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
     e.stopPropagation();
     if (loggedIn === false) {
       toast.error("Log in to wishlist this adventure.", {
-        action: { label: "Log in", onClick: () => router.push("/auth/login") },
+        action: { label: "Log in", onClick: () => router.push(loginHref()) },
       });
       return;
     }

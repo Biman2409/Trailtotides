@@ -405,7 +405,6 @@ export const ACTIVITIES: Activity[] = [
 ];
 
 export const activityBySlug = (slug: string) => ACTIVITIES.find((a) => a.slug === slug);
-export const activityByType = (type: string) => ACTIVITIES.find((a) => a.type === type);
 export const activityHref = (a: Activity) => `/adventurepedia/activities/${a.slug}`;
 
 const ICON_OF: Record<Element, SearchEntry["icon"]> = { earth: "trail", water: "raft", snow: "altitude", air: "map" };

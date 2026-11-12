@@ -4,7 +4,7 @@ import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { getAllOperatorProfiles, getAllOperatorSubmissions } from "@/app/auth/operator-actions";
 import { createClient } from "@/lib/supabase/server";
-import { adventures } from "@/lib/data";
+import { adventures, allListedOperators } from "@/lib/data";
 import { ShieldCheck } from "lucide-react";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
 import OperatorsClient, { OperatorCardData } from "./OperatorsClient";
@@ -65,11 +65,13 @@ export default async function OperatorsPage() {
     };
   });
 
-  // Static verified operators from data.ts
+  // Every operator listed on an adventure in data.ts, verified or not, so this page shows the
+  // same operators (and the same count) as the adventure pages and the homepage
   const staticVerifiedNames = new Set<string>();
   const staticCards: OperatorCardData[] = [];
+  const isVerified = new Map(allListedOperators.map((o) => [o.name, o.verified]));
   adventures.forEach((adv) => {
-    adv.operators.filter((op) => op.verified).forEach((op) => {
+    adv.operators.forEach((op) => {
       if (!staticVerifiedNames.has(op.name)) {
         staticVerifiedNames.add(op.name);
         const prices: Record<string, string> = {};
@@ -85,7 +87,7 @@ export default async function OperatorsPage() {
           email: "",
           adventureSlugs: matchedAdventures.map((a) => a.slug),
           prices,
-          verified: true,
+          verified: isVerified.get(op.name) ?? false,
           rating: null,
           adventureDetails: matchedAdventures.map((a) => ({
             slug: a.slug,
@@ -99,17 +101,16 @@ export default async function OperatorsPage() {
     });
   });
 
-  // Google rating per verified operator (the same on every adventure they run)
-  const ratings = new Map<string, number>();
-  adventures.forEach((a) => a.operators.forEach((o) => {
-    if (o.verified && o.googleRating) ratings.set(o.name, Math.max(ratings.get(o.name) ?? 0, o.googleRating));
-  }));
+  // Google rating per operator: data.ts already holds one value per operator
+  const ratings = new Map(allListedOperators.filter((o) => o.googleRating).map((o) => [o.name, o.googleRating]));
   staticCards.forEach((c) => { c.rating = ratings.get(c.company_name) ?? null; });
 
-  const allCards = [...staticCards, ...dynamicCards];
+  // An operator who signed up and is also listed in data.ts shows once
+  const staticKeys = new Set(staticCards.map((c) => c.company_name.trim().toLowerCase()));
+  const allCards = [...staticCards, ...dynamicCards.filter((c) => !staticKeys.has(c.company_name.trim().toLowerCase()))];
 
   // Headline numbers, all counted from the listings themselves
-  const verifiedCards = staticCards;
+  const verifiedCards = staticCards.filter((c) => c.verified);
   const stats = {
     verified: verifiedCards.length,
     adventures: new Set(verifiedCards.flatMap((c) => c.adventureSlugs)).size,

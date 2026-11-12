@@ -35,15 +35,6 @@ export const ACE_AXIS_COLORS: Record<AceAxis, string> = {
   nerve: "#10b981",
 };
 
-// ─── Domain groupings ─────────────────────────────────────────────────────────
-
-export const ACE_DOMAINS = [
-  { name: "Engine",    axes: ["stamina", "power"] as AceAxis[],          color: "#f97316", desc: "The physical engine — sustained output and explosive effort." },
-  { name: "Chassis",   axes: ["strength", "agility"] as AceAxis[],       color: "#22d3ee", desc: "Load-bearing capability and terrain navigation." },
-  { name: "Elements",  axes: ["water", "altitude"] as AceAxis[],         color: "#a78bfa", desc: "Environmental exposure — aquatic and high-altitude demands." },
-  { name: "Mind",      axes: ["focus", "nerve"] as AceAxis[],          color: "#10b981", desc: "Psychological resilience and the grit to operate far from help." },
-];
-
 const BLANK_ACE: ACE = { stamina: 0, power: 0, strength: 0, agility: 0, water: 0, altitude: 0, focus: 0, nerve: 0 };
 
 // ─── Difficulty computation from ACE sum ──────────────────────────────────

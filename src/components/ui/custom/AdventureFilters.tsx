@@ -7,7 +7,7 @@
 import { useEffect, useRef, useState } from "react";
 import { X, Crown, ChevronDown, Shapes, MapPin } from "lucide-react";
 import { adventures, getLowestPrice } from "@/lib/data";
-import type { AdventureType, Difficulty, Duration, Month } from "@/lib/data";
+import type { Difficulty, Duration } from "@/lib/data";
 import { toggleSelection as toggle, GENRE_GROUPS } from "@/lib/filterOptions";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import { REGION_STATES, REGION_ORDER } from "@/lib/regionGroups";
@@ -25,68 +25,13 @@ export const DURATIONS: Duration[] = ["Weekend", "3–5 days", "7+ days"];
 /** What a duration bucket is called on screen. "7+ days" stays the stored value (saved links and
  *  searches use it) but it holds 6-day trips too, so it reads "6+ days" */
 export const durationLabel = (d: Duration | string) => (d === "7+ days" ? "6+ days" : d);
-export const PRICE_STEPS = [0, 10000, 20000, 40000, 75000];
 
-// Only offer options that actually have adventures behind them — no dead ends.
-export const TYPE_OPTIONS = [...new Set(adventures.map((a) => a.type))] as AdventureType[];
 export const STATE_COUNTS = Object.entries(
   adventures.reduce<Record<string, number>>((acc, a) => {
     a.state.split("/").map((s) => s.trim()).forEach((s) => { acc[s] = (acc[s] ?? 0) + 1; });
     return acc;
   }, {})
 ).sort((x, y) => y[1] - x[1]);
-
-/* ── Quick chips: the filters most people want, one tap away ─────────────────── */
-
-export function QuickFilterChips({ f, set, thisMonth, hasFit, fitLabel = "Ready for me" }: {
-  f: AdventureFilterState;
-  set: (patch: Partial<AdventureFilterState>) => void;
-  thisMonth: Month;
-  hasFit: boolean;
-  fitLabel?: string;
-}) {
-  const inSeason = f.months.length === 1 && f.months[0] === thisMonth;
-  return (
-    <>
-      <FilterChip on={inSeason} onClick={() => set({ months: inSeason ? [] : [thisMonth] })} dot="#10b981">In season now</FilterChip>
-      {hasFit && (
-        <>
-          <FilterChip on={f.fit === "ready"} onClick={() => set({ fit: f.fit === "ready" ? null : "ready" })} dot="#10b981">{fitLabel}</FilterChip>
-          <FilterChip on={f.fit === "stretch"} onClick={() => set({ fit: f.fit === "stretch" ? null : "stretch" })} dot="#f59e0b">A stretch</FilterChip>
-        </>
-      )}
-      <FilterChip on={f.editorOnly} onClick={() => set({ editorOnly: !f.editorOnly })} icon={<Crown className="w-3.5 h-3.5" />}>Editor&apos;s Choice</FilterChip>
-      <span className="w-px h-5 shrink-0" style={{ background: "var(--border-default)" }} />
-      {STATE_COUNTS.slice(0, 6).map(([s, n]) => (
-        <FilterChip key={s} on={f.states.includes(s)} onClick={() => toggle(f.states, s, (v) => set({ states: v }))}>
-          {s} <span className="opacity-60">{n}</span>
-        </FilterChip>
-      ))}
-      <span className="w-px h-5 shrink-0" style={{ background: "var(--border-default)" }} />
-      {DURATIONS.map((d) => (
-        <FilterChip key={d} on={f.durs.includes(d)} onClick={() => toggle(f.durs, d, (v) => set({ durs: v }))}>{durationLabel(d)}</FilterChip>
-      ))}
-    </>
-  );
-}
-
-export function FilterChip({ on, onClick, children, dot, icon }: { on: boolean; onClick: () => void; children: React.ReactNode; dot?: string; icon?: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={on}
-      className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-colors"
-      style={on
-        ? { background: "rgba(255,81,0,0.14)", color: "var(--accent-ink-soft)", border: "1px solid rgba(255,81,0,0.4)" }
-        : { background: "var(--chip-bg, transparent)", color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}
-    >
-      {dot && <span className="w-1.5 h-1.5 rounded-full" style={{ background: dot }} />}
-      {icon}
-      {children}
-    </button>
-  );
-}
 
 /* ── Type and Region: the two broad categories, as on the home page ────────────── */
 
