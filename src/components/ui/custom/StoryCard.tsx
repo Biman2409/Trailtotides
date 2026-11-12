@@ -51,7 +51,7 @@ export default function StoryCard({ story, featuredBadge = true }: { story: Stor
             <span className="inline-flex items-center gap-1 pl-1.5 pr-2.5 py-1 rounded-full backdrop-blur-md"
               style={{ background: "rgba(10,8,6,0.72)", border: "1px solid rgba(255,179,122,0.3)" }}>
               <Crown className="w-2.5 h-2.5" style={{ color: "#ffb37a" }} />
-              <span className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "#ffd9b8" }}>Featured</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.14em]" style={{ color: "#ffd9b8" }}>Featured</span>
             </span>
           )}
         </div>

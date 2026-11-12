@@ -131,7 +131,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
             style={{ background: "rgba(10,8,6,0.72)", border: "1px solid rgba(255,179,122,0.3)" }}
           >
             <Crown className="w-3 h-3 shrink-0" style={{ color: "#ffb37a" }} />
-            <span className="text-[9px] font-bold tracking-[0.16em] uppercase leading-none" style={{ color: "#ffd9b8" }}>
+            <span className="text-[10px] font-bold tracking-[0.14em] uppercase leading-none" style={{ color: "#ffd9b8" }}>
               Editor&apos;s Choice
             </span>
           </div>

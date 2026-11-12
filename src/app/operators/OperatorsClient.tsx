@@ -69,12 +69,18 @@ function CountUp({ to, decimals = 0 }: { to: number; decimals?: number }) {
   return <motion.span ref={ref}>{text}</motion.span>;
 }
 
+// How many operator cards the list opens with, and how many each "Show more" adds
+const PAGE = 12;
+
 export default function OperatorsClient({ cards, allTypes, allStates, stats, isOperator }: Props) {
   const [query, setQuery] = useState("");
   const [type, setType] = useState("all");
   const [state, setState] = useState("all");
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [sort, setSort] = useState<Sort>("top");
+  // The list opens with the first dozen; any change to the filters starts it there again
+  const [limit, setLimit] = useState(PAGE);
+  useEffect(() => { setLimit(PAGE); }, [query, type, state, verifiedOnly, sort]);
 
   const typeCounts = useMemo(() => {
     const m: Record<string, number> = {};
@@ -199,11 +205,23 @@ export default function OperatorsClient({ cards, allTypes, allStates, stats, isO
               </button>
             </div>
           ) : (
-            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-              <AnimatePresence mode="popLayout" initial={false}>
-                {shown.map((op) => <OperatorCard key={op.id} op={op} />)}
-              </AnimatePresence>
-            </motion.div>
+            <>
+              <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  {shown.slice(0, limit).map((op) => <OperatorCard key={op.id} op={op} />)}
+                </AnimatePresence>
+              </motion.div>
+              {shown.length > limit && (
+                <div className="mt-8 text-center">
+                  <button type="button" onClick={() => setLimit((l) => l + PAGE)}
+                    className="inline-flex items-center gap-1.5 px-5 py-3 rounded-xl text-[14px] font-semibold transition-colors"
+                    style={{ color: "var(--text-primary)", border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}>
+                    Show {Math.min(PAGE, shown.length - limit)} more{" "}
+                    <span style={{ color: "var(--text-tertiary)" }}>· {shown.length - limit} left</span>
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>

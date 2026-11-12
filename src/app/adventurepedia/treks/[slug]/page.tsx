@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const url = `${SITE}${trekGuideHref(a.slug)}`;
   const description = `${a.name} guide: ${a.durationDays}, ${a.distance ?? ""} to ${a.altitude ?? ""}. Best season, how to get there, day-by-day itinerary, permits, packing, fitness and costs.`.replace(/ ,/g, ",");
   return {
-    title: `${a.name}: Itinerary, Season & Permits`,
+    title: a.name.length > 24 ? `${a.name}: Itinerary & Permits` : `${a.name}: Itinerary, Season & Permits`,
     description,
     alternates: { canonical: url },
     openGraph: { title: `${a.name}: the complete guide`, description, url, type: "article", images: [a.heroImage] },

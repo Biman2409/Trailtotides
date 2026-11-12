@@ -137,7 +137,7 @@ export default function Footer() {
                         href={href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center justify-center transition-all duration-300 hover:-translate-y-1.5"
+                        className="group flex items-center justify-center w-10 h-10 -m-2 transition-all duration-300 hover:-translate-y-1.5"
                         aria-label={`Visit our ${name}`}
                       >
                         <Icon className="w-5.5 h-5.5 group-hover:text-[#ff5100] transition-colors duration-300" strokeWidth={1.25} style={{ color: "var(--text-muted)" }} />

@@ -60,17 +60,29 @@ function ctaText(type?: string, name?: string): string {
 function StarRating({ value, onChange, size = "md" }: { value: number; onChange?: (v: number) => void; size?: "sm" | "md" }) {
   const [hovered, setHovered] = useState(0);
   const sz = size === "sm" ? "w-3.5 h-3.5" : "w-4 h-4";
+  if (!onChange) {
+    return (
+      <div className="flex gap-0.5" role="img" aria-label={`Rated ${value} out of 5`}>
+        {[1, 2, 3, 4, 5].map((s) => (
+          <Star key={s} aria-hidden className={`${sz} ${s <= value ? "text-amber-400 fill-amber-400" : ""}`}
+            style={s > value ? { color: "var(--text-muted)" } : undefined}
+          />
+        ))}
+      </div>
+    );
+  }
   return (
-    <div className="flex gap-0.5">
+    <div className="flex" role="group" aria-label="Your rating">
       {[1, 2, 3, 4, 5].map((s) => (
         <button
           key={s}
           type="button"
-          onClick={() => onChange?.(s)}
-          onMouseEnter={() => onChange && setHovered(s)}
-          onMouseLeave={() => onChange && setHovered(0)}
-          className={onChange ? "cursor-pointer" : "cursor-default"}
-          disabled={!onChange}
+          onClick={() => onChange(s)}
+          onMouseEnter={() => setHovered(s)}
+          onMouseLeave={() => setHovered(0)}
+          aria-label={`${s} star${s === 1 ? "" : "s"}`}
+          aria-pressed={s === value}
+          className="cursor-pointer p-1.5 -my-1.5 first:-ml-1.5"
         >
           <Star className={`${sz} transition-colors ${s <= (hovered || value) ? "text-amber-400 fill-amber-400" : ""}`}
             style={s > (hovered || value) ? { color: "var(--text-muted)" } : undefined}
@@ -412,14 +424,22 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
             </div>
 
             {reviews.length > 1 && (
-              <div className="flex items-center justify-center gap-1.5 mt-4">
+              <div className="flex items-center justify-center mt-1">
+                {/* The dot stays small; the button around it is big enough to tap */}
                 {reviews.map((_, i) => (
                   <button
                     key={i}
+                    type="button"
+                    aria-label={`Show review ${i + 1} of ${reviews.length}`}
+                    aria-current={activeIndex === i ? "true" : undefined}
                     onClick={() => scrollRef.current?.scrollTo({ left: i * scrollRef.current.clientWidth, behavior: "smooth" })}
-                    className={`rounded-full transition-all ${activeIndex === i ? "w-4 h-1.5 bg-amber-400" : "w-1.5 h-1.5"}`}
-                    style={activeIndex !== i ? { background: "var(--text-muted)" } : undefined}
-                  />
+                    className="px-[3px] py-3 grid place-items-center"
+                  >
+                    <span
+                      className={`block rounded-full transition-all ${activeIndex === i ? "w-4 h-1.5 bg-amber-400" : "w-1.5 h-1.5"}`}
+                      style={activeIndex !== i ? { background: "var(--text-muted)" } : undefined}
+                    />
+                  </button>
                 ))}
               </div>
             )}

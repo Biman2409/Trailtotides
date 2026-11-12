@@ -247,10 +247,12 @@ function Hero({ profiles }: { profiles: Profile[] }) {
               {profiles.map((q, n) => (
                 <button key={q.id} type="button" role="tab" aria-selected={n === i} aria-label={q.name} title={q.name}
                   onClick={() => pick(n)}
-                  className="relative h-2 rounded-full overflow-hidden transition-all duration-300"
-                  style={{ width: n === i ? 40 : 16, background: n === i && !auto ? q.color : "var(--ace-line)" }}
+                  className="relative py-3 -my-3 transition-all duration-300"
+                  style={{ width: n === i ? 40 : 16 }}
                 >
-                  {n === i && <StepTimer show={auto} period={period} color={q.color} k={`${i}`} />}
+                  <span className="relative block h-2 rounded-full overflow-hidden" style={{ background: n === i && !auto ? q.color : "var(--ace-line)" }}>
+                    {n === i && <StepTimer show={auto} period={period} color={q.color} k={`${i}`} />}
+                  </span>
                 </button>
               ))}
             </div>
