@@ -51,7 +51,8 @@ import { getNextDeparture } from "@/lib/nextDeparture";
 import SectionNav from "./SectionNav";
 import { hasTrekGuide } from "@/lib/trekGuides";
 import operatorOffers from "@/lib/operatorOffers.json";
-import type { OperatorOffer } from "@/lib/operatorOffer";
+import { fullTripCost, type OperatorOffer } from "@/lib/operatorOffer";
+import DepartureCalendar, { type Departure } from "./DepartureCalendar";
 
 // The page's body copy is small and calm, so its secondary and tertiary tones are
 // raised (from 60% / 35% of the text colour) to keep it easy to read in both themes
@@ -225,7 +226,21 @@ export default async function ExperiencePage({ params }: Props) {
     : undefined;
   const priceFrom = featuredOp?.priceFrom;
   const seasonUrgency = getSeasonUrgency(adventure.bestMonths);
-  const nextDeparture = getNextDeparture(allOperators.flatMap((o) => o.departureDates ?? []));
+  // Every start date we know, from operators' own pages and their listings here, one per operator per day
+  const departures: Departure[] = allOperators.flatMap((o) => {
+    const dates = [...new Set([...(o.departureDates ?? []), ...(o.offer?.departures ?? [])].map((d) => d.slice(0, 10)).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)))];
+    const fee = (o.offer && fullTripCost(o.offer)) ?? parsePrice(o.priceFrom);
+    return dates.map((date) => ({
+      date,
+      operator: o.name,
+      url: o.offer?.url ?? o.website,
+      price: Number.isFinite(fee) && fee > 0 ? fee : undefined,
+      days: o.offer?.days,
+    }));
+  });
+  // Today in India, where the treks and the operators are
+  const todayIso = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  const nextDeparture = getNextDeparture(departures.map((d) => d.date));
 
   const currentDifficultyLevel = DIFFICULTY_LEVEL[difficulty] ?? 1;
   // "A bit easier" = the same activity, a lower difficulty tier, reachable from
@@ -420,7 +435,7 @@ export default async function ExperiencePage({ params }: Props) {
         <HeroActions adventure={adventure} />
       </section>
 
-      <SectionNav hasFaq={faqs.length > 0} />
+      <SectionNav hasFaq={faqs.length > 0} hasDates={departures.some((d) => d.date >= todayIso)} />
 
       {/* Everything below the hero sits on the same topographic texture as the home page */}
       <div className="topo">
@@ -570,6 +585,13 @@ export default async function ExperiencePage({ params }: Props) {
                   <TrainForThis slug={adventure.slug} />
                 </div>
               </AccordionSection>
+
+              {/* Departure calendar: who starts when, before choosing who to book with */}
+              {departures.some((d) => d.date >= todayIso) && (
+                <AccordionSection id="dates" label="when you can go" title="Departure calendar" defaultOpen mobileDefaultOpen={false}>
+                  <DepartureCalendar departures={departures} slug={adventure.slug} today={todayIso} />
+                </AccordionSection>
+              )}
 
               {/* Operators */}
               <div className="pt-4"><RecalibrationNudge difficulty={difficulty} /></div>

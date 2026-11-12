@@ -6,14 +6,15 @@ const NAV_ITEMS = [
   { id: "overview", label: "Overview" },
   { id: "safety", label: "Safety" },
   { id: "suitability", label: "Suitability" },
+  { id: "dates", label: "Dates" },
   { id: "book-this-adventure", label: "Book" },
   { id: "community", label: "Reviews" },
   { id: "faq", label: "FAQ" },
 ];
 
-export default function SectionNav({ hasFaq = false }: { hasFaq?: boolean }) {
-  // The FAQ exists only for adventures without a trek guide
-  const items = NAV_ITEMS.filter((item) => item.id !== "faq" || hasFaq);
+export default function SectionNav({ hasFaq = false, hasDates = false }: { hasFaq?: boolean; hasDates?: boolean }) {
+  // The FAQ exists only for adventures without a trek guide; Dates only when operators list start dates
+  const items = NAV_ITEMS.filter((item) => (item.id !== "faq" || hasFaq) && (item.id !== "dates" || hasDates));
   const [active, setActive] = useState(items[0].id);
 
   useEffect(() => {

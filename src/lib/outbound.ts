@@ -1,6 +1,6 @@
 import { track } from "@/lib/analytics";
 
-export type OutboundSource = "compare" | "sidebar" | "mobile_bar" | "map" | "operators_page" | "operators_list";
+export type OutboundSource = "compare" | "sidebar" | "mobile_bar" | "map" | "operators_page" | "operators_list" | "calendar";
 
 type Outbound = { url: string; operator: string; source: OutboundSource; slug?: string };
 

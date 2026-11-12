@@ -10,7 +10,7 @@ const schema = z.object({
   operator: z.string().trim().min(1).max(200),
   slug: z.string().regex(/^[a-z0-9-]+$/).max(120).optional(),
   host: z.string().max(200).optional(),
-  source: z.enum(["compare", "sidebar", "mobile_bar", "map", "operators_page", "operators_list"]),
+  source: z.enum(["compare", "sidebar", "mobile_bar", "map", "operators_page", "operators_list", "calendar"]),
 });
 
 export async function POST(req: NextRequest) {
