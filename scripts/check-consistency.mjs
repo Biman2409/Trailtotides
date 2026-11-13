@@ -57,8 +57,8 @@ for (const f of readdirSync(DIR).filter((f) => f.endsWith(".json")).sort()) {
     if (a.off > 300 || b.off > 300) continue;
     const km = Math.abs(cum[b.i] - cum[a.i]) / 1000;
     if (Math.abs(km - d.km) > Math.max(1, 0.2 * d.km)) add("day km", `day ${d.day} ${d.from} → ${d.to}: itinerary ${d.km} km, along the line ${km.toFixed(1)} km`);
-    const step = a.i <= b.i ? 1 : -1; let up = 0, down = 0, ref = L[a.i][2];
-    for (let k = a.i + step; step > 0 ? k <= b.i : k >= b.i; k += step) { const x = L[k][2] - ref; if (x >= 15) { up += x; ref = L[k][2]; } else if (x <= -15) { down -= x; ref = L[k][2]; } }
+    const step = a.i <= b.i ? 1 : -1; let up = 0, ref = L[a.i][2];
+    for (let k = a.i + step; step > 0 ? k <= b.i : k >= b.i; k += step) { const x = L[k][2] - ref; if (x >= 15) { up += x; ref = L[k][2]; } else if (x <= -15) ref = L[k][2]; }
     const net = L[b.i][2] - L[a.i][2];
     if (Math.abs(d.up - d.down - net) > 120) add("day climb", `day ${d.day} ${d.from} → ${d.to}: +${d.up} −${d.down} (net ${d.up - d.down}) but the profile goes ${L[a.i][2]} → ${L[b.i][2]} m (net ${net})`);
     if (up > 200 && Math.abs(up - d.up) > Math.max(150, 0.35 * up)) add("day climb", `day ${d.day} ${d.from} → ${d.to}: +${d.up} m, the profile climbs ~${Math.round(up)} m`);

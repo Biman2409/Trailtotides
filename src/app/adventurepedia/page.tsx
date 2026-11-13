@@ -10,7 +10,7 @@ import Library, { type ActivityTile, type GuideCard, type TrekTile } from "./Lib
 const SITE = "https://www.trailtotides.com";
 
 export const metadata: Metadata = {
-  title: "Adventurepedia: Guides for Every Adventure in India",
+  title: "Adventurepedia: Guides to Adventure in India",
   description: "Guides to every adventure in India, from trekking and rafting to diving, paragliding and skiing, plus every trek and the essentials, from altitude to permits.",
   alternates: { canonical: `${SITE}/adventurepedia` },
   openGraph: { title: "Adventurepedia — Trail to Tides", url: `${SITE}/adventurepedia`, type: "website" },

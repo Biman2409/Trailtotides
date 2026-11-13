@@ -64,7 +64,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // "The Night Photi La Tested Us: Motorcycling in Ladakh" carries the search phrase in the title
   const title = activity && s.region ? `${s.title}: ${activity} in ${s.region}` : s.title;
   return {
-    title,
+    // Drop the " | Trail to Tides" suffix when it would push the title past what Google shows
+    title: title.length + " | Trail to Tides".length > 65 ? { absolute: title } : title,
     description,
     keywords,
     authors: [{ name: s.author }],

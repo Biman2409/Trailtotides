@@ -750,8 +750,9 @@ function People({ people, currentUserId, loadingId, actions }: { people: Profile
   const list = people.filter((p) => match(p) && (!q || `${p.full_name ?? ""} ${p.email ?? ""}`.toLowerCase().includes(q.toLowerCase())));
   const n = (f: typeof filter) => people.filter((p) => (f === "all" ? true : f === "ace" ? !!p.ace : f === "banned" ? !!p.banned : f === "unverified" ? !p.email_confirmed : p.role === f)).length;
 
-  async function exportSheet() {
-    const XLSX = await import("xlsx");
+  // A CSV that Excel and Google Sheets open directly. The BOM makes Excel read it as UTF-8, and a
+  // leading ' stops a name like "=HYPERLINK(...)" being run as a formula when the file is opened.
+  function exportSheet() {
     const rows = list.map((p) => ({
       Name: p.full_name ?? "", Email: p.email ?? "", Phone: p.phone ?? "", Role: p.role,
       Verified: p.email_confirmed ? "Yes" : "No", Banned: p.banned ? "Yes" : "No",
@@ -759,9 +760,18 @@ function People({ people, currentUserId, loadingId, actions }: { people: Profile
       Joined: format(parseISO(p.created_at), "yyyy-MM-dd HH:mm"),
       "Last sign-in": p.last_sign_in_at ? format(parseISO(p.last_sign_in_at), "yyyy-MM-dd HH:mm") : "",
     }));
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), "People");
-    XLSX.writeFile(wb, `TrailToTides_People_${format(new Date(), "yyyyMMdd")}.xlsx`);
+    if (!rows.length) return;
+    const cell = (v: string | number) => {
+      let s = String(v);
+      if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
+      return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const header = Object.keys(rows[0]) as (keyof (typeof rows)[number])[];
+    const csv = [header.map(cell), ...rows.map((r) => header.map((h) => cell(r[h])))].map((line) => line.join(",")).join("\r\n");
+    const url = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }));
+    const link = Object.assign(document.createElement("a"), { href: url, download: `TrailToTides_People_${format(new Date(), "yyyyMMdd")}.csv` });
+    link.click();
+    URL.revokeObjectURL(url);
   }
 
   return (

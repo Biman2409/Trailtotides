@@ -236,12 +236,14 @@ export default function Navbar() {
                   href={link.href}
                   data-active={isActive || undefined}
                   aria-current={isActive ? "page" : undefined}
-                  className="relative flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-full transition-colors duration-200"
+                  // Between lg and xl the icons are dropped and padding tightened so the right-hand
+                  // buttons (Log In / Sign Up, or the account menu) still fit at 1024px
+                  className="relative flex items-center gap-1.5 px-3 xl:px-3.5 py-2 text-sm font-semibold rounded-full transition-colors duration-200"
                   style={{ color: isActive ? "#fff" : isTransparent ? "rgba(255,255,255,0.78)" : "var(--nav-text)", background: "transparent" }}
                   onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = "var(--nav-active-bg)"; }}
                   onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = "transparent"; }}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? "" : "opacity-70"}`} />
+                  <Icon className={`hidden xl:block w-3.5 h-3.5 ${isActive ? "" : "opacity-70"}`} />
                   {link.label}
                 </Link>
               );
