@@ -39,10 +39,15 @@ function totalOf(op: OperatorCardData): number {
 
 /** Where the full price starts from: "Dehradun" out of "Dehradun to Sankri & return" */
 function fromCity(op: OperatorCardData): string | undefined {
-  const s = (op.offer?.transportRoute ?? op.offer?.startEnd)?.replace(/^\(|\)$/g, "");
+  // A bare word like "Transportation" is a heading caught by the import, not a route: say nothing
+  // rather than "from Transportation"
+  const route = op.offer?.transportRoute;
+  if (route && !/\bfrom\b|\bto\b|[–-]/.test(route)) return undefined;
+  const s = (route ?? op.offer?.startEnd)?.replace(/^\(|\)$/g, "");
   // "…cost from Rishikesh" names the city outright; otherwise it's the first place in the route
   const from = s?.match(/\bfrom ([A-Z][A-Za-z]+)/)?.[1];
-  return from ?? (s?.split(/\s+(?:to|–|-)\s+|\s*\(/)[0]?.trim() || undefined);
+  const city = from ?? (s?.split(/\s+(?:to|–|-)\s+|\s*\(/)[0]?.trim() || undefined);
+  return city && !/transport/i.test(city) ? city : undefined;
 }
 
 /** How a transport cell reads when transport isn't a priced extra */
@@ -53,6 +58,33 @@ function transportNote(op: OperatorCardData): string {
 
 /** True when we know the full price from the operator's own page, not just a headline fee */
 const knownFull = (op: OperatorCardData) => !!op.offer && fullTripCost(op.offer) !== undefined;
+
+/** The small line under a full-trip price: where it starts from, or why transport isn't in it */
+function fullNote(op: OperatorCardData): string {
+  const note = op.offer && transportExtra(op.offer) === undefined ? transportNote(op) : "";
+  if (note === "Own travel") return "own travel to the start";
+  if (note === "Not stated") return "transport not stated";
+  if (note === "In the fee") return "transport included";
+  const city = fromCity(op);
+  return city ? `with transport from ${city}` : "with transport";
+}
+
+/**
+ * The order operators appear in, here and in the table: those whose full price we know first,
+ * cheapest first; the ones with only a headline fee follow, since that fee can leave out GST and transport
+ */
+function sortOps(operators: OperatorCardData[]): OperatorCardData[] {
+  return [...operators].sort((a, b) => Number(knownFull(b)) - Number(knownFull(a)) || totalOf(a) - totalOf(b));
+}
+
+/** The next start date ("5 Dec"), or the batch months ("Jul, Aug") when only those are listed */
+function nextDeparture(op: OperatorCardData): string | undefined {
+  const today = new Date().toISOString().slice(0, 10);
+  const exact = (op.departureDates?.length ? op.departureDates : op.offer?.departures ?? []).filter((d) => d >= today).sort();
+  if (exact.length) return `next ${formatDate(exact[0])}`;
+  const months = op.offer?.batches ?? [];
+  return months.length ? months.slice(0, 3).map((m) => m.slice(0, 3)).join(", ") : undefined;
+}
 
 /** The next exact start dates when the operator lists them ("5 Dec, 12 Dec +15"), else the batch months */
 function datesOf(op: OperatorCardData): React.ReactNode {
@@ -71,7 +103,8 @@ function ServiceCell({ state, price, plusGst, perDay }: { state: ServiceState; p
   return none;
 }
 
-type Row = { key: string; label: string; cell: (op: OperatorCardData, i: number) => React.ReactNode; has: (op: OperatorCardData) => boolean };
+/** A row has a cell per operator, or one `span` across all of them */
+type Row = { key: string; label: string; cell: (op: OperatorCardData, i: number) => React.ReactNode; has: (op: OperatorCardData) => boolean; span?: React.ReactNode };
 type Group = { title: string; rows: Row[] };
 
 /**
@@ -81,9 +114,7 @@ type Group = { title: string; rows: Row[] };
  */
 function CompareTable({ operators, computedRatings, slug }: { operators: OperatorCardData[]; computedRatings: Record<string, ComputedRating>; slug: string }) {
   const [showLists, setShowLists] = useState(false);
-  // Operators whose full price we know come first, cheapest first; the ones with only a headline
-  // fee follow, since that fee can leave out GST and transport
-  const ops = [...operators].sort((a, b) => Number(knownFull(b)) - Number(knownFull(a)) || totalOf(a) - totalOf(b));
+  const ops = sortOps(operators);
   const totals = ops.map(totalOf);
   const anyKnown = ops.some(knownFull);
   const minTotal = Math.min(...totals.filter((n, i) => Number.isFinite(n) && n > 0 && (!anyKnown || knownFull(ops[i]))));
@@ -93,6 +124,14 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
   const bestTraveller = Math.max(...travellers.map((t) => t?.avg ?? 0));
   const services = ops.map((o) => (o.offer ? serviceStates(o.offer) : null));
   const svc = (i: number, k: ServiceKey): ServiceState => services[i]?.[k] ?? "unknown";
+  // Services every operator with details includes go on one line; the rest get a row each
+  const withDetails = ops.map((o, i) => (o.offer ? i : -1)).filter((i) => i >= 0);
+  const noDetails = ops.filter((o) => !o.offer);
+  const sharedIncluded = withDetails.length > 1
+    ? (Object.keys(SERVICE_LABELS) as ServiceKey[]).filter((k) => withDetails.every((i) => svc(i, k) === "included"))
+    : [];
+  // Transport priced as an extra already has its row under the price; don't repeat it
+  const transportPriced = ops.some((o) => !!o.offer && transportExtra(o.offer) !== undefined);
   const groupSizes = ops.map((o) => o.offer?.groupSize ?? Infinity);
   const smallestGroup = Math.min(...groupSizes);
   const perDay = ops.map((o) => (o.offer?.days && o.offer && fullTripCost(o.offer) ? fullTripCost(o.offer)! / o.offer.days : Infinity));
@@ -112,8 +151,7 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
           cell: (op, i) => {
             const full = op.offer && fullTripCost(op.offer);
             if (!full) return none;
-            const note = transportExtra(op.offer!) === undefined ? transportNote(op) : "";
-            const where = note === "Own travel" ? "own travel to the start" : note === "Not stated" ? "transport not stated" : fromCity(op) ? `from ${fromCity(op)}` : "";
+            const where = fullNote(op);
             return (
               <span className="flex flex-col">
                 <span className="text-[14px] font-semibold" style={totals[i] === minTotal ? best : { color: "var(--text-primary)" }}>{inr(full)}</span>
@@ -137,7 +175,21 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
     },
     {
       title: "What's included",
-      rows: (Object.keys(SERVICE_LABELS) as ServiceKey[]).map((k) => ({
+      rows: [
+        ...(sharedIncluded.length ? [{
+          key: "shared",
+          label: "all include",
+          has: () => true,
+          cell: () => null,
+          // One line for what every operator includes, so the rows below show only what differs
+          span: (
+            <span className="inline-flex flex-wrap items-center gap-x-3 gap-y-1">
+              {sharedIncluded.map((k) => <span key={k} className="inline-flex items-center gap-1" style={{ color: "#3fa877" }}><Check className="w-3.5 h-3.5" />{SERVICE_LABELS[k]}</span>)}
+              {noDetails.length > 0 && <span className="text-[12px]" style={muted}>({noDetails.map((o) => o.name).join(", ")}: not listed)</span>}
+            </span>
+          ),
+        }] : []),
+        ...(Object.keys(SERVICE_LABELS) as ServiceKey[]).filter((k) => !sharedIncluded.includes(k) && !(k === "transport" && transportPriced)).map((k) => ({
         key: k,
         label: SERVICE_LABELS[k].toLowerCase(),
         // Shown when someone states it either way; a row of dashes says nothing
@@ -151,6 +203,7 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
           return <ServiceCell state={svc(i, k)} price={price} plusGst={op.offer?.addOnsPlusGst} perDay={k === "offloading" && op.offer?.offloadingPerDay} />;
         },
       })),
+      ],
     },
     {
       title: "Paid extras",
@@ -186,32 +239,34 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
   const labelCell = "sticky left-0 z-[1] px-3 py-2.5 text-[11px] tracking-[0.1em] lowercase align-top text-left font-normal";
   const labelStyle = { color: "var(--text-secondary)", fontVariant: "small-caps", background: "var(--bg-surface)", width: 128, minWidth: 128 } as const;
 
-  const bookButton = (op: OperatorCardData) => (
+  const isLowest = (op: OperatorCardData, i: number) => totals[i] === minTotal && ops.length > 1 && (!anyKnown || knownFull(op));
+  // Solid for the lowest full price, outlined for the rest, so a row of buttons doesn't shout
+  const bookButton = (op: OperatorCardData, i: number) => (
     <button
       onClick={() => { const url = op.offer?.url ?? op.website; if (url) openOperator({ url, operator: op.name, source: "compare", slug }); }}
       disabled={!op.website && !op.offer?.url}
-      className="w-full h-9 inline-flex items-center justify-center gap-1 rounded-full text-[12.5px] font-semibold text-white disabled:opacity-40"
-      style={{ background: "#ff5100" }}
+      className={`w-full h-9 inline-flex items-center justify-center gap-1 rounded-full text-[12.5px] font-semibold disabled:opacity-40 transition-colors ${isLowest(op, i) ? "text-white" : "text-[#ff5100] hover:bg-[rgba(255,81,0,0.08)]"}`}
+      style={isLowest(op, i) ? { background: "#ff5100" } : { border: "1px solid rgba(255,81,0,0.55)" }}
     >
       Book <ExternalLink className="w-3 h-3" />
     </button>
   );
 
   return (
-    <div>
-      <div className="overflow-x-auto">
+    // One scroller for both directions, so the operator row stays on top and the labels on the left
+    <div className="overflow-auto flex-1 min-h-0" style={{ containerType: "inline-size" }}>
         <table className="w-full border-collapse text-[13px]" style={{ minWidth: 128 + ops.length * colW }}>
           <thead>
             <tr>
-              <th className={labelCell} style={labelStyle} />
+              <th className={`${labelCell} top-0 !z-[3]`} style={{ ...labelStyle, boxShadow: "inset 0 -1px 0 var(--border-default)" }} />
               {ops.map((op, i) => (
-                <th key={op.name} scope="col" className="px-2.5 pt-3 pb-2 text-left align-bottom font-normal" style={{ minWidth: colW }}>
-                  {totals[i] === minTotal && ops.length > 1 && (!anyKnown || knownFull(op)) && <span className="block text-[10px] font-bold uppercase tracking-wider text-[#ff5100] mb-0.5">{knownFull(op) ? "Lowest full price" : "Lowest price"}</span>}
+                <th key={op.name} scope="col" className="sticky top-0 z-[2] px-2.5 pt-3 pb-2.5 text-left align-bottom font-normal" style={{ minWidth: colW, background: "var(--bg-surface)", boxShadow: "inset 0 -1px 0 var(--border-default)" }}>
+                  {isLowest(op, i) && <span className="block text-[10px] font-bold uppercase tracking-wider text-[#ff5100] mb-0.5">{knownFull(op) ? "Lowest full price" : "Lowest price"}</span>}
                   <span className="block text-[14px] font-semibold leading-tight line-clamp-2" style={{ color: "var(--text-primary)" }}>{op.name}</span>
                   {op.verified
                     ? <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: "#3fa877" }}><BadgeCheck className="w-3 h-3" />verified</span>
                     : <span className="text-[11px]" style={muted}>not yet verified</span>}
-                  <div className="mt-2">{bookButton(op)}</div>
+                  <div className="mt-2">{bookButton(op, i)}</div>
                 </th>
               ))}
             </tr>
@@ -227,7 +282,9 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
                 {g.rows.map((r) => (
                   <tr key={r.key} style={{ borderTop: "1px solid var(--border-subtle)" }}>
                     <th scope="row" className={labelCell} style={labelStyle}>{r.label}</th>
-                    {ops.map((op, i) => <td key={op.name} className="px-2.5 py-2.5 align-top leading-snug" style={{ color: "var(--text-primary)" }}>{r.cell(op, i)}</td>)}
+                    {r.span !== undefined
+                      ? <td colSpan={ops.length} className="px-2.5 py-2.5 align-top leading-snug">{r.span}</td>
+                      : ops.map((op, i) => <td key={op.name} className="px-2.5 py-2.5 align-top leading-snug" style={{ color: "var(--text-primary)" }}>{r.cell(op, i)}</td>)}
                   </tr>
                 ))}
               </Fragment>
@@ -256,8 +313,8 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
             )}
           </tbody>
         </table>
-      </div>
-      <div className="px-3 pt-2 pb-3 space-y-2">
+      {/* Held to the visible width while the table scrolls sideways */}
+      <div className="sticky left-0 px-3 pt-2 pb-3 space-y-2" style={{ width: "100cqw" }}>
         {hasLists && (
           <button type="button" onClick={() => setShowLists((v) => !v)} aria-expanded={showLists}
             className="inline-flex items-center gap-1 text-[13px] font-semibold text-[#ff5100]">
@@ -331,9 +388,7 @@ function CompareDrawer({
             <X className="w-4 h-4" />
           </button>
         </div>
-        <div className="overflow-y-auto flex-1">
-          <CompareTable operators={operators} computedRatings={computedRatings} slug={slug} />
-        </div>
+        <CompareTable operators={operators} computedRatings={computedRatings} slug={slug} />
       </div>
     </div>
   );
@@ -416,16 +471,10 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
     );
   }
 
-  // Multiple operators — summary + compare button
-  const prices = operators.map(o => parsePrice(o.priceFrom));
-  const minPrice = Math.min(...prices);
-  const minPriceOp = operators[prices.indexOf(minPrice)];
-  const googleRatings = operators.map(op => op.googleRating).filter(Boolean);
-  const avgGoogle = googleRatings.length > 0 ? googleRatings.reduce((a, b) => a + b, 0) / googleRatings.length : null;
-  // Travellers: weighted by number of ratings, across all operators
-  const travellerRatings = operators.map(op => travellerRating(op, computedRatings)).filter((r): r is ComputedRating => !!r);
-  const travellerCount = travellerRatings.reduce((n, r) => n + r.count, 0);
-  const avgTraveller = travellerCount > 0 ? travellerRatings.reduce((s, r) => s + r.avg * r.count, 0) / travellerCount : null;
+  // Multiple operators — every one listed in the table's order, the full comparison a tap away
+  const listed = sortOps(operators);
+  const anyKnown = listed.some(knownFull);
+  const lowest = Math.min(...listed.filter((o) => !anyKnown || knownFull(o)).map(totalOf).filter((n) => Number.isFinite(n) && n > 0));
   const withDetails = operators.filter((o) => o.offer).length;
 
   return (
@@ -433,28 +482,51 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
       {drawer}
 
       <div className="space-y-3">
-        {/* Summary — the same bordered, hairline-split band as the stats strip */}
-        <dl className="rounded-2xl overflow-hidden grid grid-cols-2 sm:grid-cols-3 gap-px" style={{ border: "1px solid var(--border-default)", background: "var(--border-subtle)" }}>
-          {[
-            { label: "operators", value: <>{operators.length}</> },
-            { label: "from", value: <>{minPriceOp.priceFrom}</> },
-            ...(avgGoogle !== null || avgTraveller !== null ? [{
-              // "Operator", so it isn't read as the trek's own rating (that's the traveller reviews)
-              label: "operator ratings",
-              value: (
-                <span className="flex flex-col gap-0.5">
-                  {avgGoogle !== null && <span className="inline-flex items-center gap-1"><Star className="w-3.5 h-3.5 text-[#ff8a4c] fill-[#ff8a4c]" />{avgGoogle.toFixed(1)} <span className="font-normal text-[13px]" style={{ color: "var(--text-secondary)" }}>Google</span></span>}
-                  {avgTraveller !== null && <span className="inline-flex items-center gap-1"><Star className="w-3.5 h-3.5 text-[#ff8a4c] fill-[#ff8a4c]" />{avgTraveller.toFixed(1)} <span className="font-normal text-[13px]" style={{ color: "var(--text-secondary)" }}>Travellers ({travellerCount})</span></span>}
-                </span>
-              ),
-            }] : []),
-          ].map(({ label, value }) => (
-            <div key={label} className={`px-3.5 py-2 min-w-0 ${label === "operator ratings" ? "col-span-2 sm:col-span-1" : ""}`} style={{ background: "var(--bg-surface)" }}>
-              <dt className="text-[11.5px] tracking-[0.1em] lowercase leading-none mb-1.5" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{label}</dt>
-              <dd className="text-[15px] font-medium leading-snug" style={{ color: "var(--text-primary)" }}>{value}</dd>
-            </div>
-          ))}
-        </dl>
+        <ul className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}>
+          {listed.map((op, i) => {
+            const full = knownFull(op) ? fullTripCost(op.offer!)! : undefined;
+            const isLowest = totalOf(op) === lowest && (!anyKnown || knownFull(op));
+            const traveller = travellerRating(op, computedRatings);
+            const next = nextDeparture(op);
+            const url = op.offer?.url ?? op.website;
+            const meta = [
+              op.offer?.days ? `${op.offer.days} days` : null,
+              next,
+            ].filter(Boolean).join(" · ");
+            return (
+              // Phones stack the name over the price and Book; wider screens keep one row
+              <li key={op.name} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 px-4 py-3" style={i > 0 ? { borderTop: "1px solid var(--border-subtle)" } : undefined}>
+                <div className="min-w-0 sm:flex-1">
+                  {isLowest && <span className="block text-[10px] font-bold uppercase tracking-wider text-[#ff5100] leading-none mb-1">{full ? "Lowest full price" : "Lowest price"}</span>}
+                  <p className="flex items-center gap-1.5 text-[14.5px] font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>
+                    <span className="truncate">{op.name}</span>
+                    {op.verified && <BadgeCheck className="w-3.5 h-3.5 shrink-0" style={{ color: "#3fa877" }} aria-label="Verified operator" />}
+                  </p>
+                  <p className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 mt-1 text-[12.5px]" style={{ color: "var(--text-secondary)" }}>
+                    {op.googleRating ? <span className="inline-flex items-center gap-1">{star}{op.googleRating}<span style={muted}>Google</span></span> : null}
+                    {traveller && <span className="inline-flex items-center gap-1">{star}{traveller.avg}<span style={muted}>Travellers ({traveller.count})</span></span>}
+                    {meta && <span>{meta}</span>}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+                <div className="sm:text-right">
+                  <p className="text-[15px] font-semibold leading-tight" style={isLowest ? best : { color: "var(--text-primary)" }}>{full ? inr(full) : op.priceFrom || "On request"}</p>
+                  <p className="text-[11.5px] leading-tight mt-0.5 sm:max-w-[150px]" style={muted}>{full ? fullNote(op) : op.offer?.gstRate ? `fee only, +${Math.round(op.offer.gstRate * 100)}% GST` : "fee only"}</p>
+                </div>
+                <button
+                  onClick={() => { if (url) openOperator({ url, operator: op.name, source: "compare", slug }); }}
+                  disabled={!url}
+                  aria-label={`Book with ${op.name}`}
+                  className="shrink-0 h-9 px-3.5 inline-flex items-center gap-1 rounded-full text-[12.5px] font-semibold text-[#ff5100] transition-colors hover:bg-[rgba(255,81,0,0.08)] disabled:opacity-40"
+                  style={{ border: "1px solid rgba(255,81,0,0.55)" }}
+                >
+                  Book <ExternalLink className="w-3 h-3" />
+                </button>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
 
         {/* Compare — the secondary (outline) pill; the solid pill is the sidebar's */}
         <button
@@ -463,7 +535,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
           style={{ border: "1px solid rgba(255,81,0,0.55)" }}
         >
           <ArrowUpDown className="w-4 h-4 shrink-0" />
-          <span className="whitespace-nowrap">Compare all {operators.length} operators</span>
+          <span className="whitespace-nowrap">Compare side by side</span>
           <span className="hidden sm:inline text-[13px] font-normal" style={{ color: "var(--text-secondary)" }}>
             · {withDetails > 0 ? "price with GST, inclusions, dates, extras" : "price, ratings, dates"}
           </span>
