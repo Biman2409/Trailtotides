@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { openOperator } from "@/lib/outbound";
 import { inr } from "@/lib/operatorOffer";
@@ -14,6 +15,9 @@ export type Departure = {
   /** Per person, as the comparison shows it (fee with GST plus paid transport) */
   price?: number;
   days?: number;
+  /** The trek, when one calendar covers several (an operator's page) */
+  trek?: string;
+  trekSlug?: string;
 };
 
 // One colour per operator, distinct in light and dark
@@ -30,19 +34,23 @@ const monthLabel = (key: string, long = false) =>
 const dayLabel = (iso: string) => parse(iso).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
 
 /**
- * Every listed start date from every operator on one calendar, so someone with fixed leave can
- * see at a glance who runs the trek when, then book that batch on the operator's page.
+ * Every listed start date on one calendar, so someone with fixed leave can see at a glance what
+ * starts when, then book that batch on the operator's page. On a trek page the dots are operators;
+ * on an operator's page (by="trek") they are that operator's treks.
  */
-export default function DepartureCalendar({ departures, slug, today }: { departures: Departure[]; slug: string; today: string }) {
+export default function DepartureCalendar({ departures, slug, today, by = "operator" }: { departures: Departure[]; slug?: string; today: string; by?: "operator" | "trek" }) {
   const upcoming = useMemo(
     () => departures.filter((d) => d.date >= today).sort((a, b) => a.date.localeCompare(b.date) || (a.price ?? Infinity) - (b.price ?? Infinity)),
     [departures, today],
   );
-  const operators = useMemo(() => [...new Set(upcoming.map((d) => d.operator))].sort(), [upcoming]);
-  const colour = (op: string) => COLOURS[operators.indexOf(op) % COLOURS.length];
+  const keyOf = (d: Departure) => (by === "trek" ? d.trek ?? "" : d.operator);
+  const groups = [...new Set(upcoming.map(keyOf))].sort();
+  // More groups than colours (a big operator's many treks): one colour, and a dropdown to pick one
+  const many = groups.length > COLOURS.length;
+  const colour = (g: string) => (many ? "#ff5100" : COLOURS[groups.indexOf(g) % COLOURS.length]);
 
   const [hidden, setHidden] = useState<Set<string>>(new Set());
-  const shown = upcoming.filter((d) => !hidden.has(d.operator));
+  const shown = upcoming.filter((d) => !hidden.has(keyOf(d)));
   const months = [...new Set(shown.map((d) => monthKey(d.date)))];
 
   const [month, setMonth] = useState<string | undefined>(months[0]);
@@ -73,7 +81,7 @@ export default function DepartureCalendar({ departures, slug, today }: { departu
     setHidden((h) => {
       const next = new Set(h);
       if (next.has(op)) next.delete(op);
-      else if (operators.length - next.size > 1) next.add(op); // keep at least one on
+      else if (groups.length - next.size > 1) next.add(op); // keep at least one on
       return next;
     });
     setDay(undefined);
@@ -82,13 +90,31 @@ export default function DepartureCalendar({ departures, slug, today }: { departu
   return (
     <div className="space-y-4 @container">
       <p className="text-[14px] leading-[1.6] max-w-[66ch]" style={{ color: "var(--text-secondary)" }}>
-        {upcoming.length} start {upcoming.length === 1 ? "date" : "dates"} from {operators.length} {operators.length === 1 ? "operator" : "operators"}, as listed on their own pages. Pick a day to see who starts then.
+        {upcoming.length} start {upcoming.length === 1 ? "date" : "dates"}{" "}
+        {by === "trek"
+          ? <>across {groups.length} {groups.length === 1 ? "trek" : "treks"}, as listed on the operator&apos;s own pages. Pick a day to see what starts then.</>
+          : <>from {groups.length} {groups.length === 1 ? "operator" : "operators"}, as listed on their own pages. Pick a day to see who starts then.</>}
       </p>
 
-      {/* Operator key, which doubles as a filter */}
-      {operators.length > 1 && (
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Show operators">
-          {operators.map((op) => {
+      {many && (
+        <label className="inline-flex items-center gap-2 text-[13px]" style={{ color: "var(--text-tertiary)" }}>
+          Show
+          <select
+            value={hidden.size ? groups.find((g) => !hidden.has(g)) : ""}
+            onChange={(e) => { const v = e.target.value; setHidden(new Set(v ? groups.filter((g) => g !== v) : [])); setDay(undefined); }}
+            className="rounded-lg border px-2.5 py-1.5 text-[13.5px] max-w-[260px]"
+            style={{ borderColor: "var(--border)", background: "var(--bg-card)", color: "var(--text-primary)" }}
+          >
+            <option value="">All {groups.length} {by === "trek" ? "treks" : "operators"}</option>
+            {groups.map((g) => <option key={g} value={g}>{g} ({upcoming.filter((d) => keyOf(d) === g).length})</option>)}
+          </select>
+        </label>
+      )}
+
+      {/* Colour key, which doubles as a filter */}
+      {groups.length > 1 && !many && (
+        <div className="flex flex-wrap gap-2" role="group" aria-label={by === "trek" ? "Show treks" : "Show operators"}>
+          {groups.map((op) => {
             const on = !hidden.has(op);
             return (
               <button
@@ -132,7 +158,7 @@ export default function DepartureCalendar({ departures, slug, today }: { departu
                 return <span key={iso} className="h-10 flex items-start justify-center pt-1.5 text-[12.5px]" style={{ color: iso < today ? "var(--text-tertiary)" : "var(--text-secondary)", opacity: iso < today ? 0.4 : 0.7 }}>{n}</span>;
               }
               const selected = iso === activeDay;
-              const ops = [...new Set(deps.map((d) => d.operator))];
+              const ops = [...new Set(deps.map(keyOf))];
               return (
                 <button
                   key={iso}
@@ -195,21 +221,24 @@ export default function DepartureCalendar({ departures, slug, today }: { departu
               const end = d.days ? parse(d.date) : undefined;
               end?.setDate(end.getDate() + d.days! - 1);
               return (
-                <li key={`${d.date}-${d.operator}`} className="flex items-center gap-3 py-2.5" style={{ borderColor: "var(--border)" }}>
-                  <span className="w-2 h-2 rounded-full shrink-0" style={{ background: colour(d.operator) }} aria-hidden />
+                <li key={`${d.date}-${d.operator}-${d.trek ?? ""}`} className="flex items-center gap-3 py-2.5" style={{ borderColor: "var(--border)" }}>
+                  <span className="w-2 h-2 rounded-full shrink-0" style={{ background: colour(keyOf(d)) }} aria-hidden />
                   <div className="min-w-0 flex-1">
                     <p className="text-[13.5px] font-medium truncate" style={{ color: "var(--text-primary)" }}>
                       {dayLabel(d.date)}
                       {end && <span className="font-normal" style={{ color: "var(--text-tertiary)" }}> → {dayLabel(isoOf(end))}</span>}
                     </p>
                     <p className="text-[12.5px]" style={{ color: "var(--text-secondary)" }}>
-                      {d.operator}{d.price ? ` · ${inr(d.price)}` : ""}{d.days ? ` · ${d.days} days` : ""}
+                      {by === "trek" && d.trekSlug
+                        ? <Link href={`/experiences/${d.trekSlug}`} className="hover:text-[#ff5100] underline-offset-2 hover:underline">{d.trek}</Link>
+                        : by === "trek" ? d.trek : d.operator}
+                      {d.price ? ` · ${inr(d.price)}` : ""}{d.days ? ` · ${d.days} days` : ""}
                     </p>
                   </div>
                   {d.url && (
                     <button
                       type="button"
-                      onClick={() => openOperator({ url: d.url!, operator: d.operator, source: "calendar", slug })}
+                      onClick={() => openOperator({ url: d.url!, operator: d.operator, source: "calendar", slug: slug ?? d.trekSlug })}
                       className="shrink-0 inline-flex items-center gap-1 rounded-full border px-3 py-1 text-[12.5px] font-semibold transition-colors hover:border-[#ff5100] hover:text-[#ff5100]"
                       style={{ borderColor: "var(--border)", color: "var(--text-secondary)" }}
                     >

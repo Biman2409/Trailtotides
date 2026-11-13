@@ -5,6 +5,7 @@ import { DESTINATIONS } from "@/lib/destinations";
 import { GUIDES } from "@/lib/adventurepedia";
 import { ACTIVITIES, activityHref } from "@/lib/activityGuides";
 import { trekAdventures } from "@/lib/trekGuides";
+import { operatorPages } from "@/lib/operatorPages";
 
 const BASE = "https://www.trailtotides.com";
 // Images served from /public need the full address in a sitemap
@@ -57,5 +58,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...destinationPages, ...adventurePages, ...storyPages];
+  const operatorPageUrls: MetadataRoute.Sitemap = operatorPages().map((o) => ({
+    url: `${BASE}/operators/${o.slug}`,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...destinationPages, ...adventurePages, ...operatorPageUrls, ...storyPages];
 }

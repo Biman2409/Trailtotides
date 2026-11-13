@@ -19,6 +19,8 @@ export type OperatorCardData = {
   verified: boolean;
   /** Google rating, for verified operators */
   rating: number | null;
+  /** Their page at /operators/[pageSlug], for operators listed on our adventures */
+  pageSlug?: string;
   adventureDetails: {
     slug: string;
     name: string;
@@ -307,7 +309,9 @@ function OperatorCard({ op }: { op: OperatorCardData }) {
           {op.logo_url ? <Image src={op.logo_url} alt="" fill sizes="56px" className="object-contain p-1" /> : op.company_name.charAt(0).toUpperCase()}
         </div>
 
-        <h2 className="text-[21px] leading-tight" style={{ color: "var(--text-primary)" }}>{op.company_name}</h2>
+        <h2 className="text-[21px] leading-tight" style={{ color: "var(--text-primary)" }}>
+          {op.pageSlug ? <Link href={`/operators/${op.pageSlug}`} className="transition-colors hover:text-[#ff5100]">{op.company_name}</Link> : op.company_name}
+        </h2>
         <p className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px]" style={{ color: "var(--text-tertiary)" }}>
           {op.rating ? (
             <span className="inline-flex items-center gap-1 font-semibold" style={{ color: "var(--text-primary)" }}>
@@ -358,11 +362,18 @@ function OperatorCard({ op }: { op: OperatorCardData }) {
               <ChevronDown className="w-4 h-4 transition-transform" style={{ transform: open ? "rotate(180deg)" : undefined }} />
             </button>
           ) : <span />}
+          <span className="flex items-center gap-4">
+          {op.pageSlug && (
+            <Link href={`/operators/${op.pageSlug}`} className="inline-flex items-center gap-1 text-[13.5px] font-semibold transition-colors hover:text-[#ff5100]" style={{ color: "var(--text-secondary)" }}>
+              Dates &amp; prices
+            </Link>
+          )}
           {op.website && (
             <a href={operatorHref(op.website)} target="_blank" rel="noopener" onClick={() => recordOutbound({ url: op.website!, operator: op.company_name, source: "operators_list" })} className="inline-flex items-center gap-1 text-[13.5px] font-semibold transition-colors hover:text-[#ff5100]" style={{ color: "var(--text-secondary)" }}>
               Website <ArrowUpRight className="w-4 h-4" />
             </a>
           )}
+          </span>
         </div>
       </div>
     </motion.article>

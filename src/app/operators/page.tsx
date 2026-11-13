@@ -8,6 +8,7 @@ import { adventures, allListedOperators } from "@/lib/data";
 import { ShieldCheck } from "lucide-react";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
 import OperatorsClient, { OperatorCardData } from "./OperatorsClient";
+import { operatorSlug } from "@/lib/operatorPages";
 
 export const metadata: Metadata = {
   title: "Verified Adventure Operators",
@@ -89,6 +90,7 @@ export default async function OperatorsPage() {
           prices,
           verified: isVerified.get(op.name) ?? false,
           rating: null,
+          pageSlug: operatorSlug(op.name),
           adventureDetails: matchedAdventures.map((a) => ({
             slug: a.slug,
             name: a.name,

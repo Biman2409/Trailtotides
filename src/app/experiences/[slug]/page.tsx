@@ -51,7 +51,8 @@ import { getNextDeparture } from "@/lib/nextDeparture";
 import SectionNav from "./SectionNav";
 import { hasTrekGuide } from "@/lib/trekGuides";
 import operatorOffers from "@/lib/operatorOffers.json";
-import { fullTripCost, type OperatorOffer } from "@/lib/operatorOffer";
+import type { OperatorOffer } from "@/lib/operatorOffer";
+import { departuresOf, todayInIndia } from "@/lib/operatorPages";
 import DepartureCalendar, { type Departure } from "./DepartureCalendar";
 
 // The page's body copy is small and calm, so its secondary and tertiary tones are
@@ -227,19 +228,8 @@ export default async function ExperiencePage({ params }: Props) {
   const priceFrom = featuredOp?.priceFrom;
   const seasonUrgency = getSeasonUrgency(adventure.bestMonths);
   // Every start date we know, from operators' own pages and their listings here, one per operator per day
-  const departures: Departure[] = allOperators.flatMap((o) => {
-    const dates = [...new Set([...(o.departureDates ?? []), ...(o.offer?.departures ?? [])].map((d) => d.slice(0, 10)).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)))];
-    const fee = (o.offer && fullTripCost(o.offer)) ?? parsePrice(o.priceFrom);
-    return dates.map((date) => ({
-      date,
-      operator: o.name,
-      url: o.offer?.url ?? o.website,
-      price: Number.isFinite(fee) && fee > 0 ? fee : undefined,
-      days: o.offer?.days,
-    }));
-  });
-  // Today in India, where the treks and the operators are
-  const todayIso = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  const departures: Departure[] = allOperators.flatMap((o) => departuresOf(o));
+  const todayIso = todayInIndia();
   const nextDeparture = getNextDeparture(departures.map((d) => d.date));
 
   const currentDifficultyLevel = DIFFICULTY_LEVEL[difficulty] ?? 1;
