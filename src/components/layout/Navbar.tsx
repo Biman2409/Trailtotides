@@ -23,11 +23,11 @@ const navLinks = [
   // Same icons as the hero's Fitness match / Verified operators pop-outs
   { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark },
   { href: "/operators", label: "Operators", icon: BadgeCheck },
-  // Guides goes straight to Adventurepedia, the guides library
-  { href: "/adventurepedia", label: "Guides", icon: Library },
+  // Learn goes straight to Adventurepedia, the guides library
+  { href: "/adventurepedia", label: "Learn", icon: Library },
 ];
 
-// Active on the page itself and anything under it (/adventurepedia/altitude-sickness lights Guides)
+// Active on the page itself and anything under it (/adventurepedia/altitude-sickness lights Learn)
 const isActiveLink = (path: string, href: string) => href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
 
 export default function Navbar() {

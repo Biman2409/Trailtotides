@@ -12,7 +12,7 @@ const links = [
   { href: "/map", label: "Map", icon: Map },
   { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark },
   { href: "/", label: "Home", icon: Home, isHome: true },
-  { href: "/adventurepedia", label: "Guides", icon: Library },
+  { href: "/adventurepedia", label: "Learn", icon: Library },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
