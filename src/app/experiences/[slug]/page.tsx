@@ -492,7 +492,7 @@ export default async function ExperiencePage({ params }: Props) {
 
               {/* Safety & Prep — before suitability and booking, and open, so people
                   see the risks before choosing who to go with */}
-              <AccordionSection id="safety" label="safety and prep" title="What to know before you go" defaultOpen mobileDefaultOpen={false}>
+              <AccordionSection id="safety" label="safety and prep" title="What to know before you go" defaultOpen>
                 <div className="space-y-3">
                   <div className="max-w-[66ch]">
                     <p className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{adventure.safetyNotes}</p>
@@ -524,7 +524,7 @@ export default async function ExperiencePage({ params }: Props) {
 
               {/* Is This For You? — fit/skip lists plus the Capability Profile radar,
                   both answering the same question from two angles */}
-              <AccordionSection id="suitability" label="suitability" title="Is this for you?" defaultOpen mobileDefaultOpen={false} headerExtra={<GradingPill />} peek={<RadarPeek ace={ace} name={adventure.name} />}>
+              <AccordionSection id="suitability" label="suitability" title="Is this for you?" defaultOpen headerExtra={<GradingPill />} peek={<RadarPeek ace={ace} name={adventure.name} />}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
                   {([
                     { heading: "for you if", items: adventure.whoFor, mark: "✓", markColor: "#3fa877" },
@@ -578,8 +578,8 @@ export default async function ExperiencePage({ params }: Props) {
 
               {/* Departure calendar: who starts when, before choosing who to book with */}
               {departures.some((d) => d.date >= todayIso) && (
-                <AccordionSection id="dates" label="when you can go" title="Departure calendar" defaultOpen mobileDefaultOpen={false}>
-                  <DepartureCalendar departures={departures} slug={adventure.slug} today={todayIso} />
+                <AccordionSection id="dates" label="when you can go" title="Departure calendar" defaultOpen>
+                  <DepartureCalendar departures={departures} slug={adventure.slug} today={todayIso} trekName={adventure.name} />
                 </AccordionSection>
               )}
 
@@ -601,7 +601,7 @@ export default async function ExperiencePage({ params }: Props) {
               {/* FAQ — the questions people search, answered from the facts above
                   (treks answer them in their Adventurepedia guide instead) */}
               {faqs.length > 0 && (
-                <AccordionSection id="faq" label="quick answers" title="Frequently asked questions" defaultOpen mobileDefaultOpen={false}>
+                <AccordionSection id="faq" label="quick answers" title="Frequently asked questions" defaultOpen>
                   <dl className="space-y-3 max-w-[66ch]">
                     {faqs.map((f) => (
                       <div key={f.question}>

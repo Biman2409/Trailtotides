@@ -24,6 +24,9 @@ interface Props {
  * left of the main column (drawn by the page). The dot is filled while the
  * section is open and hollow when it's collapsed.
  */
+/** Window event (detail: the section id) that opens a section, sent by the section menu */
+export const OPEN_SECTION_EVENT = "ttt:open-section";
+
 export default function AccordionSection({ title, label, defaultOpen = false, mobileDefaultOpen, children, id, headerExtra, peek }: Props) {
   const [open, setOpen] = useState(mobileDefaultOpen ?? defaultOpen);
   const sectionRef = useRef<HTMLElement>(null);
@@ -35,6 +38,17 @@ export default function AccordionSection({ title, label, defaultOpen = false, mo
     if (window.innerWidth >= 1024) setOpen(defaultOpen);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Jumping to the section (the section menu, or a #link to it) opens it, so its details show
+  useEffect(() => {
+    if (!id) return;
+    const openIfMe = () => { if (window.location.hash === `#${id}`) setOpen(true); };
+    const onEvent = (e: Event) => { if ((e as CustomEvent<string>).detail === id) setOpen(true); };
+    openIfMe();
+    window.addEventListener("hashchange", openIfMe);
+    window.addEventListener(OPEN_SECTION_EVENT, onEvent);
+    return () => { window.removeEventListener("hashchange", openIfMe); window.removeEventListener(OPEN_SECTION_EVENT, onEvent); };
+  }, [id]);
 
   function toggle() {
     setOpen((o) => {

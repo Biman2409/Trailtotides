@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { OPEN_SECTION_EVENT } from "./AccordionSection";
 const NAV_ITEMS = [
   { id: "overview", label: "Overview" },
   { id: "safety", label: "Safety" },
@@ -44,12 +45,14 @@ export default function SectionNav({ hasFaq = false, hasDates = false }: { hasFa
     >
       <div className="max-w-7xl mx-auto px-5 lg:px-8">
         <nav className="flex items-center gap-8">
-          {NAV_ITEMS.map(({ id, label }) => {
+          {items.map(({ id, label }) => {
             const isActive = active === id;
             return (
               <a
                 key={id}
                 href={`#${id}`}
+                // Opens the section if it's collapsed, so jumping to it shows its details
+                onClick={() => window.dispatchEvent(new CustomEvent(OPEN_SECTION_EVENT, { detail: id }))}
                 aria-current={isActive ? "true" : undefined}
                 className="relative py-4 text-[14px] whitespace-nowrap transition-colors duration-200"
                 style={{ color: isActive ? "var(--text-primary)" : "var(--text-tertiary)" }}

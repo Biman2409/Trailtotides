@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, CalendarPlus, X } from "lucide-react";
 import { openOperator } from "@/lib/outbound";
 import { inr } from "@/lib/operatorOffer";
 
@@ -28,17 +28,60 @@ const pad = (n: number) => String(n).padStart(2, "0");
 const isoOf = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 /** Local-time date from YYYY-MM-DD, so a date never slips a day across time zones */
 const parse = (iso: string) => { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d); };
+const addDays = (iso: string, n: number) => { const d = parse(iso); d.setDate(d.getDate() + n); return isoOf(d); };
+/** Last day on the trail: the start date when the length isn't known */
+const endOf = (d: Departure) => (d.days ? addDays(d.date, d.days - 1) : d.date);
 const monthKey = (iso: string) => iso.slice(0, 7);
 const monthLabel = (key: string, long = false) =>
   parse(`${key}-01`).toLocaleDateString("en-IN", { month: long ? "long" : "short", year: long ? "numeric" : "2-digit" });
 const dayLabel = (iso: string) => parse(iso).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
+const shortLabel = (iso: string) => parse(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+/** "₹12.5k" for the month chips */
+const shortInr = (n: number) => (n >= 1000 ? `₹${(n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, "")}k` : inr(n));
+
+/** A one-batch .ics file, so the dates can sit in the visitor's own calendar while they decide */
+function downloadIcs(d: Departure, title: string) {
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
+  const esc = (s: string) => s.replace(/[\\;,]/g, (c) => `\\${c}`).replace(/\n/g, "\\n");
+  const lines = [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Trail to Tides//Departures//EN", "CALSCALE:GREGORIAN",
+    "BEGIN:VEVENT",
+    `UID:${d.date}-${d.operator.replace(/\W+/g, "")}-${(d.trekSlug ?? title).replace(/\W+/g, "")}@trailtotides.com`,
+    `DTSTAMP:${stamp}`,
+    `DTSTART;VALUE=DATE:${d.date.replace(/-/g, "")}`,
+    `DTEND;VALUE=DATE:${addDays(endOf(d), 1).replace(/-/g, "")}`,
+    `SUMMARY:${esc(`${title} with ${d.operator}`)}`,
+    `DESCRIPTION:${esc(`${d.days ? `${d.days} days. ` : ""}${d.price ? `${inr(d.price)} per person. ` : ""}Confirm seats on the operator's page before booking travel.`)}`,
+    ...(d.url ? [`URL:${d.url}`] : []),
+    "END:VEVENT", "END:VCALENDAR",
+  ];
+  const blob = new Blob([lines.join("\r\n")], { type: "text/calendar" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `${title} ${d.date}.ics`.replace(/[^\w .-]+/g, "");
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+const chip = (on: boolean) => ({
+  background: on ? "#ff5100" : "transparent",
+  color: on ? "#fff" : "var(--text-secondary)",
+  border: on ? "1px solid #ff5100" : "1px solid var(--border)",
+});
 
 /**
  * Every listed start date on one calendar, so someone with fixed leave can see at a glance what
  * starts when, then book that batch on the operator's page. On a trek page the dots are operators;
  * on an operator's page (by="trek") they are that operator's treks.
  */
-export default function DepartureCalendar({ departures, slug, today, by = "operator" }: { departures: Departure[]; slug?: string; today: string; by?: "operator" | "trek" }) {
+export default function DepartureCalendar({ departures, slug, today, by = "operator", trekName }: {
+  departures: Departure[];
+  slug?: string;
+  today: string;
+  by?: "operator" | "trek";
+  /** The trek's name on a trek page, for the calendar file */
+  trekName?: string;
+}) {
   const upcoming = useMemo(
     () => departures.filter((d) => d.date >= today).sort((a, b) => a.date.localeCompare(b.date) || (a.price ?? Infinity) - (b.price ?? Infinity)),
     [departures, today],
@@ -50,22 +93,39 @@ export default function DepartureCalendar({ departures, slug, today, by = "opera
   const colour = (g: string) => (many ? "#ff5100" : COLOURS[groups.indexOf(g) % COLOURS.length]);
 
   const [hidden, setHidden] = useState<Set<string>>(new Set());
-  const shown = upcoming.filter((d) => !hidden.has(keyOf(d)));
-  const months = [...new Set(shown.map((d) => monthKey(d.date)))];
-
-  const [month, setMonth] = useState<string | undefined>(months[0]);
+  // "My dates": only batches that start and finish inside the visitor's leave
+  const [leaveOpen, setLeaveOpen] = useState(false);
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [sort, setSort] = useState<"date" | "price">("date");
+  const [month, setMonth] = useState<string | undefined>();
   const [day, setDay] = useState<string | undefined>();
-  const activeMonth = month && months.includes(month) ? month : months[0];
+  // The batch being pointed at in the list: its days are shaded on the grid
+  const [span, setSpan] = useState<{ start: string; end: string } | null>(null);
 
   if (upcoming.length === 0) return null;
+
+  const fits = (d: Departure) => (!from || d.date >= from) && (!to || endOf(d) <= to);
+  const shown = upcoming.filter((d) => !hidden.has(keyOf(d)) && fits(d));
+  const months = [...new Set(shown.map((d) => monthKey(d.date)))];
+  const activeMonth = month && months.includes(month) ? month : months[0];
 
   const byDay = new Map<string, Departure[]>();
   for (const d of shown) if (monthKey(d.date) === activeMonth) byDay.set(d.date, [...(byDay.get(d.date) ?? []), d]);
   const activeDay = day && byDay.has(day) ? day : undefined;
-  const list = activeDay ? byDay.get(activeDay)! : [...byDay.values()].flat();
+  const monthList = [...byDay.values()].flat();
+  const list = [...(activeDay ? byDay.get(activeDay)! : monthList)]
+    .sort((a, b) => (sort === "price" ? (a.price ?? Infinity) - (b.price ?? Infinity) : 0) || a.date.localeCompare(b.date));
+  const priced = monthList.map((d) => d.price).filter((p): p is number => !!p);
+  const lowest = priced.length > 1 && Math.min(...priced) < Math.max(...priced) ? Math.min(...priced) : undefined;
 
   const monthIdx = activeMonth ? months.indexOf(activeMonth) : -1;
   const go = (i: number) => { setMonth(months[i]); setDay(undefined); };
+  const pickDay = (iso?: string) => {
+    setDay(iso);
+    const first = iso && byDay.get(iso)?.[0];
+    setSpan(first ? { start: first.date, end: endOf(first) } : null);
+  };
 
   // Grid cells for the month: blanks up to the first weekday (Monday first), then each day
   const cells: (string | null)[] = [];
@@ -77,15 +137,16 @@ export default function DepartureCalendar({ departures, slug, today, by = "opera
     for (let d = 1; d <= len; d++) cells.push(isoOf(new Date(first.getFullYear(), first.getMonth(), d)));
   }
 
-  function toggleOperator(op: string) {
+  function toggleGroup(g: string) {
     setHidden((h) => {
       const next = new Set(h);
-      if (next.has(op)) next.delete(op);
-      else if (groups.length - next.size > 1) next.add(op); // keep at least one on
+      if (next.has(g)) next.delete(g);
+      else if (groups.length - next.size > 1) next.add(g); // keep at least one on
       return next;
     });
-    setDay(undefined);
+    pickDay(undefined);
   }
+  const clearLeave = () => { setFrom(""); setTo(""); setLeaveOpen(false); pickDay(undefined); };
 
   return (
     <div className="space-y-4 @container">
@@ -96,47 +157,77 @@ export default function DepartureCalendar({ departures, slug, today, by = "opera
           : <>from {groups.length} {groups.length === 1 ? "operator" : "operators"}, as listed on their own pages. Pick a day to see who starts then.</>}
       </p>
 
-      {many && (
-        <label className="inline-flex items-center gap-2 text-[13px]" style={{ color: "var(--text-tertiary)" }}>
-          Show
-          <select
-            value={hidden.size ? groups.find((g) => !hidden.has(g)) : ""}
-            onChange={(e) => { const v = e.target.value; setHidden(new Set(v ? groups.filter((g) => g !== v) : [])); setDay(undefined); }}
-            className="rounded-lg border px-2.5 py-1.5 text-[13.5px] max-w-[260px]"
-            style={{ borderColor: "var(--border)", background: "var(--bg-card)", color: "var(--text-primary)" }}
-          >
-            <option value="">All {groups.length} {by === "trek" ? "treks" : "operators"}</option>
-            {groups.map((g) => <option key={g} value={g}>{g} ({upcoming.filter((d) => keyOf(d) === g).length})</option>)}
-          </select>
-        </label>
-      )}
+      {/* Filters: which operators (or treks), and the visitor's own dates */}
+      <div className="flex flex-wrap items-center gap-2">
+        {many && (
+          <label className="inline-flex items-center gap-2 text-[13px]" style={{ color: "var(--text-tertiary)" }}>
+            Show
+            <select
+              value={hidden.size ? groups.find((g) => !hidden.has(g)) : ""}
+              onChange={(e) => { const v = e.target.value; setHidden(new Set(v ? groups.filter((g) => g !== v) : [])); pickDay(undefined); }}
+              className="rounded-lg border px-2.5 py-1.5 text-[13.5px] max-w-[240px]"
+              style={{ borderColor: "var(--border)", background: "var(--bg-card)", color: "var(--text-primary)" }}
+            >
+              <option value="">All {groups.length} {by === "trek" ? "treks" : "operators"}</option>
+              {groups.map((g) => <option key={g} value={g}>{g} ({upcoming.filter((d) => keyOf(d) === g).length})</option>)}
+            </select>
+          </label>
+        )}
+        {groups.length > 1 && !many && groups.map((g) => {
+          const on = !hidden.has(g);
+          return (
+            <button
+              key={g}
+              type="button"
+              aria-pressed={on}
+              onClick={() => toggleGroup(g)}
+              className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12.5px] transition-opacity"
+              style={{ borderColor: "var(--border)", color: "var(--text-secondary)", opacity: on ? 1 : 0.45 }}
+            >
+              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: colour(g) }} aria-hidden />
+              {g}
+            </button>
+          );
+        })}
+        <button
+          type="button"
+          onClick={() => (leaveOpen && (from || to) ? clearLeave() : setLeaveOpen((o) => !o))}
+          aria-expanded={leaveOpen}
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12.5px] font-semibold"
+          style={chip(!!(from || to))}
+        >
+          {from || to ? <>My dates <X className="w-3 h-3" /></> : "Fits my dates"}
+        </button>
+      </div>
 
-      {/* Colour key, which doubles as a filter */}
-      {groups.length > 1 && !many && (
-        <div className="flex flex-wrap gap-2" role="group" aria-label={by === "trek" ? "Show treks" : "Show operators"}>
-          {groups.map((op) => {
-            const on = !hidden.has(op);
-            return (
-              <button
-                key={op}
-                type="button"
-                aria-pressed={on}
-                onClick={() => toggleOperator(op)}
-                className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12.5px] transition-opacity"
-                style={{ borderColor: "var(--border)", color: "var(--text-secondary)", opacity: on ? 1 : 0.45 }}
-              >
-                <span className="w-2 h-2 rounded-full shrink-0" style={{ background: colour(op) }} aria-hidden />
-                {op}
-              </button>
-            );
-          })}
+      {leaveOpen && (
+        <div className="flex flex-wrap items-end gap-3 rounded-xl border p-3 max-w-xl" style={{ borderColor: "var(--border)" }}>
+          <label className="flex flex-col gap-1 text-[12px]" style={{ color: "var(--text-tertiary)" }}>
+            Free from
+            <input type="date" value={from} min={today} onChange={(e) => { setFrom(e.target.value); pickDay(undefined); }}
+              className="rounded-lg border px-2.5 py-1.5 text-[13.5px]" style={{ borderColor: "var(--border)", background: "var(--bg-card)", color: "var(--text-primary)" }} />
+          </label>
+          <label className="flex flex-col gap-1 text-[12px]" style={{ color: "var(--text-tertiary)" }}>
+            Back by
+            <input type="date" value={to} min={from || today} onChange={(e) => { setTo(e.target.value); pickDay(undefined); }}
+              className="rounded-lg border px-2.5 py-1.5 text-[13.5px]" style={{ borderColor: "var(--border)", background: "var(--bg-card)", color: "var(--text-primary)" }} />
+          </label>
+          <p className="text-[12.5px] pb-2" style={{ color: "var(--text-secondary)" }}>
+            {from || to ? `${shown.length} ${shown.length === 1 ? "batch fits" : "batches fit"}` : "Shows only batches that start and finish inside your dates."}
+          </p>
         </div>
       )}
 
-      {/* Side by side only when the section itself is wide enough for both */}
+      {shown.length === 0 ? (
+        <div className="rounded-xl border p-5 text-[14px] max-w-xl" style={{ borderColor: "var(--border)", color: "var(--text-secondary)" }}>
+          No batch starts and finishes inside those dates.{" "}
+          <button type="button" onClick={clearLeave} className="font-semibold underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>Show all dates</button>
+        </div>
+      ) : (
+      /* Side by side only when the section itself is wide enough for both */
       <div className="grid grid-cols-1 @[620px]:grid-cols-[minmax(0,290px)_minmax(0,1fr)] gap-5">
         {/* Month grid */}
-        <div className="rounded-xl border p-3 w-full max-w-[360px]" style={{ borderColor: "var(--border)" }}>
+        <div className="rounded-xl border p-3 w-full max-w-[360px] self-start" style={{ borderColor: "var(--border)" }}>
           <div className="flex items-center justify-between mb-2">
             <button type="button" onClick={() => go(monthIdx - 1)} disabled={monthIdx <= 0} aria-label="Previous month with departures" className="p-1.5 rounded-full disabled:opacity-25 hover:text-[#ff5100]" style={{ color: "var(--text-secondary)" }}>
               <ChevronLeft className="w-4 h-4" />
@@ -149,54 +240,63 @@ export default function DepartureCalendar({ departures, slug, today, by = "opera
           <div className="grid grid-cols-7 text-center text-[11px] mb-1" style={{ color: "var(--text-tertiary)" }}>
             {WEEKDAYS.map((w) => <span key={w}>{w.slice(0, 2)}</span>)}
           </div>
-          <div className="grid grid-cols-7 gap-0.5">
+          <div className="grid grid-cols-7 gap-y-0.5">
             {cells.map((iso, i) => {
               if (!iso) return <span key={`b${i}`} />;
               const deps = byDay.get(iso);
               const n = Number(iso.slice(8));
+              const isToday = iso === today;
+              // Days the pointed-at batch is on the trail, shaded as one band
+              const inSpan = span && iso >= span.start && iso <= span.end;
+              const band = inSpan
+                ? { background: "rgba(255,81,0,0.16)", borderRadius: `${iso === span.start ? 8 : 0}px ${iso === span.end ? 8 : 0}px ${iso === span.end ? 8 : 0}px ${iso === span.start ? 8 : 0}px` }
+                : {};
+              const todayRing = isToday ? { boxShadow: "inset 0 0 0 1.5px var(--text-tertiary)" } : {};
               if (!deps) {
-                return <span key={iso} className="h-10 flex items-start justify-center pt-1.5 text-[12.5px]" style={{ color: iso < today ? "var(--text-tertiary)" : "var(--text-secondary)", opacity: iso < today ? 0.4 : 0.7 }}>{n}</span>;
+                return (
+                  <span key={iso} className="h-10 flex items-start justify-center pt-1.5 text-[12.5px]" style={band}>
+                    <span className="w-6 h-6 -mt-0.5 leading-6 text-center rounded-full" title={isToday ? "Today" : undefined}
+                      style={{ color: iso < today ? "var(--text-tertiary)" : "var(--text-secondary)", opacity: iso < today ? 0.4 : 0.7, ...todayRing }}>{n}</span>
+                  </span>
+                );
               }
               const selected = iso === activeDay;
-              const ops = [...new Set(deps.map(keyOf))];
+              const gs = [...new Set(deps.map(keyOf))];
               return (
-                <button
-                  key={iso}
-                  type="button"
-                  onClick={() => setDay(selected ? undefined : iso)}
-                  aria-pressed={selected}
-                  aria-label={`${dayLabel(iso)}: ${ops.join(", ")}`}
-                  className="h-10 rounded-lg flex flex-col items-center pt-1.5 gap-1 text-[12.5px] font-semibold transition-colors"
-                  style={{
-                    color: selected ? "#fff" : "var(--text-primary)",
-                    background: selected ? "#ff5100" : "rgba(255,81,0,0.10)",
-                  }}
-                >
-                  {n}
-                  <span className="flex gap-0.5" aria-hidden>
-                    {ops.slice(0, 3).map((op) => (
-                      <span key={op} className="w-1.5 h-1.5 rounded-full" style={{ background: selected ? "#fff" : colour(op) }} />
-                    ))}
-                  </span>
-                </button>
+                <span key={iso} className="h-10" style={band}>
+                  <button
+                    type="button"
+                    onClick={() => pickDay(selected ? undefined : iso)}
+                    aria-pressed={selected}
+                    aria-label={`${dayLabel(iso)}: ${gs.join(", ")}`}
+                    className="w-full h-full rounded-lg flex flex-col items-center pt-1.5 gap-1 text-[12.5px] font-semibold transition-colors"
+                    style={{
+                      color: selected ? "#fff" : "var(--text-primary)",
+                      background: selected ? "#ff5100" : inSpan ? "transparent" : "rgba(255,81,0,0.10)",
+                      ...todayRing,
+                    }}
+                  >
+                    {n}
+                    <span className="flex gap-0.5" aria-hidden>
+                      {gs.slice(0, 3).map((g) => (
+                        <span key={g} className="w-1.5 h-1.5 rounded-full" style={{ background: selected ? "#fff" : colour(g) }} />
+                      ))}
+                    </span>
+                  </button>
+                </span>
               );
             })}
           </div>
-          {/* Month chips: a quick jump, with how many batches each month has */}
+          {/* Month chips: a quick jump, with how many batches each month has and its lowest price */}
           {months.length > 1 && (
             <div className="flex gap-1.5 overflow-x-auto mt-3 -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {months.map((m, i) => {
-                const n = shown.filter((d) => monthKey(d.date) === m).length;
-                const on = m === activeMonth;
+                const inMonth = shown.filter((d) => monthKey(d.date) === m);
+                const low = Math.min(...inMonth.map((d) => d.price ?? Infinity));
                 return (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => go(i)}
-                    className="shrink-0 rounded-full px-2.5 py-1 text-[11.5px] whitespace-nowrap"
-                    style={{ background: on ? "#ff5100" : "transparent", color: on ? "#fff" : "var(--text-secondary)", border: on ? "1px solid #ff5100" : "1px solid var(--border)" }}
-                  >
-                    {monthLabel(m)} · {n}
+                  <button key={m} type="button" onClick={() => go(i)} className="shrink-0 rounded-full px-2.5 py-1 text-[11.5px] whitespace-nowrap" style={chip(m === activeMonth)}
+                    title={`${inMonth.length} ${inMonth.length === 1 ? "batch" : "batches"}${Number.isFinite(low) ? `, from ${inr(low)}` : ""}`}>
+                    {monthLabel(m)} · {inMonth.length}{Number.isFinite(low) ? ` · ${shortInr(low)}` : ""}
                   </button>
                 );
               })}
@@ -206,35 +306,63 @@ export default function DepartureCalendar({ departures, slug, today, by = "opera
 
         {/* Who starts when */}
         <div className="min-w-0">
-          <div className="flex items-baseline justify-between gap-2 mb-2">
+          <div className="flex items-center justify-between gap-2 mb-2">
             <h3 className="text-[13px] tracking-[0.1em] !font-normal" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>
               {activeDay ? `starting ${dayLabel(activeDay)}` : `all of ${activeMonth ? monthLabel(activeMonth, true) : ""}`}
+              <span className="tracking-normal"> · {list.length}</span>
             </h3>
-            {activeDay && (
-              <button type="button" onClick={() => setDay(undefined)} className="text-[12.5px] hover:text-[#ff5100]" style={{ color: "var(--text-tertiary)" }}>
-                Whole month
-              </button>
-            )}
+            <div className="flex items-center gap-3 text-[12.5px]" style={{ color: "var(--text-tertiary)" }}>
+              {activeDay && (
+                <button type="button" onClick={() => pickDay(undefined)} className="hover:text-[#ff5100]">Whole month</button>
+              )}
+              {list.length > 2 && (
+                <span className="inline-flex rounded-full border p-0.5" style={{ borderColor: "var(--border)" }} role="group" aria-label="Sort">
+                  {(["date", "price"] as const).map((s) => (
+                    <button key={s} type="button" onClick={() => setSort(s)} aria-pressed={sort === s} className="rounded-full px-2 py-0.5 text-[11.5px]"
+                      style={{ background: sort === s ? "var(--bg-surface)" : "transparent", color: sort === s ? "var(--text-primary)" : "var(--text-tertiary)", fontWeight: sort === s ? 600 : 400 }}>
+                      {s === "date" ? "Soonest" : "Cheapest"}
+                    </button>
+                  ))}
+                </span>
+              )}
+            </div>
           </div>
-          <ul className="divide-y max-h-[340px] overflow-y-auto pr-1" style={{ borderColor: "var(--border)" }}>
+          <ul className="divide-y max-h-[360px] overflow-y-auto pr-1" style={{ borderColor: "var(--border)" }} onMouseLeave={() => !activeDay && setSpan(null)}>
             {list.map((d) => {
-              const end = d.days ? parse(d.date) : undefined;
-              end?.setDate(end.getDate() + d.days! - 1);
+              const end = endOf(d);
+              const title = d.trek ?? trekName ?? "Trek";
+              const showSpan = () => setSpan({ start: d.date, end });
               return (
-                <li key={`${d.date}-${d.operator}-${d.trek ?? ""}`} className="flex items-center gap-3 py-2.5" style={{ borderColor: "var(--border)" }}>
+                <li key={`${d.date}-${d.operator}-${d.trek ?? ""}`} className="flex items-center gap-3 py-2.5" style={{ borderColor: "var(--border)" }}
+                  onMouseEnter={showSpan} onFocus={showSpan}>
                   <span className="w-2 h-2 rounded-full shrink-0" style={{ background: colour(keyOf(d)) }} aria-hidden />
                   <div className="min-w-0 flex-1">
-                    <p className="text-[13.5px] font-medium truncate" style={{ color: "var(--text-primary)" }}>
+                    <p className="text-[13.5px] font-medium" style={{ color: "var(--text-primary)" }}>
                       {dayLabel(d.date)}
-                      {end && <span className="font-normal" style={{ color: "var(--text-tertiary)" }}> → {dayLabel(isoOf(end))}</span>}
+                      {end !== d.date && <span className="font-normal whitespace-nowrap" style={{ color: "var(--text-tertiary)" }}> → {shortLabel(end)}</span>}
                     </p>
                     <p className="text-[12.5px]" style={{ color: "var(--text-secondary)" }}>
                       {by === "trek" && d.trekSlug
                         ? <Link href={`/experiences/${d.trekSlug}`} className="hover:text-[#ff5100] underline-offset-2 hover:underline">{d.trek}</Link>
                         : by === "trek" ? d.trek : d.operator}
                       {d.price ? ` · ${inr(d.price)}` : ""}{d.days ? ` · ${d.days} days` : ""}
+                      {lowest !== undefined && d.price === lowest && (
+                        <span className="ml-1.5 inline-block rounded-full px-1.5 py-px text-[10.5px] font-semibold align-[1px]" style={{ background: "rgba(63,168,119,0.15)", color: "var(--accent-green)" }}>
+                          lowest this month
+                        </span>
+                      )}
                     </p>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => downloadIcs(d, title)}
+                    aria-label={`Add ${dayLabel(d.date)} with ${d.operator} to your calendar`}
+                    title="Add to your calendar"
+                    className="shrink-0 p-1.5 rounded-full transition-colors hover:text-[#ff5100]"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
+                    <CalendarPlus className="w-4 h-4" />
+                  </button>
                   {d.url && (
                     <button
                       type="button"
@@ -254,6 +382,7 @@ export default function DepartureCalendar({ departures, slug, today, by = "opera
           </p>
         </div>
       </div>
+      )}
     </div>
   );
 }
