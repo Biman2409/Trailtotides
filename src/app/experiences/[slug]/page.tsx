@@ -21,7 +21,6 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
 import { getApprovedOperatorsForAdventure } from "@/app/auth/operator-actions";
-import OperatorListingPanel from "./OperatorListingPanel";
 import MobileBookBar from "./MobileBookBar";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
 import AccordionSection from "./AccordionSection";
@@ -29,10 +28,8 @@ import StatsStrip from "./StatsStrip";
 import CommunityCards from "./CommunityCards";
 import PackingList from "./PackingList";
 import HazardBadges from "./HazardBadges";
-import TagsList from "@/components/ui/custom/TagsList";
 import SimilarTabs from "./SimilarTabs";
 import { Emphasis, stripEmphasis } from "@/lib/emphasis";
-import RecalibrationNudge from "./RecalibrationNudge";
 import MedicalCautionNote from "./MedicalCautionNote";
 import ExploreBackLink from "./ExploreBackLink";
 import ScreenOnly from "@/components/ui/custom/ScreenOnly";
@@ -44,7 +41,7 @@ import { haversineKm } from "@/lib/geo";
 import { destinationFor, lowestPrice } from "@/lib/destinations";
 import { SITE_URL, absoluteUrl, routeLabel, experienceTitle, experienceDescription, experienceFaq, faqStructuredData } from "@/lib/seo";
 import { breadcrumbStructuredData } from "@/components/ui/custom/Breadcrumbs";
-import TrainForThis from "./TrainForThis";
+import FitLists from "./FitLists";
 import { getSeasonUrgency } from "@/lib/seasonUrgency";
 import { parsePrice } from "@/lib/price";
 import { getNextDeparture } from "@/lib/nextDeparture";
@@ -54,6 +51,7 @@ import operatorOffers from "@/lib/operatorOffers.json";
 import type { OperatorOffer } from "@/lib/operatorOffer";
 import { departuresOf, todayInIndia } from "@/lib/operatorPages";
 import DepartureCalendar, { type Departure } from "./DepartureCalendar";
+import BookTabs from "./BookTabs";
 
 // The page's body copy is small and calm, so its secondary and tertiary tones are
 // raised (from 60% / 35% of the text colour) to keep it easy to read in both themes
@@ -185,6 +183,15 @@ export default async function ExperiencePage({ params }: Props) {
   const showTechnicalWarning = ace.strength >= 5 || ace.agility >= 5;
   const showPhysicalExhaustionWarning = ace.stamina >= 5 || ace.power >= 5;
   const showWaterWarning = ace.water >= 4;
+  // The same hazards the badges show, for the collapsed Safety section's one-line summary
+  const hazards = [
+    showAltitudeWarning && "Altitude sickness",
+    showPhysicalExhaustionWarning && "Exhaustion",
+    showFatalFallWarning && "Fall risk",
+    showTechnicalWarning && "Technical terrain",
+    showExtremeIsolationWarning && "Remote area",
+    showWaterWarning && "Open water",
+  ].filter((h): h is string => !!h);
 
   // The trek's own rating: traveller reviews, the same set the Reviews card
   // shows (real ones plus seed reviews, de-duped by id)
@@ -230,6 +237,7 @@ export default async function ExperiencePage({ params }: Props) {
   // Every start date we know, from operators' own pages and their listings here, one per operator per day
   const departures: Departure[] = allOperators.flatMap((o) => departuresOf(o));
   const todayIso = todayInIndia();
+  const upcomingDepartures = departures.filter((d) => d.date >= todayIso).length;
   const nextDeparture = getNextDeparture(departures.map((d) => d.date));
 
   const currentDifficultyLevel = DIFFICULTY_LEVEL[difficulty] ?? 1;
@@ -425,7 +433,7 @@ export default async function ExperiencePage({ params }: Props) {
         <HeroActions adventure={adventure} />
       </section>
 
-      <SectionNav hasFaq={faqs.length > 0} hasDates={departures.some((d) => d.date >= todayIso)} />
+      <SectionNav hasFaq={faqs.length > 0} />
 
       {/* Everything below the hero sits on the same topographic texture as the home page */}
       <div className="topo">
@@ -482,17 +490,13 @@ export default async function ExperiencePage({ params }: Props) {
                 </p>
               </AccordionSection>
 
-              {/* Phones and tablets: the trail and nearby card right after the Overview
-                  (the sidebar, where it lives on desktop, is hidden at these sizes) */}
-              {(nearbyAdventures.length > 0 || trail) && (
-                <ScreenOnly below>
-                  <div className="pt-2"><NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} trail={trail} compact /></div>
-                </ScreenOnly>
-              )}
-
-              {/* Safety & Prep — before suitability and booking, and open, so people
-                  see the risks before choosing who to go with */}
-              <AccordionSection id="safety" label="safety and prep" title="What to know before you go" defaultOpen>
+              {/* Safety & Prep: collapsed to its hazards in one line, the notes, packing list
+                  and guides a tap away */}
+              <AccordionSection id="safety" label="safety and prep" title="What to know before you go" peek={
+                <Peek>{hazards.length
+                  ? <>Prepare for <span style={{ color: "var(--text-primary)" }}>{hazards.join(", ").toLowerCase()}</span>. Safety notes, packing list and guides inside</>
+                  : "Safety notes, packing list and guides"}</Peek>
+              }>
                 <div className="space-y-3">
                   <div className="max-w-[66ch]">
                     <p className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{adventure.safetyNotes}</p>
@@ -522,86 +526,56 @@ export default async function ExperiencePage({ params }: Props) {
                 </div>
               </AccordionSection>
 
-              {/* Is This For You? — fit/skip lists plus the Capability Profile radar,
-                  both answering the same question from two angles */}
+              {/* Is this for you? The ACE™ check first, in the spotlight (our own measure of fit),
+                  then the quick for / skip lists */}
               <AccordionSection id="suitability" label="suitability" title="Is this for you?" defaultOpen headerExtra={<GradingPill />} peek={<RadarPeek ace={ace} name={adventure.name} />}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
-                  {([
-                    { heading: "for you if", items: adventure.whoFor, mark: "✓", markColor: "#3fa877" },
-                    { heading: "skip it if", items: adventure.whoNot, mark: "✕", markColor: "#d4675a" },
-                  ]).map(({ heading, items, mark, markColor }) => (
-                    <div key={heading}>
-                      <h3 className="text-[13px] tracking-[0.1em] !font-normal mb-2" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>{heading}</h3>
-                      <ul className="space-y-1">
-                        {items.split("·").map((item) => {
-                          const t = item.trim();
-                          if (!t) return null;
-                          return (
-                            <li key={t} className="flex items-start gap-3">
-                              <span className="shrink-0 text-[12px] leading-[1.75]" style={{ color: markColor }} aria-hidden>{mark}</span>
-                              <span className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Too intense? A hint that opens the Easier tab of Similar Adventures */}
-                {easierAlternatives.length > 0 && (
-                  <a href="#easier" className="mt-3 inline-flex items-center gap-1.5 text-sm hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
-                    Too much? See easier {adventure.type.toLowerCase()} nearby
-                    <ArrowRight className="w-3.5 h-3.5 rotate-90" />
-                  </a>
-                )}
-
-                {/* Capability Profile — supporting detail below the quick-skim lists */}
-                <div className="mt-5">
-                  <h3 className="text-[13px] tracking-[0.1em] !font-normal mb-3" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>how do you measure up</h3>
-                  <ACEProfileSection
-                    bare
-                    ace={ace}
-                    slug={adventure.slug}
-                    name={adventure.name}
-                    showAltitudeWarning={showAltitudeWarning}
-                    showFatalFallWarning={showFatalFallWarning}
-                    showExtremeIsolationWarning={showExtremeIsolationWarning}
-                    showTechnicalWarning={showTechnicalWarning}
-                    showPhysicalExhaustionWarning={showPhysicalExhaustionWarning}
-                    showWaterWarning={showWaterWarning}
+                <div className="space-y-5">
+                  <ACEProfileSection ace={ace} slug={adventure.slug} name={adventure.name} />
+                  <FitLists
+                    whoFor={adventure.whoFor}
+                    whoNot={adventure.whoNot}
+                    easier={easierAlternatives.length > 0 ? { href: "#easier", label: `Too much? See easier ${adventure.type.toLowerCase()} nearby` } : undefined}
                   />
-                  {/* Personal readiness + training gaps (only shows with a Matchmaker profile) */}
-                  <TrainForThis slug={adventure.slug} />
                 </div>
               </AccordionSection>
 
-              {/* Departure calendar: who starts when, before choosing who to book with */}
-              {departures.some((d) => d.date >= todayIso) && (
-                <AccordionSection id="dates" label="when you can go" title="Departure calendar" defaultOpen>
-                  <DepartureCalendar departures={departures} slug={adventure.slug} today={todayIso} trekName={adventure.name} />
-                </AccordionSection>
-              )}
-
-              {/* Operators */}
-              <div className="pt-4"><RecalibrationNudge difficulty={difficulty} /></div>
+              {/* Where to book: the operator comparison and their start dates, one section with a switch */}
               <div id="book-this-adventure" className="scroll-mt-32" />
               <AccordionSection label="book this adventure" title="Where to book" defaultOpen>
-                <div id="operators-section" className="space-y-4">
-                  <OperatorsSection operators={allOperators} slug={adventure.slug} />
-                  <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
+                <div id="operators-section">
+                  <BookTabs
+                    operatorCount={allOperators.length}
+                    dateCount={upcomingDepartures}
+                    operators={
+                      <div className="space-y-3">
+                        <OperatorsSection operators={allOperators} slug={adventure.slug} />
+                        <Link href="/auth/operator-signup" className="inline-flex items-center gap-1 text-[12.5px] hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+                          Run this {adventure.type === "Trekking" ? "trek" : "trip"}? List your company <ArrowRight className="w-3 h-3" />
+                        </Link>
+                      </div>
+                    }
+                    dates={upcomingDepartures > 0
+                      ? <DepartureCalendar departures={departures} slug={adventure.slug} today={todayIso} trekName={adventure.name} />
+                      : undefined}
+                  />
                 </div>
               </AccordionSection>
 
-              {/* Community */}
-              <AccordionSection id="community" label="community" title="Traveller reviews" defaultOpen>
+              {/* Community: collapsed to a one-line summary, the reviews a tap away */}
+              <AccordionSection id="community" label="community" title="Traveller reviews" peek={
+                <Peek>{travellerRating
+                  ? <><span style={{ color: "var(--text-primary)" }}>★ {travellerRating.avg.toFixed(1)}</span> from {travellerRating.count} {travellerRating.count === 1 ? "review" : "reviews"}, and travellers&apos; photos</>
+                  : "No reviews yet. Been here? Share how it went"}</Peek>
+              }>
                 <CommunityCards slug={adventure.slug} adventureType={adventure.type} adventureName={adventure.name} operators={allOperators} />
               </AccordionSection>
 
               {/* FAQ — the questions people search, answered from the facts above
                   (treks answer them in their Adventurepedia guide instead) */}
               {faqs.length > 0 && (
-                <AccordionSection id="faq" label="quick answers" title="Frequently asked questions" defaultOpen>
+                <AccordionSection id="faq" label="quick answers" title="Frequently asked questions" peek={
+                  <Peek>{faqs.length} quick answers, starting with “{faqs[0].question}”</Peek>
+                }>
                   <dl className="space-y-3 max-w-[66ch]">
                     {faqs.map((f) => (
                       <div key={f.question}>
@@ -613,10 +587,13 @@ export default async function ExperiencePage({ params }: Props) {
                 </AccordionSection>
               )}
 
-              {/* Tags */}
-              <div className="pt-4 pb-1">
-                <TagsList tags={adventure.tags} />
-              </div>
+              {/* Phones and tablets: the trail and nearby map, at the end of the story (the
+                  sidebar, where it lives on desktop, is hidden at these sizes) */}
+              {(nearbyAdventures.length > 0 || trail) && (
+                <ScreenOnly below>
+                  <div className="pt-6"><NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} trail={trail} compact /></div>
+                </ScreenOnly>
+              )}
             </div>
 
             {/* ── RIGHT SIDEBAR — desktop-only: booking and the nearby map ── */}
@@ -659,5 +636,15 @@ export default async function ExperiencePage({ params }: Props) {
 
       <Footer />
     </div>
+  );
+}
+
+/** A collapsed section's one-line summary; tapping it opens the section */
+function Peek({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="mt-1.5 flex items-center gap-1.5 text-[13.5px] leading-[1.5] max-w-[66ch] hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-secondary)" }}>
+      <span>{children}</span>
+      <ArrowRight className="w-3.5 h-3.5 shrink-0 rotate-90" style={{ color: "var(--text-tertiary)" }} />
+    </span>
   );
 }
