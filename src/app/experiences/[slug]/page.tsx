@@ -38,6 +38,7 @@ import NearbyAdventuresMap from "./NearbyAdventuresMap";
 import BookingSidebarCard from "./BookingSidebarCard";
 import StickySidebar from "./StickySidebar";
 import { haversineKm } from "@/lib/geo";
+import { sortOps, leadPrice } from "@/lib/operatorRank";
 import { destinationFor, lowestPrice } from "@/lib/destinations";
 import { SITE_URL, absoluteUrl, routeLabel, experienceTitle, experienceDescription, experienceFaq, faqStructuredData } from "@/lib/seo";
 import { breadcrumbStructuredData } from "@/components/ui/custom/Breadcrumbs";
@@ -225,14 +226,14 @@ export default async function ExperiencePage({ params }: Props) {
     .slice(0, 6)
     .map(({ adventure: a }) => a);
 
-  // Featured operator = cheapest overall, so the price shown up top always
-  // matches the operator the primary CTA books with (previously this used
-  // the first *verified* operator's price, which could be higher than the
-  // true minimum shown further down in the operator comparison table).
-  const featuredOp = allOperators.length > 0
-    ? allOperators.reduce((best, o) => (parsePrice(o.priceFrom) < parsePrice(best.priceFrom) ? o : best))
+  // Featured operator = the top of the Where to book list (lowest full trip price), so the sidebar
+  // and the mobile Book bar name the same operator and the same number as the list below them
+  const featuredOp = allOperators.length > 0 ? sortOps(allOperators)[0] : undefined;
+  const lead = featuredOp ? leadPrice(featuredOp) : undefined;
+  // The lowest headline fee, for the FAQ's "how much does it cost" answer
+  const priceFrom = allOperators.length > 0
+    ? allOperators.reduce((best, o) => (parsePrice(o.priceFrom) < parsePrice(best.priceFrom) ? o : best)).priceFrom
     : undefined;
-  const priceFrom = featuredOp?.priceFrom;
   const seasonUrgency = getSeasonUrgency(adventure.bestMonths);
   // Every start date we know, from operators' own pages and their listings here, one per operator per day
   const departures: Departure[] = allOperators.flatMap((o) => departuresOf(o));
@@ -360,7 +361,8 @@ export default async function ExperiencePage({ params }: Props) {
       />
       <MobileBookBar
         adventureName={adventure.name}
-        priceFrom={priceFrom}
+        priceFrom={lead?.price}
+        priceIsFull={lead?.full}
         difficulty={difficulty}
         duration={adventure.durationDays ?? adventure.duration}
         operatorWebsite={featuredOp?.website}
@@ -416,6 +418,8 @@ export default async function ExperiencePage({ params }: Props) {
                         >
                           <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-[#ff8a4c] fill-[#ff8a4c]" />
                           {travellerRating.avg.toFixed(1)}
+                          {/* The count says it's from travellers, and how many, without a hover */}
+                          <span className="text-white/55 font-normal">({travellerRating.count})</span>
                         </a>
                       )}
                     </span>
@@ -601,7 +605,8 @@ export default async function ExperiencePage({ params }: Props) {
 
               {/* Book Now */}
               <BookingSidebarCard
-                priceFrom={priceFrom}
+                priceFrom={lead?.price}
+                priceIsFull={lead?.full}
                 operatorCount={allOperators.length}
                 operatorWebsite={featuredOp?.website}
                 slug={adventure.slug}

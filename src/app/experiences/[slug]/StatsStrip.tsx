@@ -45,11 +45,11 @@ export default function StatsStrip({ stats, weather: place, trail }: {
       </h2>
       <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}>
         {/* 1px gaps over the border colour draw the dividers, however the cells wrap */}
-        <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-flow-col lg:auto-cols-fr gap-px" style={{ background: "var(--border-subtle)" }}>
+        <dl className="grid grid-cols-3 lg:grid-flow-col lg:auto-cols-fr gap-px" style={{ background: "var(--border-subtle)" }}>
           {stats.map(({ label, value }) => (
-            <div key={label} className="min-w-0 px-3.5 py-2" style={{ background: "var(--bg-surface)" }}>
-              <dt className="text-[11.5px] tracking-[0.1em] lowercase leading-none mb-1.5" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{label}</dt>
-              <dd className="text-[14px] font-medium leading-snug" style={{ color: "var(--text-primary)" }}>{value}</dd>
+            <div key={label} className="min-w-0 px-2.5 sm:px-3.5 py-2" style={{ background: "var(--bg-surface)" }}>
+              <dt className="text-[10.5px] sm:text-[11.5px] tracking-[0.06em] sm:tracking-[0.1em] lowercase leading-none mb-1.5" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{label}</dt>
+              <dd className="text-[13.5px] sm:text-[14px] font-medium leading-snug" style={{ color: "var(--text-primary)" }}>{value}</dd>
             </div>
           ))}
         </dl>

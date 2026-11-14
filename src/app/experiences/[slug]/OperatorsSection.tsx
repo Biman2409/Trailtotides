@@ -3,9 +3,9 @@
 import { Fragment, useEffect, useState } from "react";
 import { X, Star, ExternalLink, ArrowUpDown, Check, Minus, ChevronDown, BadgeCheck } from "lucide-react";
 import { type OperatorCardData } from "./OperatorCard";
-import { parsePrice } from "@/lib/price";
 import { openOperator } from "@/lib/outbound";
 import { SERVICE_LABELS, serviceStates, inr, fullTripCost, transportExtra, finePrint, type ServiceKey, type ServiceState } from "@/lib/operatorOffer";
+import { totalOf, knownFull, fullNote, sortOps, transportNote } from "@/lib/operatorRank";
 
 /** Other parts of the page (the sidebar and the mobile Book bar) open the comparison with this event */
 export const OPEN_COMPARE_EVENT = "ttt:open-compare";
@@ -31,51 +31,6 @@ const muted = { color: "var(--text-tertiary)" };
 const best = { color: "var(--accent-ink)", fontWeight: 600 } as const;
 const star = <Star className="w-3 h-3 text-[#ff8a4c] fill-[#ff8a4c] shrink-0" />;
 const none = <span style={muted}>—</span>;
-
-/** What the trip costs per person from the pick-up city: fee with GST plus paid transport */
-function totalOf(op: OperatorCardData): number {
-  return (op.offer && fullTripCost(op.offer)) ?? parsePrice(op.priceFrom);
-}
-
-/** Where the full price starts from: "Dehradun" out of "Dehradun to Sankri & return" */
-function fromCity(op: OperatorCardData): string | undefined {
-  // A bare word like "Transportation" is a heading caught by the import, not a route: say nothing
-  // rather than "from Transportation"
-  const route = op.offer?.transportRoute;
-  if (route && !/\bfrom\b|\bto\b|[–-]/.test(route)) return undefined;
-  const s = (route ?? op.offer?.startEnd)?.replace(/^\(|\)$/g, "");
-  // "…cost from Rishikesh" names the city outright; otherwise it's the first place in the route
-  const from = s?.match(/\bfrom ([A-Z][A-Za-z]+)/)?.[1];
-  const city = from ?? (s?.split(/\s+(?:to|–|-)\s+|\s*\(/)[0]?.trim() || undefined);
-  return city && !/transport/i.test(city) ? city : undefined;
-}
-
-/** How a transport cell reads when transport isn't a priced extra */
-function transportNote(op: OperatorCardData): string {
-  const t = op.offer ? serviceStates(op.offer).transport : "unknown";
-  return t === "included" ? "In the fee" : t === "not-included" ? "Own travel" : "Not stated";
-}
-
-/** True when we know the full price from the operator's own page, not just a headline fee */
-const knownFull = (op: OperatorCardData) => !!op.offer && fullTripCost(op.offer) !== undefined;
-
-/** The small line under a full-trip price: where it starts from, or why transport isn't in it */
-function fullNote(op: OperatorCardData): string {
-  const note = op.offer && transportExtra(op.offer) === undefined ? transportNote(op) : "";
-  if (note === "Own travel") return "own travel to the start";
-  if (note === "Not stated") return "transport not stated";
-  if (note === "In the fee") return "transport included";
-  const city = fromCity(op);
-  return city ? `with transport from ${city}` : "with transport";
-}
-
-/**
- * The order operators appear in, here and in the table: those whose full price we know first,
- * cheapest first; the ones with only a headline fee follow, since that fee can leave out GST and transport
- */
-function sortOps(operators: OperatorCardData[]): OperatorCardData[] {
-  return [...operators].sort((a, b) => Number(knownFull(b)) - Number(knownFull(a)) || totalOf(a) - totalOf(b));
-}
 
 /** The next start date ("5 Dec"), or the batch months ("Jul, Aug") when only those are listed */
 function nextDeparture(op: OperatorCardData): string | undefined {
@@ -397,6 +352,7 @@ function CompareDrawer({
 export default function OperatorsSection({ operators, slug }: { operators: OperatorCardData[]; slug: string }) {
   const [computedRatings, setComputedRatings] = useState<Record<string, ComputedRating>>({});
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetch(`/api/operator-ratings?slug=${encodeURIComponent(slug)}`)
@@ -473,6 +429,10 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
 
   // Multiple operators — every one listed in the table's order, the full comparison a tap away
   const listed = sortOps(operators);
+  // The cheapest few up front; the rest a tap away, so a trek with a dozen operators stays short
+  const SHOWN = 5;
+  const hidden = listed.length - SHOWN > 1 ? listed.length - SHOWN : 0;
+  const visible = hidden && !showAll ? listed.slice(0, SHOWN) : listed;
   const anyKnown = listed.some(knownFull);
   const lowest = Math.min(...listed.filter((o) => !anyKnown || knownFull(o)).map(totalOf).filter((n) => Number.isFinite(n) && n > 0));
   const withDetails = operators.filter((o) => o.offer).length;
@@ -483,7 +443,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
 
       <div className="space-y-3">
         <ul className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}>
-          {listed.map((op, i) => {
+          {visible.map((op, i) => {
             const full = knownFull(op) ? fullTripCost(op.offer!)! : undefined;
             const isLowest = totalOf(op) === lowest && (!anyKnown || knownFull(op));
             const traveller = travellerRating(op, computedRatings);
@@ -511,7 +471,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
                 <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
                 <div className="sm:text-right">
                   <p className="text-[15px] font-semibold leading-tight" style={isLowest ? best : { color: "var(--text-primary)" }}>{full ? inr(full) : op.priceFrom || "On request"}</p>
-                  <p className="text-[11.5px] leading-tight mt-0.5 sm:max-w-[150px]" style={muted}>{full ? fullNote(op) : op.offer?.gstRate ? `fee only, +${Math.round(op.offer.gstRate * 100)}% GST` : "fee only"}</p>
+                  <p className="text-[11.5px] leading-tight mt-0.5 sm:max-w-[200px]" style={muted}>{full ? fullNote(op) : op.offer?.gstRate ? `fee only, +${Math.round(op.offer.gstRate * 100)}% GST` : "fee only"}</p>
                 </div>
                 <button
                   onClick={() => { if (url) openOperator({ url, operator: op.name, source: "compare", slug }); }}
@@ -527,6 +487,13 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
             );
           })}
         </ul>
+        {hidden > 0 && (
+          <button type="button" onClick={() => setShowAll((v) => !v)} aria-expanded={showAll}
+            className="-mt-1 inline-flex items-center gap-1 text-[13px] font-semibold text-[#ff5100]">
+            {showAll ? "Show fewer" : `Show all ${listed.length} operators`}
+            <ChevronDown className="w-4 h-4 transition-transform" style={{ transform: showAll ? "rotate(180deg)" : undefined }} />
+          </button>
+        )}
 
         {/* Compare — the secondary (outline) pill; the solid pill is the sidebar's */}
         <button

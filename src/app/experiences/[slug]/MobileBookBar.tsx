@@ -10,6 +10,8 @@ import { OPEN_COMPARE_EVENT } from "./OperatorsSection";
 interface Props {
   adventureName: string;
   priceFrom?: string;
+  /** True when priceFrom is the full trip (fee, GST and transport), not just the trek fee */
+  priceIsFull?: boolean;
   difficulty: string;
   duration: string;
   operatorWebsite?: string;
@@ -20,7 +22,7 @@ interface Props {
   nextDeparture?: string | null;
 }
 
-export default function MobileBookBar({ slug, adventureName, priceFrom, difficulty, duration, operatorWebsite, operatorName, operatorCount, seasonUrgency, nextDeparture }: Props) {
+export default function MobileBookBar({ slug, adventureName, priceFrom, priceIsFull, difficulty, duration, operatorWebsite, operatorName, operatorCount, seasonUrgency, nextDeparture }: Props) {
   const [visible, setVisible] = useState(false);
   const [staleProfile, setStaleProfile] = useState(false);
 
@@ -70,62 +72,46 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, difficul
         }}
       />
 
-      <div className="relative px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
-        {/* Top row */}
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div className="min-w-0">
-            <p className="text-black dark:text-white font-semibold text-sm leading-snug">{adventureName}</p>
-            <p className="text-black/40 dark:text-white/35 text-[11px] mt-0.5 truncate">
-              {duration}{difficulty && <> · {difficulty}</>}
+      {/* One row: what it costs on the left, the next step on the right. The trek's name is on the
+          page behind it, so the bar doesn't repeat it and keeps to about 70px of the screen. */}
+      <div className="relative flex items-center gap-3 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
+        <div className="min-w-0 flex-1">
+          {priceFrom ? (
+            <p className="text-black dark:text-white font-bold text-[15px] leading-tight whitespace-nowrap">
+              <span className="text-black/45 dark:text-white/40 font-normal text-[11px]">From </span>{priceFrom}
             </p>
-            {seasonUrgency?.kind === "ending" && (
-              <span
-                className="inline-flex items-center gap-1 mt-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold"
-                style={{ background: "rgba(239,68,68,0.18)", color: "#f87171" }}
-              >
-                <Clock3 className="w-2.5 h-2.5" /> {seasonUrgency.weeksLeft}w left in season
-              </span>
-            )}
-            {staleProfile && (
-              <button
-                onClick={() => {
-                  const el = document.getElementById("book-this-adventure");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="inline-flex items-center gap-1 mt-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold"
-                style={{ background: difficulty === "Extreme" ? "rgba(239,68,68,0.18)" : "rgba(245,158,11,0.15)", color: difficulty === "Extreme" ? "#f87171" : "#fbbf24" }}
-              >
-                <AlertTriangle className="w-2.5 h-2.5" /> Profile stale
-              </button>
-            )}
-          </div>
-          <div className="text-right shrink-0">
-            {priceFrom && (
-              <p className="text-black dark:text-white font-bold text-sm leading-none whitespace-nowrap">
-                <span className="text-black/35 dark:text-white/30 font-normal text-[11px]">From </span>{priceFrom}
-              </p>
-            )}
-            {operatorName && operatorCount > 1 && (
-              <p className="text-black/35 dark:text-white/30 text-[10px] mt-1 whitespace-nowrap">Cheapest: {operatorName}</p>
-            )}
-            {nextDeparture && (
-              <p className="text-black/35 dark:text-white/30 text-[10px] mt-1 whitespace-nowrap">Next: {nextDeparture}</p>
-            )}
-          </div>
+          ) : (
+            <p className="text-black dark:text-white font-semibold text-sm leading-tight truncate">{adventureName}</p>
+          )}
+          <p className="text-black/45 dark:text-white/40 text-[11px] mt-0.5 truncate">
+            {priceFrom
+              ? <>{priceIsFull ? "Full trip" : "Trek fee"}{operatorName && operatorCount > 1 ? ` · ${operatorName}` : ""}</>
+              : <>{duration}{difficulty && <> · {difficulty}</>}</>}
+          </p>
+          {/* At most one note, so the bar stays one row tall */}
+          {staleProfile ? (
+            <button
+              onClick={() => document.getElementById("book-this-adventure")?.scrollIntoView({ behavior: "smooth" })}
+              className="inline-flex items-center gap-1 mt-0.5 text-[10.5px] font-semibold"
+              style={{ color: difficulty === "Extreme" ? "#f87171" : "#fbbf24" }}
+            >
+              <AlertTriangle className="w-3 h-3" /> Your fitness profile is out of date
+            </button>
+          ) : seasonUrgency?.kind === "ending" ? (
+            <p className="inline-flex items-center gap-1 mt-0.5 text-[10.5px] font-semibold" style={{ color: "#f87171" }}>
+              <Clock3 className="w-3 h-3" /> {seasonUrgency.weeksLeft}w left in season
+            </p>
+          ) : nextDeparture ? (
+            <p className="text-black/45 dark:text-white/40 text-[10.5px] mt-0.5 truncate">Next departure {nextDeparture}</p>
+          ) : null}
         </div>
-
-        {/* CTA buttons */}
-        <div className="flex gap-2.5">
-          <button
-            onClick={handleBook}
-            className="flex-1 h-11 flex items-center justify-center gap-1.5 rounded-full text-white text-[14px] font-medium transition-colors bg-[#ff5100] active:bg-[#e64900]"
-          >
-            {bookDirect && operatorName
-              ? `Book with ${operatorName}`
-              : operatorCount > 1 ? `Compare ${operatorCount} operators` : "See operators"}
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
+        <button
+          onClick={handleBook}
+          className="shrink-0 h-11 px-5 flex items-center justify-center gap-1 rounded-full text-white text-[14px] font-medium transition-colors bg-[#ff5100] active:bg-[#e64900]"
+        >
+          {bookDirect ? "Book" : operatorCount > 1 ? `Compare ${operatorCount}` : "See operators"}
+          <ChevronRight className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );

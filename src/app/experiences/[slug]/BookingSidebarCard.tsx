@@ -8,6 +8,8 @@ import { OPEN_COMPARE_EVENT } from "./OperatorsSection";
 
 interface Props {
   priceFrom?: string;
+  /** True when priceFrom is the full trip (fee, GST and transport), not just the trek fee */
+  priceIsFull?: boolean;
   operatorCount: number;
   operatorWebsite?: string;
   slug?: string;
@@ -40,7 +42,7 @@ function UrgencyNote({ urgency }: { urgency: SeasonUrgency }) {
   return null;
 }
 
-export default function BookingSidebarCard({ slug, priceFrom, operatorCount, operatorWebsite, operatorName, hasVerifiedOperator, seasonUrgency, nextDeparture, quote }: Props) {
+export default function BookingSidebarCard({ slug, priceFrom, priceIsFull, operatorCount, operatorWebsite, operatorName, hasVerifiedOperator, seasonUrgency, nextDeparture, quote }: Props) {
   // The primary CTA stays neutral when there's a choice: it leads to the
   // comparison, not to whichever operator happens to be cheapest. Only a
   // sole operator gets booked directly.
@@ -63,9 +65,10 @@ export default function BookingSidebarCard({ slug, priceFrom, operatorCount, ope
         <div>
           <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>from</p>
           <p className="text-[24px] leading-tight font-medium tracking-[-0.01em]" style={{ color: "var(--text-primary)" }}>{priceFrom}</p>
-          {operatorName && operatorCount > 1 && (
-            <p className="text-[13px] mt-0.5" style={{ color: "var(--text-secondary)" }}>Cheapest: {operatorName}</p>
-          )}
+          {/* Says what the number is, so it reads the same as the top of the Where to book list */}
+          <p className="text-[13px] mt-0.5" style={{ color: "var(--text-secondary)" }}>
+            {priceIsFull ? "Full trip" : "Trek fee"}{operatorName && operatorCount > 1 ? ` with ${operatorName}` : ""}
+          </p>
         </div>
       ) : (
         <p className="text-[15px] font-medium" style={{ color: "var(--text-primary)" }}>Contact for pricing</p>
