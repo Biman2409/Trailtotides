@@ -8,6 +8,7 @@ import Logo from "@/components/ui/custom/Logo";
 import { ResendButton } from "@/app/auth/ResendVerification";
 import AuthContextNote, { intentFor } from "@/app/auth/AuthContextNote";
 import GoogleSignInButton from "@/components/ui/custom/GoogleSignInButton";
+import { safeNext } from "@/lib/safeNext";
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -53,8 +54,7 @@ function LoginForm() {
 
       // Hard reload so server and client both see the cookie. Return to ?next= if it's a
       // same-site path (e.g. Matchmaker results), otherwise the homepage.
-      const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
-      window.location.replace(safeNext);
+      window.location.replace(safeNext(next));
     } catch {
       setError("Something went wrong. Please try again.");
       setPending(false);

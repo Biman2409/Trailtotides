@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { safeNext } from "@/lib/safeNext";
 
 // Google is set up in Supabase (Authentication → Providers → Google) with the OAuth client
 // "Trail to Tides website (Supabase)" in Google Cloud project TTTCompassAI. Set
@@ -82,7 +83,8 @@ export default function GoogleSignInButton({ next = "/", label = "Continue with 
               return;
             }
             // A full load, so every server-rendered part of the site sees the new session
-            window.location.assign(next);
+            // Only to a page on this site: ?next= comes from the address bar
+            window.location.assign(safeNext(next));
           },
         });
         const width = Math.min(400, Math.max(200, Math.round(slot.current.getBoundingClientRect().width)));

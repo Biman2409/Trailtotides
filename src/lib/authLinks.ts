@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { safeNext } from "@/lib/safeNext";
 import type { EmailOtpType } from "@supabase/supabase-js";
 
 // Links in verification and password-reset emails. They point at our own /auth/callback with
@@ -16,9 +17,8 @@ export async function siteOrigin(): Promise<string> {
   return `${host.startsWith("localhost") || host.startsWith("127.") ? "http" : "https"}://${host}`;
 }
 
-/** Only same-site paths, so a link can't bounce someone to another site */
-export const safeNext = (next: string | null | undefined, fallback = "/") =>
-  next && next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/\\") ? next : fallback;
+/** Only same-site paths, so a link can't bounce someone to another site (lives in @/lib/safeNext) */
+export { safeNext };
 
 export async function callbackLink(hashedToken: string, type: EmailOtpType, next?: string) {
   const url = new URL("/auth/callback", await siteOrigin());
