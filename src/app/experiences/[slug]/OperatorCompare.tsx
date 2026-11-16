@@ -113,7 +113,7 @@ export default function OperatorCompare({ all, selected, onToggle, ratings, slug
       aria-modal="true"
       aria-labelledby="op-compare-title"
       className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center sm:p-5"
-      style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(3px)" }}
+      style={{ background: "rgba(0,0,0,0.7)" }}
       onClick={onClose}
     >
       <div
