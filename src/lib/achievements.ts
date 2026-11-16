@@ -34,7 +34,7 @@ type Rule =
 
 /** An adventure counts toward a skill badge when it's rated at least this for that skill */
 const SKILL_MIN = 4;
-/** One of each of these for Swiss Army Knife — fixed, so new adventure types don't make it harder later */
+/** One of each of these for Jack of All Terrain — fixed, so new adventure types don't make it harder later */
 const ALL_ROUNDER_TYPES: AdventureType[] = ["Trekking", "Motorcycling", "Cycling", "Mountaineering"];
 
 const AXIS_NAME: Record<keyof ACE, string> = {
@@ -48,14 +48,14 @@ const skill = (id: string, name: string, axis: keyof ACE, icon: string, descript
   ({ id, name, icon, description, tier: "tier3", rule: { kind: "skill", axis, need: 5 } });
 
 const SKILL_BADGES: Achievement[] = [
-  skill("run-forrest-run",    "Run, Forrest, Run!",  "stamina",  "Timer",        "Five long-haul adventures logged. Built for back-to-back days in the field."),
-  skill("rhino-beetle",       "Rhino Beetle",        "power",    "Dumbbell",     "Five adventures that demand raw power. Carries impossible loads without breaking stride."),
-  skill("t-800",              "T-800",               "strength", "BicepsFlexed", "Five adventures of sustained physical grind. Never quits."),
-  skill("spidey-sense",       "Spidey-Sense",        "agility",  "Footprints",   "Five adventures over rock, scree and ridge. Moves where others hesitate."),
-  skill("little-mermaid",     "Little Mermaid",      "water",    "Waves",        "Five adventures on or in the water. Strong currents hold no fear."),
-  skill("abominable-snowman", "Abominable Snowman",  "altitude", "MountainSnow", "Five high-altitude adventures. The thin air works for you."),
-  skill("master-yoda",        "Master Yoda",         "focus",    "ScanEye",      "Five adventures with real exposure. Calm and precise when it counts."),
-  skill("john-rambo",         "John Rambo",          "nerve",    "Shield",       "Five remote, self-reliant adventures. No signal, no problem."),
+  skill("run-forrest-run",    "Long Hauler",  "stamina",  "Timer",        "Five long-haul adventures logged. Built for back-to-back days in the field."),
+  skill("rhino-beetle",       "Load Bearer",        "power",    "Dumbbell",     "Five adventures that demand raw power. Carries impossible loads without breaking stride."),
+  skill("t-800",              "Iron Legs",           "strength", "BicepsFlexed", "Five adventures of sustained physical grind. Never quits."),
+  skill("spidey-sense",       "Sure-Footed",        "agility",  "Footprints",   "Five adventures over rock, scree and ridge. Moves where others hesitate."),
+  skill("little-mermaid",     "River Born",      "water",    "Waves",        "Five adventures on or in the water. Strong currents hold no fear."),
+  skill("abominable-snowman", "Thin-Air Native",  "altitude", "MountainSnow", "Five high-altitude adventures. The thin air works for you."),
+  skill("master-yoda",        "Steady Nerves",         "focus",    "ScanEye",      "Five adventures with real exposure. Calm and precise when it counts."),
+  skill("john-rambo",         "Lone Ranger",          "nerve",    "Shield",       "Five remote, self-reliant adventures. No signal, no problem."),
 ];
 const SKILL_IDS = SKILL_BADGES.map((b) => b.id);
 
@@ -63,17 +63,17 @@ const SKILL_IDS = SKILL_BADGES.map((b) => b.id);
 
 const PINNACLE: Achievement[] = [
   {
-    id: "one-above-all", name: "The One Above All", icon: "Crown", tier: "tier1",
+    id: "one-above-all", name: "Complete Adventurer", icon: "Crown", tier: "tier1",
     description: "Every single-skill badge earned. The complete adventurer — nothing is out of reach.",
     rule: { kind: "badges", ids: SKILL_IDS, need: SKILL_IDS.length, hint: "Earn all 8 single-skill badges" },
   },
   {
     id: "over-9000", name: "Over 9000 Club", icon: "Gauge", tier: "tier1",
-    description: "Every XP source maxed out. The scouter can't even measure this power level.",
+    description: "Every XP source maxed out. Every adventure logged, reviewed and shared to the cap.",
     rule: { kind: "xp", need: MAX_XP },
   },
   {
-    id: "the-mad-titan", name: "The Mad Titan", icon: "Award", tier: "tier1",
+    id: "the-mad-titan", name: "All-Rounder", icon: "Award", tier: "tier1",
     description: "Four single-skill badges. A rare all-rounder with no weak terrain.",
     rule: { kind: "badges", ids: SKILL_IDS, need: 4, hint: "Earn any 4 single-skill badges" },
   },
@@ -87,38 +87,38 @@ const pair = (id: string, name: string, icon: string, a: string, b: string, desc
 };
 
 const DOMAIN: Achievement[] = [
-  pair("incredible-hulk", "Incredible Hulk", "Zap",     "run-forrest-run", "rhino-beetle",       "Endurance and power, both proven. An unstoppable force."),
-  pair("iron-sherpa",     "Iron Sherpa",     "Pickaxe", "t-800",           "spidey-sense",       "Strength and agility, both proven. Total command over any terrain."),
-  pair("avatar-state",    "Avatar State",    "Wind",    "little-mermaid",  "abominable-snowman", "Water and altitude, both proven. Rides above the clouds and commands the current."),
-  pair("awakened-buddha", "Awakened Buddha", "Brain",   "master-yoda",     "john-rambo",         "Focus and nerve, both proven. An unbreakable mind forged in the wild."),
-  { id: "indiana-jones",     name: "Indiana Jones",     icon: "Globe",        tier: "tier2", description: "25 adventures logged. A legend of the field — hat and whip optional.", rule: { kind: "count", stat: "completed", need: 25 } },
-  { id: "lara-croft",        name: "Lara Croft",        icon: "Medal",        tier: "tier2", description: "10 adventures logged. A seasoned explorer with stories to match.",      rule: { kind: "count", stat: "completed", need: 10 } },
+  pair("incredible-hulk", "Unstoppable", "Zap",     "run-forrest-run", "rhino-beetle",       "Endurance and power, both proven. An unstoppable force."),
+  pair("iron-sherpa",     "Terrain Master",     "Pickaxe", "t-800",           "spidey-sense",       "Strength and agility, both proven. Total command over any terrain."),
+  pair("avatar-state",    "Sky and Current",    "Wind",    "little-mermaid",  "abominable-snowman", "Water and altitude, both proven. Rides above the clouds and commands the current."),
+  pair("awakened-buddha", "Unshakeable Mind", "Brain",   "master-yoda",     "john-rambo",         "Focus and nerve, both proven. An unbreakable mind forged in the wild."),
+  { id: "indiana-jones",     name: "Field Legend",      icon: "Globe",        tier: "tier2", description: "25 adventures logged. A legend of the field.", rule: { kind: "count", stat: "completed", need: 25 } },
+  { id: "lara-croft",        name: "Seasoned Explorer", icon: "Medal",        tier: "tier2", description: "10 adventures logged. A seasoned explorer with stories to match.",      rule: { kind: "count", stat: "completed", need: 10 } },
   { id: "marco-polo",        name: "Marco Polo",        icon: "Route",        tier: "tier2", description: "Adventures in 6 regions. The map keeps getting bigger.",                rule: { kind: "count", stat: "regions", need: 6 } },
-  { id: "gordon-ramsayd",    name: "Gordon Ramsay'd",   icon: "ChefHat",      tier: "tier2", description: "10 reviews written. The community reads your every word.",             rule: { kind: "count", stat: "reviews", need: 10 } },
-  { id: "nolan-vision",      name: "Nolan Vision",      icon: "Clapperboard", tier: "tier2", description: "20 adventure photos uploaded. Your feed is the envy of the community.", rule: { kind: "count", stat: "photos", need: 20 } },
+  { id: "gordon-ramsayd",    name: "Trusted Critic",    icon: "ChefHat",      tier: "tier2", description: "10 reviews written. The community reads your every word.",             rule: { kind: "count", stat: "reviews", need: 10 } },
+  { id: "nolan-vision",      name: "Lens Master",       icon: "Clapperboard", tier: "tier2", description: "20 adventure photos uploaded. Your feed is the envy of the community.", rule: { kind: "count", stat: "photos", need: 20 } },
 ];
 
 // ─── Tier 3 — expedition badges: skills, first steps, collections, secrets ──
 
 const EXPEDITION: Achievement[] = [
   ...SKILL_BADGES,
-  { id: "first-blood",     name: "First Blood",       icon: "CheckCircle2", tier: "tier3", description: "Your very first adventure logged. Every legend starts somewhere.",   rule: { kind: "count", stat: "completed", need: 1 } },
-  { id: "bilbo-baggins",   name: "Bilbo Baggins",     icon: "Backpack",     tier: "tier3", description: "5 adventures logged. You went on an adventure — and kept going.",     rule: { kind: "count", stat: "completed", need: 5 } },
-  { id: "dora-explorer",   name: "Dora the Explorer", icon: "Map",          tier: "tier3", description: "Adventures in 3 regions. ¡Vámonos!",                                   rule: { kind: "count", stat: "regions", need: 3 } },
-  { id: "swiss-army-knife", name: "Swiss Army Knife", icon: "Wrench",       tier: "tier3", description: "A trek, a ride, a cycle and a climb. A tool for every terrain.",           rule: { kind: "flag", flag: "allTypes", hint: "Log one each of Trekking, Motorcycling, Cycling and Mountaineering" } },
+  { id: "first-blood",     name: "First Footsteps",   icon: "CheckCircle2", tier: "tier3", description: "Your very first adventure logged. Every legend starts somewhere.",   rule: { kind: "count", stat: "completed", need: 1 } },
+  { id: "bilbo-baggins",   name: "Trail Regular",     icon: "Backpack",     tier: "tier3", description: "5 adventures logged. You went on an adventure, and kept going.",     rule: { kind: "count", stat: "completed", need: 5 } },
+  { id: "dora-explorer",   name: "Region Hopper"    , icon: "Map",          tier: "tier3", description: "Adventures in 3 regions. The map is opening up.",                                   rule: { kind: "count", stat: "regions", need: 3 } },
+  { id: "swiss-army-knife", name: "Jack of All Terrain", icon: "Wrench",       tier: "tier3", description: "A trek, a ride, a cycle and a climb. A tool for every terrain.",           rule: { kind: "flag", flag: "allTypes", hint: "Log one each of Trekking, Motorcycling, Cycling and Mountaineering" } },
   { id: "leap-of-faith",   name: "Leap of Faith",     icon: "Flame",        tier: "tier3", description: "Your first Extreme adventure. No turning back now.",                  rule: { kind: "flag", flag: "extreme", hint: "Log an Extreme adventure" } },
   { id: "window-shopper",  name: "Window Shopper",    icon: "Compass",      tier: "tier3", description: "First adventure wishlisted. The dreaming has begun.",                 rule: { kind: "count", stat: "wishlisted", need: 1 } },
   { id: "dream-collector", name: "Dream Collector",   icon: "Heart",        tier: "tier3", description: "10 adventures wishlisted. The bucket list is getting serious.",       rule: { kind: "count", stat: "wishlisted", need: 10 } },
-  { id: "rotten-tomato",   name: "Rotten Tomato",     icon: "Star",         tier: "tier3", description: "Your first review. Your voice shapes the adventure community.",      rule: { kind: "count", stat: "reviews", need: 1 } },
-  { id: "gossip-girl",     name: "Gossip Girl",       icon: "PenLine",      tier: "tier3", description: "5 reviews written. Everyone reads what you post. XOXO.",              rule: { kind: "count", stat: "reviews", need: 5 } },
+  { id: "rotten-tomato",   name: "First Verdict",     icon: "Star",         tier: "tier3", description: "Your first review. Your voice shapes the adventure community.",      rule: { kind: "count", stat: "reviews", need: 1 } },
+  { id: "gossip-girl",     name: "Trail Correspondent", icon: "PenLine",      tier: "tier3", description: "5 reviews written. Everyone reads what you post.",              rule: { kind: "count", stat: "reviews", need: 5 } },
   { id: "shutter-bug",     name: "Shutter Bug",       icon: "Camera",       tier: "tier3", description: "Your first adventure photo. Every adventure deserves proof.",         rule: { kind: "count", stat: "photos", need: 1 } },
-  { id: "peter-parker",    name: "Peter Parker",      icon: "Aperture",     tier: "tier3", description: "5 adventure photos. The Daily Bugle would like a word.",              rule: { kind: "count", stat: "photos", need: 5 } },
-  { id: "singin-in-the-rain", name: "Singin' in the Rain", icon: "CloudRain", tier: "tier3", secret: true, description: "An adventure in the monsoon, July or August. Just singin' in the rain.", rule: { kind: "flag", flag: "monsoon", hint: "Log an adventure done in July or August" } },
-  { id: "frozen",          name: "Frozen",            icon: "Snowflake",    tier: "tier3", secret: true, description: "An adventure in the depths of winter. The cold never bothered you anyway.", rule: { kind: "flag", flag: "winter", hint: "Log an adventure done in December, January or February" } },
-  { id: "dark-knight",     name: "The Dark Knight",   icon: "Moon",         tier: "tier3", secret: true, description: "Logged an adventure between midnight and 4am. The night is darkest just before the dawn.", rule: { kind: "flag", flag: "nightOwl", hint: "Log an adventure between midnight and 4am" } },
-  { id: "groundhog-day",   name: "Groundhog Day",     icon: "Repeat",       tier: "tier3", secret: true, description: "Wishlisted an adventure you've already done. Once wasn't enough.", rule: { kind: "flag", flag: "groundhog", hint: "Wishlist an adventure you've already done" } },
-  { id: "back-to-the-future", name: "Back to the Future", icon: "History", tier: "tier3", secret: true, description: "Logged an adventure from five or more years ago. Great Scott!", rule: { kind: "flag", flag: "throwback", hint: "Log an adventure you did 5 or more years ago" } },
-  { id: "fast-and-furious", name: "Fast & Furious",   icon: "FastForward",  tier: "tier3", secret: true, description: "Three adventures in a single month. Family, and a very full calendar.", rule: { kind: "flag", flag: "busyMonth", hint: "Log 3 adventures done in the same month" } },
+  { id: "peter-parker",    name: "Trail Photographer", icon: "Aperture",     tier: "tier3", description: "5 adventure photos. Your camera comes on every trip.",              rule: { kind: "count", stat: "photos", need: 5 } },
+  { id: "singin-in-the-rain", name: "Monsoon Walker", icon: "CloudRain", tier: "tier3", secret: true, description: "An adventure in the monsoon, July or August. Rain gear on, and out anyway.", rule: { kind: "flag", flag: "monsoon", hint: "Log an adventure done in July or August" } },
+  { id: "frozen",          name: "Deep Winter",       icon: "Snowflake",    tier: "tier3", secret: true, description: "An adventure in the depths of winter. Snow on the trail, frost on the tent.", rule: { kind: "flag", flag: "winter", hint: "Log an adventure done in December, January or February" } },
+  { id: "dark-knight",     name: "Night Owl",         icon: "Moon",         tier: "tier3", secret: true, description: "Logged an adventure between midnight and 4am. Logged at the hour most people sleep.", rule: { kind: "flag", flag: "nightOwl", hint: "Log an adventure between midnight and 4am" } },
+  { id: "groundhog-day",   name: "Encore",            icon: "Repeat",       tier: "tier3", secret: true, description: "Wishlisted an adventure you've already done. Once wasn't enough.", rule: { kind: "flag", flag: "groundhog", hint: "Wishlist an adventure you've already done" } },
+  { id: "back-to-the-future", name: "Throwback", icon: "History", tier: "tier3", secret: true, description: "Logged an adventure from five or more years ago. Old stories count too.", rule: { kind: "flag", flag: "throwback", hint: "Log an adventure you did 5 or more years ago" } },
+  { id: "fast-and-furious", name: "Full Calendar",    icon: "FastForward",  tier: "tier3", secret: true, description: "Three adventures in a single month. A very full calendar.", rule: { kind: "flag", flag: "busyMonth", hint: "Log 3 adventures done in the same month" } },
 ];
 
 /** Every badge, rarest tier first */

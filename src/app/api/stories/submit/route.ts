@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { saveStoryToStorage } from "@/lib/stories";
-import { rateLimit, getClientIp } from "@/lib/rateLimit";
+import { rateLimitShared, getClientIp } from "@/lib/rateLimit";
 import { z } from "zod";
 import { STORY_ACTIVITIES } from "@/lib/storyView";
 
@@ -42,7 +42,7 @@ function calcTags(title: string, excerpt: string, region: string, activity?: str
 }
 
 export async function POST(req: NextRequest) {
-  const { allowed, retryAfterMs } = rateLimit(`story-submit:${getClientIp(req)}`, 5, 30 * 60_000);
+  const { allowed, retryAfterMs } = await rateLimitShared(`story-submit:${getClientIp(req)}`, 5, 30 * 60_000);
   if (!allowed) {
     return NextResponse.json(
       { error: "Too many submissions. Please try again later." },

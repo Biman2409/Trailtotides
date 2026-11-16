@@ -163,6 +163,10 @@ export default function OperatorsClient({ cards, allTypes, allStates, stats, isO
                 </button>
               </div>
             </div>
+            {/* What the badge does and doesn't promise, said once where people filter by it */}
+            <p className="text-[12.5px] leading-snug max-w-[70ch]" style={{ color: "var(--text-tertiary)" }}>
+              <span style={{ color: "var(--accent-green)", fontWeight: 600 }}>Verified</span> means our team has reviewed the operator&apos;s listing on Trail to Tides. It isn&apos;t a safety certification: before you book, ask about their registration, insurance, leader training and safety record.
+            </p>
 
             {/* Type chips */}
             <LayoutGroup id="op-types">

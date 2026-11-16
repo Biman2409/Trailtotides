@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { bytesMatchType } from "@/lib/imageSniff";
 import { createClient } from "@supabase/supabase-js";
-import { rateLimit, getClientIp } from "@/lib/rateLimit";
+import { rateLimitShared, getClientIp } from "@/lib/rateLimit";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -13,7 +13,7 @@ const MAX_SIZE = 8 * 1024 * 1024; // 8MB
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 export async function POST(req: NextRequest) {
-  const { allowed, retryAfterMs } = rateLimit(`story-upload:${getClientIp(req)}`, 15, 30 * 60_000);
+  const { allowed, retryAfterMs } = await rateLimitShared(`story-upload:${getClientIp(req)}`, 15, 30 * 60_000);
   if (!allowed) {
     return NextResponse.json(
       { error: "Too many uploads. Please try again later." },

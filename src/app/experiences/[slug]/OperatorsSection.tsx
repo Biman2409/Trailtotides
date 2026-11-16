@@ -297,7 +297,7 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
           </button>
         )}
         <p className="text-[12px] leading-relaxed" style={muted}>
-          Highlighted: the best value in each row. &ldquo;Full trip&rdquo; is the fee with the GST each operator states, plus their transport from the pick-up city when it&apos;s a paid extra; columns run cheapest first.
+          Highlighted: the best value in each row. &ldquo;Full trip&rdquo; is the fee with the GST each operator states, plus their transport from the pick-up city when it&apos;s a paid extra; columns run cheapest first. Verified: our team has reviewed the listing; it isn&apos;t a safety certification.
           {checked ? ` Prices and inclusions read from each operator's own page, last checked ${formatDate(checked)}; confirm with them before you book.` : " Confirm prices and dates with the operator before you book."}
           {travellers.some(Boolean) ? " Travellers: ratings from Trail to Tides users who went with that operator." : ""}
         </p>

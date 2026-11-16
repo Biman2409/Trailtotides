@@ -9,6 +9,7 @@ import { CAPABILITY_QUESTIONS } from "../src/lib/matchmakerQuestions";
 import { AXES, bucketFor, gapsFor, groupMatches, groupFloor, decodeMembers, trainingTip, TRAINING_TIPS, weeksToReady, creditFromTrips } from "../src/lib/fitness";
 import { getTierLabel, TIER_LIST } from "../src/lib/tiers";
 import { XP_TIERS, MAX_XP, xpFromEvents, getTier as getXpTier, getProgressPct } from "../src/lib/xp";
+import { ALL_BADGES } from "../src/lib/achievements";
 
 const flat = (n: number): ACE => Object.fromEntries(AXES.map((a) => [a, n])) as unknown as ACE;
 const withAxis = (base: number, axis: keyof ACE, v: number): ACE => ({ ...flat(base), [axis]: v });
@@ -281,6 +282,15 @@ test("XP: tiers ascend, every cap filled is exactly the maximum, and revoked eve
   assert.equal(xpFromEvents([{ action: "review", revoked: true }]), 0);
   assert.equal(getXpTier(0).name, XP_TIERS[0].name);
   assert.equal(getProgressPct(MAX_XP), 100);
+});
+
+test("badges: ids and names are unique, and the renamed ones kept their ids", () => {
+  const ids = ALL_BADGES.map((b) => b.id);
+  const names = ALL_BADGES.map((b) => b.name);
+  assert.equal(new Set(ids).size, ids.length);
+  assert.equal(new Set(names).size, names.length);
+  for (const id of ["over-9000", "first-blood", "dora-explorer", "indiana-jones", "run-forrest-run"]) assert.ok(ids.includes(id), id);
+  assert.equal(ALL_BADGES.find((b) => b.id === "over-9000")!.name, "Over 9000 Club");
 });
 
 test("XP levels are the eight from the brief, Drifter to Immortal, and Immortal is the maximum", () => {

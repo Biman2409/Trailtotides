@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
-import { rateLimit, getClientIp } from "@/lib/rateLimit";
+import { rateLimitShared, getClientIp } from "@/lib/rateLimit";
 import { z } from "zod";
 
 type Comment = {
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Sign in to comment" }, { status: 401 });
 
-  const { allowed, retryAfterMs } = rateLimit(`story-comment:${user.id}:${getClientIp(req)}`, 10, 5 * 60_000);
+  const { allowed, retryAfterMs } = await rateLimitShared(`story-comment:${user.id}:${getClientIp(req)}`, 10, 5 * 60_000);
   if (!allowed) {
     return NextResponse.json(
       { error: "Too many comments. Please slow down." },

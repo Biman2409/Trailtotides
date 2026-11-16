@@ -56,6 +56,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Turbopack (npm run dev) doesn't always apply images.loaderFile on its own, and every
+  // <Image> then failed with "missing loader prop"; point it at the loader explicitly
+  turbopack: {
+    resolveAlias: {
+      "next/dist/shared/lib/image-loader": "./src/lib/imageLoader.ts",
+    },
+  },
   // Compress responses
   compress: true,
 } as NextConfig;

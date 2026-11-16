@@ -82,12 +82,12 @@ a { color: var(--accent); }
     <div class="tile"><b><s>297</s>0</b><span>people rated "Ready" despite being 3+ levels short on one axis (of 2,832 test pairs)</span></div>
     <div class="tile"><b><s>31</s>0</b><span>adventures shown at two different difficulties on different pages (of 59)</span></div>
     <div class="tile"><b><s>47</s>0</b><span>adventures whose card "from" price differed from their own page's (of 54 priced)</span></div>
-    <div class="tile"><b><s>0</s>52</b><span>automated tests on scoring, groups, data, prices, filters and uploads (all passing)</span></div>
+    <div class="tile"><b><s>0</s>53</b><span>automated tests on scoring, groups, data, prices, filters and uploads (all passing)</span></div>
   </div>
   <div class="callout">
-    <p><strong>Production readiness:</strong> ready to deploy after your approval. Type-check, lint, the full production build and all 52 tests pass.</p>
+    <p><strong>Production readiness:</strong> ready to deploy after your approval. Type-check, lint, the full production build and all 53 tests pass.</p>
     <p><strong>Since fixed (section 11):</strong> difficulty bands recalibrated, all 10 estimated ACE profiles hand-set, XP levels renamed to match the brief, story comments secured.</p>
-    <p><strong>Still needing you:</strong> what "verified operator" means, and whether to keep the pop-culture badge names.</p>
+    <p><strong>Still needing you:</strong> running one database migration (shared rate limits), and formal criteria for "verified" if you want more than "reviewed".</p>
   </div>
 </section>
 
@@ -319,7 +319,18 @@ a { color: var(--accent); }
       <tr><td>Group alternatives</td><td>Recommended earlier</td><td>Already covered: the group page lists every adventure all members are ready for, and each stretch names who it's a stretch for and what they need.</td><td><span class="chip PASS">PASS</span></td></tr>
     </tbody>
   </table></div>
-  <p class="meta">Not done, and why: the in-memory rate limiter needs a shared store (Supabase table or KV) and is infrastructure work. Structured permit data needs research per trek. The Turbopack dev server still fails on the image loader; the webpack dev server works.</p>
+  <h3>Fourth pass</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Item</th><th>What changed</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Live site after deploy</td><td>Checked in a browser: Kedarkantha shows Moderate and ₹12,475, Manali–Leh shows Hard, the altitude guide has the CDC fixes.</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Badge names</td><td>All borrowed film, character and brand names replaced with original ones (Long Hauler, Sure-Footed, Field Legend, First Footsteps, Region Hopper, Night Owl and so on). Descriptions quoting films or songs were rewritten. Badge ids are unchanged, so earned badges carry over. "Marco Polo" (a historical figure) and "Leap of Faith" (an ordinary phrase) stay.</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>What "verified" means</td><td>Stated on the Operators page and under the compare table: our team has reviewed the operator's listing; it isn't a safety certification, so ask about registration, insurance, leader training and safety record. Tighten the wording when you set formal criteria.</td><td><span class="chip FIXED">FIXED</span> · criteria yours</td></tr>
+      <tr><td>Rate limit across servers</td><td>Compass.AI, uploads, comments and story submissions now count in a shared database table, after a per-server check. Until the migration <span class="mono">20261116000000_create_rate_limits.sql</span> is run, they fall back to the per-server count, so nothing breaks.</td><td><span class="chip BLOCKED">BLOCKED</span> migration to run</td></tr>
+      <tr><td>Turbopack dev server</td><td>It returned 500 on every page with an image. Turbopack is now pointed at the custom image loader; pages load and images use the Supabase resize URLs.</td><td><span class="chip FIXED">FIXED</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">Not done: structured permit data per trek. It needs researched, sourced and dated permit facts for each of the 59 adventures; the guides and Compass.AI already say to confirm permits locally.</p>
 </section>
 
 <section>
@@ -347,7 +358,7 @@ a { color: var(--accent); }
       <tr><td>Account deletion leaves nothing behind (4 accounts, group, reviews, files)</td><td class="num">9</td><td><span class="chip PASS">PASS</span></td></tr>
     </tbody>
   </table></div>
-  <p class="meta">Run <span class="mono">npm test</span> to repeat the 52 tests. After any operator import, run <span class="mono">node --import ./tests/register.mjs scripts/build-lead-prices.ts</span>; a test fails if you forget. Nothing is committed or deployed; production goes out only with your approval.</p>
+  <p class="meta">Run <span class="mono">npm test</span> to repeat the 53 tests. After any operator import, run <span class="mono">node --import ./tests/register.mjs scripts/build-lead-prices.ts</span>; a test fails if you forget. Nothing is committed or deployed; production goes out only with your approval.</p>
 </section>
 
 </div>

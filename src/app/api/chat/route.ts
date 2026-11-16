@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { adventures } from "@/lib/data";
 import type { AdventureType } from "@/lib/data";
-import { rateLimit, getClientIp } from "@/lib/rateLimit";
+import { rateLimitShared, getClientIp } from "@/lib/rateLimit";
 import { getACE, computeDifficulty, computeMatchScore, READY_MIN, STRETCH_MIN, type ACE } from "@/lib/ace";
 import { stripEmphasis } from "@/lib/emphasis";
 import { nextSteps, trainingTip, AXIS_LABEL } from "@/lib/fitness";
@@ -583,7 +583,7 @@ const MAX_TURNS = 12;
 const MAX_CHARS = 1500;
 
 export async function POST(req: NextRequest) {
-  const { allowed, retryAfterMs } = rateLimit(`chat:${getClientIp(req)}`, 20, 5 * 60_000);
+  const { allowed, retryAfterMs } = await rateLimitShared(`chat:${getClientIp(req)}`, 20, 5 * 60_000);
   if (!allowed) {
     return NextResponse.json(
       { error: "Too many messages. Please slow down and try again shortly." },
