@@ -10,6 +10,7 @@ import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/rateLimit";
+import { adventures } from "@/lib/data";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,6 +20,7 @@ const admin = createClient(
 const BUCKET = "adventure-photos";
 const MAX_SIZE = 8 * 1024 * 1024; // 8MB
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/heic"];
+const EXT_FOR_TYPE: Record<string, string> = { "image/jpeg": "jpg", "image/jpg": "jpg", "image/png": "png", "image/webp": "webp", "image/heic": "heic" };
 
 interface PhotoMeta {
   id: string;
@@ -95,12 +97,15 @@ export async function POST(req: NextRequest) {
   const caption = (form.get("caption") as string | null)?.trim() ?? "";
 
   if (!file || !slug) return NextResponse.json({ error: "Missing file or slug" }, { status: 400 });
+  // The slug becomes the storage folder: only a real adventure's slug is accepted
+  if (!adventures.some((a) => a.slug === slug)) return NextResponse.json({ error: "Unknown adventure" }, { status: 400 });
   if (file.size > MAX_SIZE) return NextResponse.json({ error: "File too large (max 8MB)" }, { status: 400 });
   if (!ALLOWED_TYPES.includes(file.type)) return NextResponse.json({ error: "Unsupported file type" }, { status: 400 });
 
   await ensureBucket();
 
-  const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
+  // Extension from the checked file type, never from the uploaded file's name
+  const ext = EXT_FOR_TYPE[file.type] ?? "jpg";
   const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
   const path = `${slug}/${id}.${ext}`;
   const bytes = await file.arrayBuffer();

@@ -100,6 +100,9 @@ export default function SearchModal({ open, onClose }: Props) {
       {/* Modal */}
       <div className="fixed inset-0 z-[1004] flex items-start justify-center pt-[15vh] px-4">
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Search Trail to Tides"
           className="w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden"
           style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}
         >

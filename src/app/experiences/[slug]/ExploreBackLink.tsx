@@ -11,10 +11,11 @@ function BackLink({ slug, page }: { slug: string; page: number }) {
   return (
     <Link
       href={`/explore?page=${page}&scroll=${slug}`}
+      aria-label="All Adventures"
       className="absolute top-20 left-5 lg:left-8 z-20 flex items-center gap-2 text-white/60 hover:text-white transition-all text-sm font-medium backdrop-blur-md px-3 sm:px-4 py-2 rounded-full"
       style={{ background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.12)" }}
     >
-      <ChevronLeft className="w-4 h-4" />
+      <ChevronLeft className="w-4 h-4" aria-hidden />
       <span className="hidden sm:inline">All Adventures</span>
     </Link>
   );

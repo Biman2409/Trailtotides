@@ -54,9 +54,7 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, priceIsF
     };
   }, []);
 
-  // Mirrors RecalibrationNudge's staleness check — this was the original
-  // gap: mobile is the primary last-mile booking surface, so the nudge
-  // shouldn't only live below the fold in the desktop-style banner.
+  // Nudge people whose ACE profile is out of date to refresh it before they book
   useEffect(() => {
     loadProfileFromServer().then((profile) => {
       if (!profile) return;
@@ -81,6 +79,7 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, priceIsF
   return (
     <div
       aria-hidden={!visible}
+      inert={!visible || undefined}
       className={`lg:hidden fixed bottom-0 left-0 right-0 z-[999] transition-all duration-300 ease-out ${
         visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
       }`}

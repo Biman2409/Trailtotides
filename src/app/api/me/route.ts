@@ -17,7 +17,12 @@ export async function PATCH(req: Request) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const body = await req.json();
+  const body = await req.json().catch(() => null);
+  if (!body || typeof body !== "object") return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  // A preset avatar is a small whole number (or null for the default badge); nothing else is stored
+  if (body.avatar_id !== undefined && body.avatar_id !== null && !(Number.isInteger(body.avatar_id) && body.avatar_id >= 0 && body.avatar_id < 1000)) {
+    return NextResponse.json({ error: "Invalid avatar" }, { status: 400 });
+  }
   const avatar_id = body.avatar_id !== undefined ? body.avatar_id : user.user_metadata?.avatar_id;
   // Picking a preset character (or the default rank badge) supersedes any
   // uploaded photo — the two are mutually exclusive, whichever was set last.

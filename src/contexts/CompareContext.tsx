@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { adventures, type Adventure } from "@/lib/data";
+import type { Adventure } from "@/lib/data";
 
 const MAX = 3;
 
@@ -28,12 +28,20 @@ export function CompareProvider({ children }: { children: ReactNode }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
+    let stored: Pick<Adventure, "id">[] = [];
     try {
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]") as Pick<Adventure, "id">[];
-      // Match saved entries to today's data, so prices and details are never a stale copy
+      stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
+    } catch { /* unreadable storage: start empty */ }
+    if (!Array.isArray(stored) || !stored.length) return;
+    // Match saved entries to today's data, so prices and details are never a stale copy. The data
+    // is loaded only when there's a saved compare, keeping it out of every page's first download.
+    let live = true;
+    import("@/lib/data").then(({ adventures }) => {
+      if (!live) return;
       const fresh = stored.map((s) => adventures.find((a) => a.id === s.id)).filter((a): a is Adventure => !!a).slice(0, MAX);
       if (fresh.length) setSelected((prev) => (prev.length ? prev : fresh));
-    } catch { /* unreadable storage: start empty */ }
+    }).catch(() => { /* chunk failed to load: start empty */ });
+    return () => { live = false; };
   }, []);
 
   function add(a: Adventure) {

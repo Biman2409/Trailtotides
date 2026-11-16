@@ -1,3 +1,4 @@
+import { jsonLd as ldJson } from "@/lib/jsonLd";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
@@ -172,7 +173,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
   return (
     <div className="min-h-screen">
       <Navbar />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson(jsonLd) }} />
 
       {/* ── Hero ── */}
       <header className="relative h-[52vh] min-h-[380px] max-h-[560px] overflow-hidden">

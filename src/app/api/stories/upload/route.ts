@@ -36,7 +36,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unsupported file type. Use JPEG, PNG, or WebP." }, { status: 400 });
     }
 
-    const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
+    // Extension from the checked file type, never from the uploaded file's name
+    const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     const path = `${id}.${ext}`;
     const bytes = await file.arrayBuffer();

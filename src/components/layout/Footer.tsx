@@ -1,18 +1,11 @@
-"use client";
-
 import Link from "next/link";
 import { Instagram, Youtube, Twitter, Mail, Linkedin } from "lucide-react";
 import { Mountain } from "@/lib/localIcons";
-import { motion } from "framer-motion";
 import { tm } from "@/lib/tm";
 
 export default function Footer() {
   return (
-    <motion.footer
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+    <footer
       className="relative overflow-hidden pb-20 lg:pb-0" style={{ background: "var(--bg-page)", borderTop: "1px solid var(--border-subtle)", color: "var(--text-primary)" }}>
       {/* Subtle Gradient Accent — rust fading into pine, the brand duo */}
       <div className="absolute top-0 left-0 w-full h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.2) 35%, rgba(74,222,128,0.16) 65%, transparent)" }} />
@@ -41,9 +34,9 @@ export default function Footer() {
               <div className="grid grid-cols-2 gap-6 lg:gap-12">
                 {/* 2. Platform */}
                 <div className="space-y-5">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] opacity-90">
+                  <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] opacity-90">
                     Platform
-                  </h4>
+                  </h2>
                   <ul className="space-y-4">
                     {[
                       { label: "Explore", href: "/explore" },
@@ -69,9 +62,9 @@ export default function Footer() {
 
                 {/* 3. Company + Legal */}
                 <div className="space-y-5">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] opacity-90">
+                  <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] opacity-90">
                     Company
-                  </h4>
+                  </h2>
                   <ul className="space-y-4">
                     {[
                       { label: "About", href: "/about" },
@@ -97,9 +90,9 @@ export default function Footer() {
             <div className="space-y-8 lg:space-y-10">
               {/* 1. About Us */}
               <div className="space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] opacity-90">
+                <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] opacity-90">
                   About Us
-                </h4>
+                </h2>
                 <div className="max-w-md">
                   <p className="text-sm font-medium leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
                     We&apos;re three IIM alumni united by one obsession: Adventure.
@@ -110,9 +103,9 @@ export default function Footer() {
 
               {/* 2. Contact Us */}
               <div className="space-y-5">
-                <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] opacity-90">
+                <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] opacity-90">
                   Contact Us
-                </h4>
+                </h2>
                 <div className="inline-flex flex-col items-stretch gap-5">
                   <a
                     href="mailto:hello@trailtotides.com"
@@ -158,6 +151,6 @@ export default function Footer() {
       {/* Background Decor */}
       <div className="absolute bottom-0 right-0 w-[60%] h-[80%] bg-[#ff5100]/[0.02] blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute top-0 left-0 w-[45%] h-[60%] bg-[#4ade80]/[0.02] blur-[150px] rounded-full pointer-events-none" />
-    </motion.footer>
+    </footer>
   );
 }

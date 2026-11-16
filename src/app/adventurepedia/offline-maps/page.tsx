@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import Link from "next/link";
 import { Suspense, type ReactNode } from "react";
 import Navbar from "@/components/layout/Navbar";
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
   title: "Adventurepedia: Trek GPX Trails, Offline",
   description: "Download a trek's GPX trail, load it into Organic Maps, OsmAnd or Gaia GPS on Android or iPhone, and follow it with no signal. Plus GPS watches and troubleshooting.",
   alternates: { canonical: `${SITE}/adventurepedia/offline-maps` },
-  openGraph: { title: "Adventurepedia: Take your trek offline", url: `${SITE}/adventurepedia/offline-maps`, type: "article" },
+  openGraph: { title: "Adventurepedia: Take your trek offline", url: `${SITE}/adventurepedia/offline-maps`, type: "article", images: [DEFAULT_OG_IMAGE] },
 };
 
 // ── Building blocks ──────────────────────────────────────────────────────────

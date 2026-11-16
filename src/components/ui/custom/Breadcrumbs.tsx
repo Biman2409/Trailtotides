@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { jsonLd } from "@/lib/jsonLd";
 import { ChevronRight, Home } from "lucide-react";
 
 interface Crumb {
@@ -31,7 +32,7 @@ export function breadcrumbStructuredData(items: Crumb[]) {
 export default function Breadcrumbs({ items }: Props) {
   return (
     <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs py-3 px-5 lg:px-8 max-w-7xl mx-auto w-full">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData(items)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbStructuredData(items)) }} />
       <Link
         href="/"
         className="flex items-center gap-1 hover:text-[#ff5100] transition-colors"

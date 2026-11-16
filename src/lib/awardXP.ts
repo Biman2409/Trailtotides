@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { XP_LABELS, type XPAction } from "@/lib/xp";
-import { ALL_BADGES, type Achievement } from "@/lib/achievements";
+import type { Achievement } from "@/lib/achievements";
 
 // Before badges were tracked on the account, each browser kept its own list of the ones
 // it had announced. It's sent once to seed the account's list, then dropped.
@@ -31,6 +31,10 @@ async function checkNewTrophies(): Promise<Achievement[]> {
     if (!res.ok) return [];
     if (known) { try { localStorage.removeItem(LEGACY_EARNED_KEY); } catch {} }
     const { newIds } = (await res.json()) as { newIds: string[] };
+    if (!newIds?.length) return [];
+    // Loaded only when there is a badge to announce: the badge list pulls in all the adventure
+    // data, and this module is part of every page (the trip log and wishlist use it)
+    const { ALL_BADGES } = await import("@/lib/achievements");
     return ALL_BADGES.filter((b) => newIds.includes(b.id));
   } catch { return []; }
 }

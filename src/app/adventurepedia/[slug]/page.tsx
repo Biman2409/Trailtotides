@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, ChevronRight, Clock, Search, Stethoscope } from "lucide-react";
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${g.short}: Adventurepedia`,
     description: g.summary,
     alternates: { canonical: url },
-    openGraph: { title: `${g.title} — Adventurepedia`, description: g.summary, url, type: "article" },
+    openGraph: { title: `${g.title} — Adventurepedia`, description: g.summary, url, type: "article", images: [DEFAULT_OG_IMAGE] },
   };
 }
 

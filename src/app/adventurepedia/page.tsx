@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { GUIDES, TOPICS, readMinutes, searchIndex } from "@/lib/adventurepedia";
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
   title: "Adventurepedia: Guides to Adventure in India",
   description: "Guides to every adventure in India, from trekking and rafting to diving, paragliding and skiing, plus every trek and the essentials, from altitude to permits.",
   alternates: { canonical: `${SITE}/adventurepedia` },
-  openGraph: { title: "Adventurepedia — Trail to Tides", url: `${SITE}/adventurepedia`, type: "website" },
+  openGraph: { title: "Adventurepedia — Trail to Tides", url: `${SITE}/adventurepedia`, type: "website", images: [DEFAULT_OG_IMAGE] },
 };
 
 export default function Adventurepedia() {

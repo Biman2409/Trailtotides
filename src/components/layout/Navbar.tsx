@@ -11,7 +11,7 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useCompare, MAX } from "@/contexts/CompareContext";
 import { useWishlist } from "@/contexts/WishlistContext";
-import { adventures } from "@/lib/data";
+import type { Adventure } from "@/lib/data";
 import NavAvatar from "@/components/ui/custom/NavAvatar";
 import ThemeToggleButton from "@/components/ui/custom/ThemeToggleButton";
 import SearchModal from "@/components/ui/custom/SearchModal";
@@ -50,7 +50,16 @@ export default function Navbar() {
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const wishlistRef = useRef<HTMLDivElement>(null);
   const [wishlistCopied, setWishlistCopied] = useState(false);
-  const savedList = adventures.filter(a => saved.has(a.slug));
+  // The adventure data is loaded only once something is saved, keeping it out of every page's
+  // first download (most visitors have an empty wishlist)
+  const [allAdventures, setAllAdventures] = useState<Adventure[] | null>(null);
+  useEffect(() => {
+    if (!saved.size || allAdventures) return;
+    let live = true;
+    import("@/lib/data").then((m) => { if (live) setAllAdventures(m.adventures); }).catch(() => {});
+    return () => { live = false; };
+  }, [saved.size, allAdventures]);
+  const savedList = (allAdventures ?? []).filter(a => saved.has(a.slug));
 
   // Auth state
   useEffect(() => {
@@ -531,6 +540,7 @@ export default function Navbar() {
             className="lg:hidden p-2 rounded-lg transition-colors"
             style={{ color: isTransparent ? "#fff" : "var(--text-primary)" }}
             aria-label="Toggle menu"
+            aria-expanded={menuOpen}
           >
             <span className="block transition-all duration-300" style={{ transform: menuOpen ? "rotate(90deg)" : "rotate(0deg)" }}>
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -545,6 +555,7 @@ export default function Navbar() {
         className={`lg:hidden overflow-y-auto transition-all duration-300 ease-out ${menuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"}`}
         style={{ maxHeight: menuOpen ? "calc(100dvh - 64px)" : 0 }}
         aria-hidden={!menuOpen || undefined}
+        inert={!menuOpen || undefined}
       >
         <div className="px-4 pt-3 pb-5 space-y-3" style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}>
           {/* Search first: it's the quickest way anywhere */}

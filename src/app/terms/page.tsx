@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Terms of Service",
   description: "Trail to Tides terms of service — the rules and guidelines for finding, comparing and booking adventures on Trail to Tides.",
   alternates: { canonical: "https://www.trailtotides.com/terms" },
-  robots: { index: true, follow: false },
+  robots: { index: true, follow: true },
 };
 
 const SECTIONS = [

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { jsonLd } from "@/lib/jsonLd";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ShieldCheck, Star, ArrowRight } from "lucide-react";
@@ -90,7 +91,7 @@ export default async function OperatorPage({ params }: Props) {
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
       <ScrollToTop />
       <Navbar />
 

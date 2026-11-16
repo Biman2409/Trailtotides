@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { jsonLd } from "@/lib/jsonLd";
 import { DM_Sans, Fraunces, Great_Vibes, Caveat, Permanent_Marker } from "next/font/google";
 import "./globals.css";
 import CompareWrapper from "@/components/ui/custom/CompareWrapper";
@@ -178,7 +179,7 @@ export default function RootLayout({
           id="org-structured-data"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
+            __html: jsonLd([
               {
                 "@context": "https://schema.org",
                 "@type": "Organization",

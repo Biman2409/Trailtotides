@@ -146,7 +146,7 @@ export function WeatherDetails({ weather, lat, lng, locationName, altitude, isBa
   const { resolvedTheme } = useTheme();
   // resolvedTheme is unknown to the server. Treating "unknown" as dark baked dark colours into
   // the static HTML, and React keeps server attributes on hydration, so the widget could stay
-  // dark in the light theme. Stay light until mounted, then switch (as OperatorListingPanel does).
+  // dark in the light theme. Stay light until mounted, then switch.
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const isDark = mounted && resolvedTheme !== "light";

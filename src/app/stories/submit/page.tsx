@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import SubmitClient from "./SubmitClient";
 import { adventures } from "@/lib/data";
 
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
     title: "Submit Your Adventure Story — Trail to Tides",
     description: "Share your adventure with the Trail to Tides community.",
     url: "https://www.trailtotides.com/stories/submit",
+    images: [DEFAULT_OG_IMAGE],
   },
   alternates: { canonical: "https://www.trailtotides.com/stories/submit" },
   robots: { index: false },

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { jsonLd } from "@/lib/jsonLd";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -56,7 +57,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const story = await getStoryBySlug(slug);
-  if (!story) return {};
+  // Deciding here, before the page streams, makes a missing story a real 404 (not a 200)
+  if (!story) notFound();
   const s = mapStory(story);
   // Search results show about 160 characters; cut at a word, not mid-word
   const description = s.excerpt.length <= 160 ? s.excerpt : `${s.excerpt.slice(0, 157).replace(/\s+\S*$/, "")}…`;
@@ -227,7 +229,7 @@ export default async function StoryPage({ params }: Props) {
     <div className="min-h-screen">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(articleStructuredData) }}
       />
       <ReadingProgressBar targetId="story-article" />
       <ScrollToTop />

@@ -3,6 +3,9 @@ import type { Adventure } from "@/lib/data";
 import { inr } from "@/lib/destinations";
 
 export const SITE_URL = "https://www.trailtotides.com";
+/** The site-wide share image. A page that sets its own openGraph must list it again, since
+ *  Next.js replaces the whole openGraph object rather than merging it. */
+export const DEFAULT_OG_IMAGE = { url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630, alt: "Trail to Tides" };
 const BRAND = " | Trail to Tides";
 // Google shows about 60 characters of a title and 160 of a description
 const TITLE_MAX = 60;

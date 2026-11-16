@@ -2,8 +2,15 @@
 
 import { X, GitCompareArrows } from "lucide-react";
 import { useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useCompare, MAX } from "@/contexts/CompareContext";
-import CompareContent from "./CompareContent";
+
+// The drawer is in every page's layout but opens rarely: load its content (and the adventure
+// data it needs) only when it opens, so it stays out of every page's first download
+const CompareContent = dynamic(() => import("./CompareContent"), {
+  ssr: false,
+  loading: () => <p className="text-sm py-8 text-center" style={{ color: "var(--text-tertiary)" }}>Loading…</p>,
+});
 
 export default function CompareDrawer() {
   const { selected, clear, drawerOpen, closeDrawer } = useCompare();
@@ -30,6 +37,9 @@ export default function CompareDrawer() {
 
       {/* Panel */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Compare adventures"
         className="relative h-full w-full sm:w-[560px] max-w-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-300 ease-out"
         style={{ background: "var(--bg-page)", borderLeft: "1px solid var(--border-subtle)" }}
       >

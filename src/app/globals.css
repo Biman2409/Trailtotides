@@ -177,7 +177,8 @@
   /* Text */
   --text-primary:   #f0ede8;
   --text-secondary: rgba(240,237,232,0.6);
-  --text-tertiary:  rgba(240,237,232,0.45);
+  /* 0.56 keeps small grey labels above WCAG AA contrast (4.5:1) on the darkest surfaces */
+  --text-tertiary:  rgba(240,237,232,0.56);
   --accent-ink:      #ff5100;
   --accent-ink-soft: #ff7d47;
   --text-muted:     rgba(240,237,232,0.2);

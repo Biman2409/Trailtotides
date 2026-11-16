@@ -103,7 +103,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, mo
       </div>
 
       {peek && !open && (
-        <button type="button" onClick={toggle} aria-label={`Expand ${title}`} className="block w-full text-left">{peek}</button>
+        <button type="button" onClick={toggle} aria-expanded={false} className="block w-full text-left">{peek}</button>
       )}
 
       <div className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>

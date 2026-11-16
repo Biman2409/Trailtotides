@@ -40,6 +40,7 @@ import { haversineKm } from "@/lib/geo";
 import { sortOps, leadPrice } from "@/lib/operatorRank";
 import { destinationFor, lowestPrice } from "@/lib/destinations";
 import { SITE_URL, absoluteUrl, routeLabel, experienceTitle, experienceDescription, experienceFaq, faqStructuredData } from "@/lib/seo";
+import { jsonLd } from "@/lib/jsonLd";
 import { breadcrumbStructuredData } from "@/components/ui/custom/Breadcrumbs";
 import FitLists from "./FitLists";
 import { getSeasonUrgency } from "@/lib/seasonUrgency";
@@ -378,7 +379,7 @@ export default async function ExperiencePage({ params }: Props) {
     <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }}
       />
       <MobileBookBar
         adventureName={adventure.name}

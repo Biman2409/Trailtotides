@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
   title: "Trek Guides: Itineraries, Seasons and Permits",
   description: "Detailed guides to Himalayan treks in India and Nepal: day-by-day itineraries, best season, how to get there, permits, packing, fitness and costs.",
   alternates: { canonical: `${SITE}/adventurepedia/treks` },
-  openGraph: { title: "Trek guides — Adventurepedia", url: `${SITE}/adventurepedia/treks`, type: "website" },
+  openGraph: { title: "Trek guides — Adventurepedia", url: `${SITE}/adventurepedia/treks`, type: "website", images: [DEFAULT_OG_IMAGE] },
 };
 
 export default function TrekGuides() {
