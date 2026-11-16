@@ -43,7 +43,7 @@ export default function BookTabs({ operators, dates, operatorCount, dateCount }:
               aria-controls={`book-${t.id}`}
               onClick={() => setTab(t.id)}
               className="rounded-full px-4 py-1.5 text-[13.5px] font-semibold transition-colors"
-              style={{ background: on ? "#ff5100" : "transparent", color: on ? "#fff" : "var(--text-secondary)" }}
+              style={{ background: on ? "#ff5100" : "transparent", color: on ? "#1c1814" : "var(--text-secondary)" }}
             >
               {t.label} <span className="font-normal" style={{ opacity: on ? 0.85 : 0.7 }}>{t.count}</span>
             </button>

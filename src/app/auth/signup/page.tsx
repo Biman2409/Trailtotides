@@ -447,7 +447,7 @@ export default function SignUpPage() {
               type="submit"
               disabled={loading || blocker !== null}
               aria-describedby={blocker ? "signup-blocker" : undefined}
-              className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-[#fff] font-bold rounded-2xl py-3 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-1"
+              className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-[#1c1814] font-bold rounded-2xl py-3 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-1"
             >
               {loading ? "Creating your account…" : "Create free account"}
             </button>

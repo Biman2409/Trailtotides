@@ -142,7 +142,7 @@ export default function TermsModal({ onAccept, onClose }: Props) {
           <button
             onClick={() => { onAccept(); onClose(); }}
             disabled={!hasScrolledToBottom}
-            className="w-full flex items-center justify-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-30 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl text-sm transition-all"
+            className="w-full flex items-center justify-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-30 disabled:cursor-not-allowed text-[#1c1814] font-bold py-3 rounded-xl text-sm transition-all"
           >
             <CheckCircle2 className="w-4 h-4" />
             I have read and agree to the Terms & Privacy Policy

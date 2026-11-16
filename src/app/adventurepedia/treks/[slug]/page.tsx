@@ -222,7 +222,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
               <ul className="space-y-2.5">
                 {tldr.map((t, i) => (
                   <li key={i} className="flex gap-3 text-[15px] leading-[1.6] t-text">
-                    <span className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0 mt-0.5" style={{ background: "#ff5100" }}>{i + 1}</span>
+                    <span className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold text-[#1c1814] shrink-0 mt-0.5" style={{ background: "#ff5100" }}>{i + 1}</span>
                     <span><Rich text={t} /></span>
                   </li>
                 ))}
@@ -254,7 +254,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
                   const on = a.bestMonths.includes(m);
                   return (
                     <div key={m} role="listitem" className="rounded-lg py-2 text-center text-[12.5px] font-semibold"
-                      style={on ? { background: "#ff5100", color: "#fff" } : { background: "var(--bg-surface-2)", color: "var(--text-tertiary)" }}>
+                      style={on ? { background: "#ff5100", color: "#1c1814" } : { background: "var(--bg-surface-2)", color: "var(--text-tertiary)" }}>
                       {m}
                     </div>
                   );
@@ -447,7 +447,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
                       </li>
                     ))}
                   </ul>
-                  <Link href={`/experiences/${a.slug}#book-this-adventure`} className="mt-4 inline-flex items-center gap-1.5 h-11 px-5 rounded-full text-[14px] font-semibold text-white" style={{ background: "#ff5100" }}>
+                  <Link href={`/experiences/${a.slug}#book-this-adventure`} className="mt-4 inline-flex items-center gap-1.5 h-11 px-5 rounded-full text-[14px] font-semibold text-[#1c1814]" style={{ background: "#ff5100" }}>
                     Compare operators side by side <ArrowRight className="w-4 h-4" />
                   </Link>
                   <p className="text-[14px] t-text-3 mt-4">What to ask before you pay: <Link href="/adventurepedia/choosing-an-operator" className="font-semibold underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>Choosing an operator</Link>.</p>
@@ -462,7 +462,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
               <Section id="offline" kicker="Navigation" title="Offline map and GPX">
                 <p className="text-[15px] leading-[1.7] t-text-2 mb-4">Download the trail, with every overnight stop and its height, and load it on your phone before you lose signal.</p>
                 <div className="flex flex-wrap gap-3">
-                  <a href={`/experiences/${a.slug}/trail.gpx`} download={`${a.slug}-trail-to-tides.gpx`} className="inline-flex items-center gap-2 h-11 px-5 rounded-full text-[14px] font-semibold text-white" style={{ background: "#ff5100" }}>
+                  <a href={`/experiences/${a.slug}/trail.gpx`} download={`${a.slug}-trail-to-tides.gpx`} className="inline-flex items-center gap-2 h-11 px-5 rounded-full text-[14px] font-semibold text-[#1c1814]" style={{ background: "#ff5100" }}>
                     <Download className="w-4 h-4" /> Download GPX
                   </a>
                   <Link href={`/adventurepedia/offline-maps?trek=${a.slug}`} className="inline-flex items-center gap-1.5 h-11 px-5 rounded-full text-[14px] font-semibold t-text" style={{ border: "1px solid var(--border-default)" }}>

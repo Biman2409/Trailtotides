@@ -384,7 +384,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                   msg.role === "user" ? (
                     <div key={i} className="flex justify-end">
                       <div
-                        className="max-w-[85%] px-3.5 py-2 rounded-2xl rounded-br-md text-[13.5px] leading-relaxed text-white"
+                        className="max-w-[85%] px-3.5 py-2 rounded-2xl rounded-br-md text-[13.5px] leading-relaxed text-[#1c1814]"
                         style={{ background: "#ff5100" }}
                       >
                         {msg.content}

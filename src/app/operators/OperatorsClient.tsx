@@ -206,7 +206,7 @@ export default function OperatorsClient({ cards, allTypes, allStates, stats, isO
             <div className="text-center py-20 rounded-2xl" style={{ border: "1px dashed var(--border-default)" }}>
               <p className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>No operators match that</p>
               <p className="text-[14px] mt-1" style={{ color: "var(--text-tertiary)" }}>Try another adventure type or location.</p>
-              <button type="button" onClick={clearAll} className="mt-5 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-[14px] font-semibold text-white" style={{ background: "#ff5100" }}>
+              <button type="button" onClick={clearAll} className="mt-5 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-[14px] font-semibold text-[#1c1814]" style={{ background: "#ff5100" }}>
                 Show all operators
               </button>
             </div>
@@ -246,12 +246,12 @@ export default function OperatorsClient({ cards, allTypes, allStates, stats, isO
           </div>
           <div className="relative flex flex-wrap gap-3">
             {isOperator ? (
-              <Link href="/auth/operator-dashboard" className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-[15px] text-white" style={{ background: "#ff5100" }}>
+              <Link href="/auth/operator-dashboard" className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-[15px] text-[#1c1814]" style={{ background: "#ff5100" }}>
                 Manage your listings <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
             ) : (
               <>
-                <Link href="/auth/operator-signup" className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-[15px] text-white" style={{ background: "#ff5100" }}>
+                <Link href="/auth/operator-signup" className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-[15px] text-[#1c1814]" style={{ background: "#ff5100" }}>
                   List your company <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
                 <Link href="/auth/login?role=operator" className="inline-flex items-center px-5 py-3.5 rounded-xl font-semibold text-[15px]" style={{ color: "#fff", border: "1px solid rgba(255,255,255,0.25)" }}>

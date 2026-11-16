@@ -163,7 +163,7 @@ function Chip({ active, onClick, children, count }: { active: boolean; onClick: 
   return (
     <button
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-[12px] font-semibold border whitespace-nowrap shrink-0 transition-colors ${active ? "bg-[#ff5100] border-[#ff5100] text-white" : "t-text-2 hover:text-[var(--text-primary)]"}`}
+      className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-[12px] font-semibold border whitespace-nowrap shrink-0 transition-colors ${active ? "bg-[#ff5100] border-[#ff5100] text-[#1c1814]" : "t-text-2 hover:text-[var(--text-primary)]"}`}
       style={active ? undefined : { borderColor: "var(--border-subtle)", background: "var(--bg-surface)" }}
     >
       {children}
@@ -247,7 +247,7 @@ function ActionBtn({ onClick, icon: Icon, children, tone = "default", disabled, 
     default: "t-text-2 hover:text-[var(--text-primary)]",
     danger: "text-red-700 dark:text-red-400 hover:bg-red-500/10",
     ok: "text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/10",
-    primary: "bg-[#ff5100] text-white border-[#ff5100] hover:bg-[#ff6a1f]",
+    primary: "bg-[#ff5100] text-[#1c1814] border-[#ff5100] hover:bg-[#ff6a1f]",
   }[tone];
   const cls = `inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-[12px] font-semibold border transition-colors disabled:opacity-40 ${toneCls}`;
   const style = tone === "primary" ? undefined : { borderColor: "var(--border-subtle)" };
@@ -429,7 +429,7 @@ function Dashboard({
               >
                 <Icon className="w-4 h-4 shrink-0" />
                 <span className="flex-1 text-left">{label}</span>
-                {badge ? <span className="min-w-5 h-5 px-1.5 rounded-full bg-[#ff5100] text-white text-[10px] font-bold flex items-center justify-center tabular-nums">{badge}</span> : null}
+                {badge ? <span className="min-w-5 h-5 px-1.5 rounded-full bg-[#ff5100] text-[#1c1814] text-[10px] font-bold flex items-center justify-center tabular-nums">{badge}</span> : null}
               </button>
             );
           })}

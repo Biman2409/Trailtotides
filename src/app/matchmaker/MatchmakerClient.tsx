@@ -317,7 +317,7 @@ function IntroScreen({
               {/* Unfinished assessment comes first — it's the most likely thing they want */}
               {onResume && (
                 <button onClick={onResume}
-                  className="w-full flex items-center justify-between gap-2 px-5 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110"
+                  className="w-full flex items-center justify-between gap-2 px-5 py-3.5 rounded-xl font-bold text-sm text-[#1c1814] transition-all hover:brightness-110"
                   style={{ background: "#ff5100", boxShadow: "0 4px 20px rgba(255,81,0,0.35)" }}>
                   <span>Pick up where you left off</span>
                   <span className="text-xs font-semibold opacity-80">{resumeLabel}</span>
@@ -325,7 +325,7 @@ function IntroScreen({
               )}
               {hasProfile && !onResume && (
                 <button onClick={onViewResults}
-                  className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110"
+                  className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm text-[#1c1814] transition-all hover:brightness-110"
                   style={{ background: "#ff5100", boxShadow: "0 4px 20px rgba(255,81,0,0.35)" }}>
                   View my results <ChevronRight className="w-4 h-4" />
                 </button>
@@ -336,7 +336,7 @@ function IntroScreen({
                 <button onClick={onQuickStart}
                   className="flex flex-col items-start gap-0.5 px-4 py-3 rounded-xl text-left transition-all hover:brightness-110"
                   style={!hasProfile && !onResume
-                    ? { background: "#ff5100", color: "#fff", boxShadow: "0 4px 20px rgba(255,81,0,0.3)" }
+                    ? { background: "#ff5100", color: "#1c1814", boxShadow: "0 4px 20px rgba(255,81,0,0.3)" }
                     : { background: "var(--bg-surface-2)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
                   <span className="text-sm font-bold">Quick match</span>
                   <span className="text-[11px] opacity-75">{QUICK_QUESTION_COUNT} questions · 2 min</span>
@@ -450,7 +450,7 @@ function ConsentScreen({ onAccept, onBack }: { onAccept: () => void; onBack: () 
         <button
           onClick={onAccept}
           disabled={!checked}
-          className="ml-auto flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:brightness-100"
+          className="ml-auto flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm text-[#1c1814] transition-all hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:brightness-100"
           style={{ background: "#ff5100", boxShadow: checked ? "0 4px 20px rgba(255,81,0,0.35)" : "none" }}
         >
           Agree and start <ChevronRight className="w-4 h-4" />
@@ -964,7 +964,7 @@ function ResultsScreen({
                   <a
                     href="#training-focus"
                     onClick={(e) => { e.preventDefault(); document.getElementById("training-focus")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-                    className="inline-flex items-center gap-1.5 mt-4 px-4 py-2.5 rounded-xl text-[13px] font-bold text-white transition-all hover:brightness-110 hover:-translate-y-0.5"
+                    className="inline-flex items-center gap-1.5 mt-4 px-4 py-2.5 rounded-xl text-[13px] font-bold text-[#1c1814] transition-all hover:brightness-110 hover:-translate-y-0.5"
                     style={{ background: "#ff5100", boxShadow: "0 8px 24px rgba(255,81,0,0.3)" }}
                   >
                     How to level up <ArrowRight className="w-3.5 h-3.5" />
@@ -1082,7 +1082,7 @@ function ResultsScreen({
         {fromAdventure ? (
           <Link
             href={`/experiences/${fromAdventure.slug}`}
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5"
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-[#1c1814] transition-all hover:brightness-110 hover:-translate-y-0.5"
             style={{ background: "#ff5100", boxShadow: "0 10px 30px rgba(255,81,0,0.28)" }}
           >
             <ChevronLeft className="w-4 h-4" />
@@ -1091,7 +1091,7 @@ function ResultsScreen({
         ) : (
           <Link
             href="/explore?ace=ready"
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5"
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-[#1c1814] transition-all hover:brightness-110 hover:-translate-y-0.5"
             style={{ background: "#ff5100", boxShadow: "0 10px 30px rgba(255,81,0,0.28)" }}
           >
             Explore your ready adventures

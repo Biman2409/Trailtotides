@@ -507,7 +507,7 @@ export default function MatchmakerStory({ you, questions, samples, train, group,
       {/* The way in, part of the card; it lights up once the sample group is in */}
       <div className="relative flex items-center gap-3 mt-4 pt-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         <p className="flex-1 min-w-0 text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>{cta.note}</p>
-        <Link href={cta.href} className="ms-cta group shrink-0 inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full text-[12px] font-semibold text-white" data-hot={hot}>
+        <Link href={cta.href} className="ms-cta group shrink-0 inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full text-[12px] font-semibold text-[#1c1814]" data-hot={hot}>
           {cta.label}
           <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
         </Link>

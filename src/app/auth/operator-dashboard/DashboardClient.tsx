@@ -322,7 +322,7 @@ function AddListingForm({
         <button
           type="submit"
           disabled={saving || !selectedSlug || !price || !batchesFilled}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white disabled:opacity-40 transition-all"
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-[#1c1814] disabled:opacity-40 transition-all"
           style={{ background: "#ff5100" }}
         >
           {saving ? <><Loader2 className="w-4 h-4 animate-spin" />Submitting…</> : <>Submit Listing <ArrowRight className="w-4 h-4" /></>}

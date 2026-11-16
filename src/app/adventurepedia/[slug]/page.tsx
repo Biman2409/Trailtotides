@@ -66,7 +66,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
               <ul className="space-y-2.5">
                 {g.tldr.map((t, i) => (
                   <li key={i} className="flex gap-3 text-[15px] leading-[1.6] t-text">
-                    <span className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0 mt-0.5" style={{ background: "#ff5100" }}>{i + 1}</span>
+                    <span className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold text-[#1c1814] shrink-0 mt-0.5" style={{ background: "#ff5100" }}>{i + 1}</span>
                     <span><Rich text={t} /></span>
                   </li>
                 ))}
@@ -108,7 +108,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
             {applies.length > 0 && (
               <div className="mt-10 rounded-2xl p-5 flex flex-wrap items-center justify-between gap-3" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
                 <p className="text-[15px] t-text-2">Put it to use: {applies.map((a, i) => <span key={a.type}>{i ? ", " : ""}<b className="t-text">{a.n}</b> {a.type.toLowerCase()} {a.n === 1 ? "adventure" : "adventures"}</span>)} on Trail to Tides.</p>
-                <Link href={`/explore?type=${applies.map((a) => encodeURIComponent(a.type)).join(",")}`} className="inline-flex items-center gap-1.5 h-10 px-4 rounded-full text-[14px] font-semibold text-white" style={{ background: "#ff5100" }}>
+                <Link href={`/explore?type=${applies.map((a) => encodeURIComponent(a.type)).join(",")}`} className="inline-flex items-center gap-1.5 h-10 px-4 rounded-full text-[14px] font-semibold text-[#1c1814]" style={{ background: "#ff5100" }}>
                   Browse them <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>

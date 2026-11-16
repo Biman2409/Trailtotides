@@ -90,7 +90,7 @@ export default function BookingSidebarCard({ slug, priceFrom, priceIsFull, opera
       <div className="mt-3 flex flex-col gap-2">
         <button
           onClick={handleBook}
-          className="w-full h-11 flex items-center justify-center gap-1.5 rounded-full text-white text-[14px] font-medium transition-colors bg-[#ff5100] hover:bg-[#e64900]"
+          className="w-full h-11 flex items-center justify-center gap-1.5 rounded-full text-[#1c1814] text-[14px] font-medium transition-colors bg-[#ff5100] hover:bg-[#e64900]"
         >
           {bookDirect && operatorName
             ? `Book on ${operatorName}'s site`

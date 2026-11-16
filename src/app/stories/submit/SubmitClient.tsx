@@ -93,7 +93,7 @@ function Step({ n, title, sub, children }: { n: number; title: string; sub: stri
   return (
     <section className="rounded-2xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
       <header className="flex items-start gap-3.5 px-5 sm:px-7 pt-6 pb-5" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-        <span className="w-8 h-8 rounded-full flex items-center justify-center text-[14px] font-bold shrink-0 text-white" style={{ background: "#ff5100" }}>{n}</span>
+        <span className="w-8 h-8 rounded-full flex items-center justify-center text-[14px] font-bold shrink-0 text-[#1c1814]" style={{ background: "#ff5100" }}>{n}</span>
         <div>
           <h2 className="text-xl" style={{ ...serif, color: "var(--text-primary)" }}>{title}</h2>
           <p className="text-[13.5px] mt-0.5" style={{ color: "var(--text-tertiary)" }}>{sub}</p>
@@ -276,7 +276,7 @@ export default function SubmitStoryPage({ liveTypes }: { liveTypes: string[] }) 
                 ))}
               </ol>
               <div className="flex flex-wrap gap-3 mt-8">
-                <Link href="/stories" className="group inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-5 py-3 rounded-xl text-sm transition-all">
+                <Link href="/stories" className="group inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-[#1c1814] font-semibold px-5 py-3 rounded-xl text-sm transition-all">
                   Read other stories <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
                 <button type="button" onClick={startOver} className="inline-flex items-center gap-2 font-semibold px-5 py-3 rounded-xl text-sm transition-colors hover:border-[#ff5100]/50"
@@ -444,7 +444,7 @@ export default function SubmitStoryPage({ liveTypes }: { liveTypes: string[] }) 
                     {hasContent && <button type="button" onClick={discardDraft} className="ml-2 underline hover:text-[#ff5100]">Clear</button>}
                   </p>
                   <button type="submit" disabled={loading || upload.status === "uploading"}
-                    className="group bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold px-7 py-3.5 rounded-xl text-[15px] flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5"
+                    className="group bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-60 disabled:cursor-not-allowed text-[#1c1814] font-semibold px-7 py-3.5 rounded-xl text-[15px] flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5"
                     style={{ boxShadow: "0 6px 18px rgba(255,81,0,0.25)" }}>
                     {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending…</> : <>Send for review <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" /></>}
                   </button>

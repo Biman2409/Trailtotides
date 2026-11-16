@@ -65,7 +65,7 @@ export default async function StoriesPage() {
               Not travel bloggers. Not influencers. Real people who went, came back, and wrote down what it was actually like.
             </p>
             <div className="flex flex-wrap items-center gap-3 mt-7">
-              <Link href="/stories/submit" className="group inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-white text-sm font-semibold pl-4 pr-3.5 py-2.5 rounded-xl transition-all hover:-translate-y-0.5" style={{ boxShadow: "0 6px 18px rgba(255,81,0,0.28)" }}>
+              <Link href="/stories/submit" className="group inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-[#1c1814] text-sm font-semibold pl-4 pr-3.5 py-2.5 rounded-xl transition-all hover:-translate-y-0.5" style={{ boxShadow: "0 6px 18px rgba(255,81,0,0.28)" }}>
                 <PenLine className="w-4 h-4" /> Share your story
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
@@ -131,7 +131,7 @@ export default async function StoriesPage() {
               <p className="text-[15px] leading-relaxed mt-4 max-w-md" style={{ color: "var(--text-secondary)" }}>
                 The road that went wrong, the summit that nearly broke you, the stranger who helped. Honest beats polished, every time.
               </p>
-              <Link href="/stories/submit" className="group inline-flex items-center gap-2 mt-7 bg-[#ff5100] hover:bg-[#ff7d47] text-white text-sm font-semibold px-5 py-3 rounded-xl transition-all hover:-translate-y-0.5">
+              <Link href="/stories/submit" className="group inline-flex items-center gap-2 mt-7 bg-[#ff5100] hover:bg-[#ff7d47] text-[#1c1814] text-sm font-semibold px-5 py-3 rounded-xl transition-all hover:-translate-y-0.5">
                 Start writing <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </div>

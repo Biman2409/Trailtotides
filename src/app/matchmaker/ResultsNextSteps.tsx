@@ -120,7 +120,7 @@ export function GroupMatchPromo() {
           Share one link. Each friend adds their profile, and every adventure is rated for the whole group, held to its least-ready member, so nobody is left behind.
         </p>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4">
-          <Link href={href} className="inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors" style={{ boxShadow: "0 8px 24px rgba(255,81,0,0.28)" }}>
+          <Link href={href} className="inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-[#1c1814] bg-[#ff5100] hover:bg-[#ff6a24] transition-colors" style={{ boxShadow: "0 8px 24px rgba(255,81,0,0.28)" }}>
             <Users className="w-4 h-4" /> {loggedIn === false ? "Sign in to start a group" : "Start a group"} <ArrowRight className="w-4 h-4" />
           </Link>
           <span className="text-[12px]" style={{ color: "var(--text-tertiary)" }}>Private · up to {MAX_GROUP} people · free</span>
@@ -155,7 +155,7 @@ export function GroupMatchPromo() {
   );
 }
 
-const primaryBtn = "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors";
+const primaryBtn = "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-[#1c1814] bg-[#ff5100] hover:bg-[#ff6a24] transition-colors";
 
 const TONES = {
   orange: { color: "var(--accent-ink-soft)", bg: "rgba(255,81,0,0.07)", border: "rgba(255,81,0,0.25)" },

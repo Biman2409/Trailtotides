@@ -275,7 +275,7 @@ export function WeatherDetails({ weather, lat, lng, locationName, altitude, isBa
           <button
             disabled={!selectedDate || dateFetching}
             onClick={() => checkDate(selectedDate)}
-            className="shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-bold text-white transition-all disabled:opacity-30 hover:brightness-110"
+            className="shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-bold text-[#1c1814] transition-all disabled:opacity-30 hover:brightness-110"
             style={{ background: "#ff5100" }}
           >
             {dateFetching ? "…" : "Check"}

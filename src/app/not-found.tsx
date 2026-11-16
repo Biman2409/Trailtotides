@@ -36,7 +36,7 @@ export default function NotFound() {
             <Search className="w-4 h-4 shrink-0" style={{ color: "var(--text-secondary)" }} aria-hidden />
             <label htmlFor="nf-q" className="sr-only">Search adventures</label>
             <input id="nf-q" name="q" type="search" placeholder="Search treks, places…" className="flex-1 min-w-0 bg-transparent outline-none text-[15px]" style={{ color: "var(--text-primary)" }} />
-            <button type="submit" className="h-9 px-4 rounded-full text-[13.5px] font-semibold text-white" style={{ background: "#ff5100" }}>Search</button>
+            <button type="submit" className="h-9 px-4 rounded-full text-[13.5px] font-semibold text-[#1c1814]" style={{ background: "#ff5100" }}>Search</button>
           </form>
 
           <ul className="grid sm:grid-cols-2 gap-3">

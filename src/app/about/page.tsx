@@ -209,7 +209,7 @@ export default function AboutPage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/explore"
-              className="inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-8 py-4 rounded-xl text-base group transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25"
+              className="inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-[#1c1814] font-semibold px-8 py-4 rounded-xl text-base group transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25"
             >
               Explore Adventures
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

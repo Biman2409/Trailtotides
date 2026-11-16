@@ -210,7 +210,7 @@ export default function CompareContent({ fixed }: { fixed?: Adventure[] } = {}) 
       {!fixed && !selected.length && loggedIn === false && (
         <button
           onClick={() => router.push(loginHref())}
-          className="mb-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:opacity-80"
+          className="mb-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-[#1c1814] transition-all hover:opacity-80"
           style={{ background: "#ff5100" }}
         >
           <LogIn className="w-3 h-3" />
@@ -387,7 +387,7 @@ function SaveComparison({ selected, loggedIn }: { selected: Adventure[]; loggedI
           <input autoFocus value={name} onChange={(e) => setName(e.target.value)} maxLength={60} aria-label="Comparison name"
             className="flex-1 min-w-0 h-9 px-3 rounded-lg text-xs outline-none focus:ring-1 focus:ring-[#ff5100]/50"
             style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)" }} />
-          <button type="submit" disabled={busy} className="h-9 px-3.5 rounded-lg text-xs font-bold text-white disabled:opacity-60" style={{ background: "#ff5100" }}>
+          <button type="submit" disabled={busy} className="h-9 px-3.5 rounded-lg text-xs font-bold text-[#1c1814] disabled:opacity-60" style={{ background: "#ff5100" }}>
             {busy ? "Saving…" : "Save & copy link"}
           </button>
           <button type="button" onClick={() => setNaming(false)} className="h-9 px-2 text-xs" style={{ color: "var(--text-tertiary)" }}>Cancel</button>

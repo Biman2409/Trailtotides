@@ -59,7 +59,7 @@ export default async function ActivityPage({ params }: { params: Promise<{ slug:
             <Link href="/adventurepedia#every-adventure" className="hover:underline underline-offset-2">{element.label}</Link>
           </nav>
           <div className="flex items-start gap-4">
-            <span className="hidden sm:flex w-14 h-14 rounded-2xl items-center justify-center shrink-0 mt-1 text-white" style={{ background: "#ff5100", boxShadow: "0 8px 24px rgba(255,81,0,0.25)" }}>
+            <span className="hidden sm:flex w-14 h-14 rounded-2xl items-center justify-center shrink-0 mt-1 text-[#1c1814]" style={{ background: "#ff5100", boxShadow: "0 8px 24px rgba(255,81,0,0.25)" }}>
               {icon?.(28)}
             </span>
             <h1 className="text-[34px] sm:text-[44px] t-text leading-[1.08]" style={{ ...serif, letterSpacing: "-0.02em" }}>{a.type} in India</h1>
@@ -105,7 +105,7 @@ export default async function ActivityPage({ params }: { params: Promise<{ slug:
             {a.body.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-3">
                 {a.body.map((ax, i) => (
-                  <span key={ax} className="text-[13px] font-semibold px-3 py-1.5 rounded-full" style={i === 0 ? { background: "#ff5100", color: "#fff" } : { background: "rgba(255,81,0,0.08)", color: "var(--accent-ink)" }}>{AXIS_LABEL[ax]}</span>
+                  <span key={ax} className="text-[13px] font-semibold px-3 py-1.5 rounded-full" style={i === 0 ? { background: "#ff5100", color: "#1c1814" } : { background: "rgba(255,81,0,0.08)", color: "var(--accent-ink)" }}>{AXIS_LABEL[ax]}</span>
                 ))}
               </div>
             )}
@@ -114,7 +114,7 @@ export default async function ActivityPage({ params }: { params: Promise<{ slug:
                 {a.body.length > 0 ? <>These are capabilities on the <Link href="/ace" className="font-semibold t-text underline underline-offset-2 decoration-[#ff5100]/50">ACE<sup className="tm">™</sup> scale</Link>. </> : null}
                 The Adventure Matchmaker builds your ACE<sup className="tm">™</sup> profile in 2 minutes and rates every adventure for you: ready, a stretch, or not yet.
               </p>
-              <Link href="/matchmaker" className="shrink-0 inline-flex items-center gap-1.5 h-11 px-5 rounded-full text-[14px] font-semibold text-white" style={{ background: "#ff5100" }}>
+              <Link href="/matchmaker" className="shrink-0 inline-flex items-center gap-1.5 h-11 px-5 rounded-full text-[14px] font-semibold text-[#1c1814]" style={{ background: "#ff5100" }}>
                 Take the Matchmaker <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

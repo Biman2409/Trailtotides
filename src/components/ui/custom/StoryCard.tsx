@@ -88,7 +88,7 @@ export default function StoryCard({ story, featuredBadge = true }: { story: Stor
             <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 relative" style={{ background: "var(--bg-surface-2)" }}>
               {story.authorAvatar
                 ? <Image src={story.authorAvatar} alt="" fill sizes="28px" className="object-cover" />
-                : <span className="w-full h-full flex items-center justify-center text-[10px] font-bold text-white bg-[#ff5100]">{story.author.charAt(0)}</span>}
+                : <span className="w-full h-full flex items-center justify-center text-[10px] font-bold text-[#1c1814] bg-[#ff5100]">{story.author.charAt(0)}</span>}
             </div>
             <div className="min-w-0">
               <p className="text-[13px] font-semibold truncate leading-tight" style={{ color: "var(--text-primary)" }}>{story.author}</p>

@@ -137,7 +137,7 @@ function CompanyDetails({ profile }: { profile: OperatorProfile }) {
                 </button>
                 {isDirty && (
                   <button type="submit" disabled={loading}
-                    className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-40 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
+                    className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-40 text-[#1c1814] px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
                     {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Saving…</> : <><Save className="w-4 h-4" />Save Changes</>}
                   </button>
                 )}

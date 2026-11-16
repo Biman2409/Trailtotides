@@ -138,7 +138,7 @@ export default function StoryComments({ slug }: Props) {
           <button
             onClick={() => router.push(loginHref())}
             className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full transition-all hover:brightness-110 shrink-0"
-            style={{ background: "#ff5100", color: "white" }}
+            style={{ background: "#ff5100", color: "#1c1814" }}
           >
             <LogIn className="w-3.5 h-3.5" />
             Log in

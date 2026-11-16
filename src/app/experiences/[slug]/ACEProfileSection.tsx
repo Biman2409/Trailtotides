@@ -83,7 +83,7 @@ export default function ACEProfileSection({ ace, slug, name, estimated = false }
             </p>
             <Link
               href={`/matchmaker?from=${slug}`}
-              className="inline-flex items-center gap-1.5 h-11 px-5 rounded-full text-[14.5px] font-semibold text-white transition-transform hover:-translate-y-px"
+              className="inline-flex items-center gap-1.5 h-11 px-5 rounded-full text-[14.5px] font-semibold text-[#1c1814] transition-transform hover:-translate-y-px"
               style={{ background: "#ff5100", boxShadow: "0 8px 20px -10px rgba(255,81,0,0.8)" }}
             >
               Check my match <span className="font-normal opacity-85">· 2 min</span> <ArrowRight className="w-4 h-4" />

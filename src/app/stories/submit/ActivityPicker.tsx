@@ -68,7 +68,7 @@ export default function ActivityPicker({ id, value, onChange, live, invalid, des
       {value && !open ? (
         // The choice, with a way to change or clear it
         <div className="flex items-center gap-2 rounded-xl pl-3 pr-1.5 py-1.5 border" style={{ background: "var(--bg-card)", borderColor: invalid ? "rgba(239,68,68,0.6)" : "var(--border-subtle)" }}>
-          <span className="inline-flex items-center gap-2 h-9 px-3 rounded-full text-[14px] font-semibold text-white" style={{ background: "#ff5100" }}>
+          <span className="inline-flex items-center gap-2 h-9 px-3 rounded-full text-[14px] font-semibold text-[#1c1814]" style={{ background: "#ff5100" }}>
             {ADVENTURE_TYPE_ICONS[value]?.(14)}{value}
           </span>
           {!liveSet.has(value) && <span className="text-[12px]" style={{ color: "var(--text-tertiary)" }}>No trips listed yet, stories welcome</span>}

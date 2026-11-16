@@ -224,7 +224,7 @@ export default function ContactPage() {
                               return (
                                 <button key={t} type="button" aria-pressed={on} onClick={() => set("topic", on ? "" : t)}
                                   className="px-3 py-1.5 rounded-full text-[12.5px] font-semibold transition-colors"
-                                  style={{ color: on ? "#fff" : "var(--text-secondary)", background: on ? "#ff5100" : "transparent", border: `1px solid ${on ? "#ff5100" : "var(--border-default)"}` }}>
+                                  style={{ color: on ? "#1c1814" : "var(--text-secondary)", background: on ? "#ff5100" : "transparent", border: `1px solid ${on ? "#ff5100" : "var(--border-default)"}` }}>
                                   {t}
                                 </button>
                               );

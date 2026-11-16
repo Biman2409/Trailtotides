@@ -51,7 +51,7 @@ function Steps({ items }: { items: ReactNode[] }) {
       {items.map((s, i) => (
         <li key={i} className="relative flex gap-3.5 pb-4 last:pb-0">
           {i < items.length - 1 && <span className="absolute left-[13px] top-8 bottom-0 w-px" style={{ background: "var(--border-subtle)" }} aria-hidden />}
-          <span className="relative w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold text-white shrink-0" style={{ background: "#ff5100" }}>{i + 1}</span>
+          <span className="relative w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold text-[#1c1814] shrink-0" style={{ background: "#ff5100" }}>{i + 1}</span>
           <div className="text-[15px] leading-[1.65] t-text-2 pt-0.5">{s}</div>
         </li>
       ))}
@@ -145,7 +145,7 @@ export default function OfflineMapsGuide() {
                   { icon: Plane, t: "Test in airplane mode", d: "Map still shows, blue dot appears: you're ready." },
                 ].map((s, i) => (
                   <li key={i} className="flex gap-3 rounded-xl p-3.5" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
-                    <span className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-white text-[13px] font-bold" style={{ background: "#ff5100" }}>{i + 1}</span>
+                    <span className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-[#1c1814] text-[13px] font-bold" style={{ background: "#ff5100" }}>{i + 1}</span>
                     <span className="min-w-0">
                       <span className="flex items-center gap-1.5 text-[14.5px] font-semibold t-text"><s.icon className="w-3.5 h-3.5 text-[#ff5100]" />{s.t}</span>
                       <span className="block text-[13px] t-text-3 mt-0.5">{s.d}</span>

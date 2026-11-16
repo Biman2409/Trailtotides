@@ -509,7 +509,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
           style={{ background: "rgba(255,81,0,0.14)", border: "1px solid rgba(255,125,71,0.45)" }}
           aria-label={panelCount(f) ? `Filters, ${panelCount(f)} set` : "Filters"}>
           <SlidersHorizontal className="w-3.5 h-3.5" /> Filters
-          {panelCount(f) > 0 && <b className="min-w-4 h-4 px-1 rounded-full bg-[#ff5100] text-white text-[9px] font-bold grid place-items-center">{panelCount(f)}</b>}
+          {panelCount(f) > 0 && <b className="min-w-4 h-4 px-1 rounded-full bg-[#ff5100] text-[#1c1814] text-[9px] font-bold grid place-items-center">{panelCount(f)}</b>}
         </button>
       </div>
     </div>
@@ -541,7 +541,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
     <button type="button" onClick={() => setFiltersOpen(true)} aria-expanded={filtersOpen}
       className="tm-iconbtn-lg relative" data-on={filtersOpen || panelCount(f) > 0 || undefined} aria-label="Filters">
       <SlidersHorizontal className="w-4 h-4" />
-      {panelCount(f) > 0 && <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-[#ff5100] text-white text-[9px] font-bold grid place-items-center">{panelCount(f)}</span>}
+      {panelCount(f) > 0 && <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-[#ff5100] text-[#1c1814] text-[9px] font-bold grid place-items-center">{panelCount(f)}</span>}
     </button>
   );
 

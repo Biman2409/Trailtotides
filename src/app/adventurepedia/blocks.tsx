@@ -59,7 +59,7 @@ export function BlockView({ block }: { block: Block }) {
       {block.steps.map((s, i) => (
         <li key={i} className="relative flex gap-3.5 pb-4 last:pb-0">
           {i < block.steps.length - 1 && <span className="absolute left-[13px] top-8 bottom-0 w-px" style={{ background: "var(--border-subtle)" }} aria-hidden />}
-          <span className="relative w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold text-white shrink-0" style={{ background: "#ff5100" }}>{i + 1}</span>
+          <span className="relative w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold text-[#1c1814] shrink-0" style={{ background: "#ff5100" }}>{i + 1}</span>
           <p className="text-[15px] leading-[1.7] t-text-2 pt-0.5"><Rich text={s} /></p>
         </li>
       ))}

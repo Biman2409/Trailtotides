@@ -1,14 +1,14 @@
 export const typeStyle: Record<string, string> = {
   // Land — vibrant orange
-  Trekking:          "bg-[#ff5100] text-white",
-  Motorcycling:      "bg-[#ff5100] text-white",
-  Cycling:           "bg-[#ff5100] text-white",
-  "Rock Climbing":   "bg-[#ff5100] text-white",
-  Scrambling:        "bg-[#ff5100] text-white",
-  Mountaineering:    "bg-[#ff5100] text-white",
-  "Jeep Safari":     "bg-[#ff5100] text-white",
-  "Urban Adventure": "bg-[#ff5100] text-white",
-  Caving:            "bg-[#ff5100] text-white",
+  Trekking:          "bg-[#ff5100] text-[#1c1814]",
+  Motorcycling:      "bg-[#ff5100] text-[#1c1814]",
+  Cycling:           "bg-[#ff5100] text-[#1c1814]",
+  "Rock Climbing":   "bg-[#ff5100] text-[#1c1814]",
+  Scrambling:        "bg-[#ff5100] text-[#1c1814]",
+  Mountaineering:    "bg-[#ff5100] text-[#1c1814]",
+  "Jeep Safari":     "bg-[#ff5100] text-[#1c1814]",
+  "Urban Adventure": "bg-[#ff5100] text-[#1c1814]",
+  Caving:            "bg-[#ff5100] text-[#1c1814]",
   
   // Water — blue
   Diving:            "bg-blue-500 text-white",

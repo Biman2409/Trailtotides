@@ -47,7 +47,7 @@ export function CheckInbox({ email, next, onRestart }: { email: string; next?: s
       </p>
       {inbox && (
         <a href={inbox.href} target="_blank" rel="noopener noreferrer"
-          className="mb-5 flex items-center justify-center gap-2 w-full bg-[#ff5100] hover:bg-[#ff7d47] text-[#fff] font-bold rounded-2xl py-3 text-sm transition-colors">
+          className="mb-5 flex items-center justify-center gap-2 w-full bg-[#ff5100] hover:bg-[#ff7d47] text-[#1c1814] font-bold rounded-2xl py-3 text-sm transition-colors">
           {inbox.label} <ExternalLink className="w-4 h-4" />
         </a>
       )}

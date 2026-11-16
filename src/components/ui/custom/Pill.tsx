@@ -67,7 +67,7 @@ export default function Pill({ type, value, className = "", clickable = true }: 
     styleClass = typeStyle[value] || "bg-gray-500 text-white";
     href = `/explore?type=${encodeURIComponent(value)}`;
   } else if (type === "region") {
-    styleClass = "bg-[#ff5100] text-white";
+    styleClass = "bg-[#ff5100] text-[#1c1814]";
     href = `/explore?region=${encodeURIComponent(value)}`;
   } else if (type === "subRegion") {
     href = `/explore?subRegion=${encodeURIComponent(value)}`;

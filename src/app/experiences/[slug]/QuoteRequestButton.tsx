@@ -117,7 +117,7 @@ export default function QuoteRequestButton({ slug, name, operators }: { slug: st
                 className="w-full px-3 py-2 rounded-xl text-sm outline-none resize-none focus:ring-1 focus:ring-[#ff5100]/50 mb-4" style={fieldStyle} />
 
               <button type="submit" disabled={busy || !picked.length}
-                className="w-full py-3 rounded-xl text-white text-sm font-bold disabled:opacity-60" style={{ background: "#ff5100" }}>
+                className="w-full py-3 rounded-xl text-[#1c1814] text-sm font-bold disabled:opacity-60" style={{ background: "#ff5100" }}>
                 {busy ? "Sending…" : `Send to ${picked.length} operator${picked.length === 1 ? "" : "s"}`}
               </button>
             </form>

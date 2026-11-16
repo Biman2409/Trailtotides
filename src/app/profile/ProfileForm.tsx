@@ -177,7 +177,7 @@ function AccountDetails({ profile }: { profile: Profile }) {
           <div className="flex items-center gap-2 ml-auto">
             {!editing ? (
               <button type="button" onClick={() => setEditing(true)}
-                className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
+                className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-[#1c1814] px-5 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
                 Update Details
               </button>
             ) : (
@@ -189,7 +189,7 @@ function AccountDetails({ profile }: { profile: Profile }) {
                 </button>
                 {canSave && (
                   <button type="submit" disabled={loading}
-                    className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-40 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
+                    className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-40 text-[#1c1814] px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
                     {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Saving…</> : <><Save className="w-4 h-4" />Save Changes</>}
                   </button>
                 )}
@@ -268,7 +268,7 @@ function ChangePasswordSection() {
             {success && <p className="text-emerald-400 text-xs font-medium flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" />Password updated</p>}
           </div>
           <button type="submit" disabled={loading}
-            className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-40 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
+            className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-40 text-[#1c1814] px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
             {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Updating…</> : <><Lock className="w-4 h-4" />Update Password</>}
           </button>
         </div>

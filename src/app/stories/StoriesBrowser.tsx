@@ -43,7 +43,7 @@ export default function StoriesBrowser({ stories, featuredSlug }: { stories: Sto
         aria-pressed={on}
         className="shrink-0 inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-semibold transition-colors"
         style={on
-          ? { background: "#ff5100", color: "#fff", border: "1px solid #ff5100" }
+          ? { background: "#ff5100", color: "#1c1814", border: "1px solid #ff5100" }
           : { background: "var(--bg-card)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)" }}
       >
         {label}
@@ -69,7 +69,7 @@ export default function StoriesBrowser({ stories, featuredSlug }: { stories: Sto
         <div className="rounded-2xl px-6 py-12 text-center" style={{ background: "var(--bg-card)", border: "1px dashed var(--border-default)" }}>
           <p className="text-[15px] font-semibold" style={{ color: "var(--text-primary)" }}>No {activity.toLowerCase()} stories yet</p>
           <p className="text-sm mt-1 mb-5" style={{ color: "var(--text-tertiary)" }}>Been on one? Yours could be the first.</p>
-          <Link href="/stories/submit" className="inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">
+          <Link href="/stories/submit" className="inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-[#1c1814] text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">
             <PenLine className="w-4 h-4" /> Write it up
           </Link>
         </div>

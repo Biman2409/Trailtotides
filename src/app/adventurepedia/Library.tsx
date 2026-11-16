@@ -176,7 +176,7 @@ export default function Library({ guides, topics, index, treks, activities, elem
             return (
               <button key={t.id} onClick={() => setTopic(t.id)} aria-pressed={on}
                 className="shrink-0 inline-flex items-center gap-2 h-10 px-4 rounded-full text-[14px] font-semibold transition-colors"
-                style={on ? { background: "#ff5100", color: "#fff" } : { color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
+                style={on ? { background: "#ff5100", color: "#1c1814" } : { color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
                 {t.label}<span className="text-[12px] tabular-nums" style={{ opacity: 0.7 }}>{t.n}</span>
               </button>
             );
@@ -267,7 +267,7 @@ export default function Library({ guides, topics, index, treks, activities, elem
             <p className="text-[20px] t-text" style={serif}>Can&apos;t find what you need?</p>
             <p className="text-[14.5px] t-text-2 mt-1">Tell us the question you had before your trip. We write new guides from what people ask.</p>
           </div>
-          <Link href="/contact" className="shrink-0 inline-flex items-center gap-1.5 h-11 px-5 rounded-full text-[14px] font-semibold text-white" style={{ background: "#ff5100" }}>
+          <Link href="/contact" className="shrink-0 inline-flex items-center gap-1.5 h-11 px-5 rounded-full text-[14px] font-semibold text-[#1c1814]" style={{ background: "#ff5100" }}>
             Suggest a guide <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

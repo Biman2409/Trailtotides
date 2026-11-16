@@ -40,10 +40,10 @@ export default function EmptyState({ icon, heading, subtext, actionLabel, onActi
         onClick={onAction}
         className={
           isLg
-            ? "bg-[#ff5100] text-white px-7 py-3 rounded-xl text-sm font-semibold hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 uppercase tracking-wider"
+            ? "bg-[#ff5100] text-[#1c1814] px-7 py-3 rounded-xl text-sm font-semibold hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 uppercase tracking-wider"
             : "px-4 py-2 rounded-lg text-xs font-bold transition-all hover:brightness-110"
         }
-        style={!isLg ? { background: "#ff5100", color: "#fff", boxShadow: "0 4px 14px rgba(255,81,0,0.25)" } : undefined}
+        style={!isLg ? { background: "#ff5100", color: "#1c1814", boxShadow: "0 4px 14px rgba(255,81,0,0.25)" } : undefined}
       >
         {actionLabel}
       </button>

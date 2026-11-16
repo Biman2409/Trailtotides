@@ -47,7 +47,7 @@ export default function LayersMenu({
             {([["map", "Map", MapIcon], ["satellite", "Satellite", Satellite]] as const).map(([k, label, Icon]) => (
               <button key={k} type="button" onClick={() => onBase(k)} aria-pressed={base === k}
                 className="h-9 rounded-lg flex items-center justify-center gap-1.5 text-[12.5px] font-semibold transition-colors"
-                style={base === k ? { background: "#ff5100", color: "#fff" } : { background: "rgba(var(--tm-ink),0.06)", color: "rgba(var(--tm-ink),0.75)" }}>
+                style={base === k ? { background: "#ff5100", color: "#1c1814" } : { background: "rgba(var(--tm-ink),0.06)", color: "rgba(var(--tm-ink),0.75)" }}>
                 <Icon className="w-3.5 h-3.5" />{label}
               </button>
             ))}

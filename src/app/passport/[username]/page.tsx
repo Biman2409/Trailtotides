@@ -41,7 +41,7 @@ export default async function PublicPassportPage({ params }: Props) {
               <p className="font-semibold" style={{ color: "var(--text-primary)" }}>Start your own passport</p>
               <p className="text-sm mt-0.5" style={{ color: "var(--text-tertiary)" }}>Log the adventures you&apos;ve done, earn stamps and badges, and see your rank.</p>
             </div>
-            <Link href="/auth/signup" className="inline-flex items-center gap-1.5 h-10 px-4 rounded-full text-[13px] font-semibold text-white" style={{ background: "#ff5100" }}>
+            <Link href="/auth/signup" className="inline-flex items-center gap-1.5 h-10 px-4 rounded-full text-[13px] font-semibold text-[#1c1814]" style={{ background: "#ff5100" }}>
               Create a free account <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

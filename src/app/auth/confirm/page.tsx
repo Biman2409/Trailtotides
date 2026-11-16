@@ -47,7 +47,7 @@ export default async function ConfirmPage({ searchParams }: Props) {
               <input type="hidden" name="next" value={next} />
               <button
                 type="submit"
-                className="w-full bg-[#ff5100] hover:bg-[#ff7d47] text-[#fff] font-bold py-3.5 rounded-2xl transition-colors shadow-lg shadow-[#ff5100]/20"
+                className="w-full bg-[#ff5100] hover:bg-[#ff7d47] text-[#1c1814] font-bold py-3.5 rounded-2xl transition-colors shadow-lg shadow-[#ff5100]/20"
               >
                 {copy.button}
               </button>

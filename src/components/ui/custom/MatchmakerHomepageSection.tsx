@@ -159,7 +159,7 @@ function DefaultCTA() {
           <div className="mt-4 hidden lg:flex flex-wrap items-center gap-x-4 gap-y-2">
             <Link
               href="/matchmaker"
-              className="group hidden lg:inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors"
+              className="group hidden lg:inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-semibold text-[#1c1814] bg-[#ff5100] hover:bg-[#ff6a24] transition-colors"
               style={{ boxShadow: "0 6px 20px rgba(255,81,0,0.25)" }}
             >
               Take the Matchmaker
@@ -291,7 +291,7 @@ function ProfileSummary({ profile, ace, credits, stale }: { profile: StoredProfi
           <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 mt-5">
             <Link
               href="/matchmaker"
-              className="col-span-2 group inline-flex items-center justify-center gap-2 bg-[#ff5100] text-white font-semibold px-5 h-11 rounded-xl text-[14px] hover:bg-[#ff6a24] transition-colors"
+              className="col-span-2 group inline-flex items-center justify-center gap-2 bg-[#ff5100] text-[#1c1814] font-semibold px-5 h-11 rounded-xl text-[14px] hover:bg-[#ff6a24] transition-colors"
               style={{ boxShadow: "0 6px 20px rgba(255,81,0,0.25)" }}
             >
               See your results

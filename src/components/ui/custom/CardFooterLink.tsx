@@ -18,8 +18,8 @@ export default function CardFooterLink({ href, label, accentColor = "#ff5100" }:
     <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--border-subtle)" }}>
       <Link
         href={href}
-        className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-xs font-semibold text-white transition-all duration-150 hover:-translate-y-0.5"
-        style={{ background: accentColor, boxShadow: `0 4px 14px ${accentColor}55` }}
+        className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5"
+        style={{ background: accentColor, color: accentColor.toLowerCase() === "#ff5100" ? "#1c1814" : "#ffffff", boxShadow: `0 4px 14px ${accentColor}55` }}
       >
         {label}
         <ArrowRight className="w-3.5 h-3.5" />

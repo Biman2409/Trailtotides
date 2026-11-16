@@ -354,7 +354,7 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
             {(["trail", "region"] as const).map((v) => (
               <button key={v} type="button" onClick={() => show(v)} aria-pressed={view === v}
                 className="px-2.5 h-7 capitalize transition-colors"
-                style={view === v ? { background: "#ff5100", color: "#fff" } : { background: isDark ? "rgba(9,16,31,0.85)" : "rgba(255,255,255,0.92)", color: isDark ? "rgba(255,255,255,0.75)" : "rgba(15,23,31,0.7)" }}>
+                style={view === v ? { background: "#ff5100", color: "#1c1814" } : { background: isDark ? "rgba(9,16,31,0.85)" : "rgba(255,255,255,0.92)", color: isDark ? "rgba(255,255,255,0.75)" : "rgba(15,23,31,0.7)" }}>
                 {v}
               </button>
             ))}
@@ -364,7 +364,7 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
           {(["map", "satellite"] as const).map((b) => (
             <button key={b} type="button" onClick={() => pickBase(b)} aria-pressed={base === b}
               className="px-2.5 h-7 capitalize transition-colors"
-              style={base === b ? { background: "#ff5100", color: "#fff" } : { background: isDark ? "rgba(9,16,31,0.85)" : "rgba(255,255,255,0.92)", color: isDark ? "rgba(255,255,255,0.75)" : "rgba(15,23,31,0.7)" }}>
+              style={base === b ? { background: "#ff5100", color: "#1c1814" } : { background: isDark ? "rgba(9,16,31,0.85)" : "rgba(255,255,255,0.92)", color: isDark ? "rgba(255,255,255,0.75)" : "rgba(15,23,31,0.7)" }}>
               {b}
             </button>
           ))}
@@ -379,7 +379,7 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
       {trail && compact && (
         <div className="px-4 py-2.5 flex items-center gap-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
           <a href={`/experiences/${current.slug}/trail.gpx`} download={`${current.slug}-trail-to-tides.gpx`}
-            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg text-[12.5px] font-bold text-white shrink-0" style={{ background: "#ff5100" }}>
+            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg text-[12.5px] font-bold text-[#1c1814] shrink-0" style={{ background: "#ff5100" }}>
             <Download className="w-3.5 h-3.5" />GPX
           </a>
           <p className="text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>
@@ -390,7 +390,7 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
       {trail && !compact && (
         <div className="px-4 py-3 space-y-2" style={{ borderTop: "1px solid var(--border-subtle)" }}>
           <a href={`/experiences/${current.slug}/trail.gpx`} download={`${current.slug}-trail-to-tides.gpx`}
-            className="flex items-center justify-center gap-2 h-10 rounded-xl text-[13px] font-bold text-white transition-colors hover:brightness-110" style={{ background: "#ff5100" }}>
+            className="flex items-center justify-center gap-2 h-10 rounded-xl text-[13px] font-bold text-[#1c1814] transition-colors hover:brightness-110" style={{ background: "#ff5100" }}>
             <Download className="w-4 h-4" />Download trail (GPX)
           </a>
           <p className="text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>

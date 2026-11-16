@@ -24,7 +24,7 @@ export default function SharedComparison({ name, by, slugs }: { name: string; by
           <h1 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight">{name}</h1>
           {by && <p className="text-sm mt-1.5" style={{ color: "var(--text-secondary)" }}>Saved by {by}</p>}
         </div>
-        <button onClick={openInCompare} className="inline-flex items-center gap-2 h-10 px-4 rounded-full text-[13px] font-semibold text-white hover:brightness-110 transition"
+        <button onClick={openInCompare} className="inline-flex items-center gap-2 h-10 px-4 rounded-full text-[13px] font-semibold text-[#1c1814] hover:brightness-110 transition"
           style={{ background: "#ff5100" }}>
           <GitCompareArrows className="w-4 h-4" /> Open in my compare
         </button>

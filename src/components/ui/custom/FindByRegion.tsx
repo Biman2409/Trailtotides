@@ -121,7 +121,7 @@ export default function FindByRegion() {
                   </ul>
                   <Link
                     href={`/explore?region=${encodeURIComponent(region.name)}`}
-                    className="group mt-auto self-start inline-flex items-center gap-1.5 h-10 px-4 rounded-xl text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                    className="group mt-auto self-start inline-flex items-center gap-1.5 h-10 px-4 rounded-xl text-sm font-semibold text-[#1c1814] transition hover:-translate-y-0.5"
                     style={{ background: "#ff5100", boxShadow: "0 4px 14px #ff510055" }}
                   >
                     View all {region.total} in the {region.name}

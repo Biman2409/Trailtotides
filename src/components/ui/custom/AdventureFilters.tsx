@@ -295,7 +295,7 @@ export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun 
           <button onClick={onClear} disabled={!anySet} className="px-4 py-3 rounded-xl text-sm font-medium disabled:opacity-40" style={{ color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
             Clear all
           </button>
-          <button onClick={onClose} className="flex-1 px-4 py-3 rounded-xl text-sm font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors">
+          <button onClick={onClose} className="flex-1 px-4 py-3 rounded-xl text-sm font-semibold text-[#1c1814] bg-[#ff5100] hover:bg-[#ff6a24] transition-colors">
             Show {resultCount} {resultCount === 1 ? resultNoun : `${resultNoun}s`}
           </button>
         </div>

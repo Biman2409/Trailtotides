@@ -24,7 +24,7 @@ export default function AccountTabs({ active }: { active: "/profile" | "/setting
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all"
             style={
               isActive
-                ? { background: "#ff5100", color: "#fff" }
+                ? { background: "#ff5100", color: "#1c1814" }
                 : { color: "var(--text-tertiary)" }
             }
           >

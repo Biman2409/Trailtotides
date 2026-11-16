@@ -16,7 +16,7 @@ export default function TrekDownloadCard({ treks }: { treks: Record<string, stri
         <p className="text-[16px] font-semibold t-text">{name}</p>
         <Link href={`/experiences/${slug}#at-a-glance`} className="inline-flex items-center gap-1 text-[13px] t-text-3 hover:text-[#ff5100] mt-0.5"><ArrowLeft className="w-3.5 h-3.5" />Back to the trek</Link>
       </div>
-      <a href={`/experiences/${slug}/trail.gpx`} download className="inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-bold text-white bg-[#ff5100] hover:bg-[#ff6a1f]">
+      <a href={`/experiences/${slug}/trail.gpx`} download className="inline-flex items-center gap-2 h-11 px-5 rounded-xl text-[14px] font-bold text-[#1c1814] bg-[#ff5100] hover:bg-[#ff6a1f]">
         <Download className="w-4 h-4" />Download trail (GPX)
       </a>
     </div>

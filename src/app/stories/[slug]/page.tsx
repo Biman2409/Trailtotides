@@ -377,7 +377,7 @@ export default async function StoryPage({ params }: Props) {
 
             <div className="flex flex-wrap gap-3 mt-8">
               <Link href={activity && liveTypes.has(activity) ? `/explore?type=${encodeURIComponent(activity)}` : "/explore"}
-                className="group inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-white text-sm font-semibold px-5 py-3 rounded-xl transition-all hover:-translate-y-0.5" style={{ boxShadow: "0 6px 18px rgba(255,81,0,0.28)" }}>
+                className="group inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-[#1c1814] text-sm font-semibold px-5 py-3 rounded-xl transition-all hover:-translate-y-0.5" style={{ boxShadow: "0 6px 18px rgba(255,81,0,0.28)" }}>
                 {activity && liveTypes.has(activity) ? `Find ${activity.toLowerCase()} trips` : "Explore adventures"}
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
               </Link>

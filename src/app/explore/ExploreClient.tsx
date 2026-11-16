@@ -203,7 +203,7 @@ export default function ExploreClient() {
                 onClick={() => setFiltersOpen(true)}
                 className="inline-flex flex-1 sm:flex-none justify-center items-center gap-1.5 sm:gap-2 h-10 sm:h-11 px-3 sm:px-4 rounded-xl text-sm font-medium whitespace-nowrap transition-colors"
                 style={extraCount > 0
-                  ? { background: "#ff5100", color: "#fff", border: "1px solid #ff5100" }
+                  ? { background: "#ff5100", color: "#1c1814", border: "1px solid #ff5100" }
                   : { background: "var(--bg-card)", color: "var(--text-primary)", border: "1px solid var(--border-default)" }}
               >
                 <SlidersHorizontal className="w-4 h-4" />
@@ -286,7 +286,7 @@ export default function ExploreClient() {
                 : "Try a trek, a place or an activity, or describe the trip and let Compass.AI pick."}
             </p>
             <div className="flex flex-wrap justify-center gap-2">
-              <button onClick={() => askCompass(comingSoon ? `Something like ${search}` : search)} className="h-10 px-4 rounded-full text-sm font-semibold text-white" style={{ background: "#ff5100" }}>
+              <button onClick={() => askCompass(comingSoon ? `Something like ${search}` : search)} className="h-10 px-4 rounded-full text-sm font-semibold text-[#1c1814]" style={{ background: "#ff5100" }}>
                 Ask Compass.AI
               </button>
               <Link href={`/explore?month=${MONTHS[monthIdx]}`} onClick={() => setF({ ...NO_FILTERS, months: [MONTHS[monthIdx]] })} className="h-10 px-4 inline-flex items-center rounded-full text-sm font-semibold" style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>

@@ -305,7 +305,7 @@ export default function Navbar() {
                 >
                   <Heart className="w-4 h-4 fill-[#ff5100]" style={{ color: "var(--accent-ink)" }} />
                   <span className="text-[#ff5100] text-sm font-semibold">Wishlist</span>
-                  <span className="w-5 h-5 rounded-full bg-[#ff5100] text-white text-[11px] font-bold flex items-center justify-center leading-none">
+                  <span className="w-5 h-5 rounded-full bg-[#ff5100] text-[#1c1814] text-[11px] font-bold flex items-center justify-center leading-none">
                     {savedList.length}
                   </span>
                 </button>
@@ -404,7 +404,7 @@ export default function Navbar() {
                   <GitCompareArrows className="w-4 h-4 text-[#ff5100]" />
                   {/* Just the icon and count below 1280px, where the bar has no room for the word */}
                   <span className="hidden xl:inline text-[#ff5100] text-sm font-semibold">Compare</span>
-                  <span className="w-5 h-5 rounded-full bg-[#ff5100] text-white text-[11px] font-bold flex items-center justify-center leading-none">
+                  <span className="w-5 h-5 rounded-full bg-[#ff5100] text-[#1c1814] text-[11px] font-bold flex items-center justify-center leading-none">
                     {selected.length}
                   </span>
                 </button>
@@ -521,9 +521,9 @@ export default function Navbar() {
                   className="group flex items-center gap-2.5 pl-4 pr-1.5 py-1.5 rounded-full hover:-translate-y-0.5 transition-all duration-200"
                   style={{ background: "#ff5100", boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}
                 >
-                  <span className="text-white text-xs font-semibold whitespace-nowrap">Sign Up</span>
+                  <span className="text-[#1c1814] text-xs font-semibold whitespace-nowrap">Sign Up</span>
                   <span className="w-6 h-6 rounded-full bg-black/20 group-hover:bg-black/30 flex items-center justify-center transition-colors shrink-0">
-                    <ArrowRight className="w-3 h-3 text-white" />
+                    <ArrowRight className="w-3 h-3 text-[#1c1814]" />
                   </span>
                 </Link>
               </>
@@ -581,7 +581,7 @@ export default function Navbar() {
                   className="flex items-center gap-2.5 p-2.5 rounded-xl transition-colors"
                   style={{ background: on ? "rgba(255,81,0,0.1)" : "var(--bg-surface-2)", border: `1px solid ${on ? "rgba(255,81,0,0.4)" : "var(--border-subtle)"}` }}
                 >
-                  <span className="w-9 h-9 rounded-lg grid place-items-center shrink-0" style={{ background: on ? "#ff5100" : "rgba(255,81,0,0.1)", color: on ? "#fff" : "var(--accent-ink)" }}>
+                  <span className="w-9 h-9 rounded-lg grid place-items-center shrink-0" style={{ background: on ? "#ff5100" : "rgba(255,81,0,0.1)", color: on ? "#1c1814" : "var(--accent-ink)" }}>
                     <Icon className="w-4 h-4" />
                   </span>
                   <span className="min-w-0 text-[14px] font-semibold leading-tight truncate" style={{ color: "var(--text-primary)" }}>{link.label}</span>
@@ -599,7 +599,7 @@ export default function Navbar() {
               <span className="text-sm font-medium flex-1" style={{ color: "var(--text-secondary)" }}>
                 Wishlist
               </span>
-              <span className="w-5 h-5 rounded-full bg-[#ff5100] text-white text-[11px] font-bold flex items-center justify-center">
+              <span className="w-5 h-5 rounded-full bg-[#ff5100] text-[#1c1814] text-[11px] font-bold flex items-center justify-center">
                 {savedList.length}
               </span>
             </Link>
@@ -615,7 +615,7 @@ export default function Navbar() {
               <span className="text-sm font-medium flex-1 text-left" style={{ color: "var(--text-secondary)" }}>
                 Compare
               </span>
-              <span className="w-5 h-5 rounded-full bg-[#ff5100] text-white text-[11px] font-bold flex items-center justify-center">
+              <span className="w-5 h-5 rounded-full bg-[#ff5100] text-[#1c1814] text-[11px] font-bold flex items-center justify-center">
                 {selected.length}
               </span>
             </button>
@@ -657,7 +657,7 @@ export default function Navbar() {
               <Link href={loginHref(pathname)} className="block w-full text-center font-semibold py-3 rounded-xl transition-colors text-sm" style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
                 Log In
               </Link>
-              <Link href={signupHref(pathname)} className="block w-full text-center bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold py-3 rounded-xl transition-colors text-sm">
+              <Link href={signupHref(pathname)} className="block w-full text-center bg-[#ff5100] hover:bg-[#ff7d47] text-[#1c1814] font-semibold py-3 rounded-xl transition-colors text-sm">
                 Sign Up
               </Link>
             </div>

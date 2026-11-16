@@ -11,7 +11,7 @@ export default function WebsiteLink({ url, operator }: { url: string; operator: 
       target="_blank"
       rel="noopener"
       onClick={() => recordOutbound({ url, operator, source: "operators_page" })}
-      className="inline-flex items-center gap-1.5 px-5 py-3 rounded-xl font-bold text-[15px] text-white"
+      className="inline-flex items-center gap-1.5 px-5 py-3 rounded-xl font-bold text-[15px] text-[#1c1814]"
       style={{ background: "#ff5100" }}
     >
       Visit their website <ArrowUpRight className="w-4 h-4" />

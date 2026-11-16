@@ -847,7 +847,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                     return (
                       <button key={k} ref={k === "sat" ? satRef : undefined} type="button" aria-pressed={on} onClick={() => { takeOver(); setSat(k === "sat"); }}
                         className="md-hit inline-flex items-center gap-1 px-2 py-0.5 rounded-full transition-colors"
-                        style={on ? { background: "#ff5100", color: "#fff" } : { color: "rgba(255,255,255,0.7)" }}>
+                        style={on ? { background: "#ff5100", color: "#1c1814" } : { color: "rgba(255,255,255,0.7)" }}>
                         <Icon className="w-2.5 h-2.5" />{label}
                       </button>
                     );
@@ -884,7 +884,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                     download
                     onClick={() => { takeOver(); setOffline(true); }}
                     className="md-hit shrink-0 inline-flex items-center gap-1 text-[10px] font-bold px-2.5 h-6 rounded-full transition-colors"
-                    style={offline ? { background: "rgba(16,185,129,0.92)", color: "#03140d" } : { background: "#ff5100", color: "#fff" }}
+                    style={offline ? { background: "rgba(16,185,129,0.92)", color: "#03140d" } : { background: "#ff5100", color: "#1c1814" }}
                   >
                     {offline ? <WifiOff className="w-3 h-3" /> : <Download className="w-3 h-3" />}{offline ? "GPS on" : "Download GPX"}
                   </a>
@@ -974,7 +974,7 @@ export default function MapDemo({ pins: real, tour, cta }: { pins: MapDemoPin[];
                       onClick={() => { takeOver(); setCompared((c) => (c === sel.slug ? null : sel.slug)); }}
                       aria-label={compared === sel.slug ? "In compare" : "Add to compare"} title={compared === sel.slug ? "In compare" : "Add to compare"}
                       className="md-hit w-6 h-6 rounded-full grid place-items-center transition-colors"
-                      style={compared === sel.slug ? { background: "#ff5100", color: "#fff" } : { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.75)" }}
+                      style={compared === sel.slug ? { background: "#ff5100", color: "#1c1814" } : { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.75)" }}
                     >
                       <GitCompare className="w-3 h-3" />
                     </button>

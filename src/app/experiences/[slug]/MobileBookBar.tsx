@@ -128,7 +128,7 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, priceIsF
         </div>
         <button
           onClick={handleBook}
-          className="shrink-0 h-11 px-5 flex items-center justify-center gap-1 rounded-full text-white text-[14px] font-medium transition-colors bg-[#ff5100] active:bg-[#e64900]"
+          className="shrink-0 h-11 px-5 flex items-center justify-center gap-1 rounded-full text-[#1c1814] text-[14px] font-medium transition-colors bg-[#ff5100] active:bg-[#e64900]"
         >
           {bookDirect ? "Visit site" : operatorCount > 1 ? `Compare ${operatorCount}` : "See operators"}
           <ChevronRight className="w-4 h-4" />

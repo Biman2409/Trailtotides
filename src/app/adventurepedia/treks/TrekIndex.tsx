@@ -16,7 +16,7 @@ const DIFFS = ["Easy", "Moderate", "Hard", "Advanced", "Extreme"];
 const SORTS = { name: "A to Z", alt: "Highest first", short: "Shortest first" } as const;
 
 const chip = (on: boolean) => on
-  ? { background: "#ff5100", color: "#fff", border: "1px solid #ff5100" }
+  ? { background: "#ff5100", color: "#1c1814", border: "1px solid #ff5100" }
   : { color: "var(--text-secondary)", border: "1px solid var(--border-default)" };
 
 export default function TrekIndex({ treks }: { treks: TrekCard[] }) {

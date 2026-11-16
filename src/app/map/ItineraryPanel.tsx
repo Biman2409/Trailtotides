@@ -97,8 +97,8 @@ function Place({ name, n }: { name: string; n: number | null }) {
   return (
     <span className="inline-flex items-center gap-1 align-middle">
       {n != null && (
-        <span aria-label={`stop ${n} on the map`} className="inline-grid place-items-center w-[17px] h-[17px] rounded-full text-[9.5px] font-bold text-white shrink-0"
-          style={{ background: n === 1 ? "#16a34a" : "#ff5100", boxShadow: "0 0 0 1.5px #fff" }}>{n}</span>
+        <span aria-label={`stop ${n} on the map`} className="inline-grid place-items-center w-[17px] h-[17px] rounded-full text-[9.5px] font-bold shrink-0"
+          style={{ background: n === 1 ? "#16a34a" : "#ff5100", color: n === 1 ? "#ffffff" : "#1c1814", boxShadow: "0 0 0 1.5px #fff" }}>{n}</span>
       )}
       {name}
     </span>
