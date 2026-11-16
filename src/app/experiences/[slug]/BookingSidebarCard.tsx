@@ -93,7 +93,7 @@ export default function BookingSidebarCard({ slug, priceFrom, priceIsFull, opera
           className="w-full h-11 flex items-center justify-center gap-1.5 rounded-full text-white text-[14px] font-medium transition-colors bg-[#ff5100] hover:bg-[#e64900]"
         >
           {bookDirect && operatorName
-            ? `Book with ${operatorName}`
+            ? `Book on ${operatorName}'s site`
             : operatorCount > 1 ? `Compare ${operatorCount} operators` : "See operators"}
           <ChevronRight className="w-4 h-4" />
         </button>

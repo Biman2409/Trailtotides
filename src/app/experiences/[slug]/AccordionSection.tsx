@@ -43,7 +43,14 @@ export default function AccordionSection({ title, label, defaultOpen = false, mo
   useEffect(() => {
     if (!id) return;
     const openIfMe = () => { if (window.location.hash === `#${id}`) setOpen(true); };
-    const onEvent = (e: Event) => { if ((e as CustomEvent<string>).detail === id) setOpen(true); };
+    // A jump from the menu lands before a collapsed section has grown, which can leave it short
+    // of the top (near the page's end there's nothing below to scroll into): once it has opened
+    // (the 300ms expand), bring it into place again
+    const onEvent = (e: Event) => {
+      if ((e as CustomEvent<string>).detail !== id) return;
+      setOpen(true);
+      window.setTimeout(() => sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 320);
+    };
     openIfMe();
     window.addEventListener("hashchange", openIfMe);
     window.addEventListener(OPEN_SECTION_EVENT, onEvent);
@@ -60,7 +67,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, mo
   }
 
   return (
-    <section ref={sectionRef} id={id} className="pt-5 first:pt-0 scroll-mt-32">
+    <section ref={sectionRef} id={id} className="pt-5 first:pt-0 scroll-mt-32 lg:scroll-mt-36">
       <div className="relative flex items-start gap-4">
         {/* The section's stop on the trail line, level with the label */}
         <span

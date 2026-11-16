@@ -1886,6 +1886,9 @@ export const adventures: Adventure[] = [
   },
 ];
 
+/** Operators hidden from every page for now (lower-case names): no rating, not verified */
+const HIDDEN_OPERATORS = new Set(["treks and trails india"]);
+
 // ── Operator facts that must read the same on every page ─────────────────────────────────────
 // Runs once when this module loads, so every page (cards, comparison, directory, map) sees the
 // same price and rating for an operator.
@@ -1902,6 +1905,9 @@ export const adventures: Adventure[] = [
     a.operators.push(...add.filter((o) => !have.has(o.name.toLowerCase()))
       .map((o) => ({ ...o, verified: handListed.get(o.name.toLowerCase())?.verified ?? false })));
   }
+  // Operators kept off the site for now, wherever they're listed (by hand or from the sheet).
+  // Their rows stay in the data files, so taking a name out of this list brings them back.
+  for (const a of adventures) a.operators = a.operators.filter((o) => !HIDDEN_OPERATORS.has(o.name.toLowerCase()));
   // The latest fee read from the operator's own page (scripts/import-operator-offers.ts)
   // replaces the hand-entered one
   const latest = operatorPrices as Record<string, Record<string, { priceFrom: string; checkedAt?: string }>>;

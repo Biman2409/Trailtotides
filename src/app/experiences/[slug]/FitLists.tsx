@@ -33,12 +33,12 @@ export default function FitLists({ whoFor, whoNot, easier }: { whoFor: string; w
       </div>
       <div className="flex flex-wrap items-center gap-x-5 gap-y-1 mt-3 text-[13px]">
         {more && (
-          <button type="button" onClick={() => setAll((a) => !a)} aria-expanded={all} className="inline-flex items-center gap-1 font-semibold" style={{ color: "var(--accent-ink)" }}>
+          <button type="button" onClick={() => setAll((a) => !a)} aria-expanded={all} className="inline-flex items-center gap-1 min-h-11 -my-3 font-semibold" style={{ color: "var(--accent-ink)" }}>
             {all ? "Show fewer" : "Show all"} <ChevronDown className="w-3.5 h-3.5 transition-transform" style={{ transform: all ? "rotate(180deg)" : undefined }} />
           </button>
         )}
         {easier && (
-          <a href={easier.href} className="inline-flex items-center gap-1.5 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+          <a href={easier.href} className="inline-flex items-center gap-1.5 min-h-11 -my-3 hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
             {easier.label} <ArrowRight className="w-3.5 h-3.5 rotate-90" />
           </a>
         )}

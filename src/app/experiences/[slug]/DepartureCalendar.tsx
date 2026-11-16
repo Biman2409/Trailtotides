@@ -367,10 +367,11 @@ export default function DepartureCalendar({ departures, slug, today, by = "opera
                     <button
                       type="button"
                       onClick={() => openOperator({ url: d.url!, operator: d.operator, source: "calendar", slug: slug ?? d.trekSlug })}
-                      className="shrink-0 inline-flex items-center gap-1 rounded-full border px-3 py-1 text-[12.5px] font-semibold transition-colors hover:border-[#ff5100] hover:text-[#ff5100]"
+                      aria-label={`Book this date on ${d.operator}'s website (opens their site)`}
+                      className="shrink-0 inline-flex items-center gap-1 rounded-full border px-3 min-h-9 text-[12.5px] font-semibold transition-colors hover:border-[#ff5100] hover:text-[#ff5100]"
                       style={{ borderColor: "var(--border)", color: "var(--text-secondary)" }}
                     >
-                      Book <ExternalLink className="w-3 h-3" />
+                      Visit site <ExternalLink className="w-3 h-3" aria-hidden />
                     </button>
                   )}
                 </li>

@@ -22,7 +22,6 @@ import { getACE, computeDifficulty } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
 import { getApprovedOperatorsForAdventure } from "@/app/auth/operator-actions";
 import MobileBookBar from "./MobileBookBar";
-import FadeInSection from "@/components/ui/custom/FadeInSection";
 import AccordionSection from "./AccordionSection";
 import StatsStrip from "./StatsStrip";
 import CommunityCards from "./CommunityCards";
@@ -103,7 +102,7 @@ function RelatedRow({ items, exploreHref, exploreLabel, pillMode = "type", meta 
         })}
       </div>
       {exploreHref && (
-        <Link href={exploreHref} className="inline-flex items-center gap-1.5 text-xs font-medium hover:text-[#ff5100] transition-colors group" style={{ color: "var(--text-tertiary)" }}>
+        <Link href={exploreHref} className="inline-flex items-center gap-1.5 min-h-11 text-xs font-medium hover:text-[#ff5100] transition-colors group" style={{ color: "var(--text-tertiary)" }}>
           {exploreLabel ?? "Explore all"}
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </Link>
@@ -398,35 +397,24 @@ export default async function ExperiencePage({ params }: Props) {
             <p className="text-[12px] tracking-[0.12em] lowercase mb-2 text-white/80" style={{ fontVariant: "small-caps" }}>
               {adventure.type} · {adventure.state}
             </p>
-            <h1 className="text-[32px] sm:text-[44px] lg:text-[52px] !font-normal tracking-[-0.025em] leading-[1.02] mb-2" style={{ color: "#f7f3ee" }}>
-              {(() => {
-                // The traveller rating sits as a superscript after the last word,
-                // kept on the same line as it so it never wraps on its own
-                const words = routeLabel(adventure).split(" ");
-                const last = words.pop();
-                return (
-                  <>
-                    {words.length > 0 && <>{words.join(" ")} </>}
-                    <span className="whitespace-nowrap">
-                      {last}
-                      {travellerRating && (
-                        <a
-                          href="#community"
-                          aria-label={`Rated ${travellerRating.avg.toFixed(1)} out of 5 from ${travellerRating.count} traveller review${travellerRating.count !== 1 ? "s" : ""}`}
-                          title={`${travellerRating.count} traveller review${travellerRating.count !== 1 ? "s" : ""}`}
-                          className="relative -top-[1.05em] ml-1.5 sm:ml-2.5 inline-flex items-center gap-1 align-baseline font-sans text-xs sm:text-sm md:text-base font-medium tracking-normal text-white/85 hover:text-white transition-colors"
-                        >
-                          <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-[#ff8a4c] fill-[#ff8a4c]" />
-                          {travellerRating.avg.toFixed(1)}
-                          {/* The count says it's from travellers, and how many, without a hover */}
-                          <span className="text-white/55 font-normal">({travellerRating.count})</span>
-                        </a>
-                      )}
-                    </span>
-                  </>
-                );
-              })()}
-            </h1>
+            {/* The traveller rating sits as a superscript after the title, but outside the <h1>, so
+                the heading screen readers and search engines read is the adventure's name alone */}
+            <div className="text-[32px] sm:text-[44px] lg:text-[52px] tracking-[-0.025em] leading-[1.02] mb-2" style={{ color: "#f7f3ee" }}>
+              <h1 className="inline text-[1em] !font-normal tracking-[inherit] leading-[inherit]">{routeLabel(adventure)}</h1>
+              {travellerRating && (
+                <a
+                  href="#community"
+                  aria-label={`Rated ${travellerRating.avg.toFixed(1)} out of 5 from ${travellerRating.count} traveller review${travellerRating.count !== 1 ? "s" : ""}`}
+                  title={`${travellerRating.count} traveller review${travellerRating.count !== 1 ? "s" : ""}`}
+                  className="relative -top-[1.05em] ml-1.5 sm:ml-2.5 inline-flex items-center gap-1 align-baseline whitespace-nowrap font-sans text-xs sm:text-sm md:text-base font-medium tracking-normal text-white/85 hover:text-white transition-colors"
+                >
+                  <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-[#ff8a4c] fill-[#ff8a4c]" aria-hidden />
+                  {travellerRating.avg.toFixed(1)}
+                  {/* The count says it's from travellers, and how many, without a hover */}
+                  <span className="text-white/55 font-normal">({travellerRating.count})</span>
+                </a>
+              )}
+            </div>
             <p className="text-white/85 text-[14px] md:text-[16px] leading-relaxed max-w-xl">
               {adventure.tagline}
             </p>
@@ -443,7 +431,9 @@ export default async function ExperiencePage({ params }: Props) {
       <div className="topo">
 
         {/* ── STATS + WEATHER ZONE ──────────────────────────────── */}
-        <FadeInSection as="div" className="pt-3" style={READABLE_TONES}>
+        {/* No fade-in on the page's own content: after a jump or a quick scroll it left sections
+            blank for a moment */}
+        <div className="pt-3" style={READABLE_TONES}>
 
           {/* Stats strip — trek facts only, plus live weather. Price lives in the
               booking card / mobile bar and the operator section; type is in the
@@ -468,10 +458,10 @@ export default async function ExperiencePage({ params }: Props) {
             ]}
           />
 
-        </FadeInSection>
+        </div>
 
         {/* ── MAIN CONTENT ──────────────────────────────────────── */}
-        <FadeInSection as="div" className="max-w-7xl mx-auto px-5 lg:px-8 pt-5 sm:pt-6 pb-10" style={READABLE_TONES}>
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-5 sm:pt-6 pb-10" style={READABLE_TONES}>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
             {/* ── LEFT COLUMN — chapters on a trail line ── */}
@@ -544,8 +534,7 @@ export default async function ExperiencePage({ params }: Props) {
               </AccordionSection>
 
               {/* Where to book: the operator comparison and their start dates, one section with a switch */}
-              <div id="book-this-adventure" className="scroll-mt-32" />
-              <AccordionSection label="book this adventure" title="Where to book" defaultOpen>
+              <AccordionSection id="book-this-adventure" label="book this adventure" title="Where to book" defaultOpen>
                 <div id="operators-section">
                   <BookTabs
                     operatorCount={allOperators.length}
@@ -627,7 +616,7 @@ export default async function ExperiencePage({ params }: Props) {
 
             </StickySidebar>
           </div>
-        </FadeInSection>
+        </div>
 
         {/* ── SIMILAR ADVENTURES ────────────────────────────────── */}
         {similarTabs.length > 0 && (

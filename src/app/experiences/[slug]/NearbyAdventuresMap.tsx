@@ -216,19 +216,21 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
         const pts = trail.line.map(([la, lo]) => [la, lo] as [number, number]);
         L.polyline(pts, { color: isDark ? "#000" : "#fff", weight: 6, opacity: 0.55, interactive: false }).addTo(map);
         const line = L.polyline(pts, { color: "#ff5100", weight: 3.5, opacity: 1, interactive: false }).addTo(map);
+        // An 18px dot inside a 32px clear square, so the stop is easy to tap without looking bigger
         const stop = (label: string, bg: string) => L.divIcon({
           className: "",
-          html: `<div style="width:18px;height:18px;border-radius:50%;background:${bg};border:2px solid #fff;color:#fff;font:700 9.5px/14px system-ui,sans-serif;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.45)">${label}</div>`,
-          iconSize: [18, 18],
-          iconAnchor: [9, 9],
+          html: `<div style="width:32px;height:32px;display:flex;align-items:center;justify-content:center"><div style="width:18px;height:18px;border-radius:50%;background:${bg};border:2px solid #fff;color:#fff;font:700 9.5px/14px system-ui,sans-serif;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.45)">${label}</div></div>`,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
         });
         trail.stops.forEach((st, i) => {
-          L.marker([st.lat, st.lng], { icon: stop(String(i + 1), i === 0 ? "#16a34a" : "#ff5100"), zIndexOffset: 900 })
+          // title names the marker for screen readers (Leaflet gives it role="button")
+          L.marker([st.lat, st.lng], { icon: stop(String(i + 1), i === 0 ? "#16a34a" : "#ff5100"), zIndexOffset: 900, title: `Stop ${i + 1}: ${st.name}, km ${st.km}` })
             .bindTooltip(`${st.name} · km ${st.km}${st.ele != null ? ` · ${st.ele.toLocaleString("en-IN")} m` : ""}`, { direction: "top", offset: [0, -10], opacity: 0.95, className: "ttt-nearby-tooltip" })
             .addTo(map);
         });
         trail.side.forEach((st) => {
-          L.marker([st.lat, st.lng], { icon: stop("▲", "#0e7c86"), zIndexOffset: 900 })
+          L.marker([st.lat, st.lng], { icon: stop("▲", "#0e7c86"), zIndexOffset: 900, title: `Side trip: ${st.name}` })
             .bindTooltip(`${st.name} (side trip)${st.ele != null ? ` · ${st.ele.toLocaleString("en-IN")} m` : ""}`, { direction: "top", offset: [0, -10], opacity: 0.95, className: "ttt-nearby-tooltip" })
             .addTo(map);
         });
@@ -237,6 +239,7 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
         const currentMarker = L.marker([current.lat, current.lng], {
           icon: makeIcon("#ff5100", 36, current.type, true),
           zIndexOffset: 1000,
+          title: `${current.name} (this adventure)`,
         }).addTo(map);
 
         currentMarker.bindTooltip(`${current.name} · You are here`, {
@@ -254,7 +257,8 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
         const color = DIFF_COLORS[diff] ?? "#38bdf8";
         const km = Math.round(haversineKm(current.lat, current.lng, a.lat, a.lng));
         const marker = L.marker([a.lat, a.lng], {
-          icon: makeIcon(color, 26, a.type),
+          icon: makeIcon(color, 32, a.type),
+          title: `${a.name}, ${km} km away. Open its page`,
         }).addTo(map);
 
         marker.bindTooltip(`${a.name} · ${km} km`, {
@@ -391,7 +395,7 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
           </a>
           <p className="text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>
             No signal? Your GPS still works.{" "}
-            <Link href={`/adventurepedia/offline-maps?trek=${current.slug}`} className="font-semibold text-[#ff5100] hover:underline underline-offset-2 whitespace-nowrap">Take this trail offline →</Link>
+            <Link href={`/adventurepedia/offline-maps?trek=${current.slug}`} className="inline-flex items-center min-h-11 -my-3 font-semibold text-[#ff5100] hover:underline underline-offset-2 whitespace-nowrap">Take this trail offline →</Link>
           </p>
         </div>
       )}
