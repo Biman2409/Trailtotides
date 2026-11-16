@@ -269,7 +269,7 @@ export function TrailWeather({ trail }: { trail: Trail }) {
                   <span className={iconColor(r.w.code)} title={desc(r.w.code)}><WeatherIcon code={r.w.code} className="w-5 h-5" /></span>
                   <span className="tabular-nums whitespace-nowrap"><b style={{ color: "var(--text-primary)" }}>{r.w.max}°</b> <span style={{ color: "var(--text-tertiary)" }}>/ {r.w.min}°</span></span>
                   <span className="hidden sm:inline tabular-nums text-[12px] w-14 text-right" style={{ color: "var(--text-tertiary)" }}>{r.w.rain > 0 ? `${r.w.rain} mm` : "dry"}</span>
-                  {r.source === "last-year" && <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ background: "var(--bg-surface-2)", color: "var(--text-tertiary)" }}>last yr</span>}
+                  {r.source === "last-year" && <span className="text-[11.5px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ background: "var(--bg-surface-2)", color: "var(--text-tertiary)" }}>last yr</span>}
                 </span>
               ) : rows ? (
                 // Loaded, but neither the forecast nor last year's record has this place and date

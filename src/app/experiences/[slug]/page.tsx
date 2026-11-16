@@ -60,6 +60,9 @@ const READABLE_TONES = {
   "--text-tertiary": "color-mix(in srgb, var(--text-primary) 58%, transparent)",
 } as CSSProperties;
 
+/** Real traveller reviews a trek needs before its rating shows in the hero */
+const MIN_REVIEWS_FOR_RATING = 5;
+
 const DIFFICULTY_LEVEL: Record<string, number> = { Easy: 1, Moderate: 2, Hard: 3, Advanced: 4, Extreme: 5 };
 // Easier-alternative suggestions: furthest we'll look, and how many km of extra
 // travel one additional difficulty tier dropped is "worth" when ranking.
@@ -74,11 +77,11 @@ interface Props {
 function RelatedRow({ items, exploreHref, exploreLabel, pillMode = "type", meta }: { items: Adventure[]; exploreHref?: string; exploreLabel?: string; pillMode?: "type" | "region"; meta?: (a: Adventure) => string }) {
   return (
     <div>
-      <div className="flex gap-4 overflow-x-auto pb-3 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
+      <div className="flex gap-4 overflow-x-auto pb-3 -mx-2 px-2 snap-x snap-mandatory no-scrollbar lg:grid lg:grid-cols-6 lg:overflow-visible lg:mx-0 lg:px-0">
         {items.map((a) => {
           const diff = computeDifficulty(getACE(a));
           return (
-            <Link key={a.id} href={`/experiences/${a.slug}`} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-56 snap-start transition-all duration-300 hover:-translate-y-1" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
+            <Link key={a.id} href={`/experiences/${a.slug}`} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-56 lg:w-auto snap-start transition-all duration-300 hover:-translate-y-1" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
               <div className="relative h-28 shrink-0 overflow-hidden">
                 <Image src={a.heroImage} alt={a.name} fill sizes="224px" loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
@@ -89,9 +92,9 @@ function RelatedRow({ items, exploreHref, exploreLabel, pillMode = "type", meta 
                   }
                 </div>
               </div>
-              <div className="p-2.5 h-14 flex flex-col justify-between">
-                <h3 className="font-semibold text-xs leading-snug group-hover:text-[#ff5100] transition-colors line-clamp-2" style={{ color: "var(--text-primary)" }}>{a.name}</h3>
-                <div className="flex items-center gap-1.5 text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+              <div className="p-2.5 h-16 flex flex-col justify-between">
+                <h3 className="font-semibold text-[13px] leading-snug group-hover:text-[#ff5100] transition-colors line-clamp-2" style={{ color: "var(--text-primary)" }}>{a.name}</h3>
+                <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "var(--text-tertiary)" }}>
                   <span className="font-semibold" style={{ color: "var(--text-secondary)" }}>{diff}</span>
                   <span style={{ color: "var(--text-muted)" }}>·</span>
                   <span>{meta ? meta(a) : a.durationDays}</span>
@@ -193,17 +196,12 @@ export default async function ExperiencePage({ params }: Props) {
     showWaterWarning && "Open water",
   ].filter((h): h is string => !!h);
 
-  // The trek's own rating: traveller reviews, the same set the Reviews card
-  // shows (real ones plus seed reviews, de-duped by id)
-  const seedReviews = adventure.seedReviews ?? [];
+  // The trek's own rating, from real traveller reviews only (never the seed reviews), and only
+  // once there are enough of them to mean something. Until then the hero shows no rating.
   const supabase = await createAdminClient();
   const { data: dbReviews } = await supabase.from("reviews").select("id, rating").eq("adventure_slug", slug);
-  const dbReviewIds = new Set((dbReviews ?? []).map((r) => r.id));
-  const reviewRatings = [
-    ...(dbReviews ?? []).map((r) => r.rating as number),
-    ...seedReviews.filter((r) => !dbReviewIds.has(r.id)).map((r) => r.rating),
-  ];
-  const travellerRating = reviewRatings.length > 0
+  const reviewRatings = (dbReviews ?? []).map((r) => r.rating as number).filter((n) => Number.isFinite(n));
+  const travellerRating = reviewRatings.length >= MIN_REVIEWS_FOR_RATING
     ? { avg: reviewRatings.reduce((a, b) => a + b, 0) / reviewRatings.length, count: reviewRatings.length }
     : null;
 
@@ -233,14 +231,38 @@ export default async function ExperiencePage({ params }: Props) {
   const priceFrom = allOperators.length > 0
     ? allOperators.reduce((best, o) => (parsePrice(o.priceFrom) < parsePrice(best.priceFrom) ? o : best)).priceFrom
     : undefined;
-  const seasonUrgency = getSeasonUrgency(adventure.bestMonths);
+  const season = getSeasonUrgency(adventure.bestMonths);
   // Every start date we know, from operators' own pages and their listings here, one per operator per day
   const departures: Departure[] = allOperators.flatMap((o) => departuresOf(o));
   const todayIso = todayInIndia();
   const upcomingDepartures = departures.filter((d) => d.date >= todayIso).length;
-  const nextDeparture = getNextDeparture(departures.map((d) => d.date));
+  // The earliest start date, with whose it is when that isn't the operator named beside the price
+  const firstDeparture = departures.filter((d) => d.date >= todayIso).sort((a, b) => a.date.localeCompare(b.date))[0];
+  const nextDate = getNextDeparture(departures.map((d) => d.date));
+  const nextDeparture = nextDate && firstDeparture && featuredOp && firstDeparture.operator !== featuredOp.name && allOperators.length > 1
+    ? `${nextDate} with ${firstDeparture.operator}`
+    : nextDate;
+  // "Season opens in 3 weeks" beside a departure next week reads as a contradiction: operators
+  // run before our best months, so the note only shows when no one has dates before it opens
+  const seasonUrgency = season?.kind === "upcoming" && firstDeparture
+    && new Date(firstDeparture.date).getTime() < Date.now() + season.weeksUntil * 7 * 86400000
+    ? null : season;
 
   const currentDifficultyLevel = DIFFICULTY_LEVEL[difficulty] ?? 1;
+  // The grade most operators give it ("Easy to moderate"), when that differs from ours
+  const operatorGrade = (() => {
+    const counts = new Map<string, number>();
+    for (const o of allOperators) {
+      const raw = o.offer?.difficulty?.split(/[·(|]/)[0].trim();
+      if (!raw) continue;
+      const g = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+      counts.set(g, (counts.get(g) ?? 0) + 1);
+    }
+    const top = [...counts].sort((a, b) => b[1] - a[1])[0]?.[0];
+    return top && !top.toLowerCase().includes(difficulty.toLowerCase()) && top.length <= 24 ? top : undefined;
+  })();
+  // Hard and above: the safety notes open on desktop instead of hiding behind a tap
+  const safetyOpen = currentDifficultyLevel >= 3;
   // "A bit easier" = the same activity, a lower difficulty tier, reachable from
   // roughly the same base. A different activity (trek → bike ride) isn't a real
   // alternative, so it's excluded. Ranking weighs each extra tier dropped like
@@ -375,7 +397,8 @@ export default async function ExperiencePage({ params }: Props) {
       <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="relative h-[44vh] min-h-[320px] sm:h-[48vh] lg:h-[50vh] lg:min-h-[400px] max-h-[520px] flex items-end overflow-hidden">
+      {/* A dusk-mountain tone behind the photo, so a slow connection sees colour rather than black */}
+      <section className="relative h-[44vh] min-h-[320px] sm:h-[48vh] lg:h-[50vh] lg:min-h-[400px] max-h-[520px] flex items-end overflow-hidden" style={{ background: "linear-gradient(165deg, #6f7f8c 0%, #46535e 45%, #262d34 100%)" }}>
         <Image
           src={adventure.heroImage}
           alt={adventure.name}
@@ -454,7 +477,14 @@ export default async function ExperiencePage({ params }: Props) {
                 { label: "Best Season", value: adventure.bestSeason },
                 ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
                 ...(adventure.type === "Motorcycling" && adventure.startingPoint ? [{ label: "Starting Point", value: adventure.startingPoint }] : []),
-                { label: "Difficulty", value: difficulty },
+                {
+                  label: "Difficulty",
+                  // Our ACE grade weighs altitude and cold, so it can sit above the operators' own
+                  // grade: say so, rather than leave "Hard" beside their "Easy to moderate"
+                  value: operatorGrade
+                    ? <span title={`Our ACE grade. The operators' own grade is ${operatorGrade}.`}>{difficulty}<span className="block text-[11px] font-normal leading-tight mt-0.5" style={{ color: "var(--text-tertiary)" }}>operators say {operatorGrade.toLowerCase()}</span></span>
+                    : difficulty,
+                },
             ]}
           />
 
@@ -486,7 +516,7 @@ export default async function ExperiencePage({ params }: Props) {
 
               {/* Safety & Prep: collapsed to its hazards in one line, the notes, packing list
                   and guides a tap away */}
-              <AccordionSection id="safety" label="safety and prep" title="What to know before you go" peek={
+              <AccordionSection id="safety" label="safety and prep" title="What to know before you go" defaultOpen={safetyOpen} mobileDefaultOpen={false} peek={
                 <Peek>{hazards.length
                   ? <>Prepare for <span style={{ color: "var(--text-primary)" }}>{hazards.join(", ").toLowerCase()}</span>. Safety notes, packing list and guides inside</>
                   : "Safety notes, packing list and guides"}</Peek>
@@ -539,14 +569,7 @@ export default async function ExperiencePage({ params }: Props) {
                   <BookTabs
                     operatorCount={allOperators.length}
                     dateCount={upcomingDepartures}
-                    operators={
-                      <div className="space-y-3">
-                        <OperatorsSection operators={allOperators} slug={adventure.slug} />
-                        <Link href="/auth/operator-signup" className="inline-flex items-center gap-1 text-[12.5px] hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
-                          Run this {adventure.type === "Trekking" ? "trek" : "trip"}? List your company <ArrowRight className="w-3 h-3" />
-                        </Link>
-                      </div>
-                    }
+                    operators={<OperatorsSection operators={allOperators} slug={adventure.slug} />}
                     dates={upcomingDepartures > 0
                       ? <DepartureCalendar departures={departures} slug={adventure.slug} today={todayIso} trekName={adventure.name} />
                       : undefined}
@@ -558,7 +581,7 @@ export default async function ExperiencePage({ params }: Props) {
               <AccordionSection id="community" label="community" title="Traveller reviews" peek={
                 <Peek>{travellerRating
                   ? <><span style={{ color: "var(--text-primary)" }}>★ {travellerRating.avg.toFixed(1)}</span> from {travellerRating.count} {travellerRating.count === 1 ? "review" : "reviews"}, and travellers&apos; photos</>
-                  : "No reviews yet. Been here? Share how it went"}</Peek>
+                  : "Reviews and photos from travellers. Been here? Share how it went"}</Peek>
               }>
                 <CommunityCards slug={adventure.slug} adventureType={adventure.type} adventureName={adventure.name} operators={allOperators} />
               </AccordionSection>
@@ -579,6 +602,13 @@ export default async function ExperiencePage({ params }: Props) {
                   </dl>
                 </AccordionSection>
               )}
+
+              {/* For operators, not travellers: kept out of the booking area, at the end of the story */}
+              <p className="pt-6">
+                <Link href="/auth/operator-signup" className="inline-flex items-center gap-1 min-h-11 text-[12.5px] hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+                  Run this {adventure.type === "Trekking" ? "trek" : "trip"}? List your company <ArrowRight className="w-3 h-3" aria-hidden />
+                </Link>
+              </p>
 
               {/* Phones and tablets: the trail and nearby map, at the end of the story (the
                   sidebar, where it lives on desktop, is hidden at these sizes) */}

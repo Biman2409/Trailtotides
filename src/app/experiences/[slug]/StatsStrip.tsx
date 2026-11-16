@@ -48,7 +48,7 @@ export default function StatsStrip({ stats, weather: place, trail }: {
         <dl className="grid grid-cols-3 lg:grid-flow-col lg:auto-cols-fr gap-px" style={{ background: "var(--border-subtle)" }}>
           {stats.map(({ label, value }) => (
             <div key={label} className="min-w-0 px-2.5 sm:px-3.5 py-2" style={{ background: "var(--bg-surface)" }}>
-              <dt className="text-[10.5px] sm:text-[11.5px] tracking-[0.06em] sm:tracking-[0.1em] lowercase leading-none mb-1.5" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{label}</dt>
+              <dt className="text-[11.5px] sm:text-[12px] tracking-[0.06em] sm:tracking-[0.1em] lowercase leading-none mb-1.5" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{label}</dt>
               <dd className="text-[13.5px] sm:text-[14px] font-medium leading-snug" style={{ color: "var(--text-primary)" }}>{value}</dd>
             </div>
           ))}

@@ -347,7 +347,7 @@ export default function DepartureCalendar({ departures, slug, today, by = "opera
                         : by === "trek" ? d.trek : d.operator}
                       {d.price ? ` · ${inr(d.price)}` : ""}{d.days ? ` · ${d.days} days` : ""}
                       {lowest !== undefined && d.price === lowest && (
-                        <span className="ml-1.5 inline-block rounded-full px-1.5 py-px text-[10.5px] font-semibold align-[1px]" style={{ background: "rgba(63,168,119,0.15)", color: "var(--accent-green)" }}>
+                        <span className="ml-1.5 inline-block rounded-full px-1.5 py-px text-[11.5px] font-semibold align-[1px]" style={{ background: "rgba(63,168,119,0.15)", color: "var(--accent-green)" }}>
                           lowest this month
                         </span>
                       )}

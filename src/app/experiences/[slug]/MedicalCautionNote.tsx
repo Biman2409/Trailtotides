@@ -30,7 +30,7 @@ export default function MedicalCautionNote({ slug }: { slug: string }) {
       <div className="flex gap-3">
         <Stethoscope className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
         <div className="space-y-2">
-          <p className="text-[10px] font-bold uppercase tracking-[0.15em]" style={{ color: "#38bdf8" }}>Based on what you shared</p>
+          <p className="text-[11.5px] font-bold uppercase tracking-[0.15em]" style={{ color: "#38bdf8" }}>Based on what you shared</p>
           {notes.map((note, i) => (
             <p key={i} className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>{note}</p>
           ))}

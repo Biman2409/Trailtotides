@@ -6,6 +6,7 @@ import { loadProfileFromServer, isProfileStale } from "@/lib/matchmaker";
 import type { SeasonUrgency } from "@/lib/seasonUrgency";
 import { openOperator } from "@/lib/outbound";
 import { OPEN_COMPARE_EVENT } from "./OperatorsSection";
+import { BOOK_BAR_ATTR, BOOK_BAR_EVENT } from "@/lib/bookBar";
 
 interface Props {
   adventureName: string;
@@ -26,11 +27,31 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, priceIsF
   const [visible, setVisible] = useState(false);
   const [staleProfile, setStaleProfile] = useState(false);
 
+  // Shown once past the hero, but not while the operator list itself is on screen: there the
+  // bar's "Compare" only repeats what's in front of you
   useEffect(() => {
     const threshold = window.innerHeight * 0.8;
-    const onScroll = () => setVisible(window.scrollY > threshold);
+    let past = false;
+    let listInView = false;
+    const update = () => {
+      const show = past && !listInView;
+      setVisible(show);
+      // The site's bottom nav steps aside while the bar shows, so the two never stack
+      document.documentElement.toggleAttribute(BOOK_BAR_ATTR, show);
+      window.dispatchEvent(new Event(BOOK_BAR_EVENT));
+    };
+    const onScroll = () => { const p = window.scrollY > threshold; if (p !== past) { past = p; update(); } };
+    const list = document.getElementById("operators-section");
+    const io = list ? new IntersectionObserver(([e]) => { listInView = e.isIntersecting; update(); }, { rootMargin: "-20% 0px -20% 0px" }) : null;
+    if (list) io!.observe(list);
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      io?.disconnect();
+      document.documentElement.removeAttribute(BOOK_BAR_ATTR);
+      window.dispatchEvent(new Event(BOOK_BAR_EVENT));
+    };
   }, []);
 
   // Mirrors RecalibrationNudge's staleness check — this was the original
@@ -59,8 +80,9 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, priceIsF
 
   return (
     <div
-      className={`lg:hidden fixed bottom-0 left-0 right-0 z-[999] transition-all duration-500 ease-out ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+      aria-hidden={!visible}
+      className={`lg:hidden fixed bottom-0 left-0 right-0 z-[999] transition-all duration-300 ease-out ${
+        visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
       }`}
     >
       {/* Blur backdrop */}
@@ -78,12 +100,12 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, priceIsF
         <div className="min-w-0 flex-1">
           {priceFrom ? (
             <p className="text-black dark:text-white font-bold text-[15px] leading-tight whitespace-nowrap">
-              <span className="text-black/45 dark:text-white/40 font-normal text-[11px]">From </span>{priceFrom}
+              <span className="text-black/45 dark:text-white/40 font-normal text-[12px]">From </span>{priceFrom}
             </p>
           ) : (
             <p className="text-black dark:text-white font-semibold text-sm leading-tight truncate">{adventureName}</p>
           )}
-          <p className="text-black/45 dark:text-white/40 text-[11px] mt-0.5 truncate">
+          <p className="text-black/45 dark:text-white/40 text-[12px] mt-0.5 truncate">
             {priceFrom
               ? <>{priceIsFull ? "Full trip" : "Trek fee"}{operatorName && operatorCount > 1 ? ` · ${operatorName}` : ""}</>
               : <>{duration}{difficulty && <> · {difficulty}</>}</>}
@@ -92,17 +114,17 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, priceIsF
           {staleProfile ? (
             <button
               onClick={() => document.getElementById("book-this-adventure")?.scrollIntoView({ behavior: "smooth" })}
-              className="inline-flex items-center gap-1 mt-0.5 text-[10.5px] font-semibold"
+              className="inline-flex items-center gap-1 mt-0.5 text-[12px] font-semibold"
               style={{ color: difficulty === "Extreme" ? "#f87171" : "#fbbf24" }}
             >
               <AlertTriangle className="w-3 h-3" /> Your fitness profile is out of date
             </button>
           ) : seasonUrgency?.kind === "ending" ? (
-            <p className="inline-flex items-center gap-1 mt-0.5 text-[10.5px] font-semibold" style={{ color: "#f87171" }}>
+            <p className="inline-flex items-center gap-1 mt-0.5 text-[12px] font-semibold" style={{ color: "#f87171" }}>
               <Clock3 className="w-3 h-3" /> {seasonUrgency.weeksLeft}w left in season
             </p>
           ) : nextDeparture ? (
-            <p className="text-black/45 dark:text-white/40 text-[10.5px] mt-0.5 truncate">Next departure {nextDeparture}</p>
+            <p className="text-black/45 dark:text-white/40 text-[12px] mt-0.5 truncate">Next departure {nextDeparture}</p>
           ) : null}
         </div>
         <button

@@ -641,8 +641,8 @@ export default function PackingList({
           >
             <Backpack className="w-4 h-4 text-amber-400 shrink-0" />
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-black/55 dark:text-white/50">Smart Packing List</p>
-              <p className="text-black/35 dark:text-white/30 text-[10px] mt-0.5 flex items-center gap-1">
+              <p className="text-[11.5px] font-bold uppercase tracking-[0.18em] text-black/55 dark:text-white/50">Smart Packing List</p>
+              <p className="text-black/35 dark:text-white/30 text-[11.5px] mt-0.5 flex items-center gap-1">
                 <>{checkedCount}/{allItems.length} packed · {essentialCount} essentials</>
               </p>
             </div>
@@ -724,7 +724,7 @@ export default function PackingList({
                     <button
                       key={c.name}
                       onClick={() => setActiveTab(i)}
-                      className="flex items-center gap-1.5 px-2.5 py-2 rounded-t-lg text-[10px] font-bold whitespace-nowrap shrink-0 transition-all"
+                      className="flex items-center gap-1.5 px-2.5 py-2 rounded-t-lg text-[11.5px] font-bold whitespace-nowrap shrink-0 transition-all"
                       style={isActive
                         ? { color: "var(--accent-ink-soft)", background: "rgba(255,81,0,0.08)", borderBottom: "2px solid #ff5100" }
                         : { color: "rgba(var(--fg-rgb),0.3)", background: "transparent", borderBottom: "2px solid transparent" }
@@ -755,7 +755,7 @@ export default function PackingList({
               <div className="flex items-center justify-between px-4 pt-3 pb-1">
                 <div className="flex items-center gap-2">
                   <CatIcon className="w-3.5 h-3.5" style={{ color: catPct === 100 ? "#10b981" : "var(--accent-ink-soft)" }} />
-                  <p className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: catPct === 100 ? "#10b981" : "rgba(var(--fg-rgb),0.4)" }}>
+                  <p className="text-[11.5px] font-bold uppercase tracking-[0.16em]" style={{ color: catPct === 100 ? "#10b981" : "rgba(var(--fg-rgb),0.4)" }}>
                     {cat.name}
                   </p>
                 </div>
@@ -841,7 +841,7 @@ export default function PackingList({
                   style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}
                 >
                   <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <p className="text-emerald-400/80 text-[10px] font-semibold">{cat.name} packed!</p>
+                  <p className="text-emerald-400/80 text-[11.5px] font-semibold">{cat.name} packed!</p>
                 </div>
               )}
 

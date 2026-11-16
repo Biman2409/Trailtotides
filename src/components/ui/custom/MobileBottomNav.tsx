@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Compass, Map, User, Home, Library } from "lucide-react";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
+import { BOOK_BAR_ATTR, BOOK_BAR_EVENT } from "@/lib/bookBar";
 
 // The same sections as the navbar (Operators stays in the menu); Home sits in the middle
 const links = [
@@ -21,12 +22,14 @@ export default function MobileBottomNav() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    // Hidden while an adventure page's Book bar holds the bottom of the screen
     const handleScroll = () => {
-      setVisible(window.scrollY > 80);
+      setVisible(window.scrollY > 80 && !document.documentElement.hasAttribute(BOOK_BAR_ATTR));
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener(BOOK_BAR_EVENT, handleScroll);
+    return () => { window.removeEventListener("scroll", handleScroll); window.removeEventListener(BOOK_BAR_EVENT, handleScroll); };
   }, []);
 
   return (

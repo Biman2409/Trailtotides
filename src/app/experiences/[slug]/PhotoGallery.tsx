@@ -153,7 +153,7 @@ export default function PhotoGallery({ slug, currentUserId, onCount }: Props) {
               >
                 <Camera className="w-5 h-5 text-black/25 dark:text-white/20" />
                 <p className="text-black/45 dark:text-white/40 text-xs font-medium">Drop a photo or tap to upload</p>
-                <p className="text-black/25 dark:text-white/20 text-[10px]">JPG, PNG, WebP · Max 8MB</p>
+                <p className="text-black/25 dark:text-white/20 text-[11.5px]">JPG, PNG, WebP · Max 8MB</p>
                 <input
                   ref={fileRef}
                   type="file"
@@ -257,7 +257,7 @@ export default function PhotoGallery({ slug, currentUserId, onCount }: Props) {
                         ? <Image src={`/avatars/avatar-${photo.avatar_id}.png`} alt={photo.username} fill sizes="20px" className="object-cover" />
                         : <span className="w-full h-full flex items-center justify-center text-white text-[8px] font-bold">{photo.username.charAt(0).toUpperCase()}</span>}
                     </div>
-                    <span className="text-white text-[10px] font-semibold leading-none truncate max-w-[80px]">{photo.username}</span>
+                    <span className="text-white text-[11.5px] font-semibold leading-none truncate max-w-[80px]">{photo.username}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <ZoomIn className="w-3.5 h-3.5 text-white/60" />
@@ -275,7 +275,7 @@ export default function PhotoGallery({ slug, currentUserId, onCount }: Props) {
                   </div>
                 </div>
                 {photo.caption && (
-                  <p className="text-white/70 text-[10px] mt-1 leading-snug line-clamp-2">{photo.caption}</p>
+                  <p className="text-white/70 text-[11.5px] mt-1 leading-snug line-clamp-2">{photo.caption}</p>
                 )}
               </div>
             </div>
@@ -283,7 +283,7 @@ export default function PhotoGallery({ slug, currentUserId, onCount }: Props) {
         </div>
         </div>
         {photos.length > 1 && (
-          <p className="text-center text-black/30 dark:text-white/25 text-[10px] mt-3">{photos.length} photos · scroll to see all</p>
+          <p className="text-center text-black/30 dark:text-white/25 text-[11.5px] mt-3">{photos.length} photos · scroll to see all</p>
         )}
         </>
       )}

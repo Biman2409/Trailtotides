@@ -51,12 +51,28 @@ function datesOf(op: OperatorCardData): React.ReactNode {
   return null;
 }
 
+/**
+ * The GST cell: the stated rate, or the rate the fee with GST implies when only that is stated,
+ * so a "with GST" price never sits beside a blank GST cell
+ */
+function gstOf(op: OperatorCardData): string | undefined {
+  const o = op.offer;
+  if (!o) return undefined;
+  if (o.gstRate !== undefined) return `+${Math.round(o.gstRate * 100)}%`;
+  if (!o.feeTotal) return undefined;
+  const pct = o.feeBase ? Math.round((o.feeTotal / o.feeBase - 1) * 100) : 0;
+  return pct > 0 ? `+${pct}%` : "In the fee";
+}
+
 function ServiceCell({ state, price, plusGst, perDay }: { state: ServiceState; price?: number; plusGst?: boolean; perDay?: boolean }) {
   if (state === "included") return <span className="inline-flex items-center gap-1" style={{ color: "#3fa877" }}><Check className="w-3.5 h-3.5" />Included</span>;
   if (state === "extra") return <span>{price ? `${inr(price)}${perDay ? " a day" : ""}${plusGst ? " + GST" : ""}` : "Extra"}</span>;
   if (state === "not-included") return <span className="inline-flex items-center gap-1" style={muted}><Minus className="w-3.5 h-3.5" />Not included</span>;
   return none;
 }
+
+/** Rows an operator without details from their own page can still fill (from their listing here); the rest stay blank */
+const LISTING_ROWS = new Set(["fee", "dates", "cloakroom", "offloading", "google", "travellers"]);
 
 /** A row has a cell per operator, or one `span` across all of them */
 type Row = { key: string; label: string; cell: (op: OperatorCardData, i: number) => React.ReactNode; has: (op: OperatorCardData) => boolean; span?: React.ReactNode };
@@ -98,8 +114,8 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
       title: "Price per person",
       rows: [
         { key: "fee", label: "trek fee", has: () => true, cell: (op) => op.offer?.feeBase ? inr(op.offer.feeBase) : op.priceFrom || none },
-        { key: "gst", label: "gst", has: (op) => op.offer?.gstRate !== undefined, cell: (op) => op.offer?.gstRate !== undefined ? `+${Math.round(op.offer.gstRate * 100)}%` : none },
-        { key: "total", label: "with gst", has: (op) => !!op.offer?.feeTotal, cell: (op) => op.offer?.feeTotal ? inr(op.offer.feeTotal) : none },
+        { key: "gst", label: "gst", has: (op) => gstOf(op) !== undefined, cell: (op) => gstOf(op) ?? none },
+        { key: "total", label: "with gst", has: (op) => !!op.offer?.feeTotal, cell: (op) => op.offer?.feeTotal ? inr(op.offer.feeTotal) : <span style={muted}>Not stated</span> },
         { key: "transport", label: "+ transport", has: (op) => !!op.offer && transportExtra(op.offer) !== undefined, cell: (op) => !op.offer ? none : transportExtra(op.offer) !== undefined ? inr(transportExtra(op.offer)!) : <span style={muted}>{transportNote(op)}</span> },
         {
           key: "full", label: "full trip", has: (op) => !!op.offer && fullTripCost(op.offer) !== undefined,
@@ -110,7 +126,7 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
             return (
               <span className="flex flex-col">
                 <span className="text-[14px] font-semibold" style={totals[i] === minTotal ? best : { color: "var(--text-primary)" }}>{inr(full)}</span>
-                <span className="text-[11.5px]" style={muted}>{where}</span>
+                <span className="text-[12px]" style={muted}>{where}</span>
               </span>
             );
           },
@@ -217,11 +233,13 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
               <th className={`${labelCell} top-0 !z-[3]`} style={{ ...labelStyle, boxShadow: "inset 0 -1px 0 var(--border-default)" }} />
               {ops.map((op, i) => (
                 <th key={op.name} scope="col" className="sticky top-0 z-[2] px-2.5 pt-3 pb-2.5 text-left align-bottom font-normal" style={{ minWidth: colW, background: "var(--bg-surface)", boxShadow: "inset 0 -1px 0 var(--border-default)" }}>
-                  {isLowest(op, i) && <span className="block text-[10px] font-bold uppercase tracking-wider text-[#ff5100] mb-0.5">{knownFull(op) ? "Lowest full price" : "Lowest price"}</span>}
+                  {isLowest(op, i) && <span className="block text-[11px] font-bold uppercase tracking-wider text-[#ff5100] mb-0.5">{knownFull(op) ? "Lowest full price" : "Lowest price"}</span>}
                   <span className="block text-[14px] font-semibold leading-tight line-clamp-2" style={{ color: "var(--text-primary)" }}>{op.name}</span>
                   {op.verified
-                    ? <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: "#3fa877" }}><BadgeCheck className="w-3 h-3" />verified</span>
-                    : <span className="text-[11px]" style={muted}>not yet verified</span>}
+                    ? <span className="inline-flex items-center gap-1 text-[12px]" style={{ color: "#3fa877" }}><BadgeCheck className="w-3 h-3" />verified</span>
+                    : <span className="text-[12px]" style={muted}>not yet verified</span>}
+                  {/* Said once here rather than as a dash in every row below */}
+                  {!op.offer && <span className="block text-[11px] leading-snug mt-1" style={muted}>Only their fee is listed so far</span>}
                   <div className="mt-2">{bookButton(op, i)}</div>
                 </th>
               ))}
@@ -240,7 +258,7 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
                     <th scope="row" className={labelCell} style={labelStyle}>{r.label}</th>
                     {r.span !== undefined
                       ? <td colSpan={ops.length} className="px-2.5 py-2.5 align-top leading-snug">{r.span}</td>
-                      : ops.map((op, i) => <td key={op.name} className="px-2.5 py-2.5 align-top leading-snug" style={{ color: "var(--text-primary)" }}>{r.cell(op, i)}</td>)}
+                      : ops.map((op, i) => <td key={op.name} className="px-2.5 py-2.5 align-top leading-snug" style={{ color: "var(--text-primary)" }}>{op.offer || LISTING_ROWS.has(r.key) ? r.cell(op, i) : null}</td>)}
                   </tr>
                 ))}
               </Fragment>
@@ -278,7 +296,7 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
             <ChevronDown className="w-4 h-4 transition-transform" style={{ transform: showLists ? "rotate(180deg)" : undefined }} />
           </button>
         )}
-        <p className="text-[11.5px] leading-relaxed" style={muted}>
+        <p className="text-[12px] leading-relaxed" style={muted}>
           Highlighted: the best value in each row. &ldquo;Full trip&rdquo; is the fee with the GST each operator states, plus their transport from the pick-up city when it&apos;s a paid extra; columns run cheapest first.
           {checked ? ` Prices and inclusions read from each operator's own page, last checked ${formatDate(checked)}; confirm with them before you book.` : " Confirm prices and dates with the operator before you book."}
           {travellers.some(Boolean) ? " Travellers: ratings from Trail to Tides users who went with that operator." : ""}
@@ -401,7 +419,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
             <div className="text-right shrink-0">
               <p className="text-[11px] tracking-[0.1em] lowercase leading-none mb-1" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>from</p>
               <p className="text-[16px] font-medium" style={{ color: "var(--text-primary)" }}>{op.priceFrom}</p>
-              {op.offer?.gstRate ? <p className="text-[11.5px]" style={muted}>+{Math.round(op.offer.gstRate * 100)}% GST</p> : null}
+              {op.offer?.gstRate ? <p className="text-[12px]" style={muted}>+{Math.round(op.offer.gstRate * 100)}% GST</p> : null}
             </div>
           </div>
           <div className="mt-3 flex flex-col sm:flex-row gap-2">
@@ -437,6 +455,9 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
   const anyKnown = listed.some(knownFull);
   const lowest = Math.min(...listed.filter((o) => !anyKnown || knownFull(o)).map(totalOf).filter((n) => Number.isFinite(n) && n > 0));
   const withDetails = operators.filter((o) => o.offer).length;
+  // Where the fee-only operators start, when the list has both kinds of price
+  const firstFeeOnly = anyKnown ? visible.findIndex((o) => !knownFull(o)) : -1;
+  const grouped = firstFeeOnly > 0;
 
   return (
     <>
@@ -455,10 +476,17 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
               next,
             ].filter(Boolean).join(" · ");
             return (
-              // Phones stack the name over the price and Book; wider screens keep one row
-              <li key={op.name} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 px-4 py-3" style={i > 0 ? { borderTop: "1px solid var(--border-subtle)" } : undefined}>
+              <Fragment key={op.name}>
+              {/* Two price groups, each cheapest first: without these headings the prices read as unsorted */}
+              {grouped && (i === 0 || i === firstFeeOnly) && (
+                <li className="px-4 pt-2.5 pb-1.5 text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps", background: "var(--bg-page)", ...(i > 0 ? { borderTop: "1px solid var(--border-subtle)" } : {}) }}>
+                  {i === 0 ? "full trip price · cheapest first" : "trek fee only · gst and transport may be extra"}
+                </li>
+              )}
+              {/* Phones stack the name over the price and Book; wider screens keep one row */}
+              <li className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 px-4 py-3" style={i > 0 || grouped ? { borderTop: "1px solid var(--border-subtle)" } : undefined}>
                 <div className="min-w-0 sm:flex-1">
-                  {isLowest && <span className="block text-[10px] font-bold uppercase tracking-wider text-[#ff5100] leading-none mb-1">{full ? "Lowest full price" : "Lowest price"}</span>}
+                  {isLowest && <span className="block text-[11px] font-bold uppercase tracking-wider text-[#ff5100] leading-none mb-1">{full ? "Lowest full price" : "Lowest price"}</span>}
                   <p className="flex items-center gap-1.5 text-[14.5px] font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>
                     <span className="truncate">{op.name}</span>
                     {op.verified && <BadgeCheck className="w-3.5 h-3.5 shrink-0" style={{ color: "#3fa877" }} aria-label="Verified operator" />}
@@ -472,7 +500,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
                 <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
                 <div className="sm:text-right">
                   <p className="text-[15px] font-semibold leading-tight" style={isLowest ? best : { color: "var(--text-primary)" }}>{full ? inr(full) : op.priceFrom || "On request"}</p>
-                  <p className="text-[11.5px] leading-tight mt-0.5 sm:max-w-[200px]" style={muted}>{full ? fullNote(op) : op.offer?.gstRate ? `fee only, +${Math.round(op.offer.gstRate * 100)}% GST` : "fee only"}</p>
+                  <p className="text-[12px] leading-tight mt-0.5 sm:max-w-[200px]" style={muted}>{full ? fullNote(op) : op.offer?.gstRate ? `fee only, +${Math.round(op.offer.gstRate * 100)}% GST` : "fee only"}</p>
                 </div>
                 <button
                   onClick={() => { if (url) openOperator({ url, operator: op.name, source: "compare", slug }); }}
@@ -485,6 +513,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
                 </button>
                 </div>
               </li>
+              </Fragment>
             );
           })}
         </ul>

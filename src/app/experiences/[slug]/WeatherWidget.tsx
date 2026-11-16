@@ -236,7 +236,7 @@ export function WeatherDetails({ weather, lat, lng, locationName, altitude, isBa
       </div>
 
       {/* Week ahead — 4 across on phones so each day stays readable */}
-      <p className="text-[10px] font-bold uppercase tracking-[0.16em] mb-2.5" style={{ color: "var(--text-tertiary)" }}>Week ahead</p>
+      <p className="text-[11.5px] font-bold uppercase tracking-[0.16em] mb-2.5" style={{ color: "var(--text-tertiary)" }}>Week ahead</p>
       <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 sm:gap-2.5 mb-5">
         {weather.daily.slice(0, 7).map((day, i) => (
           <div
@@ -286,7 +286,7 @@ export function WeatherDetails({ weather, lat, lng, locationName, altitude, isBa
         {willUseHistorical && !dateWeather && (
           <div className="px-4 py-2.5 flex items-start gap-2" style={{ borderTop: "1px solid var(--border-subtle)", background: "rgba(56,189,248,0.08)" }}>
             <CalendarDays className="w-3 h-3 text-sky-400/70 shrink-0 mt-0.5" />
-            <p className="text-sky-400/70 text-[10.5px] leading-snug">
+            <p className="text-sky-400/70 text-[11.5px] leading-snug">
               This date is beyond the 16-day forecast, so you&apos;ll see last year&apos;s conditions for it instead of a live forecast.
             </p>
           </div>
@@ -317,7 +317,7 @@ export function WeatherDetails({ weather, lat, lng, locationName, altitude, isBa
             {dateWeather.precipitation > 0 && (
               <div className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl shrink-0" style={{ background: "rgba(56,189,248,0.08)", border: "1px solid rgba(56,189,248,0.15)" }}>
                 <Droplets className="w-3.5 h-3.5 text-sky-400" />
-                <span className="text-sky-400 text-[10px] font-bold">{dateWeather.precipitation}mm</span>
+                <span className="text-sky-400 text-[11.5px] font-bold">{dateWeather.precipitation}mm</span>
               </div>
             )}
           </div>
@@ -325,13 +325,13 @@ export function WeatherDetails({ weather, lat, lng, locationName, altitude, isBa
       </div>
 
       {altM && altM >= 3500 ? (
-        <p className="mt-4 text-black/35 dark:text-white/30 text-[10px] flex items-center gap-1.5">
+        <p className="mt-4 text-black/35 dark:text-white/30 text-[11.5px] flex items-center gap-1.5">
           <Thermometer className="w-3 h-3 text-amber-500/50 dark:text-amber-400/40 shrink-0" />
           At {altitude}, summit temps run 10–15°C colder. Data reflects base-area conditions.
           <span className="ml-auto text-black/40 dark:text-white/35">Open-Meteo</span>
         </p>
       ) : (
-        <p className="mt-3 text-black/40 dark:text-white/35 text-[10px] text-right">Open-Meteo · Updated now</p>
+        <p className="mt-3 text-black/40 dark:text-white/35 text-[11.5px] text-right">Open-Meteo · Updated now</p>
       )}
     </div>
   );
