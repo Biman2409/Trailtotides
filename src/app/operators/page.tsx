@@ -11,18 +11,18 @@ import OperatorsClient, { OperatorCardData } from "./OperatorsClient";
 import { operatorSlug } from "@/lib/operatorPages";
 
 export const metadata: Metadata = {
-  title: "Verified Adventure Operators",
-  description: "Browse verified adventure operators across India — trekking guides, diving schools, biking tours, and more. Every operator reviewed and approved by Trail to Tides.",
+  title: "Adventure Operators",
+  description: "The trekking, motorcycling, cycling and rafting operators listed on Trail to Tides, with the adventures each runs, their Google ratings and which ones we've verified.",
   openGraph: {
-    title: "Verified Adventure Operators — Trail to Tides",
-    description: "Discover trusted adventure operators across India — each verified by our team for safety, quality, and expertise.",
+    title: "Adventure Operators — Trail to Tides",
+    description: "Trekking, motorcycling, cycling and rafting operators across India and Nepal, with the adventures each runs and which ones we've verified.",
     url: "https://www.trailtotides.com/operators",
-    images: [{ url: "https://www.trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "Verified Adventure Operators — Trail to Tides" }],
+    images: [{ url: "https://www.trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "Adventure Operators — Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Verified Adventure Operators — Trail to Tides",
-    description: "Trusted operators for trekking, diving, biking, climbing, and more across India.",
+    title: "Adventure Operators — Trail to Tides",
+    description: "Trekking, motorcycling, cycling and rafting operators across India and Nepal.",
   },
   alternates: { canonical: "https://www.trailtotides.com/operators" },
 };

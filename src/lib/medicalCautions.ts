@@ -4,13 +4,13 @@
 // a flag only becomes a note. "A person, not the algorithm, should make the final call."
 
 import type { Adventure } from "./data";
-import { getACE } from "./ace";
+import { getACE, difficultyOf } from "./ace";
 import type { MedicalFlags } from "./matchmakerQuestions";
 
 export function deriveMedicalCautions(flags: MedicalFlags | null | undefined, adventure: Adventure): string[] {
   if (!flags) return [];
   const req = getACE(adventure);
-  const isExtreme = adventure.difficulty === "Extreme";
+  const isExtreme = difficultyOf(adventure) === "Extreme";
   const notes: string[] = [];
 
   if (flags.cardioRespiratory && (req.stamina >= 4 || req.altitude >= 4)) {

@@ -5,8 +5,8 @@ import { ArrowRight, Mountain, RefreshCw, RotateCcw, TrendingUp, Users } from "l
 import { adventures } from "@/lib/data";
 import { type StoredProfile } from "@/lib/matchmaker";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
-import { AXES, AXIS_LABEL, TRAINING_TIPS, bestNextStep, nextSteps, type TripCredit } from "@/lib/fitness";
-import { getACE, computeMatchScore, type ACE } from "@/lib/ace";
+import { AXES, AXIS_LABEL, trainingTip, bestNextStep, nextSteps, type TripCredit } from "@/lib/fitness";
+import { getACE, computeMatchScore, READY_MIN, STRETCH_MIN, type ACE } from "@/lib/ace";
 import { SAMPLE_ACE } from "@/lib/homeCuration";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import RankBar from "@/components/ui/custom/RankBar";
@@ -82,7 +82,7 @@ const FRIENDS: { name: string; shift: Partial<Record<keyof ACE, number>> }[] = [
   { name: "Meera", shift: { stamina: -2, power: -1, strength: -1, altitude: -2, nerve: -1 } },
 ];
 function sampleGroup(samples: ReturnType<typeof sampleResults>) {
-  const pick = samples.find((s) => s.score >= 80) ?? samples[0];
+  const pick = samples.find((s) => s.score >= READY_MIN) ?? samples[0];
   const trekAce = getACE(pick.a);
   const members = [{ name: "You", ace: SAMPLE_ACE as ACE }, ...FRIENDS.map((f) => ({
     name: f.name,
@@ -129,7 +129,7 @@ function sampleTrain(): StoryTrain | null {
       })
       // A stretch that turns ready and was short on this capability; best if the new level is
       // exactly what it needs, then the fewest gaps left
-      .filter((x) => x.before >= 55 && x.before < 80 && x.after >= 80 && x.req[step.axis] >= step.to)
+      .filter((x) => x.before >= STRETCH_MIN && x.before < READY_MIN && x.after >= READY_MIN && x.req[step.axis] >= step.to)
       .sort((x, y) => Number(x.req[step.axis] !== step.to) - Number(y.req[step.axis] !== step.to) || x.left - y.left || y.after - x.after)[0];
     if (f) return { ...step, trek: { name: f.a.name, ace: f.req, before: f.before, after: f.after } };
   }
@@ -205,9 +205,9 @@ function ProfileSummary({ profile, ace, credits, stale }: { profile: StoredProfi
 
   const scores = adventures.map((a) => computeMatchScore(ace, getACE(a)));
   const counts = {
-    ready: scores.filter((s) => s >= 80).length,
-    stretch: scores.filter((s) => s >= 55 && s < 80).length,
-    notyet: scores.filter((s) => s < 55).length,
+    ready: scores.filter((s) => s >= READY_MIN).length,
+    stretch: scores.filter((s) => s >= STRETCH_MIN && s < READY_MIN).length,
+    notyet: scores.filter((s) => s < STRETCH_MIN).length,
   };
   const step = bestNextStep(ace, adventures);
   const strengths = [...AXES].sort((a, b) => ace[b] - ace[a]).slice(0, 3);
@@ -266,7 +266,7 @@ function ProfileSummary({ profile, ace, credits, stale }: { profile: StoredProfi
                   Train next: {AXIS_LABEL[step.axis]} <span className="tabular-nums" style={{ color: "#10b981" }}>{step.from} → {step.to}</span>
                 </span>
                 <span className="block text-[12.5px] mt-0.5" style={{ color: "var(--text-secondary)" }}>
-                  Unlocks <b style={{ color: "#10b981" }}>{step.unlocked} more</b> {step.unlocked === 1 ? "adventure" : "adventures"}. {TRAINING_TIPS[step.axis]}
+                  Unlocks <b style={{ color: "#10b981" }}>{step.unlocked} more</b> {step.unlocked === 1 ? "adventure" : "adventures"}. {trainingTip(step.axis, step.from, step.to)}
                 </span>
               </span>
               <ArrowRight className="w-4 h-4 mt-1 shrink-0 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" style={{ color: "var(--text-secondary)" }} />

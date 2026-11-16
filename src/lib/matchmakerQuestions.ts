@@ -230,9 +230,9 @@ export const DECAY_QUESTIONS: DecayQuestion[] = [
 ];
 
 // ─── Medical questions ──────────────────────────────────────────────────────
-// 7 questions, each individually skippable. These NEVER feed into ACE
-// scoring (see src/lib/matchmakerScoring.ts, which has no parameter through
-// which these answers could reach it) — they only ever produce advisory
+// 6 questions, each individually skippable. The raw answers never reach ACE
+// scoring directly: they become MedicalFlags, which lower specific axes by fixed
+// multipliers in src/lib/matchmakerScoring.ts (at most half in total) and produce advisory
 // flags, interpreted per-adventure by src/lib/medicalCautions.ts.
 
 export interface MedicalOption {

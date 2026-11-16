@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { bytesMatchType } from "@/lib/imageSniff";
 import { createClient } from "@supabase/supabase-js";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
@@ -41,6 +42,8 @@ export async function POST(req: NextRequest) {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     const path = `${id}.${ext}`;
     const bytes = await file.arrayBuffer();
+    // The declared type is the sender's claim; the first bytes say what the file really is
+    if (!bytesMatchType(bytes, file.type)) return NextResponse.json({ error: "That file isn't a JPG, PNG or WebP image" }, { status: 400 });
 
     let { error: uploadError } = await admin.storage.from(BUCKET).upload(path, bytes, {
       contentType: file.type,

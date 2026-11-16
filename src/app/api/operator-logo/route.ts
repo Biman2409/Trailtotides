@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { bytesMatchType } from "@/lib/imageSniff";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
@@ -11,7 +12,8 @@ const admin = createClient(
 
 const BUCKET = "operator-profiles";
 const MAX_SIZE = 4 * 1024 * 1024; // 4 MB
-const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/svg+xml"];
+// No SVG: it can carry script, and a logo is shown fine as PNG or WebP
+const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 async function ensureBucket() {
   const { data: buckets } = await admin.storage.listBuckets();
@@ -53,10 +55,13 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     const ownerId = user?.id ?? randomUUID();
 
-    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    // Extension from the checked file type, never from the uploaded file's name
+    const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
     const path = `${ownerId}-logo.${ext}`;
 
     const arrayBuffer = await file.arrayBuffer();
+    // The declared type is the sender's claim; the first bytes say what the file really is
+    if (!bytesMatchType(arrayBuffer, file.type)) return NextResponse.json({ error: "That file isn't a JPG, PNG or WebP image" }, { status: 400 });
     const { error: uploadError } = await admin.storage
       .from(BUCKET)
       .upload(path, arrayBuffer, { contentType: file.type, upsert: true });

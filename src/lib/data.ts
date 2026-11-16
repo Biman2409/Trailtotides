@@ -163,6 +163,8 @@ export const adventures: Adventure[] = [
           durationDays: "10 days",
           distance: "490km",
           altitude: "5,359m (Tanglang La)",
+          // Hand-set ACE (was estimated from the grade): 5,359 m passes on a heavy bike; gravel, water crossings, no guardrails
+          ace: { stamina:3, power:2, strength:3, agility:3, water:0, altitude:5, focus:4, nerve:3 },
         bestSeason: "Jun – Sep",
         bestMonths: ["Jun", "Jul", "Aug", "Sep"],
           startingPoint: "Manali",
@@ -206,6 +208,8 @@ export const adventures: Adventure[] = [
       durationDays: "12 days",
       distance: "550km",
       altitude: "4,551m (Kunzum Pass)",
+      // Hand-set ACE (was estimated from the grade): 550 km pedalled over 4,551 m passes; endurance above all
+      ace: { stamina:5, power:5, strength:3, agility:3, water:0, altitude:4, focus:3, nerve:4 },
       bestSeason: "Jun – Oct",
       bestMonths: ["Jun", "Jul", "Aug", "Sep", "Oct"],
         heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/spiti-valley-cycling.jpeg",
@@ -246,6 +250,8 @@ export const adventures: Adventure[] = [
               durationDays: "14 days",
               distance: "1,800km",
                 altitude: "5,883m (Umling La)",
+                // Hand-set ACE (was estimated from the grade): 14 days, 1,800 km, up to 5,883 m (Umling La); very remote
+                ace: { stamina:4, power:2, strength:3, agility:3, water:0, altitude:5, focus:4, nerve:4 },
             bestSeason: "Jun – Sep",
             bestMonths: ["Jun", "Jul", "Aug", "Sep"],
               startingPoint: "Leh",
@@ -260,7 +266,7 @@ export const adventures: Adventure[] = [
     safetyNotes:
       "Spend minimum 3 days acclimatising in Leh before starting. Carry oxygen, full repair kit, and satellite communicator. Fuel up whenever possible — stations are 200km+ apart. File a route plan with local police.",
         operators: [
-          { name: "Rimo Expeditions", verified: true, priceFrom: "₹65,000", googleRating: 4.9, website: "https://www.rimoexpeditions.com" },
+          { name: "Rimo Expeditions", verified: true, priceFrom: "₹65,000", googleRating: 4.9 },
           { name: "Royal Enfield Marquee Rides", verified: true, priceFrom: "₹1,20,000", googleRating: 4.9, website: "https://www.royalenfield.com/in/en/rides/marquee-rides" },
           { name: "Himalayan Rider", verified: true, priceFrom: "₹55,000", googleRating: 4.8, website: "https://himalayanrider.com" },
           { name: "Twisted Trails Adventures", verified: false, priceFrom: "₹48,000", googleRating: 4.2, website: "https://www.twistedtrailsadv.com" },
@@ -287,6 +293,8 @@ export const adventures: Adventure[] = [
       durationDays: "10 days",
       distance: "600km",
         altitude: "5,091m (Shinku La)",
+        // Hand-set ACE (was estimated from the grade): broken roads over Shinku La (5,091 m), river crossings, days from help
+        ace: { stamina:4, power:3, strength:4, agility:4, water:0, altitude:5, focus:4, nerve:5 },
       bestSeason: "Jul – Sep",
       bestMonths: ["Jul", "Aug", "Sep"],
         startingPoint: "Leh / Manali / Kargil",
@@ -303,9 +311,9 @@ export const adventures: Adventure[] = [
       "Carry a satellite phone — there is no mobile signal in Zanskar. River crossings should only be attempted in the morning before glacial melt raises water levels. Always ride in pairs minimum.",
         operators: [
           { name: "Motorcycle Tour India", verified: true, priceFrom: "₹48,000", googleRating: 4.9, website: "https://www.motorcycletourindia.com" },
-          { name: "Rimo Expeditions", verified: true, priceFrom: "₹55,000", googleRating: 4.8, website: "https://www.rimoexpeditions.com" },
+          { name: "Rimo Expeditions", verified: true, priceFrom: "₹55,000", googleRating: 4.8 },
           { name: "Mototour Ladakh", verified: true, priceFrom: "₹52,000", googleRating: 4.7, website: "https://mototourladakh.com" },
-          { name: "Ride On Bike Trips", verified: false, priceFrom: "₹38,000", googleRating: 4.2, website: "https://www.rideonbiketrips.com" },
+          { name: "Ride On Bike Trips", verified: false, priceFrom: "₹38,000", googleRating: 4.2 },
           { name: "Dream Riders Group", verified: false, priceFrom: "₹42,000", googleRating: 4.0, website: "https://thedreamridersgroup.com" },
         ],
     tags: ["Zanskar", "remote", "off-road", "river crossings", "expedition"],
@@ -388,9 +396,9 @@ export const adventures: Adventure[] = [
     "The Indian side requires a permit from the Darjeeling DFO. Nepal side checkposts require passport copies. The ridge path can be icy December–January — carry microspikes.",
   ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
     operators: [
-    { name: "Indiahikes", verified: true, priceFrom: "₹13,000", googleRating: 4.9, website: "https://indiahikes.com/sandakphu-phalut-trek" },
+    { name: "Indiahikes", verified: true, priceFrom: "₹13,000", googleRating: 4.9, website: "https://indiahikes.com/sandakphu-phalut" },
     { name: "Trek The Himalayas", verified: true, priceFrom: "₹13,900", googleRating: 4.8, website: "https://trekthehimalayas.com/sandakphu-trek" },
-    { name: "Trekup India", verified: false, priceFrom: "₹13,000", googleRating: 4.2, website: "https://www.trekupindia.com/sandakphu-phalut-trek" },
+    { name: "Trekup India", verified: false, priceFrom: "₹13,000", googleRating: 4.2, website: "https://trekupindia.com/trek/sandakphu-phalut" },
   ],
   tags: ["four peaks view", "West Bengal", "Singalila ridge", "rhododendrons", "iconic"],
   featured: true,
@@ -429,7 +437,7 @@ export const adventures: Adventure[] = [
     "Aru requires Pahalgam-area permits for foreigners. The pass between Tarsar and Marsar is steep and can be snowy in July. Register at the Forest Department checkpost at Aru before starting.",
   ace: { stamina:3, power:2, strength:3, agility:2, water:2, altitude:4, focus:2, nerve:2 },
     operators: [
-    { name: "Indiahikes", verified: true, priceFrom: "₹16,000", googleRating: 4.9, website: "https://indiahikes.com/tarsar-marsar-trek" },
+    { name: "Indiahikes", verified: true, priceFrom: "₹16,000", googleRating: 4.9, website: "https://indiahikes.com/tarsar-marsar" },
     { name: "Trek The Himalayas", verified: true, priceFrom: "₹17,000", googleRating: 4.8, website: "https://trekthehimalayas.com/tarsar-marsar-trek" },
     { name: "Trekmunk", verified: false, priceFrom: "₹18,000", googleRating: 4.3, website: "https://www.trekmunk.com/treks/tarsar-marsar-trek" },
   ],
@@ -454,6 +462,8 @@ export const adventures: Adventure[] = [
           durationDays: "9 days",
           distance: "450km",
           altitude: "4,551m (Kunzum Pass)",
+          // Hand-set ACE (was estimated from the grade): Kinnaur–Spiti roads, landslide zones, Kunzum at 4,551 m
+          ace: { stamina:3, power:2, strength:3, agility:4, water:0, altitude:4, focus:4, nerve:4 },
         bestSeason: "Jun – Oct",
         bestMonths: ["Jun", "Jul", "Aug", "Sep", "Oct"],
           startingPoint: "Manali / Shimla",
@@ -617,7 +627,7 @@ export const adventures: Adventure[] = [
     ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:5, focus:4, nerve:4 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹21,500", googleRating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/bali-pass-trek" },
-      { name: "Indiahikes", verified: true, priceFrom: "₹22,000", googleRating: 4.8, website: "https://indiahikes.com/bali-pass-trek" },
+      { name: "Indiahikes", verified: true, priceFrom: "₹22,000", googleRating: 4.8, website: "https://indiahikes.com/bali-pass-ruinsara-tal" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹22,000", googleRating: 4.7, website: "https://trekthehimalayas.com/bali-pass-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹20,000", googleRating: 4.3, website: "https://www.trekupindia.com/bali-pass-trek" },
     ],
@@ -796,7 +806,7 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹10,000", googleRating: 4.8, website: "https://indiahikes.com/deoriatal-chandrashila-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹9,500", googleRating: 4.7, website: "https://trekthehimalayas.com/deoriatal-chandrashila-trek" },
-      { name: "Trekup India", verified: false, priceFrom: "₹9,000", googleRating: 4.3, website: "https://www.trekupindia.com/deoriatal-chandrashila-trek" },
+      { name: "Trekup India", verified: false, priceFrom: "₹9,000", googleRating: 4.3, website: "https://trekupindia.com/trek/chopta-chandrashila-tungnath" },
     ],
     tags: ["Chandrashila", "Deoria Tal", "Uttarakhand", "summit", "Kedarnath view"], featured: false,
     seedReviews: [
@@ -825,7 +835,7 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹85,000", googleRating: 4.9, website: "https://www.bikatadventures.com/Home/Itinerary/Everest-Base-Camp-Trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹75,500", googleRating: 4.8, website: "https://trekthehimalayas.com/everest-base-camp-trek" },
-      { name: "Trekup India", verified: false, priceFrom: "₹80,000", googleRating: 4.4, website: "https://www.trekupindia.com/everest-base-camp-trek" },
+      { name: "Trekup India", verified: false, priceFrom: "₹80,000", googleRating: 4.4, website: "https://trekupindia.com/trek/everest-base-camp" },
     ],
     tags: ["Nepal", "Everest", "iconic", "Khumbu", "high altitude"], featured: true, editorChoice: true,
     seedReviews: [
@@ -854,7 +864,7 @@ export const adventures: Adventure[] = [
     safetyNotes: "Gangotri Glacier moraine is loose and slippery. Gaumukh section requires careful footing — no fixed trail on the glacier. Trek with an experienced guide.",
     ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, nerve:3 },
     operators: [
-      { name: "Indiahikes", verified: true, priceFrom: "₹17,000", googleRating: 4.8, website: "https://indiahikes.com/gaumukh-tapovan-trek" },
+      { name: "Indiahikes", verified: true, priceFrom: "₹17,000", googleRating: 4.8, website: "https://indiahikes.com/gaumukh-tapovan" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹17,000", googleRating: 4.7, website: "https://trekthehimalayas.com/gaumukh-tapovan-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹17,000", googleRating: 4.3, website: "https://www.trekupindia.com/gaumukh-tapovan-trek" },
     ],
@@ -884,7 +894,7 @@ export const adventures: Adventure[] = [
     ace: { stamina:5, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, nerve:3 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹20,000", googleRating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/goechala-trek" },
-      { name: "Indiahikes", verified: true, priceFrom: "₹20,000", googleRating: 4.8, website: "https://indiahikes.com/goechala-trek" },
+      { name: "Indiahikes", verified: true, priceFrom: "₹20,000", googleRating: 4.8, website: "https://indiahikes.com/goechala" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹21,000", googleRating: 4.7, website: "https://trekthehimalayas.com/goechala-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹20,000", googleRating: 4.3, website: "https://www.trekupindia.com/goechala-trek" },
     ],
@@ -913,7 +923,7 @@ export const adventures: Adventure[] = [
     safetyNotes: "Stream crossings on Jobra side are knee-deep in monsoon — use trekking poles. Snow on pass even in August — carry extra layers. Check pass conditions with local operators before departure.",
     ace: { stamina:3, power:3, strength:3, agility:3, water:3, altitude:4, focus:3, nerve:2 },
     operators: [
-      { name: "Indiahikes", verified: true, priceFrom: "₹14,000", googleRating: 4.8, website: "https://indiahikes.com/hampta-pass-trek" },
+      { name: "Indiahikes", verified: true, priceFrom: "₹14,000", googleRating: 4.8, website: "https://indiahikes.com/hampta-pass" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹12,500", googleRating: 4.7, website: "https://trekthehimalayas.com/hampta-pass-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹12,000", googleRating: 4.3, website: "https://www.trekupindia.com/hampta-pass-trek" },
     ],
@@ -999,7 +1009,7 @@ export const adventures: Adventure[] = [
     safetyNotes: "Trail involves Class 2 scrambling on loose boulders above Kedarkharak. No rescue access. Go with experienced local guide from Gangotri.",
     ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, nerve:4 },
     operators: [
-      { name: "Indiahikes", verified: true, priceFrom: "₹15,000", googleRating: 4.8, website: "https://indiahikes.com/kedar-tal-trek" },
+      { name: "Indiahikes", verified: true, priceFrom: "₹15,000", googleRating: 4.8, website: "https://indiahikes.com/kedartal" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹16,000", googleRating: 4.7, website: "https://trekthehimalayas.com/kedar-tal-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹15,000", googleRating: 4.3, website: "https://www.trekupindia.com/kedartal-trek" },
     ],
@@ -1029,7 +1039,7 @@ export const adventures: Adventure[] = [
     ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹10,500", googleRating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/Kuari-pass-trek" },
-      { name: "Indiahikes", verified: true, priceFrom: "₹12,000", googleRating: 4.8, website: "https://indiahikes.com/kuari-pass-trek" },
+      { name: "Indiahikes", verified: true, priceFrom: "₹12,000", googleRating: 4.8, website: "https://indiahikes.com/kuari-pass" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹11,900", googleRating: 4.7, website: "https://trekthehimalayas.com/winter-kuari-pass-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹10,000", googleRating: 4.3, website: "https://www.trekupindia.com/kuari-pass-trek" },
     ],
@@ -1086,7 +1096,6 @@ export const adventures: Adventure[] = [
     ace: { stamina:5, power:4, strength:5, agility:5, water:4, altitude:5, focus:5, nerve:5 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹40,000", googleRating: 4.8, website: "" },
-      { name: "Indiahikes", verified: true, priceFrom: "₹40,000", googleRating: 4.8, website: "https://indiahikes.com/pin-parvati-pass-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹45,000", googleRating: 4.7, website: "https://trekthehimalayas.com/pin-parvati-pass-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹35,000", googleRating: 4.3, website: "https://www.trekupindia.com/pin-parvati-pass-trek" },
     ],
@@ -1116,7 +1125,7 @@ export const adventures: Adventure[] = [
     ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, nerve:4 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹16,650", googleRating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/rupin-pass-trek" },
-      { name: "Indiahikes", verified: true, priceFrom: "₹16,000", googleRating: 4.8, website: "https://indiahikes.com/rupin-pass-trek" },
+      { name: "Indiahikes", verified: true, priceFrom: "₹16,000", googleRating: 4.8, website: "https://indiahikes.com/rupin-pass" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹16,500", googleRating: 4.7, website: "https://trekthehimalayas.com/rupin-pass-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹16,000", googleRating: 4.3, website: "https://www.trekupindia.com/rupin-pass-trek" },
     ],
@@ -1244,6 +1253,8 @@ export const adventures: Adventure[] = [
     region: "Himalayas", state: "Jammu & Kashmir", type: "Trekking", difficulty: "Moderate",
     duration: "7+ days", durationDays: "7 days", durationRange: "7 Days",
     distance: "49km", distanceRange: "49 km", altitude: "2,730m",
+    // Hand-set ACE (was estimated from the grade): meadow walking under 2,800 m
+    ace: { stamina:2, power:1, strength:1, agility:1, water:1, altitude:2, focus:1, nerve:1 },
     baseCamp: "Doodhpathri",
     bestSeason: "Jul–Aug", bestMonths: ["Jul","Aug"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/doodhpathri.jpeg",
@@ -1305,7 +1316,7 @@ export const adventures: Adventure[] = [
     whoFor: "You have only 5 days and want one big climb to 4,000m · You can climb steeply for 5–6 hours with a daypack · You want close views of Bandarpunch and Swargarohini · Tent camping is fine: nights near freezing at the top, even in summer",
     whoNot: "Long drives make you sick: Dehradun to Hanuman Chatti is 6–7 hours · You're going in the monsoon: the steep trail gets slippery",
     safetyNotes: "Trail can be slippery after rain in monsoon shoulder months. Night temperatures drop sharply at 4,000m even in summer — sleeping bag essential.",
-    ace: { stamina:2, power:2, strength:2, agility:2, water:1, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:2, power:2, strength:2, agility:2, water:1, altitude:4, focus:2, nerve:2 }, // 4,023 m top: altitude 4, like other treks above 4,000 m
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹10,900", googleRating: 4.7, website: "https://trekthehimalayas.com/gulabi-kantha-trek" },
     ],
@@ -1331,12 +1342,11 @@ export const adventures: Adventure[] = [
     whoFor: "You're in Dharamshala or McLeod Ganj and have 3 days · You can walk 5–6 hours a day with a daypack · First trek: a lake under the Dhauladhar range, no altitude worries · Tent camping is fine: cold nights at the lake, even in September",
     whoNot: "You want big Himalayan views or altitude: it tops out under 3,000m · You're going in June without care: snowmelt makes the river crossings strong",
     safetyNotes: "River crossings above Kareri village can be challenging in June snowmelt — check conditions. Campsite at the lake is exposed — cold nights even in September.",
-    ace: { stamina:3, power:2, strength:3, agility:3, water:2, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:3, water:2, altitude:2, focus:2, nerve:2 }, // tops out at 2,936 m: altitude 2
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹8,000", googleRating: 4.7, website: "https://www.bikatadventures.com/Home/Itinerary/kareri-lake-trek" },
-      { name: "Indiahikes", verified: true, priceFrom: "₹8,000", googleRating: 4.8, website: "https://indiahikes.com/kareri-lake-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹5,500", googleRating: 4.7, website: "https://trekthehimalayas.com/kareri-lake-trek" },
-      { name: "Trekup India", verified: false, priceFrom: "₹8,000", googleRating: 4.3, website: "https://www.trekupindia.com/kareri-lake-trek" },
+      { name: "Trekup India", verified: false, priceFrom: "₹8,000", googleRating: 4.3, website: "https://trekupindia.com/trek/kareri-lake" },
     ],
     tags: ["Kareri Lake", "Dhauladhar", "Dharamshala", "Himachal Pradesh", "beginner"], featured: false,
     seedReviews: [
@@ -1377,6 +1387,8 @@ export const adventures: Adventure[] = [
     region: "Himalayas", state: "Nepal", type: "Mountaineering", difficulty: "Advanced",
     duration: "7+ days", durationDays: "18 days", durationRange: "18 Days",
     distance: "124km", distanceRange: "124 km", altitude: "6,119m",
+    // Hand-set ACE (was estimated from the grade): 6,119 m climb: fixed ropes, crampons, ice axe
+    ace: { stamina:5, power:5, strength:5, agility:5, water:0, altitude:5, focus:5, nerve:5 },
     bestSeason: "Apr–May, Oct", bestMonths: ["Apr","May","Oct"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/lobuche-peak.jpeg",
     galleryImages: ["https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/lobuche-peak.jpeg"],
@@ -1427,6 +1439,8 @@ export const adventures: Adventure[] = [
     region: "Himalayas", state: "Nepal", type: "Mountaineering", difficulty: "Advanced",
     duration: "7+ days", durationDays: "15 days", durationRange: "15 Days",
     distance: "100km", distanceRange: "100 km", altitude: "6,476m",
+    // Hand-set ACE (was estimated from the grade): 6,476 m glaciated trekking peak, less technical than Lobuche
+    ace: { stamina:5, power:5, strength:4, agility:4, water:0, altitude:5, focus:4, nerve:5 },
     bestSeason: "Apr–May, Oct", bestMonths: ["Apr","May","Oct"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/mera-peak.jpeg",
     galleryImages: ["https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/mera-peak.jpeg"],
@@ -1462,7 +1476,6 @@ export const adventures: Adventure[] = [
     safetyNotes: "Temples close by late October — verify opening dates before booking. Some sections between Rudranath and Kalpeshwar are poorly marked. Local guide strongly recommended for the full circuit.",
     ace: { stamina:5, power:3, strength:4, agility:3, water:1, altitude:4, focus:4, nerve:3 },
     operators: [
-      { name: "Indiahikes", verified: true, priceFrom: "₹60,000", googleRating: 4.8, website: "https://indiahikes.com/panch-kedar-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹64,500", googleRating: 4.7, website: "https://trekthehimalayas.com/panchkedar-trek" },
     ],
     tags: ["Panch Kedar", "pilgrimage", "Tungnath", "Kedarnath", "Uttarakhand"], featured: false,
@@ -1599,7 +1612,6 @@ export const adventures: Adventure[] = [
     safetyNotes: "Trail is well-maintained and marked. River crossings near Dwali can be strong in June. Black bear habitat — make noise on trail in forest sections. Carry sufficient cash as no ATMs beyond Song.",
     ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
     operators: [
-      { name: "Indiahikes", verified: true, priceFrom: "₹14,000", googleRating: 4.8, website: "https://indiahikes.com/pindari-glacier-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹14,500", googleRating: 4.7, website: "https://trekthehimalayas.com/pindari-glacier-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹14,000", googleRating: 4.3, website: "https://www.trekupindia.com/pindari-glacier-trek" },
     ],
@@ -1616,6 +1628,8 @@ export const adventures: Adventure[] = [
     region: "Himalayas", state: "Uttarakhand", type: "Trekking", difficulty: "Hard",
     duration: "7+ days", durationDays: "7 days", durationRange: "7 Days",
     distance: "37km", distanceRange: "37 km", altitude: "4,115m",
+    // Hand-set ACE (was estimated from the grade): 4,115 m high point, remote Garhwal villages
+    ace: { stamina:3, power:2, strength:2, agility:2, water:1, altitude:4, focus:2, nerve:3 },
     bestSeason: "May–Jun, Sep–Oct", bestMonths: ["May","Jun","Sep","Oct"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/ranthan-kharak.jpeg",
     galleryImages: ["https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/ranthan-kharak.jpeg"],
@@ -1651,7 +1665,7 @@ export const adventures: Adventure[] = [
     safetyNotes: "Roopkund has had a controversial trekking ban — verify current permit status before booking. Ali Bedni route is fine regardless. Weather above Bhagwabasa can deteriorate extremely rapidly. Crampons essential on final approach.",
     ace: { stamina:4, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, nerve:3 },
     operators: [
-      { name: "Indiahikes", verified: true, priceFrom: "₹18,000", googleRating: 4.8, website: "https://indiahikes.com/roopkund-trek" },
+      { name: "Indiahikes", verified: true, priceFrom: "₹18,000", googleRating: 4.8, website: "https://indiahikes.com/roopkund" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹18,000", googleRating: 4.7, website: "https://trekthehimalayas.com/roopkund-trek" },
     ],
     tags: ["Roopkund", "skeleton lake", "Trishul", "Ali Bedni", "Uttarakhand"], featured: false, editorChoice: true,
@@ -1721,6 +1735,8 @@ export const adventures: Adventure[] = [
     region: "Himalayas", state: "Uttarakhand", type: "Trekking", difficulty: "Hard",
     duration: "7+ days", durationDays: "7 days", durationRange: "7 Days",
     distance: "32km", distanceRange: "32 km", altitude: "3,901m",
+    // Hand-set ACE (was estimated from the grade): 3,901 m summit, a week in remote Garhwal
+    ace: { stamina:3, power:2, strength:2, agility:2, water:1, altitude:3, focus:2, nerve:3 },
     bestSeason: "May–Jun, Oct–Nov", bestMonths: ["May","Jun","Oct","Nov"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/surya-top.jpeg",
     galleryImages: ["https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/surya-top.jpeg"],

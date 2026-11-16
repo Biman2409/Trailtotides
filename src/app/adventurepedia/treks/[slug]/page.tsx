@@ -1,5 +1,5 @@
-import { jsonLd as ldJson } from "@/lib/jsonLd";
 import type { Metadata } from "next";
+import { jsonLd as ldJson } from "@/lib/jsonLd";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -10,7 +10,7 @@ import {
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ChatBubble from "@/components/ChatBubble";
-import { getACE, ACE_AXES, ACE_AXIS_LABELS, ACE_AXIS_COLORS } from "@/lib/ace";
+import { getACE, difficultyOf, ACE_AXES, ACE_AXIS_LABELS, ACE_AXIS_COLORS } from "@/lib/ace";
 import { adventures } from "@/lib/data";
 import { haversineKm } from "@/lib/geo";
 import { sunTimes, clock } from "@/lib/sun";
@@ -140,7 +140,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
     : null;
 
   const tldr = [
-    `**${a.durationDays}**${a.distance ? `, about **${a.distanceRange ?? a.distance}**` : ""} on foot, topping out at **${a.altitude ?? "high altitude"}**. Rated **${a.difficulty}** on Trail to Tides.`,
+    `**${a.durationDays}**${a.distance ? `, about **${a.distanceRange ?? a.distance}**` : ""} on foot, topping out at **${a.altitude ?? "high altitude"}**. Rated **${difficultyOf(a)}** on Trail to Tides.`,
     `Best in **${a.bestSeason}**.`,
     start ? `Starts from **${start}**${access ? `, reached via **${access.gateway}**` : ""}.` : access ? `Most groups start from **${access.gateway}**.` : null,
     acclimVerdict,
@@ -148,7 +148,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
   ].filter((x): x is string => !!x);
 
   const faq: [string, string][] = [
-    [`How difficult is the ${a.name}?`, `It's rated ${a.difficulty} on Trail to Tides. ${FITNESS[a.difficulty] ? `A fair benchmark before you go: ${FITNESS[a.difficulty].charAt(0).toLowerCase()}${FITNESS[a.difficulty].slice(1)}` : ""} The highest point is ${a.altitude ?? "high"}, so pace and acclimatisation matter as much as fitness.`],
+    [`How difficult is the ${a.name}?`, `It's rated ${difficultyOf(a)} on Trail to Tides. ${FITNESS[difficultyOf(a)] ? `A fair benchmark before you go: ${FITNESS[difficultyOf(a)].charAt(0).toLowerCase()}${FITNESS[difficultyOf(a)].slice(1)}` : ""} The highest point is ${a.altitude ?? "high"}, so pace and acclimatisation matter as much as fitness.`],
     [`When is the best time for the ${a.name}?`, `${a.bestSeason}. ${seasonNotes(a)[0]?.replace(/\*\*/g, "") ?? ""}`],
     [`How many days does the ${a.name} take?`, `${a.durationDays} including travel to and from the trailhead${trail ? `, with ${walkDays.length} walking ${walkDays.length === 1 ? "day" : "days"}` : ""}. Add a buffer day for weather or road delays.`],
     [`How do I reach the ${a.name}?`, access ? `Most groups meet in ${access.gateway}. Nearest airport: ${access.air}. Nearest railway: ${access.rail}.${access.drive ? ` ${access.drive}.` : ""}` : `Your operator arranges transport from the nearest town.`],
@@ -202,7 +202,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
               [Clock, "Duration", a.durationRange ?? a.durationDays],
               [Route, "Distance", a.distanceRange ?? a.distance ?? "—"],
               [Mountain, "Highest point", a.altitude ?? "—"],
-              [Gauge, "Difficulty", a.difficulty],
+              [Gauge, "Difficulty", difficultyOf(a)],
               [CalendarDays, "Best season", a.bestSeason],
               [MapPin, "Starts from", start ?? access?.gateway ?? "—"],
             ] as const).map(([Icon, label, value]) => (
@@ -375,7 +375,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
 
             {/* ── Fitness ── */}
             <Section id="fitness" kicker="Fitness" title="How fit you need to be">
-              {FITNESS[a.difficulty] && <BlockView block={{ p: `Rated **${a.difficulty}**. A fair benchmark before you go: ${FITNESS[a.difficulty].charAt(0).toLowerCase()}${FITNESS[a.difficulty].slice(1)}` }} />}
+              {FITNESS[difficultyOf(a)] && <BlockView block={{ p: `Rated **${difficultyOf(a)}**. A fair benchmark before you go: ${FITNESS[difficultyOf(a)].charAt(0).toLowerCase()}${FITNESS[difficultyOf(a)].slice(1)}` }} />}
               <p className="text-[14px] t-text-2 mb-3">What this trek asks of you, on the ACE<sup className="tm">™</sup> scale from 0 to 5:</p>
               <div className="grid sm:grid-cols-2 gap-x-6 gap-y-2.5 rounded-2xl p-4" style={card}>
                 {ACE_AXES.map((k) => (

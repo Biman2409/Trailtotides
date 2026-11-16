@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, TrendingUp } from "lucide-react";
-import type { ACE, AceAxis } from "@/lib/ace";
+import { READY_MIN, STRETCH_MIN, type ACE, type AceAxis } from "@/lib/ace";
 import { QUICK_QUESTION_COUNT } from "@/lib/matchmakerScoring";
 
 // The home page's Matchmaker preview, told with one radar that never cuts away, in the order the
@@ -43,8 +43,8 @@ const RANKS = [
 
 // Same thresholds and colours as the match bar on adventure cards
 function bucket(score: number) {
-  if (score >= 80) return { label: "Ready", color: "#10b981" };
-  if (score >= 55) return { label: "Stretch", color: "#f59e0b" };
+  if (score >= READY_MIN) return { label: "Ready", color: "#10b981" };
+  if (score >= STRETCH_MIN) return { label: "Stretch", color: "#f59e0b" };
   return { label: "Not yet", color: "#f43f5e" };
 }
 

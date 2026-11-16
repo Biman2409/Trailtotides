@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
 import { requireAdmin } from "@/lib/authz";
+import { deleteAccountFiles } from "@/lib/deleteAccountFiles";
 
 function adminAuth() {
   return createClient(
@@ -37,6 +38,8 @@ export async function deleteUser(userId: string) {
   // auth.users has no cascade into profiles — clean it up explicitly so
   // deleted accounts don't leave an orphaned row behind.
   await supabase.from("profiles").delete().eq("id", userId);
+  // Storage isn't linked to the account, so its files are removed here
+  await deleteAccountFiles(supabase, userId);
   revalidatePath("/admin");
   return { success: true };
 }

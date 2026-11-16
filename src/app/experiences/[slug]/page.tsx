@@ -18,7 +18,7 @@ import RadarPeek from "./RadarPeek";
 import GuidesForTrek from "./GuidesForTrek";
 import HeroActions from "./HeroActions";
 import { createAdminClient } from "@/lib/supabase/server";
-import { getACE, computeDifficulty } from "@/lib/ace";
+import { getACE, computeDifficulty, hasRealACE } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
 import { getApprovedOperatorsForAdventure } from "@/app/auth/operator-actions";
 import MobileBookBar from "./MobileBookBar";
@@ -228,10 +228,6 @@ export default async function ExperiencePage({ params }: Props) {
   // and the mobile Book bar name the same operator and the same number as the list below them
   const featuredOp = allOperators.length > 0 ? sortOps(allOperators)[0] : undefined;
   const lead = featuredOp ? leadPrice(featuredOp) : undefined;
-  // The lowest headline fee, for the FAQ's "how much does it cost" answer
-  const priceFrom = allOperators.length > 0
-    ? allOperators.reduce((best, o) => (parsePrice(o.priceFrom) < parsePrice(best.priceFrom) ? o : best)).priceFrom
-    : undefined;
   const season = getSeasonUrgency(adventure.bestMonths);
   // Every start date we know, from operators' own pages and their listings here, one per operator per day
   const departures: Departure[] = allOperators.flatMap((o) => departuresOf(o));
@@ -307,7 +303,7 @@ export default async function ExperiencePage({ params }: Props) {
     }] : []),
   ];
 
-  const faqs = hasTrekGuide(adventure) ? [] : experienceFaq(adventure, { difficulty, priceFrom: priceFrom ? parsePrice(priceFrom) : undefined, operatorCount: allOperators.length });
+  const faqs = hasTrekGuide(adventure) ? [] : experienceFaq(adventure, { difficulty, priceFrom: lead ? parsePrice(lead.price) : undefined, operatorCount: allOperators.length });
 
   const operatorPrices = allOperators.map((o) => parsePrice(o.priceFrom)).filter((p) => Number.isFinite(p) && p > 0);
 
@@ -555,7 +551,7 @@ export default async function ExperiencePage({ params }: Props) {
                   then the quick for / skip lists */}
               <AccordionSection id="suitability" label="suitability" title="Is this for you?" defaultOpen headerExtra={<GradingPill />} peek={<RadarPeek ace={ace} name={adventure.name} />}>
                 <div className="space-y-5">
-                  <ACEProfileSection ace={ace} slug={adventure.slug} name={adventure.name} />
+                  <ACEProfileSection ace={ace} slug={adventure.slug} name={adventure.name} estimated={!hasRealACE(adventure)} />
                   <FitLists
                     whoFor={adventure.whoFor}
                     whoNot={adventure.whoNot}

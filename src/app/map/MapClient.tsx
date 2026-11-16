@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { STRETCH_MIN } from "@/lib/ace";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
 import {
@@ -199,7 +200,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const filterNoNear = useCallback((ff: AdventureFilterState) => {
     const rows = filterAdventures(adventures, ff, { score });
     // The group's suggestions: the same 55% floor as Group Match's "ready" and "stretch" lists
-    return groupOnly && group ? rows.filter((a) => (fits.get(a.slug)?.score ?? 0) >= 55) : rows;
+    return groupOnly && group ? rows.filter((a) => (fits.get(a.slug)?.score ?? 0) >= STRETCH_MIN) : rows;
   }, [score, groupOnly, group, fits]);
   const filterWith = useCallback((ff: AdventureFilterState) => {
     const rows = filterNoNear(ff);

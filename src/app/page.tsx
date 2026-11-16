@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { fromPrice } from "@/lib/leadPrices";
 import Link from "next/link";
 import { ArrowRight, ChevronDown, ChevronRight } from "lucide-react";
 import HeroCTAs from "@/components/ui/custom/HeroCTAs";
@@ -42,7 +43,7 @@ import PickedForYou from "@/components/ui/custom/PickedForYou";
 import EditorsPicks from "@/components/ui/custom/EditorsPicks";
 import MapDemo, { type MapDemoPin, type MapDemoTour } from "@/components/ui/custom/MapDemo";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
-import { adventures, stories, getLowestPrice } from "@/lib/data";
+import { adventures, stories } from "@/lib/data";
 import { computeDifficulty, computeMatchScore, getACE } from "@/lib/ace";
 import { bucketFor } from "@/lib/fitness";
 import { getTrail } from "@/lib/trails";
@@ -63,7 +64,7 @@ const mapPins: MapDemoPin[] = adventures.map((a) => {
   return {
     slug: a.slug, name: a.name, type: a.type, lat: a.lat, lng: a.lng, difficulty: computeDifficulty(getACE(a)),
     durationDays: a.durationDays, state: a.state, image: a.heroImage, bestMonths: a.bestMonths,
-    price: getLowestPrice({ operators: verified.length ? verified : a.operators }), verified: verified.length,
+    price: fromPrice(a), verified: verified.length,
     fit: bucketFor(computeMatchScore(SAMPLE_ACE, getACE(a))).key,
   };
 });

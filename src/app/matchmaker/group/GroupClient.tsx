@@ -8,7 +8,7 @@ import Image from "next/image";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { adventures } from "@/lib/data";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
-import { getACE, type ACE } from "@/lib/ace";
+import { getACE, READY_MIN, STRETCH_MIN, type ACE } from "@/lib/ace";
 import { matchesSearch } from "@/lib/exploreHelpers";
 import {
   AXES, AXIS_LABEL, MAX_GROUP, PENDING_GROUP_KEY, bucketFor, gapsFor, groupFloor, groupMatches, matchScore, memberTag, weeksToReady,
@@ -877,7 +877,7 @@ function GroupPlan({ group, viewerId, members, picks }: { group: StoredGroup; vi
   } else if (top.yes.length === count) {
     tone = "#10b981";
     title = `Everyone's in for ${top.adventure.name}`;
-    body = top.fit >= 80 ? "And all of you are ready for it. Time to pick dates and an operator."
+    body = top.fit >= READY_MIN ? "And all of you are ready for it. Time to pick dates and an operator."
       : `The least-ready of you is at ${top.fit}%, so plan some training before you go.`;
     action = <>
       <Link href={`/experiences/${top.adventure.slug}`} className={btn} style={primary}>Dates and operators <ArrowRight className="w-4 h-4" /></Link>
@@ -984,7 +984,7 @@ function GroupWishlist({ group, viewerId, members, picks }: { group: StoredGroup
                       <span className="text-sm font-semibold t-text truncate">{r.adventure.name}</span>
                     </span>
                     <span className="block text-[11px] mt-0.5" style={{ color: b.color }}>
-                      {r.fit >= 80 ? "Everyone ready" : r.fit >= 55 ? "A stretch for someone" : "Not yet for everyone"} · lowest {r.fit}%
+                      {r.fit >= READY_MIN ? "Everyone ready" : r.fit >= STRETCH_MIN ? "A stretch for someone" : "Not yet for everyone"} · lowest {r.fit}%
                     </span>
                     <span className="flex items-center gap-1 mt-1.5 flex-wrap">
                       {r.yes.map((u) => <Avatar key={u} name={group.members[seat(u)]?.name ?? "?"} color={SEAT_COLORS[Math.max(0, seat(u)) % SEAT_COLORS.length]} />)}
@@ -1117,7 +1117,7 @@ function TrekCheck({ adventure, members, onList, onAdd, onClose }: {
     return { m, i, score, gaps, weeks: weeksToReady(gaps) };
   });
   const lowest = rows.length ? Math.min(...rows.map((r) => r.score)) : 0;
-  const notReady = rows.filter((r) => r.score < 80);
+  const notReady = rows.filter((r) => r.score < READY_MIN);
   const longest = Math.max(0, ...rows.map((r) => r.weeks));
   const b = bucketFor(lowest);
   // Capabilities where the trek asks more than the whole group can give together
@@ -1174,8 +1174,8 @@ function TrekCheck({ adventure, members, onList, onAdd, onClose }: {
                 </div>
                 {r.gaps.length > 0 ? (
                   <p className="text-[12px] mt-2" style={{ color: "var(--text-secondary)" }}>
-                    {r.score >= 80 ? "Ready, with a small gap in " : "Needs "}{r.gaps.slice(0, 3).map((g) => `${AXIS_LABEL[g.axis]} ${g.have}→${g.need}`).join(", ")}
-                    {r.score < 80 && r.weeks > 0 && <span style={{ color: "var(--text-tertiary)" }}> · ~{r.weeks} weeks</span>}
+                    {r.score >= READY_MIN ? "Ready, with a small gap in " : "Needs "}{r.gaps.slice(0, 3).map((g) => `${AXIS_LABEL[g.axis]} ${g.have}→${g.need}`).join(", ")}
+                    {r.score < READY_MIN && r.weeks > 0 && <span style={{ color: "var(--text-tertiary)" }}> · ~{r.weeks} weeks</span>}
                     {r.gaps.some((g) => g.axis === "altitude") && <span style={{ color: "var(--text-tertiary)" }}> · altitude comes from acclimatising, not training</span>}
                   </p>
                 ) : (
@@ -1295,7 +1295,7 @@ function GroupNote({ row, members, pick }: { row: GroupRow; members: GroupMember
       </span>
       <span className="flex items-center justify-between gap-2">
         <span className="text-[10px] font-semibold leading-snug min-w-0 truncate" style={{ color: b.color }}>
-          {row.min >= 80
+          {row.min >= READY_MIN
             ? <>Everyone ready · lowest {row.min}%</>
             : <>Waiting on {weakest.name} ({row.min}%){gaps ? ` — ${gaps}` : ""}</>}
         </span>

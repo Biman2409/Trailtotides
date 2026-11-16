@@ -3,6 +3,7 @@ import { adventures } from "@/lib/data";
 import { getPublishedStories } from "@/lib/stories";
 import { GUIDES } from "@/lib/adventurepedia";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
+import { difficultyOf } from "@/lib/ace";
 
 export interface SearchResult {
   id: string;
@@ -29,7 +30,7 @@ export async function GET(req: NextRequest) {
     results.push({
       id: a.id,
       title: a.name,
-      subtitle: `${a.type} · ${a.state} · ${a.difficulty}`,
+      subtitle: `${a.type} · ${a.state} · ${difficultyOf(a)}`,
       url: `/experiences/${a.slug}`,
       type: "adventure",
       image: a.heroImage,

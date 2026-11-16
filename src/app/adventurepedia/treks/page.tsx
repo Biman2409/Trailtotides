@@ -1,10 +1,11 @@
-import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { trekAdventures, ACCESS, altitudeM } from "@/lib/trekGuides";
+import { difficultyOf } from "@/lib/ace";
 import { TRAIL_SLUGS } from "@/lib/trails";
 import TrekIndex, { type TrekCard } from "./TrekIndex";
 import { serif } from "../blocks";
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
 export default function TrekGuides() {
   const mapped = new Set(TRAIL_SLUGS);
   const treks: TrekCard[] = trekAdventures().map((a) => ({
-    slug: a.slug, name: a.name, tagline: a.tagline, state: a.state, difficulty: a.difficulty, type: a.type,
+    slug: a.slug, name: a.name, tagline: a.tagline, state: a.state, difficulty: difficultyOf(a), type: a.type,
     days: a.durationDays, altitude: a.altitude ?? "", altM: altitudeM(a), months: a.bestMonths, season: a.bestSeason,
     image: a.heroImage, mapped: mapped.has(a.slug),
     // Extra words search can match: start points and the gateway town

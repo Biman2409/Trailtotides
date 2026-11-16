@@ -5,8 +5,9 @@
 // them here means both pages always offer exactly the same filters.
 
 import { useEffect, useRef, useState } from "react";
+import { fromPrice } from "@/lib/leadPrices";
 import { X, Crown, ChevronDown, Shapes, MapPin } from "lucide-react";
-import { adventures, getLowestPrice } from "@/lib/data";
+import { adventures } from "@/lib/data";
 import type { Difficulty, Duration } from "@/lib/data";
 import { toggleSelection as toggle, GENRE_GROUPS } from "@/lib/filterOptions";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
@@ -317,7 +318,7 @@ const THIS_MONTH = MONTHS[currentMonthIndexIST()];
 
 // The slider runs from the cheapest starting price to the dearest, in ₹1,000 steps; the far
 // right end means any price
-const PRICES = adventures.map((a) => getLowestPrice(a)).filter((p): p is number => p !== null && p > 0);
+const PRICES = adventures.map((a) => fromPrice(a)).filter((p): p is number => p !== null && p > 0);
 const PRICE_MIN = Math.floor(Math.min(...PRICES) / 1000) * 1000;
 const PRICE_MAX = Math.ceil(Math.max(...PRICES) / 5000) * 5000;
 const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;

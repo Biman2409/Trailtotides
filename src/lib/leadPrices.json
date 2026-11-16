@@ -1,0 +1,272 @@
+{
+ "manali-leh-bike-expedition": {
+  "price": 28000,
+  "full": false,
+  "operator": "StoneHead Bikes"
+ },
+ "spiti-valley-cycling": {
+  "price": 26999,
+  "full": false,
+  "operator": "Spiti Holiday Adventure"
+ },
+ "ladakh-circuit": {
+  "price": 44000,
+  "full": false,
+  "operator": "Dream Riders Group"
+ },
+ "zanskar-valley-bike": {
+  "price": 38000,
+  "full": false,
+  "operator": "Ride On Bike Trips"
+ },
+ "kedarkantha-trek": {
+  "price": 12475,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "sandakphu-phalut-trek": {
+  "price": 14070,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "tarsar-marsar-trek": {
+  "price": 19530,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "spiti-valley-bike": {
+  "price": 26999,
+  "full": false,
+  "operator": "Spiti Holiday Adventure"
+ },
+ "ali-bedni-bugyal": {
+  "price": 11813,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "annapurna-base-camp": {
+  "price": 41475,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "annapurna-circuit": {
+  "price": 84000,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "bagini-glacier": {
+  "price": 22575,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "bali-pass": {
+  "price": 27175,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "buran-ghati": {
+  "price": 21375,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "beas-kund": {
+  "price": 7875,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "bhrigu-lake": {
+  "price": 7875,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "brahmatal": {
+  "price": 14025,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "dayara-bugyal": {
+  "price": 11025,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "deoriatal-chandrashila": {
+  "price": 9975,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "everest-base-camp": {
+  "price": 87675,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "gaumukh-tapovan": {
+  "price": 18375,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "goechala": {
+  "price": 22575,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "hampta-pass": {
+  "price": 14175,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "har-ki-dun": {
+  "price": 15325,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "kashmir-great-lakes": {
+  "price": 23650,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "kedartal": {
+  "price": 18900,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "kuari-pass": {
+  "price": 12975,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "markha-valley": {
+  "price": 23625,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "pin-parvati-pass": {
+  "price": 58800,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "rupin-pass": {
+  "price": 22375,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "valley-of-flowers": {
+  "price": 16643,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "chandrakhani-pass": {
+  "price": 9660,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "dodital-darwa-pass": {
+  "price": 11970,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "doodhpathri": {
+  "price": 17640,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "gokyo-lakes": {
+  "price": 97000,
+  "full": false,
+  "operator": "Trek The Himalayas"
+ },
+ "gulabi-kantha": {
+  "price": 13755,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "kareri-lake": {
+  "price": 6195,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "khopra-danda": {
+  "price": 26040,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "lobuche-peak": {
+  "price": 194250,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "manaslu-circuit": {
+  "price": 97125,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "mera-peak": {
+  "price": 194250,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "panch-kedar": {
+  "price": 67725,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "pangarchulla-peak": {
+  "price": 17070,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "panwali-kantha": {
+  "price": 15075,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "phulara-ridge": {
+  "price": 12075,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "pin-bhaba-pass": {
+  "price": 20925,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "pindari-glacier": {
+  "price": 15225,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "ranthan-kharak": {
+  "price": 14543,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "roopkund": {
+  "price": 22363,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "sar-pass": {
+  "price": 12075,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "satopanth-lake": {
+  "price": 23678,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "surya-top": {
+  "price": 15593,
+  "full": true,
+  "operator": "Trek The Himalayas"
+ },
+ "rishikesh-river-rafting": {
+  "price": 945,
+  "full": true,
+  "operator": "Bikat Adventures"
+ },
+ "everest-base-camp-gokyo-lakes": {
+  "price": 101000,
+  "full": false,
+  "operator": "Trek The Himalayas"
+ }
+}

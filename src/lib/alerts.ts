@@ -2,7 +2,8 @@
 // next month or whose lowest price dropped, and adventures newly matching a saved map search.
 // Plain functions, so they're easy to reason about apart from the job that sends the email.
 
-import { adventures, getLowestPrice, type Adventure } from "@/lib/data";
+import { adventures, type Adventure } from "@/lib/data";
+import { fromPrice } from "@/lib/leadPrices";
 import { MONTHS, MONTH_NAMES, currentMonthIndexIST } from "@/lib/homeCuration";
 import { filtersFromParams, filterAdventures } from "@/lib/adventureFilterState";
 import { haversineKm } from "@/lib/geo";
@@ -23,7 +24,7 @@ export interface AlertState { last_price: number | null; season_alerted: string 
 /** What to tell the user about one wishlisted adventure, and the state to remember afterwards */
 export function wishlistNews(a: Adventure, prev: AlertState | null, now = new Date()) {
   const lines: string[] = [];
-  const price = getLowestPrice(a);
+  const price = fromPrice(a);
   // A drop needs a price we've seen before; the first sighting only sets the baseline
   if (price !== null && prev?.last_price && price < prev.last_price) {
     lines.push(`price down to ${formatRupees(price)} (was ${formatRupees(prev.last_price)})`);

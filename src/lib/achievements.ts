@@ -68,7 +68,7 @@ const PINNACLE: Achievement[] = [
     rule: { kind: "badges", ids: SKILL_IDS, need: SKILL_IDS.length, hint: "Earn all 8 single-skill badges" },
   },
   {
-    id: "over-9000", name: "It's Over 9000!", icon: "Gauge", tier: "tier1",
+    id: "over-9000", name: "Over 9000 Club", icon: "Gauge", tier: "tier1",
     description: "Every XP source maxed out. The scouter can't even measure this power level.",
     rule: { kind: "xp", need: MAX_XP },
   },

@@ -220,7 +220,7 @@ function CompareTable({ operators, computedRatings, slug }: { operators: Operato
       className={`w-full h-9 inline-flex items-center justify-center gap-1 rounded-full text-[12.5px] font-semibold disabled:opacity-40 transition-colors ${isLowest(op, i) ? "text-white" : "text-[#ff5100] hover:bg-[rgba(255,81,0,0.08)]"}`}
       style={isLowest(op, i) ? { background: "#ff5100" } : { border: "1px solid rgba(255,81,0,0.55)" }}
     >
-      Visit site <ExternalLink className="w-3 h-3" aria-hidden />
+      {op.offer?.url ?? op.website ? <>Visit site <ExternalLink className="w-3 h-3" aria-hidden /></> : "No website listed"}
     </button>
   );
 
@@ -509,7 +509,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
                   className="shrink-0 h-9 px-3.5 inline-flex items-center gap-1 rounded-full text-[12.5px] font-semibold text-[#ff5100] transition-colors hover:bg-[rgba(255,81,0,0.08)] disabled:opacity-40"
                   style={{ border: "1px solid rgba(255,81,0,0.55)" }}
                 >
-                  Visit site <ExternalLink className="w-3 h-3" aria-hidden />
+                  {url ? <>Visit site <ExternalLink className="w-3 h-3" aria-hidden /></> : "No website listed"}
                 </button>
                 </div>
               </li>

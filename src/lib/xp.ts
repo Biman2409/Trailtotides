@@ -18,7 +18,7 @@ export const XP_REWARDS: Record<XPAction, number> = {
 };
 
 /** How many of each action earn XP. Every cap filled adds up to exactly MAX_XP — so
- *  "It's Over 9000!" means you've done it all, not that you posted a lot of reviews. */
+ *  the Over 9000 Club means you've done it all, not that you posted a lot of reviews. */
 export const XP_CAPS: Record<XPAction, number> = {
   ace_complete: 1,   //   300
   trip_log:     30,  // 4,500
@@ -58,17 +58,18 @@ export interface XPTier {
   description: string;
 }
 
-// Legend sits below the 9,000 maximum: the last stretch to the max is what the badge is for
+// Eight levels, Drifter to Immortal. Immortal is the 9,000 maximum: every action done to its cap.
+// The levels reward taking part on Trail to Tides; they say nothing about physical ability (that's
+// the ACE rank). XP is worked out from the actions each time, so renaming levels moves no one's points.
 export const XP_TIERS: XPTier[] = [
-  { level: 1, name: "Toddler",      minXP: 0,    color: "#6b7280", description: "First steps into the wild." },
-  { level: 2, name: "Drifter",      minXP: 200,  color: "#84cc16", description: "Curiosity is your compass." },
-  { level: 3, name: "Wanderer",     minXP: 500,  color: "#22d3ee", description: "Finding your way." },
-  { level: 4, name: "Rambler",      minXP: 1000, color: "#3b82f6", description: "The open road calls." },
-  { level: 5, name: "Rover",        minXP: 1800, color: "#8b5cf6", description: "Reading terrain with ease." },
-  { level: 6, name: "Explorer",     minXP: 3000, color: "#f59e0b", description: "Charting the unknown." },
-  { level: 7, name: "Expeditioner", minXP: 4500, color: "#f97316", description: "Leading the charge." },
-  { level: 8, name: "Summiteer",    minXP: 6500, color: "#ef4444", description: "At the peak of the pursuit." },
-  { level: 9, name: "Legend",       minXP: 8000, color: "#ec4899", description: "Stories told around campfires." },
+  { level: 1, name: "Drifter",      minXP: 0,    color: "#84cc16", description: "Curiosity is your compass." },
+  { level: 2, name: "Wanderer",     minXP: 300,  color: "#22d3ee", description: "Finding your way." },
+  { level: 3, name: "Rover",        minXP: 1000, color: "#3b82f6", description: "Reading terrain with ease." },
+  { level: 4, name: "Rambler",      minXP: 2000, color: "#8b5cf6", description: "The open road calls." },
+  { level: 5, name: "Expeditioner", minXP: 3500, color: "#f59e0b", description: "Leading the charge." },
+  { level: 6, name: "Summiteer",    minXP: 5500, color: "#f97316", description: "At the peak of the pursuit." },
+  { level: 7, name: "Legend",       minXP: 7500, color: "#ef4444", description: "Stories told around campfires." },
+  { level: 8, name: "Immortal",     minXP: 9000, color: "#ec4899", description: "Everything done, to the last badge." },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

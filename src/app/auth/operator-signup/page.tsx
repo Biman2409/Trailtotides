@@ -29,9 +29,9 @@ export default function OperatorSignupPage() {
       setLogoError("File too large (max 4 MB)");
       return;
     }
-    const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/svg+xml"];
+    const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
     if (!allowed.includes(file.type)) {
-      setLogoError("Only JPG, PNG, WebP or SVG allowed");
+      setLogoError("Only JPG, PNG or WebP allowed");
       return;
     }
     setLogoError(null);
@@ -344,7 +344,7 @@ export default function OperatorSignupPage() {
                     <p className="text-white/50 text-xs font-medium flex items-center gap-1.5 justify-center">
                       <Upload className="w-3 h-3" /> Upload logo
                     </p>
-                    <p className="text-white/20 text-[10px] mt-0.5">PNG, JPG, WebP or SVG · max 4 MB</p>
+                    <p className="text-white/20 text-[10px] mt-0.5">PNG, JPG or WebP · max 4 MB</p>
                   </div>
                 </button>
               )}
@@ -356,7 +356,7 @@ export default function OperatorSignupPage() {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/jpeg,image/jpg,image/png,image/webp,image/svg+xml"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
                 onChange={handleLogoChange}
                 className="hidden"
               />

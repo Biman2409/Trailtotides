@@ -118,7 +118,7 @@ export const GUIDES: Guide[] = [
             ["HAPE (fluid in the lungs)", "Breathless at rest, a cough (sometimes frothy or pink), gurgling chest, blue lips, far slower than usual", "Emergency. Descend immediately"],
           ] } },
           { callout: "warn", title: "The heel-to-toe test", text: "If someone seems off, ask them to walk a straight line heel to toe for a few metres. Sober people who can't do it at altitude may have HACE. Don't wait for morning." },
-          { p: "Mild AMS often appears 6 to 12 hours after arriving at a new height, and is usually worst on the first night. Tell your trek leader about **every** headache. It's not complaining; it's information they need." },
+          { p: "Mild AMS usually appears 2 to 12 hours after arriving at a new height, and is usually worst on the first night. Tell your trek leader about **every** headache. It's not complaining; it's information they need." },
         ],
       },
       {
@@ -138,7 +138,7 @@ export const GUIDES: Guide[] = [
         id: "medicines",
         title: "Medicines",
         blocks: [
-          { p: "**Acetazolamide (Diamox)** speeds up acclimatisation and is widely used to prevent AMS on fast ascents (like flying to Leh) or by people who've had it before. It's prescription medicine: talk to your doctor before the trip, especially if you're allergic to sulfa drugs. Tingling fingers and needing to pee more are normal side effects." },
+          { p: "**Acetazolamide (Diamox)** speeds up acclimatisation and is widely used to prevent AMS on fast ascents (like flying to Leh) or by people who've had it before. It's prescription medicine: talk to your doctor before the trip. A sulfa antibiotic allergy doesn't usually rule it out, but tell your doctor about any serious drug allergy. Tingling fingers and needing to pee more are normal side effects." },
           { p: "Drugs like dexamethasone and nifedipine are used for HACE and HAPE emergencies by trained leaders and doctors. They are not something to self-prescribe, and they don't replace going down." },
           { p: "A **pulse oximeter** (the finger clip) is useful, but readings at altitude are naturally low and vary a lot. How someone looks and feels, and whether it's getting worse, matters more than any single number." },
           { callout: "tip", title: "Medical conditions", text: "Heart or lung conditions, pregnancy, sickle cell disease or recent surgery all need a doctor's view before you go high. The Matchmaker's health questions flag adventures that may need clearance." },
@@ -181,7 +181,7 @@ export const GUIDES: Guide[] = [
         blocks: [
           { p: "Mountain streams look clean but often run past villages, grazing animals and camps. Treat everything that doesn't come from your camp kitchen's boiled supply." },
           { table: { head: ["Method", "Handles", "Notes"], rows: [
-            ["Boiling", "Everything", "A rolling boil for a minute is enough, even at altitude. Uses fuel; ask the kitchen team"],
+            ["Boiling", "Everything", "A rolling boil for 1 minute; 3 minutes above about 2,000 m, where water boils cooler (CDC advice). Uses fuel; ask the kitchen team"],
             ["Chlorine dioxide tablets", "Bacteria, viruses, most parasites", "Light and cheap. Wait 30 minutes (4 hours for the toughest parasites, longer in icy water)"],
             ["Filter bottle or pump", "Bacteria and parasites", "Most don't stop viruses. Pair with tablets near villages"],
             ["UV pen", "Everything in clear water", "Needs batteries, which die in the cold. Useless in muddy water"],

@@ -1,0 +1,353 @@
+<title>Trail to Tides Product Audit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column with wide tables that scroll in place; status chips carry the verdicts */
+:root {
+  --bg: #fbfaf8; --surface: #ffffff; --fg: #1d1a17; --muted: #6b645c; --line: #e7e2db;
+  --accent: #d94600; --accent-soft: #fff1ea;
+  --pass: #17794a; --pass-bg: #e6f5ec; --fixed: #1f5fbf; --fixed-bg: #e8f0fc;
+  --fail: #b42318; --fail-bg: #fdecea; --blocked: #8a5a00; --blocked-bg: #fdf3dc; --nt: #555; --nt-bg: #eeeeee;
+  --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15130f; --surface: #1d1a16; --fg: #eee9e2; --muted: #a69e94; --line: #34302a;
+  --accent: #ff7a3d; --accent-soft: #2b1d14;
+  --pass: #5fd39a; --pass-bg: #12301f; --fixed: #8ab4ff; --fixed-bg: #15233d; --fail: #ff8a80; --fail-bg: #3a1714;
+  --blocked: #f2c25b; --blocked-bg: #33280f; --nt: #bbb; --nt-bg: #2a2a2a; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #15130f; --surface: #1d1a16; --fg: #eee9e2; --muted: #a69e94; --line: #34302a;
+  --accent: #ff7a3d; --accent-soft: #2b1d14;
+  --pass: #5fd39a; --pass-bg: #12301f; --fixed: #8ab4ff; --fixed-bg: #15233d; --fail: #ff8a80; --fail-bg: #3a1714;
+  --blocked: #f2c25b; --blocked-bg: #33280f; --nt: #bbb; --nt-bg: #2a2a2a; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 40px 80px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 44px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: clamp(28px, 5vw, 40px); letter-spacing: -0.02em; }
+h2 { font-size: 22px; letter-spacing: -0.01em; padding-bottom: 8px; border-bottom: 2px solid var(--fg); }
+h2 .n { color: var(--accent); font-variant-numeric: tabular-nums; margin-right: 8px; }
+h3 { font-size: 16px; margin-top: 6px; }
+p, li { max-width: 72ch; }
+p { margin: 0; }
+section { display: grid; gap: 14px; min-width: 0; }
+.eyebrow { font: 600 12px/1 var(--body); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.lede { font-size: 17px; color: var(--muted); }
+.meta { font-size: 13px; color: var(--muted); }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+th { font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--bg); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.chip { display: inline-block; font: 600 11px/1 var(--body); letter-spacing: 0.06em; padding: 5px 7px; border-radius: 5px; white-space: nowrap; }
+.PASS { color: var(--pass); background: var(--pass-bg); } .FIXED { color: var(--fixed); background: var(--fixed-bg); }
+.FAIL { color: var(--fail); background: var(--fail-bg); } .BLOCKED { color: var(--blocked); background: var(--blocked-bg); }
+.NT { color: var(--nt); background: var(--nt-bg); }
+.sev { font: 600 11px/1 var(--body); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+.sev.crit { color: var(--fail); } .sev.high { color: var(--accent); } .sev.med { color: var(--blocked); } .sev.low { color: var(--muted); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 4px; }
+.tile b { font: 600 26px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.tile b s { color: var(--muted); font-weight: 500; font-size: 18px; margin-right: 6px; }
+.tile span { font-size: 13px; color: var(--muted); }
+.callout { background: var(--accent-soft); border-left: 3px solid var(--accent); padding: 12px 16px; border-radius: 0 8px 8px 0; display: grid; gap: 6px; }
+ul, ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 13px; color: var(--muted); align-items: center; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+
+<header style="display:grid;gap:10px">
+  <span class="eyebrow">Level 4 product audit · 16 Nov 2026 · branch <span class="mono">audit/level4-product</span></span>
+  <h1>Trail to Tides Product Audit</h1>
+  <p class="lede">The whole product as one system: catalogue, ACE™, Matchmaker, groups, map, Compass.AI, operators and pricing, Adventurepedia, and gamification. Defects that could be fixed safely were fixed and retested on a separate branch. Nothing has been deployed.</p>
+  <div class="legend">
+    <span class="chip PASS">PASS</span> tested and working
+    <span class="chip FIXED">FIXED</span> resolved and retested
+    <span class="chip FAIL">FAIL</span> defect remains
+    <span class="chip BLOCKED">BLOCKED</span> needs access or a decision
+    <span class="chip NT">NOT TESTED</span> could not be verified
+  </div>
+</header>
+
+<section>
+  <h2><span class="n">1</span>Executive assessment</h2>
+  <p>The product's core is sound. Its data model lives in one place, and most pages already read the same catalogue, ACE profiles and filters. The serious problems were in how features <em>disagreed</em> with each other, and in one safety flaw in the match score. Those are now fixed on the branch, with 44 automated tests guarding them.</p>
+  <div class="tiles">
+    <div class="tile"><b><s>297</s>0</b><span>people rated "Ready" despite being 3+ levels short on one axis (of 2,832 test pairs)</span></div>
+    <div class="tile"><b><s>31</s>0</b><span>adventures shown at two different difficulties on different pages (of 59)</span></div>
+    <div class="tile"><b><s>47</s>0</b><span>adventures whose card "from" price differed from their own page's (of 54 priced)</span></div>
+    <div class="tile"><b><s>0</s>52</b><span>automated tests on scoring, groups, data, prices, filters and uploads (all passing)</span></div>
+  </div>
+  <div class="callout">
+    <p><strong>Production readiness:</strong> ready to deploy after your approval. Type-check, lint, the full production build and all 52 tests pass.</p>
+    <p><strong>Since fixed (section 11):</strong> difficulty bands recalibrated, all 10 estimated ACE profiles hand-set, XP levels renamed to match the brief, story comments secured.</p>
+    <p><strong>Still needing you:</strong> what "verified operator" means, and whether to keep the pop-culture badge names.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">2</span>Feature integrity matrix</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Feature</th><th>What it actually does</th><th>Data source</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Explore and search</td><td>59 adventures; type, state, difficulty, duration, month, price and fit filters; shareable links</td><td><span class="mono">data.ts</span>, shared filter module</td><td><span class="chip FIXED">FIXED</span> price basis</td></tr>
+      <tr><td>Adventure pages</td><td>Facts, ACE check, operator comparison, departure calendar, map and GPX</td><td>data.ts, operator offers, Supabase reviews</td><td><span class="chip FIXED">FIXED</span> FAQ price</td></tr>
+      <tr><td>ACE™ scoring</td><td>8 axes, 1–5 for people, 0–5 for adventures (0 = not needed)</td><td><span class="mono">ace.ts</span>, <span class="mono">matchmakerScoring.ts</span></td><td><span class="chip FIXED">FIXED</span> gap gate</td></tr>
+      <tr><td>Matchmaker assessment</td><td>Quick 14 questions, full 20 (12 capability, 2 calibration, 6 optional health)</td><td>matchmakerQuestions.ts</td><td><span class="chip PASS">PASS</span> logic · <span class="chip NT">NOT TESTED</span> UI past consent</td></tr>
+      <tr><td>Training</td><td>Per-gap advice, weeks-to-ready estimate, next level that unlocks most</td><td><span class="mono">fitness.ts</span></td><td><span class="chip FIXED">FIXED</span> level-specific</td></tr>
+      <tr><td>Group Match</td><td>Least-ready member sets the verdict; group floor per axis; invite links and stored groups</td><td>fitness.ts, Supabase match_groups</td><td><span class="chip PASS">PASS</span> with 4 real accounts</td></tr>
+      <tr><td>Adventure Map</td><td>Same data and filters as Explore; difficulty pins; fit for you or your group</td><td>data.ts, filter module</td><td><span class="chip FIXED">FIXED</span> price basis</td></tr>
+      <tr><td>Trails and GPX</td><td>37 routes computed from OpenStreetMap with BRouter; straight-line gaps flagged</td><td>build-time JSON</td><td><span class="chip FIXED">FIXED</span> GPX label</td></tr>
+      <tr><td>Compass.AI</td><td>Keyword engine for searches, Gemini for questions; slug and difficulty guardrails</td><td>api/chat, data.ts</td><td><span class="chip FIXED">FIXED</span> routing, honesty, input caps</td></tr>
+      <tr><td>Operators directory</td><td>27 operators (13 verified), same count as homepage</td><td>data.ts plus approved Supabase operators</td><td><span class="chip FIXED">FIXED</span> claims</td></tr>
+      <tr><td>Booking pathway</td><td>External referral only ("Visit site"), click-tracked; quote requests behind a flag</td><td>operator sites</td><td><span class="chip PASS">PASS</span> labelling · <span class="chip NT">NOT TESTED</span> external links</td></tr>
+      <tr><td>Adventurepedia</td><td>Trek guides, activity guides, search</td><td>adventurepedia.ts, trekGuides.ts</td><td><span class="chip FIXED">FIXED</span> difficulty · <span class="chip NT">NOT TESTED</span> claims vs sources</td></tr>
+      <tr><td>XP and achievements</td><td>9 tiers to 9,000 XP, capped per action, revocable</td><td><span class="mono">xp.ts</span>, achievements.ts</td><td><span class="chip PASS">PASS</span> logic · <span class="chip BLOCKED">BLOCKED</span> naming</td></tr>
+      <tr><td>Accounts, avatars, premium</td><td>Supabase auth, 10 preset avatars plus photo upload; no premium tier exists</td><td>Supabase</td><td><span class="chip FIXED">FIXED</span> XP, uploads, deletion</td></tr>
+      <tr><td>Reviews and stories</td><td>User reviews; hero rating only from 5+ real reviews</td><td>Supabase</td><td><span class="chip PASS">PASS</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="n">3</span>ACE™ mathematical validation</h2>
+  <h3>How it works today</h3>
+  <ul>
+    <li><strong>Person:</strong> each answer A–E scores 1–5. Two-question axes combine and lean to the weaker answer when the two are far apart. "Not sure" and unanswered both score a cautious 1. Calibration (how long since you trained, how often you train now) and optional health answers lower axes by fixed multipliers, never by more than half. Result: 1–5 on every axis, total 8–40.</li>
+    <li><strong>Adventure:</strong> hand-set 0–5 per axis, with 0 meaning not needed. Ten adventures have no hand-set profile and use an estimate built from their hand-typed difficulty, type and altitude.</li>
+    <li><strong>Match:</strong> a weighted average over the axes the adventure needs (weight = requirement). Full credit when met, 75% one level short, 40% two short, 10% three or more. Ready ≥ 80, Stretch ≥ 55.</li>
+    <li><strong>Rank:</strong> Pathfinder 8–15, Navigator 16–23, Trailblazer 24–31, Vanguard 32–39, Apex 40 only.</li>
+  </ul>
+  <h3>Defect found and fixed: a strong profile could hide a dangerous gap</h3>
+  <p>Because the score is an average, being strong everywhere else outweighed one large shortfall. Altitude 1 with 3s elsewhere was rated <strong>Ready (85%)</strong> for Hampta Pass at 4,298 m, and Stamina 1 was Ready for Sar Pass. Across every one-weak-axis profile against every adventure, 297 of 2,832 pairs were "Ready" despite a 3-level gap, and 610 despite a 2-level gap.</p>
+  <p><strong>Fix:</strong> the largest single gap now caps the result. Two levels short on any axis is at best a Stretch; three or more is Not yet. The weighting is unchanged, and stored profiles need no migration. Every page, the map, groups and Compass inherit it because they all call the same function. <strong>After:</strong> 0 of 2,832. Tested at the boundaries for every adventure and axis, and for monotonicity (raising an axis never lowers a match).</p>
+  <h3>Boundary results</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Case</th><th>Result</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>All E answers, trained this month, no health flags</td><td>5 on every axis, total 40, Apex</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>All A, all "Not sure", or no answers</td><td>1 on every axis, never 0</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Worst calibration plus every health flag</td><td>Every axis multiplier ≥ 0.5; scores stay 1–5</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Water 0 on an adventure (not applicable)</td><td>Ignored in the match; user Water is always ≥ 1</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Every total 8–40</td><td>Exactly one rank, in order, no gaps or overlaps</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Adventure with no requirements</td><td>100% for everyone</td><td><span class="chip PASS">PASS</span></td></tr>
+    </tbody>
+  </table></div>
+  <h3>Where the framework is weak (recommendations, not changed)</h3>
+  <ul>
+    <li><strong>Difficulty bands are compressed at the top.</strong> Difficulty comes from the sum of the 8 axes (≤8 Easy, ≤14 Moderate, ≤20 Hard, ≤26 Advanced, above that Extreme). A Himalayan trek starts near 2 per axis, so 54 of 59 adventures land on Hard or above: 1 Easy, 4 Moderate, 24 Hard, 9 Advanced, 21 Extreme. Kedarkantha, a standard first Himalayan trek, is "Hard". Everest Base Camp (non-technical) sits in the same "Extreme" as Mera Peak (a 6,476 m climb). <em>Recommendation:</em> derive difficulty from the highest single demand plus the sum, or raise the bands. This changes labels only, not anyone's stored profile. It needs your approval because it changes what every page says.</li>
+    <li><strong>Ten adventures run on estimated profiles</strong> built from their hand-typed difficulty. The Manali–Leh ride (5,359 m passes) estimates to Stamina 1, Strength 0, Agility 0, so it's rated "Moderate" and almost anyone is "Ready" for it. Others: Ladakh Circuit, Zanskar, Spiti bike, Spiti cycling, Lobuche, Mera Peak, Doodhpathri, Ranthan Kharak, Surya Top. <span class="chip FAIL">FAIL</span> These need hand-set profiles from someone who knows the routes.</li>
+    <li><strong>The rank is a sum, not readiness.</strong> Apex needs a perfect 40, and a Vanguard can still be Not yet for an altitude trek. The rank is fine as a badge, but it shouldn't be shown as capability. The match verdicts now handle that correctly.</li>
+    <li><strong>False precision.</strong> A match like "81%" comes from coarse 1–5 self-reports. Leading with the verdict and the named gaps, rather than the percentage, would be more honest.</li>
+    <li><strong>Overlapping and ambiguous axes.</strong> "Water" means swimming for rafting but stream crossings for treks (Pin Parvati 4). "Focus" is described as comfort with heights and exposure, which overlaps "Nerve" (remoteness). Clearer one-line definitions on the ACE page would help.</li>
+    <li><strong>Two difficulty fields.</strong> Each record had a hand-typed difficulty that disagreed with its ACE-derived one on 31 of 59 adventures, and Adventurepedia, site search and the medical cautions read the hand-typed one. Everest Base Camp was "Moderate" in its guide and "Extreme" on its page. <span class="chip FIXED">FIXED</span> Everything now reads one shared <span class="mono">difficultyOf()</span>. The hand-typed field only feeds the estimates above.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="n">4</span>Data integrity report</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Check (59 adventures, 27 operators)</th><th>Finding</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Duplicate slugs, ids, names</td><td>None</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Coordinates</td><td>All inside India and Nepal</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Required text, image, season</td><td>All present</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>ACE values</td><td>All whole numbers 0–5; every water activity needs water; hand-set treks above 5,000 m need Altitude 5</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Altitude vs Altitude axis</td><td>Gulabi Kantha (4,023 m) rated Altitude 3; Kareri Lake (2,936 m) and Doodhpathri (2,730 m) rated 3</td><td><span class="chip FAIL">FAIL</span> needs review</td></tr>
+      <tr><td>Duration buckets</td><td>6-day trips sit in the bucket stored as "7+ days", but the screen already labels it "6+ days"</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Operator duplicates and verified flag</td><td>No near-duplicate names; each operator's flag is the same on every adventure</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Operator websites</td><td>All https</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Difficulty, one source</td><td>31 disagreements between pages</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>"From" price, one source</td><td>47 of 54 priced adventures showed a different number on cards than on their page (Kedarkantha ₹9,500 vs ₹12,475)</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Live Supabase tables (reviews, operator submissions, groups)</td><td>Not inspected directly: the Supabase access token has expired</td><td><span class="chip BLOCKED">BLOCKED</span></td></tr>
+    </tbody>
+  </table></div>
+  <h3>Source-of-truth matrix</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Information</th><th>Source</th><th>Freshness</th><th>Shown honestly?</th></tr></thead>
+    <tbody>
+      <tr><td>Adventure facts, seasons</td><td>Hand-written in <span class="mono">data.ts</span></td><td>When edited</td><td>Yes; shown as general best months, not live access</td></tr>
+      <tr><td>ACE profiles, difficulty</td><td>data.ts, or estimated</td><td>When edited</td><td>Estimates aren't marked on the page. Recommend a note.</td></tr>
+      <tr><td>Operator prices, inclusions</td><td>Read from operators' own pages (<span class="mono">operatorOffers.json</span>)</td><td>Import date shown ("last checked")</td><td>Yes</td></tr>
+      <tr><td>Lead "from" price</td><td>Derived into <span class="mono">leadPrices.json</span> (new)</td><td>Rebuilt with the offers; a test fails if stale</td><td>Yes</td></tr>
+      <tr><td>Departure dates</td><td>Operators' pages and listings</td><td>Import date</td><td>Yes, with "confirm with the operator"</td></tr>
+      <tr><td>Google ratings</td><td>Typed into data.ts</td><td>No date recorded</td><td>Partly; add a "checked" date</td></tr>
+      <tr><td>Weather</td><td>Open-Meteo, fetched live in the browser</td><td>Live</td><td>Yes; notes it's for the base, colder higher up</td></tr>
+      <tr><td>Routes, elevation</td><td>OpenStreetMap via BRouter, at build time</td><td>Build date</td><td>Now yes, GPX included (see section 8)</td></tr>
+      <tr><td>Permits, route conditions</td><td>No structured data; guide text only</td><td>Static</td><td>Compass now says to confirm locally</td></tr>
+      <tr><td>Reviews, photos, groups</td><td>Supabase, user content</td><td>Live</td><td>Hero rating only from 5+ real reviews</td></tr>
+      <tr><td>Compass.AI answers</td><td>Gemini plus the catalogue; keyword engine as fallback</td><td>Live</td><td>Now told not to state prices, operators, permits or conditions as fact</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="n">5</span>Compass.AI evaluation</h2>
+  <p>Ten scenarios were run against the local server with the real model, before and after the fixes. All recommendations link to real adventure records (the server rejects unknown slugs), and no reply stated a price.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Scenario</th><th>Before</th><th>After</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>1 · Beginner Himalayan trek</td><td>Triund, Doodhpathri, Yulla Kanda</td><td>Same (the only Easy/Moderate treks)</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>2 · Above 5,000 m, experienced</td><td>Tarsar Marsar (4,019 m), Ali Bedni (3,824 m)</td><td>Everest Base Camp, Markha Valley, Pin Parvati</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>3 · Compare ABC and KGL</td><td>A list, plus an unrelated third trek</td><td>A side-by-side answer with both treks</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>4 · Motorcycle trips in Ladakh</td><td>3 correct rides</td><td>Same, but Manali–Leh shows "Moderate" (estimated profile)</td><td><span class="chip PASS">PASS</span> · data issue</td></tr>
+      <tr><td>5 · Within a budget</td><td>Short treks</td><td>Says prices are compared on each adventure page; no invented figures</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>6 · Fit for an ACE profile</td><td>Ready treks in season</td><td>Same</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>7 · Easier alternative, multi-turn</td><td>One trek, or unrelated bike rides</td><td>Easier treks in Himachal</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>8 · Training for altitude</td><td>A list of treks and a bike ride</td><td>Answer in words, doctor caveat, no unrelated cards; still generic, doesn't use the ACE plan</td><td><span class="chip FIXED">FIXED</span> · partial</td></tr>
+      <tr><td>9 · Group of 4, one first-timer, weekend</td><td>Included a 9-day Extreme trek, silently</td><td>Says nothing in Uttarakhand fits a weekend and shows the closest 4-day treks</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>10 · Goechala permits and season</td><td>Brahmatal, Roopkund, Kedarkantha cards</td><td>Permit and season answer, says rules change, Goechala card only</td><td><span class="chip FIXED">FIXED</span></td></tr>
+    </tbody>
+  </table></div>
+  <h3>Root causes fixed</h3>
+  <ul>
+    <li><strong>Keyword engine answered questions.</strong> Any message naming a place or activity skipped the AI, so permit, training, comparison, budget, altitude and group questions got lists. Those now go to the AI.</li>
+    <li><strong>Unrelated cards added to answers.</strong> When the AI answered in words, the server attached random keyword matches. It now attaches only adventures the visitor named.</li>
+    <li><strong>Dishonest fallback.</strong> When the free-tier model was rate-limited, the fallback said "Here are some adventures that match" whatever was asked. Now questions get an honest "can't answer right now" with a pointer to Adventurepedia, and searches say plainly when a limit (a weekend, a level) had to be relaxed. An "above 5,000 m" altitude limit is also enforced.</li>
+    <li><strong>Prompt invited invention.</strong> The prompt told the model to name "planned locations" for activities that don't exist yet (diving in the Andamans, and so on). Now it must not promise them, and must not state prices, operators, dates, permits or conditions as fact.</li>
+    <li><strong>Unchecked input.</strong> The browser could send "system" messages and unlimited history and length (prompt injection and cost risk). Now only the last 12 user/assistant turns are sent, each capped at 1,500 characters.</li>
+  </ul>
+  <p class="meta">Latency: keyword answers under 120 ms; AI answers 1.2–3.1 s. The in-memory rate limiter (20 messages per 5 minutes per IP) is per server instance, a known open item.</p>
+</section>
+
+<section>
+  <h2><span class="n">6</span>Operator and booking audit</h2>
+  <ul>
+    <li><strong>Counts agree:</strong> homepage 27 = directory 27; 13 verified. <span class="chip PASS">PASS</span></li>
+    <li><strong>Overclaiming:</strong> the Operators page's search description said "Every operator reviewed and approved by Trail to Tides" and listed "diving schools". The site description said "run by verified operators". Neither is true (14 of 27 aren't verified; there's no diving). <span class="chip FIXED">FIXED</span> The copy now describes what's listed. The page title "Find, Compare &amp; Book" is kept for you to decide, since booking happens on the operator's site.</li>
+    <li><strong>One price everywhere:</strong> see section 4. The FAQ answer "Packages start from…" also used the old fee-only number. <span class="chip FIXED">FIXED</span></li>
+    <li><strong>Booking types:</strong> all bookings are external referrals labelled "Visit site", opening the operator's page and logged as a click. Quote requests exist behind a feature flag. There's no direct booking, and nothing claims there is. <span class="chip PASS">PASS</span></li>
+    <li><strong>"Verified" has no written definition.</strong> It's a hand-set flag. <span class="chip BLOCKED">BLOCKED</span> Decide the criteria (for example: registration, insurance, safety record, a call), then show them on the Operators page.</li>
+    <li><strong>External booking links</strong> were not crawled, to avoid hammering operators' sites. <span class="chip NT">NOT TESTED</span></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="n">7</span>UX and journey analysis</h2>
+  <ul>
+    <li><strong>Discover → understand:</strong> a single difficulty and a single price now follow the visitor from card to page to guide to Compass. That was the biggest broken transition.</li>
+    <li><strong>Evaluate:</strong> the Matchmaker counts are consistent: the homepage's 14 is the quick match, the full one is 20, and "eight" refers to the axes. <span class="chip PASS">PASS</span></li>
+    <li><strong>Prepare:</strong> training advice was one sentence per axis, the same whether you were at level 1 or 4. It's now a concrete next step for each of the 32 level changes (for example, Altitude 3→4: "Complete a trek that sleeps at 3,500–4,000 m on a gradual, well-acclimatised itinerary"), on the adventure page, Matchmaker results and homepage. <span class="chip FIXED">FIXED</span> The Matchmaker's plan still lists the hardest adventure's demand as each axis's target, so it can read as "get to 5 everywhere". Recommend targeting the next level that unlocks the most adventures, which the homepage already does.</li>
+    <li><strong>Groups:</strong> the "least-ready member sets the pace" rule holds in code (the verdict uses the minimum, and the group profile uses the floor). With the gap gate, one member's critical deficiency now keeps the whole group off that adventure. There's no "try this instead" suggestion for the group yet.</li>
+    <li><strong>Map and GPX:</strong> the downloaded GPX now says it's a planned route computed from OpenStreetMap, not a recorded GPS track. <span class="chip FIXED">FIXED</span></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="n">8</span>Technical defects and fixes</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Defect</th><th>Root cause</th><th>Affected</th><th>Severity</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>"Ready" despite a 3-level gap</td><td>Average score with no per-axis floor</td><td>Every verdict, map, groups, Compass</td><td><span class="sev crit">Critical</span></td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Same trek, two difficulties</td><td>Some pages read the hand-typed field</td><td>Adventurepedia, search, medical cautions</td><td><span class="sev high">High</span></td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Extreme-trip health caution missed</td><td>Caution keyed to the hand-typed "Extreme"</td><td>Medical notes (EBC was "Moderate")</td><td><span class="sev high">High</span></td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Card price ≠ page price</td><td>Cards used lowest fee; page uses full trip</td><td>Explore, filter, map, home, Compare, Compass, alerts</td><td><span class="sev high">High</span></td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Chat accepts "system" turns, unlimited input</td><td>Client messages passed through unchecked</td><td>/api/chat</td><td><span class="sev high">High</span></td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Questions answered with lists</td><td>Keyword-first routing</td><td>Compass.AI</td><td><span class="sev med">Medium</span></td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Fallback hides relaxed limits</td><td>Generic fallback text</td><td>Compass.AI</td><td><span class="sev med">Medium</span></td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Operator claims overstate verification</td><td>Copy</td><td>Search results, social cards</td><td><span class="sev med">Medium</span></td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>GPX could pass as a recorded track</td><td>No provenance in the file</td><td>Trail downloads</td><td><span class="sev med">Medium</span></td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Generic training advice</td><td>One tip per axis</td><td>Matchmaker, adventure page, home</td><td><span class="sev med">Medium</span></td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Duplicate training tips; stale comment saying health answers never affect scores</td><td>Copy-paste, drift</td><td>Maintenance</td><td><span class="sev low">Low</span></td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Ready/Stretch thresholds typed as 80/55 in about 10 files</td><td>No shared constant</td><td>Maintenance</td><td><span class="sev low">Low</span></td><td><span class="chip FAIL">FAIL</span> constants added; most files not migrated</td></tr>
+      <tr><td>Estimated ACE profiles (10) and altitude mismatches (3)</td><td>Missing content</td><td>Verdicts for those adventures</td><td><span class="sev high">High</span></td><td><span class="chip FAIL">FAIL</span></td></tr>
+      <tr><td>Turbopack dev server fails</td><td>Custom image loader</td><td>Local development only</td><td><span class="sev low">Low</span></td><td><span class="chip FAIL">FAIL</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">Files: <span class="mono">lib/ace.ts</span> (gate, <span class="mono">difficultyOf</span>, thresholds), <span class="mono">lib/fitness.ts</span> (training steps), <span class="mono">lib/leadPrices*.ts</span> plus <span class="mono">scripts/build-lead-prices.ts</span>, <span class="mono">app/api/chat/route.ts</span>, Adventurepedia, search, medical cautions, Explore, Map, cards, Compare, alerts, Operators page, site description, GPX route. New: <span class="mono">tests/</span> and <span class="mono">npm test</span>, plus audit scripts in <span class="mono">scripts/audit-*.{ts,mjs}</span>.</p>
+</section>
+
+<section>
+  <h2><span class="n">9</span>Strategic opportunities</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Opportunity</th><th>User problem → solution</th><th>Value</th><th>Complexity</th><th>Depends on</th><th>Priority</th></tr></thead>
+    <tbody>
+      <tr><td>Recalibrate difficulty</td><td>"Hard" on beginner treks erodes trust → bands from peak demand plus sum</td><td>High</td><td>Low</td><td>Your approval</td><td><span class="sev crit">P1</span></td></tr>
+      <tr><td>Hand-set the 10 estimated profiles</td><td>Wrong verdicts on rides and peaks → expert profiles</td><td>High</td><td>Low</td><td>Route knowledge</td><td><span class="sev crit">P1</span></td></tr>
+      <tr><td>Publish what "verified" means</td><td>Users can't judge operators → criteria and date on each badge</td><td>High</td><td>Low</td><td>Your policy</td><td><span class="sev crit">P1</span></td></tr>
+      <tr><td>Gap-first verdicts</td><td>"81%" invites false confidence → lead with Ready/Stretch and the named gap</td><td>Medium</td><td>Low</td><td>None</td><td><span class="sev high">P2</span></td></tr>
+      <tr><td>Next-level training plan</td><td>Plan targets the hardest trek → target the level that unlocks most, with weeks</td><td>Medium</td><td>Low</td><td>None</td><td><span class="sev high">P2</span></td></tr>
+      <tr><td>Group alternatives</td><td>Group stuck with no option → "everyone's ready for these nearby"</td><td>Medium</td><td>Medium</td><td>None</td><td><span class="sev high">P2</span></td></tr>
+      <tr><td>Compass uses ACE for training</td><td>Generic training answer → feed the person's gaps and level steps into the prompt</td><td>Medium</td><td>Low</td><td>None</td><td><span class="sev high">P2</span></td></tr>
+      <tr><td>Structured permits per trek</td><td>Permit info is free text → fields with source and checked date</td><td>Medium</td><td>Medium</td><td>Research</td><td><span class="sev med">P3</span></td></tr>
+      <tr><td>Rating freshness</td><td>Google ratings undated → store a checked date like prices</td><td>Low</td><td>Low</td><td>None</td><td><span class="sev med">P3</span></td></tr>
+      <tr><td>Durable rate limit</td><td>Per-instance limiter weak for AI cost → store-backed limiter</td><td>Medium</td><td>Medium</td><td>Supabase or KV</td><td><span class="sev med">P3</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="n">10</span>Second pass: the areas not checked the first time</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Area</th><th>What was found</th><th>What changed</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Booking links (179)</td><td>Indiahikes and Trek The Himalayas block scripts, so all 82 of their links were rechecked in a real browser. Trek The Himalayas: 55 of 55 fine. <strong>Indiahikes: 13 of 27 returned 404</strong> (Goechala, Hampta Pass, Roopkund, Rupin Pass and others). Trekup India: 3 broken, 1 landing on a blog post. Rimo Expeditions (marked verified) and Ride On Bike Trips: their domains don't exist.</td><td>9 Indiahikes and 4 Trekup links pointed at the right pages. Indiahikes removed from Pin Parvati, Kareri Lake, Panch Kedar and Pindari Glacier: it only has info guides for them, not a trip you can book, yet it was listed with prices up to ₹60,000. The two dead domains removed; their button now reads "No website listed" instead of opening nothing.</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Altitude and first-aid guides vs the CDC</td><td>Ascent rate (500 m a night above 3,000 m), the extra-day rule and risk from about 2,500 m all match the CDC Yellow Book. Three claims didn't: symptoms start 2–12 hours after arrival (the guide said 6–12); a sulfa antibiotic allergy doesn't rule out Diamox (the guide warned against it); boil water 3 minutes above about 2,000 m (the guide said 1 minute "even at altitude").</td><td>All three corrected. Other guides (fitness, rafting, riding) give general guidance and weren't checked line by line.</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>XP and achievements</td><td>The XP endpoint gave points for reviews, photos and completed trips on the browser's word alone. Anyone signed in could post 30 fake "completed" events and climb most of the way to the 9,000 XP badge.</td><td>The server now checks the review row, the photo, the logged trip, the wishlist save or the saved Matchmaker profile before awarding XP. Compare stays unchecked (it lives in the browser; 100 XP once).</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Uploads (avatar, photos, stories, operator logo)</td><td>Each route trusted the file type the browser declared. The operator-logo route also took its extension from the file's name and accepted SVG, which can carry script.</td><td>All four now check the file's first bytes are really JPG, PNG or WebP. The logo extension comes from the checked type. SVG logos are no longer accepted.</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Accounts, signed out</td><td>Group Match, profile, settings and admin all send signed-out visitors to sign-in, with the right return link. 8 account APIs refuse them (401); the two that answer return empty data.</td><td>None needed.</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Premium features</td><td>There's no premium tier, paywall or entitlement check anywhere in the code. "Premium" exists only as design language.</td><td>Nothing to fix. If premium is planned, it hasn't been built.</td><td><span class="chip PASS">PASS</span> · not built</td></tr>
+      <tr><td>Avatars</td><td>10 preset character avatars plus your own photo upload. There's no avatar generation in the code.</td><td>Upload hardened (above).</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Group Match with four real accounts</td><td>Four throwaway accounts (reserved example.com addresses, no passwords, signed in through the app's own email-link flow) saved profiles, created a group and joined by invite code. The group page showed all four. It named the right person: Chitra, the strongest overall (36/40) but at Altitude 1, held the group back on Kedarkantha and other 3,600 m+ treks, while the weakest overall (16/40) was ready. Only Triund suited everyone. Outsiders can't read the group, and a member can't remove the owner.</td><td>None needed. Accounts deleted afterwards.</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Signed-in account flows</td><td>Sign-in, saving a Matchmaker profile, XP (a real profile and a real review earned it; a trip and a review that didn't exist were refused), review posting, avatar upload and removal (an HTML file posing as a PNG was refused), and the profile page (XP, level, rank, group, passport) all worked.</td><td>None needed.</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Deleting an account</td><td>Database rows go with the account, but the admin "Delete account" button left the person's profile photo, XP history, wishlist, trip log and badge records in Storage. Health answers live on the account itself, so they were already deleted.</td><td>Account deletion now removes those files too. It was tested by deleting the four test accounts and confirming nothing of theirs remained. Photos shared on adventure pages still stay; the Privacy Policy doesn't say either way.</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Badge names</td><td>Several achievement names borrow from films and brands: "It's Over 9000!", "Dora the Explorer", "First Blood", "Rotten Tomato".</td><td>Not changed; your call.</td><td><span class="chip BLOCKED">BLOCKED</span> decision</td></tr>
+      <tr><td>Anonymous story comments</td><td>Anyone can comment under any name, and comments are stored as one file per story that's rewritten on every post, so two posts at once can lose one.</td><td>Not changed (a design choice); recommend sign-in or moderation, and a table instead of a file.</td><td><span class="chip FAIL">FAIL</span> open</td></tr>
+      <tr><td>Also done</td><td>Ready/Stretch thresholds were typed as 80/55 in about 10 files. The Matchmaker's training plan targeted the hardest adventure's demand. Compass gave generic training advice. Estimated ACE profiles weren't marked.</td><td>One shared constant everywhere. The plan targets the next level an adventure asks for. Compass uses the person's own next steps. The 10 estimated profiles say "Estimated scores" on their pages.</td><td><span class="chip FIXED">FIXED</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="n">11</span>Third pass: the remaining fixes</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Item</th><th>Before</th><th>After</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Difficulty bands</td><td>1 Easy, 4 Moderate, 24 Hard, 9 Advanced, 21 Extreme. Kedarkantha "Hard"; Everest Base Camp in the same "Extreme" as Mera Peak.</td><td>Bands from the total (≤12, ≤24, ≤29, ≤34, above) with a floor from the hardest single demand: any 5 (5,000 m+, a technical climb) is at least Hard. Now 2 Easy, 30 Moderate, 19 Hard, 6 Advanced, 2 Extreme. Kedarkantha, Brahmatal and Hampta are Moderate; Everest Base Camp, Goechala and KGL are Hard; Bali Pass and the Three Passes are Advanced; Pin Parvati and Lobuche are Extreme. Only labels change: no stored profile, and no Ready / Stretch / Not yet verdict, depends on them.</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Estimated ACE profiles</td><td>10 adventures, including Manali–Leh at Stamina 1, Strength 0, Agility 0 ("Moderate", almost anyone "Ready").</td><td>All 10 hand-set from their route facts, each with a one-line reason in the data. Manali–Leh is now Hard (Altitude 5, Focus 4). Mera Peak is Advanced and Lobuche Extreme. A test now fails if an estimate comes back.</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Altitude axis vs top altitude</td><td>Gulabi Kantha (4,023 m) at 3; Kareri Lake (2,936 m) at 3.</td><td>4 and 2. A test checks every adventure (4,000 m+ needs 4+; under 3,000 m, 2 or less).</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>XP levels</td><td>9 levels starting at "Toddler", Rambler before Rover, no Immortal.</td><td>Your brief's 8: Drifter, Wanderer, Rover, Rambler, Expeditioner, Summiteer, Legend, Immortal. Immortal is the 9,000 maximum. Nobody's points change.</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>"It's Over 9000!" badge</td><td>A meme quote</td><td>"Over 9000 Club", as in the brief. The other ~20 pop-culture badge names are a deliberate theme and are left for you.</td><td><span class="chip FIXED">FIXED</span> · rest yours</td></tr>
+      <tr><td>Story comments</td><td>The form required sign-in, but the API didn't: anyone could post under any name. All of a story's comments shared one file, so two posts at once could lose one.</td><td>The API requires sign-in and takes the name from the account. Each comment is its own file, so posts can't overwrite each other. Existing comments still load. Account ids are never shown.</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Match percentage</td><td>As large as the verdict</td><td>The verdict and the named gaps lead; the percentage is small, with a note that it's a rough guide.</td><td><span class="chip FIXED">FIXED</span></td></tr>
+      <tr><td>Group alternatives</td><td>Recommended earlier</td><td>Already covered: the group page lists every adventure all members are ready for, and each stretch names who it's a stretch for and what they need.</td><td><span class="chip PASS">PASS</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">Not done, and why: the in-memory rate limiter needs a shared store (Supabase table or KV) and is infrastructure work. Structured permit data needs research per trek. The Turbopack dev server still fails on the image loader; the webpack dev server works.</p>
+</section>
+
+<section>
+  <h2><span class="n">12</span>Final verification</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Test</th><th class="num">Count</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Unit: ACE scoring, boundaries, monotonicity, ranks, Matchmaker answers, calibration and health floors, training, XP</td><td class="num">25</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Multi-member group matching (critical gap, weakest named, floor, identical members, link decoding)</td><td class="num">5</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Data integrity (uniqueness, coordinates, fields, operators, duration buckets, lead prices fresh)</td><td class="num">7</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Filters and search (combined, empty, difficulty, month, price, link round trip, synonyms)</td><td class="num">7</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>ACE sweep: 2,832 profile × adventure pairs for hidden gaps</td><td class="num">2,832</td><td><span class="chip FIXED">FIXED</span> 297 → 0</td></tr>
+      <tr><td>Compass.AI scenarios with the real model</td><td class="num">10</td><td>9 pass, 1 partial</td></tr>
+      <tr><td>Pages served locally (home, Explore, Map, Matchmaker, ACE, Operators, guides, adventure page)</td><td class="num">9</td><td><span class="chip PASS">PASS</span> all 200</td></tr>
+      <tr><td>Browser: Explore card price matches page (₹12,475)</td><td class="num">1</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Calibration, profiles, altitude and XP-level tests (added in the third pass)</td><td class="num">5</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Upload byte checks (JPG, PNG, WebP accepted; HTML, SVG, empty refused)</td><td class="num">3</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Outbound booking links (scripted, then blocked sites in a real browser)</td><td class="num">179</td><td><span class="chip FIXED">FIXED</span> 20 broken → 0 known</td></tr>
+      <tr><td>Signed-out access: 10 pages, 10 APIs</td><td class="num">20</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Type-check, lint, production build</td><td class="num">3</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Live site</td><td class="num">–</td><td><span class="chip BLOCKED">BLOCKED</span> Vercel firewall blocks scripted requests</td></tr>
+      <tr><td>Supabase tables</td><td class="num">–</td><td><span class="chip BLOCKED">BLOCKED</span> access token expired</td></tr>
+      <tr><td>Matchmaker in the browser past the consent screen</td><td class="num">–</td><td><span class="chip NT">NOT TESTED</span> I don't accept consent on your behalf</td></tr>
+      <tr><td>End to end with 4 throwaway accounts on the live database: sign-in, profiles, XP, reviews, avatars, Group Match, permissions</td><td class="num">23</td><td><span class="chip PASS">PASS</span></td></tr>
+      <tr><td>Account deletion leaves nothing behind (4 accounts, group, reviews, files)</td><td class="num">9</td><td><span class="chip PASS">PASS</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">Run <span class="mono">npm test</span> to repeat the 52 tests. After any operator import, run <span class="mono">node --import ./tests/register.mjs scripts/build-lead-prices.ts</span>; a test fails if you forget. Nothing is committed or deployed; production goes out only with your approval.</p>
+</section>
+
+</div>

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { fromPrice } from "@/lib/leadPrices";
 import { loginHref } from "@/lib/loginHref";
 import Link from "next/link";
 import { X, ArrowRight, GitCompare, Heart, Plus, ChevronDown, Search, LogIn, Share2 } from "lucide-react";
@@ -8,7 +9,7 @@ import { toast } from "sonner";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { Adventure, adventures, getLowestPrice } from "@/lib/data";
+import { Adventure, adventures } from "@/lib/data";
 import { useCompare, MAX } from "@/contexts/CompareContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import ACERadar from "@/components/ui/custom/ACERadar";
@@ -31,7 +32,7 @@ const FIELDS: { label: string; key: keyof Adventure | "price" | "rating" | "oper
 ];
 
 function getPrice(a: Adventure) {
-  const min = getLowestPrice(a);
+  const min = fromPrice(a);
   return min === null ? "–" : `₹${min.toLocaleString("en-IN")}`;
 }
 

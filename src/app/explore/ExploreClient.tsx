@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
+import { fromPrice } from "@/lib/leadPrices";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,7 +15,7 @@ import DifficultyMeter from "@/components/ui/custom/DifficultyMeter";
 import SeasonStrip from "@/components/ui/custom/SeasonStrip";
 import EmptyState from "@/components/ui/custom/EmptyState";
 import ChatBubble from "@/components/ChatBubble";
-import { adventures, getLowestPrice } from "@/lib/data";
+import { adventures } from "@/lib/data";
 import type { Adventure } from "@/lib/data";
 import { getACE, computeDifficulty, computeMatchScore } from "@/lib/ace";
 import { bucketFor } from "@/lib/fitness";
@@ -378,7 +379,7 @@ function ListView({ items, monthIdx, score }: { items: Adventure[]; monthIdx: nu
         <span>Adventure</span><span>Days</span><span>Max alt</span><span>Difficulty</span><span>Season</span><span>Operators</span><span className="text-right">From</span><span />
       </div>
       {items.map((a, i) => {
-        const price = getLowestPrice(a);
+        const price = fromPrice(a);
         const checked = latestPriceCheck(a);
         const s = score?.(a);
         const b = s !== undefined ? bucketFor(s) : null;

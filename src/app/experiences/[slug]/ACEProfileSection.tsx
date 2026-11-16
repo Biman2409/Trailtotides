@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight, RotateCcw, Check } from "lucide-react";
 import AceRadar, { AXIS_KEYS, AXIS_NAMES, axisColor } from "@/app/ace/AceRadar";
 import { ACE_THEME_CSS, BUCKET_VAR, tint } from "@/app/ace/aceTheme";
-import { bucketFor, TRAINING_TIPS, weeksToReady } from "@/lib/fitness";
+import { bucketFor, trainingTip, weeksToReady } from "@/lib/fitness";
 import { computeMatchScore } from "@/lib/ace";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
 import type { ACE } from "@/lib/ace";
@@ -14,7 +14,7 @@ import type { ACE } from "@/lib/ace";
  * section. Without a profile: what this adventure asks for, on the radar, and the 2-minute check.
  * With one: you drawn over it, the verdict, and each gap once, with how to close it.
  */
-export default function ACEProfileSection({ ace, slug, name }: { ace: ACE; slug: string; name: string }) {
+export default function ACEProfileSection({ ace, slug, name, estimated = false }: { ace: ACE; slug: string; name: string; /** No hand-set profile yet: these scores are worked out from its type, grade and altitude */ estimated?: boolean }) {
   const { ace: userAce } = useFitnessProfile();
 
   const trekValues = AXIS_KEYS.map((k) => ace[k] ?? 0);
@@ -39,6 +39,11 @@ export default function ACEProfileSection({ ace, slug, name }: { ace: ACE; slug:
       <div className="px-4 sm:px-5 pt-4">
         <p className="text-[11px] font-bold tracking-[0.2em] uppercase" style={{ color: "var(--accent-ink)" }}>ACE<sup className="tm">™</sup> capability check</p>
         <h3 className="text-[20px] sm:text-[22px] leading-tight mt-1" style={{ color: "var(--text-primary)" }}>How do you measure up?</h3>
+        {estimated && (
+          <p className="text-[12.5px] leading-snug mt-1" style={{ color: "var(--text-tertiary)" }}>
+            Estimated scores: worked out from this adventure&apos;s type, grade and altitude until our team rates it in detail.
+          </p>
+        )}
       </div>
 
       <div className="grid sm:grid-cols-[minmax(0,260px)_minmax(0,1fr)] gap-4 sm:gap-6 items-center p-4 sm:p-5 pt-2 sm:pt-3">
@@ -92,7 +97,8 @@ export default function ACEProfileSection({ ace, slug, name }: { ace: ACE; slug:
                 <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--ace-faint)" }}>Your match</p>
                 <p className="text-2xl font-black leading-tight" style={{ color: match.color }}>{match.bucket.label}</p>
               </div>
-              <p className="text-2xl font-black tabular-nums" style={{ color: "var(--ace-ink)" }}>{match.score}%</p>
+              {/* The verdict and the gaps lead; the percentage is a rough guide from 1–5 answers, so it stays small */}
+              <p className="text-[14px] font-semibold tabular-nums" style={{ color: "var(--ace-soft)" }} title="A rough guide from your 1–5 answers">{match.score}% match</p>
             </div>
             <div className="mt-2 h-2 rounded-full overflow-hidden" style={{ background: "var(--ace-line)" }}>
               <div className="h-full rounded-full" style={{ width: `${match.score}%`, background: match.color }} />
@@ -121,7 +127,7 @@ export default function ACEProfileSection({ ace, slug, name }: { ace: ACE; slug:
                           style={{ color: short >= 2 ? "var(--bad)" : "var(--warn)", background: tint(short >= 2 ? "var(--bad)" : "var(--warn)", 12) }}>−{short}</span>
                       </div>
                       {/* How to close it, for the three biggest gaps */}
-                      {idx < 3 && <p className="text-[12.5px] leading-snug mt-0.5" style={{ color: "var(--text-tertiary)" }}>{TRAINING_TIPS[g.k]}</p>}
+                      {idx < 3 && <p className="text-[12.5px] leading-snug mt-0.5" style={{ color: "var(--text-tertiary)" }}>{trainingTip(g.k, g.have, g.need)}</p>}
                     </li>
                   );
                 })}

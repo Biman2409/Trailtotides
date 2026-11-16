@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { fromPrice } from "@/lib/leadPrices";
 import Image from "next/image";
 import { BadgeCheck, GitCompare, Crown } from "lucide-react";
 import { toast } from "sonner";
 import { awardXP, revokeXP } from "@/lib/awardXP";
-import { getLowestPrice, type Adventure, type Month } from "@/lib/data";
+import { type Adventure, type Month } from "@/lib/data";
 import { getACE, computeDifficulty, computeMatchScore } from "@/lib/ace";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
 import { bucketFor } from "@/lib/fitness";
@@ -116,7 +117,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
   const seasonLabel = formatSeasonShort(adventure.bestMonths);
   const operatorCount = adventure.operators?.length ?? 0;
 
-  const lowestPrice = getLowestPrice(adventure);
+  const lowestPrice = fromPrice(adventure);
   // Every listed operator, the same number the adventure page and its comparison show
   const displayCount = operatorCount;
 

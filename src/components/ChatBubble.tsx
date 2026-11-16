@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { fromPrice } from "@/lib/leadPrices";
 import { X, ArrowUp, ChevronRight, RotateCcw, Mountain, Bike, Sparkles, Snowflake, Gauge, Compass as CompassIcon } from "lucide-react";
 import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import Link from "next/link";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
 import { COMPASS_ASK_EVENT, COMPASS_GRADIENT, COMPASS_RING, deriveChips, type CompassMessage } from "@/lib/compass";
 import { getACE, computeDifficulty, computeMatchScore, type ACE } from "@/lib/ace";
-import { getLowestPrice, type Adventure } from "@/lib/data";
+import { type Adventure } from "@/lib/data";
 import { bucketFor } from "@/lib/fitness";
 import { DIFFICULTY_CONFIG } from "@/components/ui/custom/DifficultyMeter";
 
@@ -49,7 +50,7 @@ function Orb({ size = 28, pulse = false }: { size?: number; pulse?: boolean }) {
 function PickCard({ adventure, reason, ace }: { adventure: Adventure; reason?: string; ace: ACE | null }) {
   const difficulty = computeDifficulty(getACE(adventure));
   const color = DIFFICULTY_CONFIG[difficulty as keyof typeof DIFFICULTY_CONFIG]?.color ?? "#94a3b8";
-  const price = getLowestPrice(adventure);
+  const price = fromPrice(adventure);
   const match = ace ? computeMatchScore(ace, getACE(adventure)) : null;
   const b = match !== null ? bucketFor(match) : null;
   return (

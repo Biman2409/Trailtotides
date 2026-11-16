@@ -1,10 +1,10 @@
 // Shared pieces of the Adventure Map: tiles, genre colours, the Leaflet loader and the small
 // helpers the canvas, the list and the pin card all use. No React here.
 import type L from "leaflet";
+import { fromPrice } from "@/lib/leadPrices";
 import type { Adventure, AdventureType, Month } from "@/lib/data";
-import { getLowestPrice } from "@/lib/data";
 import { GENRE_GROUPS } from "@/lib/filterOptions";
-import { getACE, computeDifficulty, type ACE } from "@/lib/ace";
+import type { ACE } from "@/lib/ace";
 import { matchScore, bucketFor, gapsFor, weeksToReady, type Bucket, type Gap, type GroupMember } from "@/lib/fitness";
 import { DIFFICULTY_CONFIG } from "@/components/ui/custom/DifficultyMeter";
 
@@ -272,9 +272,7 @@ export function genreOf(type: AdventureType) {
 // ── Difficulty, price, operators ──────────────────────────────────────────────
 
 /** Same ACE-derived difficulty the cards and detail pages show, not the raw data field */
-export function difficultyOf(a: Adventure): string {
-  return computeDifficulty(getACE(a));
-}
+export { difficultyOf } from "@/lib/ace";
 
 export function difficultyColor(d: string): string {
   return DIFFICULTY_CONFIG[d as keyof typeof DIFFICULTY_CONFIG]?.color ?? "#94a3b8";
@@ -282,10 +280,9 @@ export function difficultyColor(d: string): string {
 
 export const verifiedOperators = (a: Adventure) => (a.operators ?? []).filter((o) => o.verified);
 
-/** Lowest price among verified operators, falling back to any operator */
+/** The adventure's "from" price, the same one its page and every card show */
 export function priceFrom(a: Adventure): number | null {
-  const v = verifiedOperators(a);
-  return getLowestPrice({ operators: v.length ? v : a.operators ?? [] });
+  return fromPrice(a);
 }
 
 export function formatINR(n: number): string {

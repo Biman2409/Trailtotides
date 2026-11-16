@@ -11,6 +11,7 @@ import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/rateLimit";
+import { bytesMatchType } from "@/lib/imageSniff";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -47,6 +48,8 @@ export async function POST(req: NextRequest) {
   const ext = file.type.split("/")[1] === "jpeg" ? "jpg" : file.type.split("/")[1];
   const path = `${user.id}.${ext}`;
   const bytes = await file.arrayBuffer();
+  // The declared type is the sender's claim; the first bytes say what the file really is
+  if (!bytesMatchType(bytes, file.type)) return NextResponse.json({ error: "That file isn't a JPG, PNG or WebP image" }, { status: 400 });
 
   // Clear any previous upload under a different extension so switching
   // JPG → PNG (etc.) doesn't leave an orphaned file behind.

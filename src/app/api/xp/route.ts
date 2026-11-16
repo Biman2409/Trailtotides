@@ -57,6 +57,47 @@ async function writeEvents(userId: string, events: XPEvent[]): Promise<boolean> 
   return true;
 }
 
+async function readJsonFile<T>(bucket: string, path: string, fallback: T): Promise<T> {
+  const { data } = await admin.storage.from(bucket).download(path);
+  if (!data) return fallback;
+  try { return JSON.parse(await data.text()) as T; } catch { return fallback; }
+}
+
+/**
+ * True when the thing the XP is for is really on the account: the review, the photo, the logged
+ * trip, the wishlist save or the saved Matchmaker profile. Compare lives in the browser only, so it
+ * can't be checked; it's worth 100 XP once.
+ */
+async function actionHappened(action: XPAction, slug: string, user: { id: string; user_metadata?: Record<string, unknown> }): Promise<boolean> {
+  switch (action) {
+    case "review": {
+      if (!slug) return false;
+      const { count } = await admin.from("reviews").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("adventure_slug", slug);
+      return (count ?? 0) > 0;
+    }
+    case "photo": {
+      if (!slug) return false;
+      const index = await readJsonFile<{ user_id?: string }[]>("adventure-photos", `${slug}/_index.json`, []);
+      return Array.isArray(index) && index.some((p) => p?.user_id === user.id);
+    }
+    case "trip_log": {
+      if (!slug) return false;
+      const trips = await readJsonFile<{ slug?: string }[]>("wishlists", `triplog-${user.id}.json`, []);
+      return Array.isArray(trips) && trips.some((t) => t?.slug === slug);
+    }
+    case "wishlist": {
+      const saved = await readJsonFile<string[]>("wishlists", `${user.id}.json`, []);
+      return Array.isArray(saved) && saved.length > 0;
+    }
+    case "ace_complete": {
+      const ace = user.user_metadata?.ace_profile as Record<string, number> | undefined;
+      return !!ace && Object.values(ace).some((v) => Number(v) > 0);
+    }
+    default:
+      return true;
+  }
+}
+
 // ─── GET /api/xp ─────────────────────────────────────────────────────────────
 
 export async function GET() {
@@ -86,6 +127,12 @@ export async function POST(req: NextRequest) {
 
   if (!action || !(action in XP_REWARDS)) {
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+  }
+
+  // XP is earned for something that exists on the account, not for the browser saying so: without
+  // this, anyone signed in could post 30 "adventure completed" events and climb to the top tier
+  if (!(await actionHappened(action, slug, user))) {
+    return NextResponse.json({ awarded: false, reason: "not_found" });
   }
 
   const xp = XP_REWARDS[action];

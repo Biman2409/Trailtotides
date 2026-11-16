@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     template: "%s | Trail to Tides",
   },
   description:
-    "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI and run by verified operators.",
+    "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI, then booked directly with the operators who run them.",
   metadataBase: new URL(BASE_URL),
   keywords: [
     "adventure travel India",
@@ -109,7 +109,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Trail to Tides — Find, Compare & Book Adventures in India",
     description:
-      "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI and run by verified operators.",
+      "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI, then booked directly with the operators who run them.",
     type: "website",
     url: BASE_URL,
     siteName: "Trail to Tides",
@@ -129,7 +129,7 @@ export const metadata: Metadata = {
     creator: "@trailtotides",
     title: "Trail to Tides — Find, Compare & Book Adventures in India",
     description:
-      "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI and run by verified operators.",
+      "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI, then booked directly with the operators who run them.",
     images: [OG_IMAGE],
   },
   robots: {
@@ -194,7 +194,7 @@ export default function RootLayout({
                 },
                 image: OG_IMAGE,
                 description:
-                  "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI and run by verified operators.",
+                  "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI, then booked directly with the operators who run them.",
                 email: "hello@trailtotides.com",
                 foundingDate: "2024",
                 areaServed: {

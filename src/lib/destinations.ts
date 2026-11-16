@@ -1,6 +1,6 @@
 import { adventures, type Adventure, type Month } from "@/lib/data";
+import { fromPrice } from "@/lib/leadPrices";
 import { getACE, computeDifficulty } from "@/lib/ace";
-import { parsePrice } from "@/lib/price";
 
 // Destination pages (/destinations/<slug>): every region with at least two adventures,
 // built from the adventure data so they stay in step with it. An adventure listed under
@@ -37,9 +37,9 @@ export const destinationFor = (a: Adventure) => DESTINATIONS.find((d) => d.adven
 export const difficultyOf = (a: Adventure) => computeDifficulty(getACE(a));
 
 /** Cheapest operator price for an adventure, in rupees (0 when none is listed) */
+/** The adventure's "from" price (as its page leads with), 0 when none */
 export function lowestPrice(a: Adventure): number {
-  const prices = a.operators.map((o) => parsePrice(o.priceFrom)).filter((p) => Number.isFinite(p) && p > 0);
-  return prices.length ? Math.min(...prices) : 0;
+  return fromPrice(a) ?? 0;
 }
 
 const days = (a: Adventure) => parseInt(a.durationDays, 10) || 0;

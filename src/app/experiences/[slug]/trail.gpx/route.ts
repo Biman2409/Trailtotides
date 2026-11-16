@@ -26,7 +26,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
 <gpx version="1.1" creator="Trail to Tides" xmlns="http://www.topografix.com/GPX/1/1">
   <metadata>
     <name>${esc(adventure.name)}</name>
-    <desc>${esc(`${trail.lengthKm} km one way from ${trail.stops[0].name}. Check the route with your operator: paths change after landslides and snow.`)}</desc>
+    <desc>${esc(`${trail.lengthKm} km one way from ${trail.stops[0].name}. A planned route computed from OpenStreetMap paths (BRouter), not a recorded GPS track${(trail.approxKm ?? 0) > 0 ? `; about ${Math.round(trail.approxKm ?? 0)} km of it is drawn straight where no path is mapped` : ""}. Check the route with your operator: paths change after landslides and snow.`)}</desc>
     <copyright author="OpenStreetMap contributors"><license>https://opendatacommons.org/licenses/odbl/</license></copyright>
     <link href="${page}"><text>Trail to Tides</text></link>
   </metadata>

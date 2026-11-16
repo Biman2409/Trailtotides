@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack --port 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --import ./tests/register.mjs --test --test-reporter=spec \"tests/**/*.test.ts\""
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

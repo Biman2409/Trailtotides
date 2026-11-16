@@ -3,8 +3,9 @@ import OpenAI from "openai";
 import { adventures } from "@/lib/data";
 import type { AdventureType } from "@/lib/data";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
-import { getACE, computeDifficulty, computeMatchScore, type ACE } from "@/lib/ace";
+import { getACE, computeDifficulty, computeMatchScore, READY_MIN, STRETCH_MIN, type ACE } from "@/lib/ace";
 import { stripEmphasis } from "@/lib/emphasis";
+import { nextSteps, trainingTip, AXIS_LABEL } from "@/lib/fitness";
 import { parseTrip, applyTrip, hasTrip, fitsTrip, failingChecks, tripPhrase, relaxedNote, kmFrom, type Check, type TripAsk } from "@/lib/tripAsk";
 
 // Gemini's free tier via its OpenAI-compatible endpoint — no billing required.
@@ -88,12 +89,15 @@ ${CATALOG_STR}
 → Acknowledge briefly, give new recommendations.
 
 **Coming-soon type** (Diving, Paragliding, Hot Air Balloon, Ice Skating, Scrambling):
-→ Say it's coming soon, name exciting planned locations (Diving→Andamans/Lakshadweep; Paragliding→Bir Billing/Kullu; HotAirBalloon→Rajasthan; IceSkating→Shimla/Manali).
+→ Say Trail to Tides doesn't list it yet. Don't promise dates, places or operators for it.
 → Ask if they want to explore what's live instead.
 → No <recommendations> block yet.
 
-**General travel chat** (weather, best time, about a place):
-→ Answer warmly with general knowledge, then offer to find an adventure there.
+**Training or preparation** ("how do I get fitter for…", "how to prepare for altitude"):
+→ Give 2–3 concrete steps. If this user's TRAINING line is below, use it. Otherwise include <suggest_ace/> so the Adventure Matchmaker can give a plan for their level. Altitude can't be trained at home: prior nights at altitude and a slow ascent matter most.
+
+**General travel chat** (weather, best time, permits, about a place):
+→ Answer briefly from general knowledge and say so ("generally", "check before you go"), then offer to find an adventure there.
 
 **User confused / indecisive** (fitness doubts, "I don't know", "can't decide", "which one", "too many options"):
 → Include <suggest_ace/> + 1 sentence pointing them to the Adventure Matchmaker — a short fitness check (a 2-minute quick match, or about 3 minutes for the full version) that rates every adventure for their body, faster than browsing back and forth with you.
@@ -103,7 +107,9 @@ ${CATALOG_STR}
 → Include <suggest_ace/> and note the Adventure Matchmaker will narrow it down in one pass instead of more back-and-forth.
 
 ## Hard rules:
-- ONLY use slugs from the catalog above. Never invent slugs.
+- ONLY use slugs from the catalog above. Never invent slugs, adventures or operators.
+- The catalog has no prices, operators, dates or availability. Never state a price, fee, operator name, batch date, availability, permit cost or current trail/road/weather condition as fact. For prices and operators, point to the adventure's page on Trail to Tides, where operators' own prices are compared; for permits and conditions, say rules change and to confirm with the local forest/tourism office or the operator.
+- Health and safety: give general guidance only, never medical advice. For heart, lung or other medical conditions at altitude, say to see a doctor before booking.
 - Difficulty is the catalog's "difficulty" field (Easy, Moderate, Hard, Advanced, Extreme) and nothing else. Never call an adventure easier or harder than that field says.
 - When the user asks for a difficulty ("moderate", "easy", "challenging"…), recommend ONLY adventures whose "difficulty" field is that level. If none fit the rest of the request, say so and offer the nearest level, naming it.
 - Never recommend a coming-soon type — say it's coming soon instead.
@@ -285,7 +291,7 @@ function parseAce(raw: unknown): ACE | null {
 }
 
 const LEVEL: Record<string, number> = { Easy: 1, Moderate: 2, Hard: 3, Advanced: 4, Extreme: 5 };
-const BEGINNER_WORDS = /\b(beginner|beginners|easy|first[- ]?time|first trek|gentle|newbie|novice|not too hard|family)\b/i;
+const BEGINNER_WORDS = /\b(beginner|beginners|easy|first[- ]?time|first trek|gentle|newbie|novice|not too hard|family|never (trekked|hiked|been)|no experience)\b/i;
 
 const ratingOf = (slug: string) => {
   const a = adventures.find((x) => x.slug === slug);
@@ -376,20 +382,30 @@ function misstatesDifficulty(reason: string, slug: string): boolean {
   return !!rating && said.length > 0 && !said.includes(rating);
 }
 
+/** Their next training steps (the levels that open the most adventures), for training questions */
+function trainingHint(ace: ACE): string {
+  const steps = nextSteps(ace, adventures).slice(0, 3);
+  if (!steps.length) return "";
+  return `
+TRAINING (use for training or "how do I get ready" questions, in this order): ${steps
+    .map((s) => `${AXIS_LABEL[s.axis]} ${s.from}→${s.to} opens ${s.unlocked} more adventure${s.unlocked === 1 ? "" : "s"}: ${trainingTip(s.axis, s.from, s.to)}`)
+    .join(" | ")}`;
+}
+
 /** Tells the model which adventures this person is ready for, so it stops suggesting ones they aren't. */
 function fitnessHint(ace: ACE | null): string {
   if (!ace) return "";
   const groups = { ready: [] as string[], stretch: [] as string[], notYet: [] as string[] };
   for (const a of adventures) {
     const s = computeMatchScore(ace, getACE(a));
-    (s >= 80 ? groups.ready : s >= 55 ? groups.stretch : groups.notYet).push(a.slug);
+    (s >= READY_MIN ? groups.ready : s >= STRETCH_MIN ? groups.stretch : groups.notYet).push(a.slug);
   }
   return `\n\n## This user's fitness (from the Adventure Matchmaker)
 Levels 1–5: ${ACE_KEYS.map((k) => `${k} ${ace[k]}`).join(", ")}.
 READY for: ${groups.ready.join(", ") || "none"}
 STRETCH (possible with preparation): ${groups.stretch.join(", ") || "none"}
 NOT YET (beyond them today): ${groups.notYet.join(", ") || "none"}
-Rules: recommend READY adventures first. Only suggest a STRETCH one if it fits the request especially well, and say it will need preparation. Never recommend a NOT YET adventure unless they explicitly ask for it by name — then say plainly it's beyond their current fitness. You don't need to mention the Matchmaker; they've already taken it.`;
+Rules: recommend READY adventures first. Only suggest a STRETCH one if it fits the request especially well, and say it will need preparation. Never recommend a NOT YET adventure unless they explicitly ask for it by name — then say plainly it's beyond their current fitness. You don't need to mention the Matchmaker; they've already taken it.${trainingHint(ace)}`;
 }
 
 /** Keyword fallback, made safe: respects "beginner" wording and the user's fitness when known. */
@@ -402,13 +418,19 @@ function pickFallback(query: string, ace: ACE | null, limit = 3) {
     const inScope = (a: typeof adventures[0]) => (types.length === 0 || types.includes(a.type)) && (places.length === 0 || places.some((p) => a.state.includes(p)));
     list = applyTrip([...list, ...adventures.filter((a) => !list.includes(a))].filter(inScope), trip).list;
   }
+  const minAlt = /\b(?:above|over|more than|higher than)\s*(\d[\d,]{2,})\s*m/i.exec(query);
+  if (minAlt) {
+    const need = Number(minAlt[1].replace(/,/g, ""));
+    const high = adventures.filter((a) => Number((a.altitude ?? "").replace(/[^\d.]/g, "")) >= need);
+    list = [...list.filter((a) => high.includes(a)), ...high.filter((a) => !list.includes(a))];
+  }
   if (BEGINNER_WORDS.test(query)) {
     const gentle = list.filter((a) => LEVEL[computeDifficulty(getACE(a))] <= 2);
     list = gentle.length > 0 ? gentle : list.filter((a) => LEVEL[computeDifficulty(getACE(a))] <= 3);
   }
   if (ace) {
     const scored = list.map((a) => ({ a, s: computeMatchScore(ace, getACE(a)) }));
-    const fitting = scored.filter((x) => x.s >= 55);
+    const fitting = scored.filter((x) => x.s >= STRETCH_MIN);
     list = (fitting.length > 0 ? fitting : scored).sort((x, y) => y.s - x.s).map((x) => x.a);
   }
   return list.slice(0, limit);
@@ -417,14 +439,34 @@ function pickFallback(query: string, ace: ACE | null, limit = 3) {
 function fallbackReason(adventure: typeof adventures[0], query: string, ace: ACE | null = null): string {
   if (ace) {
     const s = computeMatchScore(ace, getACE(adventure));
-    if (s >= 80) return `A strong fit for your fitness — ${s}% match.`;
-    if (s >= 55) return `A stretch for you (${s}% match) — doable with some preparation.`;
+    if (s >= READY_MIN) return `A strong fit for your fitness — ${s}% match.`;
+    if (s >= STRETCH_MIN) return `A stretch for you (${s}% match) — doable with some preparation.`;
   }
   const q = query.toLowerCase();
   if (q.includes(adventure.state.toLowerCase())) return `Located in ${adventure.state}, matching your region preference.`;
   if (q.includes(adventure.type.toLowerCase())) return `A well-rated ${adventure.type} adventure in India.`;
   if (LEVEL[computeDifficulty(getACE(adventure))] <= 2) return `Accessible for most fitness levels — a great starting point.`;
   return `One of the top ${adventure.type} experiences on Trail to Tides.`;
+}
+
+/** A question that wants an answer (permits, training, a comparison), not a list of adventures */
+const INFO_QUESTION = /\b(permits?|train|training|improve|prepare|preparation|acclimati[sz]\w*|why|what is|what are|compare|comparison|versus|vs\.?|difference|safe|safety|altitude sickness|ams)\b/i;
+
+/**
+ * What Compass says when the AI can't answer. A question gets an honest "can't answer that now"
+ * and a pointer, not a list of unrelated adventures; a search gets the keyword answer, which
+ * says plainly when a limit (a weekend, a level) had to be relaxed.
+ */
+function honestFallback(query: string, ace: ACE | null) {
+  if (INFO_QUESTION.test(query) && !/\b(recommend|suggest|find|show|which (trek|adventure))\b/i.test(query)) {
+    return {
+      text: "Compass.AI can't answer that one right now. Adventurepedia has guides on permits, altitude, fitness and preparation, and every adventure page lists its season, safety notes and the operators who run it.",
+      recommendations: [], cards: [],
+    };
+  }
+  const k = keywordAnswer(query, ace);
+  if (!k.picks.length) return null;
+  return { text: k.text, recommendations: k.recommendations, cards: k.picks };
 }
 
 // ─── Indecision detection ────────────────────────────────────────────────────
@@ -451,17 +493,31 @@ function detectIndecision(messages: { role: string; content: string }[]): boolea
 // Check if query is about a coming-soon type (to skip keyword fallback)
 // Note: Kayaking/Diving are declared types but currently have zero live adventures,
 // so generic water/coastal phrasing needs to route here too, not just the exact type name.
+const NEEDS_REASONING = /\b(permits?|compare|comparison|versus|vs\.?|difference|better|train|training|prepare|preparation|improve|acclimati[sz]\w*|how|why|when|what is|what are|which is|should i|can i|budget|cost|price|cheap|afford|under|below|above|over|more than|less than|friends|group|family|kids|my wife|my husband|my partner)\b|₹|rs\.?\s?\d|\d{3,}\s?(m|km|metres|meters|rupees|inr)\b|\?/i;
+
 /**
  * Keyword search answers on its own only when the question names an activity, a place or a
  * trek: "a 5 day trek in Uttarakhand", "Hampta Pass", "bike trip in Ladakh". Vague asks and
  * follow-ups ("something shorter") need the conversation, so they go to the AI.
  */
 function keywordCanAnswer(query: string): boolean {
+  // Questions, comparisons, numbers and groups need reasoning, not a list: "what permits for
+  // Goechala", "compare X and Y", "above 5,000 m", "under ₹15,000", "how do I train", "4 friends"
+  if (NEEDS_REASONING.test(query)) return false;
   const { types, places } = requestLimits(query);
   if (types.length > 0 || places.length > 0) return true;
   const q = query.toLowerCase();
   // A trek's name without its last word, so "hampta pass" finds "Hampta Pass Trek"
   return adventures.some((a) => {
+    const name = a.name.toLowerCase().replace(/\s+(trek|ride|climb|expedition|circuit|trail)$/, "");
+    return name.length > 3 && q.includes(name);
+  });
+}
+
+/** Adventures the visitor named ("hampta pass" finds "Hampta Pass Trek") */
+function namedIn(query: string) {
+  const q = query.toLowerCase();
+  return adventures.filter((a) => {
     const name = a.name.toLowerCase().replace(/\s+(trek|ride|climb|expedition|circuit|trail)$/, "");
     return name.length > 3 && q.includes(name);
   });
@@ -483,13 +539,10 @@ function keywordAnswer(query: string, ace: ACE | null) {
     }
   }
   // A trek asked for by name leads, with the closest keyword matches after it
-  const q = query.toLowerCase();
-  const named = adventures.filter((a) => {
-    const name = a.name.toLowerCase().replace(/\s+(trek|ride|climb|expedition|circuit|trail)$/, "");
-    return name.length > 3 && q.includes(name);
-  });
+  const named = namedIn(query);
   if (!text && named.length) {
-    picks = [...named, ...picks.filter((a) => !named.includes(a))].slice(0, 3);
+    const sameKind = picks.filter((a) => !named.includes(a) && named.some((n) => n.type === a.type));
+    picks = [...named, ...sameKind].slice(0, 3);
     const more = picks.length - named.length;
     text = named.length === 1
       ? `Here's ${named[0].name}${more ? `, plus ${more} more like it` : ""}.`
@@ -525,6 +578,10 @@ function isComingSoonQuery(query: string): boolean {
 
 // ─── Route handler ────────────────────────────────────────────────────────────
 
+/** The most recent turns sent to the model, and the most characters kept from each */
+const MAX_TURNS = 12;
+const MAX_CHARS = 1500;
+
 export async function POST(req: NextRequest) {
   const { allowed, retryAfterMs } = rateLimit(`chat:${getClientIp(req)}`, 20, 5 * 60_000);
   if (!allowed) {
@@ -535,9 +592,19 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { messages, recommendationRounds, ace: rawAce } = await req.json();
+    const body = await req.json();
+    const { recommendationRounds, ace: rawAce } = body;
     const userAce = parseAce(rawAce);
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+    // Only the visitor's and Compass's own turns, the recent ones, each kept short: the browser
+    // can't add "system" turns of its own, and a long paste can't run up the model bill
+    const messages: { role: "user" | "assistant"; content: string }[] = Array.isArray(body.messages)
+      ? body.messages
+          .filter((m: unknown): m is { role: string; content: string } =>
+            !!m && typeof m === "object" && ((m as { role?: unknown }).role === "user" || (m as { role?: unknown }).role === "assistant") && typeof (m as { content?: unknown }).content === "string")
+          .slice(-MAX_TURNS)
+          .map((m: { role: string; content: string }) => ({ role: m.role as "user" | "assistant", content: m.content.slice(0, MAX_CHARS) }))
+      : [];
+    if (messages.length === 0 || messages[messages.length - 1].role !== "user") {
       return NextResponse.json({ error: "No messages provided" }, { status: 400 });
     }
 
@@ -556,10 +623,7 @@ export async function POST(req: NextRequest) {
 
     const chatMessages: { role: "user" | "assistant" | "system"; content: string }[] = [
       { role: "system", content: systemContent },
-      ...messages.map((m: { role: string; content: string }) => ({
-        role: m.role as "user" | "assistant",
-        content: m.content,
-      })),
+      ...messages,
     ];
 
     // Keywords first: instant and free, and right for anything that names an activity, place or
@@ -579,22 +643,15 @@ export async function POST(req: NextRequest) {
 
       if (isComingSoonQuery(lastQuery)) {
         return NextResponse.json({
-          text: "Water adventures are coming soon — we're planning dives and kayaking trips in the Andamans and Lakshadweep. Want to see what's live today instead?",
+          text: "Trail to Tides doesn't list diving, kayaking or other water adventures yet, apart from river rafting. Want to see what's live today instead?",
           recommendations: [],
           cards: [],
           suggestAce: shouldSuggestAce,
         });
       }
 
-      const fallback = pickFallback(lastQuery, userAce);
-      if (fallback.length > 0) {
-        return NextResponse.json({
-          text: "Here are some adventures that match what you're looking for.",
-          recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery, userAce) })),
-          cards: fallback,
-          suggestAce: shouldSuggestAce,
-        });
-      }
+      const fallback = honestFallback(lastQuery, userAce);
+      if (fallback) return NextResponse.json({ ...fallback, suggestAce: shouldSuggestAce });
       return NextResponse.json({
         text: "Tell me a region, activity, or trip length and I'll pull up matching adventures.",
         recommendations: [],
@@ -623,15 +680,8 @@ export async function POST(req: NextRequest) {
 
     if (!rawContent) {
       const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
-      const fallback = pickFallback(lastQuery, userAce);
-      if (fallback.length > 0) {
-        return NextResponse.json({
-          text: "Here are some adventures that match what you're looking for.",
-          recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery, userAce) })),
-          cards: fallback,
-          suggestAce: shouldSuggestAce,
-        });
-      }
+      const fallback = honestFallback(lastQuery, userAce);
+      if (fallback) return NextResponse.json({ ...fallback, suggestAce: shouldSuggestAce });
       return NextResponse.json(rateLimited
         ? { rateLimited: true, text: "", recommendations: [], cards: [], suggestAce: false }
         : { text: "Tell me a region, activity, or trip length and I'll pull up matching adventures.", recommendations: [], cards: [], suggestAce: shouldSuggestAce });
@@ -697,6 +747,18 @@ export async function POST(req: NextRequest) {
 
     // Keyword fallback — skip if it's clearly a coming-soon query
     const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
+
+    // The model answered in words and chose not to recommend (a permits or training question):
+    // keep its answer, with only the adventures the visitor named, rather than unrelated cards
+    if (text) {
+      const named = namedIn(lastQuery);
+      return NextResponse.json({
+        text,
+        recommendations: named.map((a) => ({ slug: a.slug, name: a.name, reason: factualReason(a) })),
+        cards: named,
+        suggestAce,
+      });
+    }
 
     if (!isComingSoonQuery(lastQuery)) {
       const fallback = pickFallback(lastQuery, userAce);

@@ -2,7 +2,8 @@
 // the filter itself. Plain functions with no React, so the server can run them too (saved
 // map searches are checked for new matches by the daily alerts job).
 
-import { getLowestPrice } from "@/lib/data";
+
+import { fromPrice } from "@/lib/leadPrices";
 import type { Adventure, AdventureType, Difficulty, Duration, Month } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import { bucketFor } from "@/lib/fitness";
@@ -80,7 +81,7 @@ export function filterAdventures(all: Adventure[], f: AdventureFilterState, opts
     if (f.durs.length && !f.durs.includes(a.duration)) return false;
     if (f.months.length && !f.months.some((m) => a.bestMonths.includes(m))) return false;
     if (f.maxPrice) {
-      const p = getLowestPrice(a);
+      const p = fromPrice(a);
       if (p === null || p > f.maxPrice) return false;
     }
     if (f.fit && opts.score && bucketFor(opts.score(a)).key !== f.fit) return false;

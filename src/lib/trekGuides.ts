@@ -5,6 +5,7 @@
 
 import { adventures, type Adventure, type Month } from "./data";
 import { getTrail } from "./trails";
+import { difficultyOf } from "./ace";
 import type { Trail } from "./trails/shared";
 import type { SearchEntry } from "./adventurepedia";
 
@@ -208,7 +209,7 @@ export function trekSearchIndex(): SearchEntry[] {
     const plainDesc = a.description.replace(/\*\*/g, "");
     const price = priceRange(a);
     return [
-      { ...base, text: `${a.name}. ${a.state}. ${a.type}. ${a.difficulty}. ${a.altitude ?? ""}. Best ${a.bestSeason}. ${a.tags.join(" ")}. ${plainDesc}` },
+      { ...base, text: `${a.name}. ${a.state}. ${a.type}. ${difficultyOf(a)}. ${a.altitude ?? ""}. Best ${a.bestSeason}. ${a.tags.join(" ")}. ${plainDesc}` },
       ...(access ? [{ ...base, section: "Getting there", sectionId: "getting-there", text: [a.baseCamp, a.startingPoint, access.gateway, access.air, access.rail, access.drive, access.note].filter(Boolean).join(". ") }] : []),
       ...(trail ? [{ ...base, section: "Day by day", sectionId: "itinerary", text: "Itinerary, day by day. " + trail.days.map((d) => `Day ${d.day}: ${d.from}${d.to ? ` to ${d.to}` : ""}. ${d.note}`).join(" · ") }] : []),
       { ...base, section: "Permits and paperwork", sectionId: "permits", text: permitNotes(a).join(" ") },

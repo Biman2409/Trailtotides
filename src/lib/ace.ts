@@ -37,16 +37,42 @@ export const ACE_AXIS_COLORS: Record<AceAxis, string> = {
 
 const BLANK_ACE: ACE = { stamina: 0, power: 0, strength: 0, agility: 0, water: 0, altitude: 0, focus: 0, nerve: 0 };
 
+// ─── Match verdict thresholds ─────────────────────────────────────────────────
+/** A match score at or above this is "Ready" */
+export const READY_MIN = 80;
+/** At or above this (and below READY_MIN) is "Stretch"; below it, "Not yet" */
+export const STRETCH_MIN = 55;
+
 // ─── Difficulty computation from ACE sum ──────────────────────────────────
 
-/** Derives the difficulty label from the total of all ACE axis scores. */
+const DIFFICULTY_LABELS = ["Easy", "Moderate", "Hard", "Advanced", "Extreme"] as const;
+
+/**
+ * The difficulty label, from the total of the eight ACE scores and the single hardest demand.
+ *
+ * Recalibrated 2026-11-16. The old bands (≤8, ≤14, ≤20, ≤26) put 54 of 59 adventures at Hard or
+ * above, because a Himalayan trek scores about 2 on every axis before it asks anything hard of
+ * you: Kedarkantha, a standard first Himalayan trek, was "Hard", and Everest Base Camp shared
+ * "Extreme" with Mera Peak. The bands below are wider at the top, and a 5 on any axis (5,000 m+,
+ * a technical climb) keeps an adventure at Hard or above whatever its total. Only labels change:
+ * people's scores and every Ready / Stretch / Not yet verdict are worked out per axis, not from this.
+ */
 export function computeDifficulty(ace: ACE): string {
-  const total = Object.values(ace).reduce((a, b) => a + b, 0);
-  if (total <= 8)  return "Easy";
-  if (total <= 14) return "Moderate";
-  if (total <= 20) return "Hard";
-  if (total <= 26) return "Advanced";
-  return "Extreme";
+  const values = Object.values(ace);
+  const total = values.reduce((a, b) => a + b, 0);
+  const peak = Math.max(...values);
+  const byTotal = total <= 12 ? 1 : total <= 24 ? 2 : total <= 29 ? 3 : total <= 34 ? 4 : 5;
+  const floor = peak >= 5 ? 3 : peak >= 4 ? 2 : 1;
+  return DIFFICULTY_LABELS[Math.max(byTotal, floor) - 1];
+}
+
+/**
+ * The difficulty every page shows: derived from the adventure's ACE profile. The hand-typed
+ * `difficulty` field on the record is only an input to estimateACE for adventures without a
+ * profile yet; reading it directly made the same trek "Moderate" in one place and "Extreme" in another.
+ */
+export function difficultyOf(a: Adventure): string {
+  return computeDifficulty(getACE(a));
 }
 
 /** True when the adventure has a hand-set ACE profile (not an estimate). */
@@ -100,6 +126,9 @@ export function getACE(a: Adventure): ACE {
  * - Partial credit if the user is within 1 point below.
  * - Heavy penalty if the user is 2+ below on any axis.
  * - Returns a 0–100 integer.
+ * - A weighted average alone let strong axes hide a dangerous gap on one (Altitude 1 rated
+ *   "Ready" for a 4,300m pass), so the single largest gap caps the result: 2 levels short on any
+ *   axis is at best a Stretch, 3 or more is Not yet, however strong the rest of the profile is.
  */
 export function computeMatchScore(userAce: ACE, adventureAce: ACE): number {
   const axes = Object.keys(adventureAce) as (keyof ACE)[];
@@ -108,11 +137,13 @@ export function computeMatchScore(userAce: ACE, adventureAce: ACE): number {
 
   let totalWeight = 0;
   let earnedWeight = 0;
+  let maxGap = 0;
 
   for (const ax of relevant) {
     const required = adventureAce[ax];
     const has = userAce[ax];
     const weight = required; // Higher requirement = more weight
+    maxGap = Math.max(maxGap, required - has);
 
     totalWeight += weight;
 
@@ -133,6 +164,9 @@ export function computeMatchScore(userAce: ACE, adventureAce: ACE): number {
     }
   }
 
-  return Math.round((earnedWeight / totalWeight) * 100);
+  const score = Math.round((earnedWeight / totalWeight) * 100);
+  if (maxGap >= 3) return Math.min(score, STRETCH_MIN - 1);
+  if (maxGap >= 2) return Math.min(score, READY_MIN - 1);
+  return score;
 }
 

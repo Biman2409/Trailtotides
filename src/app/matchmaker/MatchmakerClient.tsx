@@ -21,7 +21,7 @@ import {
   type StoredProfile,
 } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
-import { getACE, computeMatchScore, computeDifficulty, type ACE, type AceAxis } from "@/lib/ace";
+import { getACE, computeMatchScore, computeDifficulty, READY_MIN, type ACE, type AceAxis } from "@/lib/ace";
 import { awardXP } from "@/lib/awardXP";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
 import {
@@ -31,7 +31,7 @@ import {
 import { computeAceFromAnswers, estimateQuickAnswers, liveAxisScores, NOT_SURE, QUICK_KEYS, QUICK_QUESTION_COUNT, FULL_QUESTION_COUNT } from "@/lib/matchmakerScoring";
 import AceRadar, { AXIS_KEYS as ACE_AXIS_KEYS } from "@/app/ace/AceRadar";
 import { ACE_THEME_CSS } from "@/app/ace/aceTheme";
-import { profileAgeDays, bucketFor } from "@/lib/fitness";
+import { profileAgeDays, bucketFor, trainingTip } from "@/lib/fitness";
 import ResultsNextSteps, { GroupMatchPromo } from "./ResultsNextSteps";
 import { tm } from "@/lib/tm";
 
@@ -882,7 +882,7 @@ function ResultsScreen({
   const notReady = enriched.filter((a) => a.status !== "IN_ZONE");
   trainingPlan.forEach((item) => {
     const lifted = { ...userAxes, [item.axis]: item.required_level } as unknown as ACE;
-    unlocks[item.axis] = notReady.filter((a) => computeMatchScore(lifted, a.requirements as unknown as ACE) >= 80).length;
+    unlocks[item.axis] = notReady.filter((a) => computeMatchScore(lifted, a.requirements as unknown as ACE) >= READY_MIN).length;
     neededBy[item.axis] = notReady.filter((a) => a.weakAxes.includes(item.axis)).length;
   });
 
@@ -1133,16 +1133,7 @@ function ResultsScreen({
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-const TRAINING_TIPS: Record<string, string> = {
-  stamina:  "Build aerobic base with 3–4 weekly runs or hikes. Progress to back-to-back long days.",
-  power:    "Add interval training and steep hill repeats to develop explosive leg power.",
-  strength: "Weighted step-ups, squats and loaded carries will develop the strength needed.",
-  agility:  "Practice trail running on technical terrain; add balance and proprioception drills.",
-  water:    "Swim 2–3 times a week. Progress from pool to open water, then moving water.",
-  altitude: "Spend nights above 3,000m before attempting higher objectives. Acclimatise gradually.",
-  focus:    "Exposure therapy on smaller heights — via ferrata and scrambling routes build tolerance.",
-  nerve: "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
-};
+// The training tips live in lib/fitness.ts, shared with the group page and Compass.AI
 
 function buildResult(userAxes: Record<string, number>, extra?: { rawAxes?: Record<string, number>; decayNotes?: string[] }): AnalysisResult {
   const enriched: EnrichedAdventure[] = ALL_ADVENTURES.map((adv) => {
@@ -1167,24 +1158,23 @@ function buildResult(userAxes: Record<string, number>, extra?: { rawAxes?: Recor
     };
   });
 
-  const axisGapMap: Record<string, number> = {};
+  // Each capability's next target: the nearest level some adventure asks for above where you are,
+  // not the hardest one's demand, which made the plan read as "get to 5 at everything"
+  const nextNeed: Record<string, number> = {};
   ALL_ADVENTURES.forEach(adv => {
     const req = getACE(adv);
     (Object.keys(userAxes) as string[]).forEach(ax => {
-      if (req[ax as keyof typeof req] > userAxes[ax]) {
-        axisGapMap[ax] = Math.max(axisGapMap[ax] ?? 0, req[ax as keyof typeof req] - userAxes[ax]);
-      }
+      const need = req[ax as keyof typeof req];
+      if (need > userAxes[ax]) nextNeed[ax] = Math.min(nextNeed[ax] ?? 5, need);
     });
   });
 
-  const trainingPlan: TrainingItem[] = Object.entries(axisGapMap)
-    .filter(([, gap]) => gap > 0)
-    .sort(([, a], [, b]) => b - a)
-    .map(([ax, gap]) => ({
+  const trainingPlan: TrainingItem[] = Object.entries(nextNeed)
+    .map(([ax, need]) => ({
       axis: ax,
       current_level: userAxes[ax],
-      required_level: userAxes[ax] + gap,
-      recommendation: TRAINING_TIPS[ax] ?? "Train consistently to improve this capability.",
+      required_level: need,
+      recommendation: trainingTip(ax as AceAxis, userAxes[ax], need),
     }));
 
   return { userAxes, adventures: enriched, trainingPlan, rawAxes: extra?.rawAxes, decayNotes: extra?.decayNotes };
