@@ -55,7 +55,7 @@ export default function FindYourFormat() {
     <section id="styles" className="relative py-6 lg:py-10 px-5 lg:px-8 t-bg-page overflow-hidden">
       {/* Background accent glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-24 right-[8%] w-96 h-96 rounded-full opacity-[0.05] dark:opacity-[0.08] blur-[100px]" style={{ background: ACCENT }} />
+        <div className="absolute -top-24 right-[8%] w-96 h-96 rounded-full opacity-[0.05] dark:opacity-[0.08] soft-glow" style={{ background: ACCENT }} />
         {/* Waves pool bottom-left; "In season" has the same texture top-right */}
         <SectionTexture kind="tides" color="#3fc6bd" at="10% 85%" opacity={0.16} />
       </div>

@@ -149,8 +149,8 @@ export default function Footer() {
       </div>
 
       {/* Background Decor */}
-      <div className="absolute bottom-0 right-0 w-[60%] h-[80%] bg-[#ff5100]/[0.02] blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute top-0 left-0 w-[45%] h-[60%] bg-[#4ade80]/[0.02] blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[60%] h-[80%] bg-[#ff5100]/[0.02] soft-glow rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-0 w-[45%] h-[60%] bg-[#4ade80]/[0.02] soft-glow rounded-full pointer-events-none" />
     </footer>
   );
 }

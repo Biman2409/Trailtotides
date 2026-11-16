@@ -932,7 +932,7 @@ function ResultsScreen({
       <FadeInSection>
         <div className={`${panel} px-5 sm:px-8 pt-6 sm:pt-8 pb-6 sm:pb-7`} style={{ ...panelStyle, borderColor: `${tier.color}40` }}>
           <SectionTexture kind="trail" color={tier.color} at="85% 15%" opacity={0.28} />
-          <div className="absolute -top-24 -right-16 w-80 h-80 rounded-full pointer-events-none blur-[90px]" style={{ background: tier.color, opacity: 0.16 }} />
+          <div className="absolute -top-24 -right-16 w-80 h-80 rounded-full pointer-events-none soft-glow" style={{ background: tier.color, opacity: 0.16 }} />
 
           <div className="relative">
             <div className="flex items-center justify-between gap-3 mb-5 sm:mb-6">

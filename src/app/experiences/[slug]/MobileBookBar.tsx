@@ -80,17 +80,13 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, priceIsF
     <div
       aria-hidden={!visible}
       inert={!visible || undefined}
-      className={`lg:hidden fixed bottom-0 left-0 right-0 z-[999] transition-all duration-300 ease-out ${
+      className={`lg:hidden fixed bottom-0 left-0 right-0 z-[999] transition-[transform,opacity] duration-300 ease-out ${
         visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
       }`}
     >
-      {/* Blur backdrop */}
+      {/* Backdrop: a near-opaque fade. No blur: a blur under a fixed bar repaints on every scroll frame */}
       <div
         className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_top,rgba(255,255,255,0.97)_60%,rgba(255,255,255,0)_100%)] dark:bg-[linear-gradient(to_top,rgba(8,10,18,0.97)_60%,rgba(8,10,18,0)_100%)]"
-        style={{
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-        }}
       />
 
       {/* One row: what it costs on the left, the next step on the right. The trek's name is on the

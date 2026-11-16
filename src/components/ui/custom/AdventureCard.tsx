@@ -128,7 +128,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
       <div className="h-7 flex items-center">
         {badge !== undefined ? badge : adventure.editorChoice && (
           <div
-            className="inline-flex items-center gap-1.5 pl-2 pr-3 py-1 rounded-full backdrop-blur-md"
+            className="inline-flex items-center gap-1.5 pl-2 pr-3 py-1 rounded-full"
             style={{ background: "rgba(10,8,6,0.72)", border: "1px solid rgba(255,179,122,0.3)" }}
           >
             <Crown className="w-3 h-3 shrink-0" style={{ color: "#ffb37a" }} />
@@ -173,8 +173,8 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
         <div className="absolute z-20 top-3 left-3 right-[92px] flex items-center gap-1.5 min-w-0">
           <DifficultyMeter difficulty={difficulty} className="shrink-0" />
           <span
-            className="inline-flex items-center gap-1 px-2 h-5 min-w-0 rounded-full text-[10px] font-bold tracking-tight leading-none text-white/85 backdrop-blur-md whitespace-nowrap"
-            style={{ background: "rgba(10,8,6,0.6)", border: "1px solid rgba(255,255,255,0.08)" }}
+            className="inline-flex items-center gap-1 px-2 h-5 min-w-0 rounded-full text-[10px] font-bold tracking-tight leading-none text-white/85 whitespace-nowrap"
+            style={{ background: "rgba(10,8,6,0.74)", border: "1px solid rgba(255,255,255,0.08)" }}
           >
             <span className="shrink-0">{adventure.durationDays}</span>
             {season ? (
@@ -200,10 +200,10 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
                 onClick={handleCompare}
                 disabled={!inCompare && isFull}
                 aria-label={inCompare ? "Remove from compare" : "Add to compare"}
-                className={`${HIT_AREA} w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed`}
+                className={`${HIT_AREA} w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 disabled:opacity-40 disabled:cursor-not-allowed`}
                 style={inCompare
                   ? { background: "rgba(255,81,0,0.9)", color: "#fff", boxShadow: "0 0 0 1px rgba(255,81,0,0.5), 0 0 10px rgba(255,81,0,0.3)" }
-                  : { background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.7)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
+                  : { background: "rgba(0,0,0,0.62)", color: "rgba(255,255,255,0.7)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
                 }
               >
                 <GitCompare className="w-3.5 h-3.5" />

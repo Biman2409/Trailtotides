@@ -61,8 +61,8 @@ export default function SectionNav({ hasFaq = false, hasDates = false }: { hasFa
   // navbar at every size, so phones can jump to Book or Reviews without scrolling the whole page
   return (
     <div
-      className="sticky top-16 lg:top-20 z-30 backdrop-blur-xl"
-      style={{ background: "color-mix(in srgb, var(--bg-page) 88%, transparent)", borderBottom: "1px solid var(--border-subtle)" }}
+      className="sticky top-16 z-30"
+      style={{ background: "var(--bg-page)", borderBottom: "1px solid var(--border-subtle)" }}
     >
       <div className="max-w-7xl mx-auto px-5 lg:px-8">
         <nav ref={navRef} aria-label="On this page" className="flex items-center gap-6 lg:gap-8 overflow-x-auto no-scrollbar -mx-5 px-5 lg:mx-0 lg:px-0">

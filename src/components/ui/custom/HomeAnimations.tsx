@@ -24,6 +24,14 @@ export function FadeUp({
     el.style.transform = "translateY(28px)";
     el.style.transition = `opacity 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}ms`;
 
+    // Already scrolled past (back navigation, anchor jump): show it at once rather than leave a hole
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.9) {
+      el.style.transition = "none";
+      el.style.opacity = "1";
+      el.style.transform = "none";
+      return;
+    }
+    // Any part in view counts (a ratio threshold never fires for blocks taller than the screen)
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -32,7 +40,7 @@ export function FadeUp({
           observer.disconnect();
         }
       },
-      { threshold: 0.12 }
+      { threshold: 0, rootMargin: "0px 0px -8% 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -59,7 +67,6 @@ export function HeroOrbs() {
           height: 520,
           borderRadius: "50%",
           background: "radial-gradient(circle, rgba(255,140,80,0.06) 0%, transparent 70%)",
-          filter: "blur(40px)",
           animation: "orbFloat 9s ease-in-out infinite",
         }}
       />
@@ -73,7 +80,6 @@ export function HeroOrbs() {
           height: 400,
           borderRadius: "50%",
           background: "radial-gradient(circle, rgba(56,189,248,0.09) 0%, transparent 70%)",
-          filter: "blur(50px)",
           animation: "orbFloat 12s ease-in-out infinite reverse",
         }}
       />

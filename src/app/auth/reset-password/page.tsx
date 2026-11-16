@@ -60,8 +60,8 @@ export default function ResetPasswordPage() {
 
       {/* Right panel — form */}
       <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-20 xl:px-32 auth-themed bg-[var(--bg-page)] relative">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 soft-glow rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 soft-glow rounded-full translate-y-1/2 -translate-x-1/2" />
         
         <div className="max-w-md w-full mx-auto relative z-10">
             {/* Mobile logo */}

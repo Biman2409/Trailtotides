@@ -145,7 +145,7 @@ export default function ExploreClient() {
       </header>
 
       {/* ── Toolbar ── */}
-      <div className="sticky top-16 lg:top-20 z-40 backdrop-blur-lg" style={{ background: "color-mix(in srgb, var(--bg-page) 92%, transparent)", borderBottom: "1px solid var(--border-subtle)" }}>
+      <div className="sticky top-16 z-40" style={{ background: "var(--bg-page)", borderBottom: "1px solid var(--border-subtle)" }}>
         <div className="max-w-7xl mx-auto px-5 lg:px-8 py-2.5 flex items-center gap-2">
           <div className="relative flex-1 min-w-0 sm:max-w-sm">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--text-tertiary)" }} />

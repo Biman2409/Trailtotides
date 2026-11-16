@@ -8,7 +8,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 // its end is in view and pins there, and on the way back up it scrolls until its top is in view
 // and pins there. Its top offset just follows the scroll, clamped, so it never jumps.
 
-const TOP = 112; // under the navbar (lg:top-28)
+const TOP = 128; // under the navbar (64px once scrolled) and the section links bar (~54px)
 const GAP = 16;
 
 export default function StickySidebar({ className, children }: { className?: string; children: ReactNode }) {

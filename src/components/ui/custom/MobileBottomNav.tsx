@@ -44,8 +44,6 @@ export default function MobileBottomNav() {
         className="mx-3 rounded-2xl shadow-2xl overflow-hidden"
         style={{
           background: "var(--nav-bg)",
-          backdropFilter: "blur(24px)",
-          WebkitBackdropFilter: "blur(24px)",
           border: "1px solid var(--nav-border)",
           boxShadow: "0 -4px 24px rgba(0,0,0,0.1), 0 8px 32px rgba(0,0,0,0.12)",
         }}

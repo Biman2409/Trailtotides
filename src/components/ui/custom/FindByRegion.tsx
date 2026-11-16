@@ -51,7 +51,7 @@ export default function FindByRegion() {
     <section id="regions" className="relative py-6 lg:py-10 t-bg-surface2 px-5 lg:px-8 overflow-hidden">
       {/* Background accent glow — pine green, complementing the orange genre section above */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -bottom-24 left-[6%] w-96 h-96 rounded-full opacity-[0.06] dark:opacity-[0.09] blur-[100px]" style={{ background: "var(--accent-green)" }} />
+        <div className="absolute -bottom-24 left-[6%] w-96 h-96 rounded-full opacity-[0.06] dark:opacity-[0.09] soft-glow" style={{ background: "var(--accent-green)" }} />
         <SectionTexture kind="trail" color="var(--accent-green)" at="12% 85%" opacity={0.3} />
       </div>
       <div className="max-w-7xl mx-auto relative z-10">

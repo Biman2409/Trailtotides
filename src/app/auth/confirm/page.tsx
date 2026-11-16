@@ -29,7 +29,7 @@ export default async function ConfirmPage({ searchParams }: Props) {
 
   return (
     <main className="min-h-screen auth-themed bg-[var(--bg-page)] flex items-center justify-center px-6 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 soft-glow rounded-full -translate-y-1/2 translate-x-1/2" />
       <div className="max-w-sm w-full relative">
         <div className="mb-10"><Logo size="sm" /></div>
         {token_hash ? (

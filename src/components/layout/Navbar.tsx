@@ -182,7 +182,7 @@ export default function Navbar() {
       style={
         isTransparent
           ? { background: "transparent", borderBottom: "none" }
-          : { background: "var(--nav-bg)", backdropFilter: "blur(16px)", borderBottom: "1px solid var(--nav-border)", boxShadow: "0 4px 24px rgba(var(--shadow-color), 0.12)" }
+          : { background: "var(--nav-bg)", borderBottom: "1px solid var(--nav-border)", boxShadow: "0 4px 24px rgba(var(--shadow-color), 0.12)" }
       }
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
