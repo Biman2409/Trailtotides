@@ -6,6 +6,7 @@ import { loadProfileFromServer, isProfileStale } from "@/lib/matchmaker";
 import type { SeasonUrgency } from "@/lib/seasonUrgency";
 import { openOperator } from "@/lib/outbound";
 import { OPEN_COMPARE_EVENT } from "./OperatorsSection";
+import { MAX_COMPARE } from "@/lib/operatorCompare";
 import { BOOK_BAR_ATTR, BOOK_BAR_EVENT } from "@/lib/bookBar";
 
 interface Props {
@@ -126,7 +127,7 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, priceIsF
           onClick={handleBook}
           className="shrink-0 h-11 px-5 flex items-center justify-center gap-1 rounded-full text-[#1c1814] text-[14px] font-medium transition-colors bg-[#ff5100] active:bg-[#e64900]"
         >
-          {bookDirect ? "Visit site" : operatorCount > 1 ? `Compare ${operatorCount}` : "See operators"}
+          {bookDirect ? "Visit site" : operatorCount > MAX_COMPARE ? "Compare" : operatorCount > 1 ? `Compare ${operatorCount}` : "See operators"}
           <ChevronRight className="w-4 h-4" />
         </button>
       </div>

@@ -5,6 +5,7 @@ import type { SeasonUrgency } from "@/lib/seasonUrgency";
 import QuoteRequestButton from "./QuoteRequestButton";
 import { openOperator } from "@/lib/outbound";
 import { OPEN_COMPARE_EVENT } from "./OperatorsSection";
+import { MAX_COMPARE } from "@/lib/operatorCompare";
 
 interface Props {
   priceFrom?: string;
@@ -94,7 +95,7 @@ export default function BookingSidebarCard({ slug, priceFrom, priceIsFull, opera
         >
           {bookDirect && operatorName
             ? `Book on ${operatorName}'s site`
-            : operatorCount > 1 ? `Compare ${operatorCount} operators` : "See operators"}
+            : operatorCount > MAX_COMPARE ? "Pick operators to compare" : operatorCount > 1 ? `Compare ${operatorCount} operators` : "See operators"}
           <ChevronRight className="w-4 h-4" />
         </button>
         {quote && <QuoteRequestButton {...quote} />}
