@@ -180,13 +180,7 @@ export const adventures: Adventure[] = [
     whoNot: "You'd sleep at Sarchu (4,300m) without acclimatising first: spend 2 nights in Manali · You've never ridden on gravel or through streams · You need phone signal: prepaid SIMs from outside Ladakh and J&K don't work there (postpaid does) · Your dates can't move: landslides close the road for hours or days",
     safetyNotes:
       "Carry a basic repair kit, spare clutch cable, and fuel for 150km stretches. Altitude sickness is real — acclimatise in Manali for 2 days minimum. Ride before noon to avoid afternoon weather.",
-        operators: [
-          { name: "Royal Enfield Marquee Rides", verified: true, priceFrom: "₹80,000", googleRating: 4.9, website: "https://www.royalenfield.com/in/en/rides/marquee-rides" },
-          { name: "Himalayan Rider", verified: true, priceFrom: "₹29,999", googleRating: 4.8, website: "https://himalayanrider.com" },
-          { name: "Lalli Singh Adventures", verified: true, priceFrom: "₹35,000", googleRating: 4.7, website: "https://lallisinghadventures.com" },
-          { name: "StoneHead Bikes", verified: false, priceFrom: "₹28,000", googleRating: 4.3, website: "https://www.stoneheadbikes.com" },
-          { name: "Extreme Tours India", verified: false, priceFrom: "₹32,000", googleRating: 4.1, website: "https://extremetoursindia.com" },
-        ],
+        operators: [],
     tags: ["motorcycle", "high passes", "Ladakh", "iconic", "long ride"],
     featured: true, editorChoice: true,
     seedReviews: [
@@ -222,13 +216,7 @@ export const adventures: Adventure[] = [
     whoNot: "You've never toured loaded: this is not the place to learn · You'd rely on shops along the way: food and spares are far apart · You'd count on Google Maps: download offline maps, it fails here",
     safetyNotes:
       "Carry CO2 cartridges, a multi-tool, and spare brake cables. First aid kit essential. Download offline maps — Google Maps fails here.",
-        operators: [
-          { name: "Cycle Safari India", verified: true, priceFrom: "₹67,000", googleRating: 4.9, website: "https://cyclesafari.in/spiti" },
-          { name: "Spiti Ecosphere", verified: true, priceFrom: "₹45,000", googleRating: 4.8, website: "https://www.spitiecosphere.com" },
-          { name: "GoMissing Adventures", verified: true, priceFrom: "₹32,000", googleRating: 4.7, website: "https://gomissing.in" },
-          { name: "JustWravel Spiti Cycling", verified: false, priceFrom: "₹27,500", googleRating: 4.2, website: "https://justwravel.com" },
-          { name: "Spiti Holiday Adventure", verified: false, priceFrom: "₹26,999", googleRating: 4.0, website: "https://spitiholidayadventure.com" },
-        ],
+        operators: [],
     tags: ["cycling", "remote", "cold desert", "monasteries", "extreme"],
     featured: false,
     seedReviews: [
@@ -265,13 +253,7 @@ export const adventures: Adventure[] = [
     whoNot: "You'd skip acclimatisation: riding to 5,000m+ passes straight from the plane is dangerous · You won't get an Inner Line Permit: Nubra, Pangong and Hanle need one (operators arrange it online) · You need phone signal: prepaid SIMs from outside Ladakh and J&K don't work there (postpaid does) · You have a heart, lung or blood-pressure condition without a doctor's OK for very high altitude",
     safetyNotes:
       "Spend minimum 3 days acclimatising in Leh before starting. Carry oxygen, full repair kit, and satellite communicator. Fuel up whenever possible — stations are 200km+ apart. File a route plan with local police.",
-        operators: [
-          { name: "Rimo Expeditions", verified: true, priceFrom: "₹65,000", googleRating: 4.9 },
-          { name: "Royal Enfield Marquee Rides", verified: true, priceFrom: "₹1,20,000", googleRating: 4.9, website: "https://www.royalenfield.com/in/en/rides/marquee-rides" },
-          { name: "Himalayan Rider", verified: true, priceFrom: "₹55,000", googleRating: 4.8, website: "https://himalayanrider.com" },
-          { name: "Twisted Trails Adventures", verified: false, priceFrom: "₹48,000", googleRating: 4.2, website: "https://www.twistedtrailsadv.com" },
-          { name: "Dream Riders Group", verified: false, priceFrom: "₹44,000", googleRating: 4.1, website: "https://thedreamridersgroup.com" },
-        ],
+        operators: [],
             tags: ["Umling La", "world record", "Ladakh", "extreme altitude", "circuit"],
           featured: true,
           seedReviews: [
@@ -309,18 +291,12 @@ export const adventures: Adventure[] = [
     whoNot: "Your bike has road tyres or low clearance · You've never crossed a river on a bike: cross in the morning, before glacier melt raises them · You'd ride alone",
     safetyNotes:
       "Carry a satellite phone — there is no mobile signal in Zanskar. River crossings should only be attempted in the morning before glacial melt raises water levels. Always ride in pairs minimum.",
-        operators: [
-          { name: "Motorcycle Tour India", verified: true, priceFrom: "₹48,000", googleRating: 4.9, website: "https://www.motorcycletourindia.com" },
-          { name: "Rimo Expeditions", verified: true, priceFrom: "₹55,000", googleRating: 4.8 },
-          { name: "Mototour Ladakh", verified: true, priceFrom: "₹52,000", googleRating: 4.7, website: "https://mototourladakh.com" },
-          { name: "Ride On Bike Trips", verified: false, priceFrom: "₹38,000", googleRating: 4.2 },
-          { name: "Dream Riders Group", verified: false, priceFrom: "₹42,000", googleRating: 4.0, website: "https://thedreamridersgroup.com" },
-        ],
+        operators: [],
     tags: ["Zanskar", "remote", "off-road", "river crossings", "expedition"],
     featured: false,
     seedReviews: [
       { id: "sr-zanskar-1", username: "sameer_offroad", avatar_id: 3, rating: 5, body: "Calling it a road is generous. River crossings, loose scree, landslide debris. Valley on the other side is worth it but beginners should skip this one.", created_at: "2025-08-22T22:27:00Z", user_id: "" },
-      { id: "sr-zanskar-2", username: "leela_b", rating: 4, body: "We went with Mototour Ladakh. They know when the river crossings are safe (that timing matters a lot) and had a support vehicle. Take a full rest day near Padum for the monastery. Carry plenty of cash, there are no ATMs after Kargil.", created_at: "2025-09-03T06:42:00Z", user_id: "" },
+      { id: "sr-zanskar-2", username: "leela_b", rating: 4, body: "Go with a team that knows when the river crossings are safe (that timing matters a lot) and runs a support vehicle. Take a full rest day near Padum for the monastery. Carry plenty of cash, there are no ATMs after Kargil.", created_at: "2025-09-03T06:42:00Z", user_id: "" },
       { id: "sr-zanskar-3", username: "keshav", rating: 5, body: "3 days with zero signal, woke up to a frozen tent on day 2, and the Zanskar river at sunrise was a blue I'd never seen. Please take a local guide, it's not optional out here.", created_at: "2025-08-30T08:15:00Z", user_id: "" },
     ],
   },
@@ -479,18 +455,12 @@ export const adventures: Adventure[] = [
     whoNot: "You're going before late June: Kunzum La can still be snowbound · You don't have proper cold-weather riding gear: passes are near freezing even in summer · Your dates can't move: landslides and snow close roads without warning",
     safetyNotes:
       "Kunzum La can be snowbound until late June — check pass status before departure. Carry chain lube, tyre plugs, and a basic toolkit. Fuel up at Kaza — it's the last pump for 130km.",
-        operators: [
-          { name: "Royal Enfield Marquee Rides", verified: true, priceFrom: "₹80,000", googleRating: 4.9, website: "https://www.royalenfield.com/in/en/rides/marquee-rides" },
-          { name: "Himalayan Rider", verified: true, priceFrom: "₹32,000", googleRating: 4.8, website: "https://himalayanrider.com" },
-          { name: "Spiti Riders Group", verified: true, priceFrom: "₹35,000", googleRating: 4.7, website: "https://spitiriders.com" },
-          { name: "JustWravel", verified: false, priceFrom: "₹27,500", googleRating: 4.2, website: "https://justwravel.com" },
-          { name: "Spiti Holiday Adventure", verified: false, priceFrom: "₹26,999", googleRating: 4.0, website: "https://spitiholidayadventure.com" },
-        ],
+        operators: [],
     tags: ["Spiti", "cold desert", "monasteries", "loop", "Kunzum La"],
     featured: false,
     seedReviews: [
       { id: "sr-spiti-bike-1", username: "gaurav_thakur", avatar_id: 5, rating: 5, body: "This loop is what riding in India should feel like. Dhankar on its cliff, Pin Valley at golden hour, kids waving from monastery roofs. Never felt touristy once.", created_at: "2025-07-25T08:15:00Z", user_id: "" },
-      { id: "sr-spiti-bike-2", username: "divya_m", rating: 5, body: "Did the loop in 10 days, could easily have used 14. Stay a night or two in Kibber, tiny village and perfect for a rest day. Spiti Riders Group handled everything, would book them again.", created_at: "2025-08-10T09:30:00Z", user_id: "" },
+      { id: "sr-spiti-bike-2", username: "divya_m", rating: 5, body: "Did the loop in 10 days, could easily have used 14. Stay a night or two in Kibber, tiny village and perfect for a rest day.", created_at: "2025-08-10T09:30:00Z", user_id: "" },
       { id: "sr-spiti-bike-3", username: "tanvir", rating: 4, body: "Kaza to Losar before Kunzum La was the most surreal riding I've done. Brown desert hills, turquoise river and no traffic at all. Do book your Kaza stay in advance for July and August.", created_at: "2025-07-30T11:05:00Z", user_id: "" },
     ],
   },
@@ -1397,9 +1367,7 @@ export const adventures: Adventure[] = [
     whoFor: "You've been above 5,000m before and felt fine · You can use crampons, an ice axe and a jumar on fixed rope, or will train for it first · You can keep going 10–12 hours on summit day, starting before 3am · You can take 18–20 days off, with spare days for Lukla flights and summit weather",
     whoNot: "You've never been above 5,000m: do Everest Base Camp or Gokyo first · Steep exposure scares you: the summit ridge is steep with big drops · You have a heart, lung or blood-pressure condition without a doctor's OK for 6,000m · Your dates can't move: Lukla flights and summit weather both cause delays",
     safetyNotes: "Technical climb requiring professional mountain guide and full climbing equipment. Pre-climb acclimatization on Kala Patthar or Island Peak strongly recommended. NMA climbing permit required.",
-    operators: [
-      { name: "Trek The Himalayas", verified: true, priceFrom: "₹2,01,000", googleRating: 4.8, website: "https://trekthehimalayas.com/lobuche-peak-trek" },
-    ],
+    operators: [],
     tags: ["Lobuche", "Nepal", "Khumbu", "mountaineering", "6000m peak"], featured: false,
     seedReviews: [
       { id: "sr-lobuche-1", username: "arun_karki", avatar_id: 10, rating: 5, body: "Lobuche East summit with Everest right in front of you. The fixed rope sections were fine with our guide coaching us through.", created_at: "2025-05-12T19:36:00Z", user_id: "" },
@@ -1449,9 +1417,7 @@ export const adventures: Adventure[] = [
     whoFor: "You've been above 5,000m before and felt fine · You can walk 8–10 hours in crampons, roped to others on a glacier (training given at base camp) · Tent nights well below −15°C at high camp are fine · You can take 16–18 days off, with spare days for Lukla flights and summit weather",
     whoNot: "You've never been above 5,000m: the summit is 6,476m · You've had altitude sickness above 4,500m · You have a heart, lung or blood-pressure condition without a doctor's OK for 6,500m · Your dates can't move: Lukla flights and summit weather both cause delays",
     safetyNotes: "NMA permit required. Must be accompanied by certified mountain guide at all times above base camp. Summit push is 8–10 hours on glacier — early start essential. Weather window narrow in Nepal.",
-    operators: [
-      { name: "Trek The Himalayas", verified: true, priceFrom: "₹1,85,000", googleRating: 4.8, website: "https://trekthehimalayas.com/mera-peak-expedition" },
-    ],
+    operators: [],
     tags: ["Mera Peak", "Nepal", "mountaineering", "6000m", "highest trekking peak"], featured: false,
     seedReviews: [
       { id: "sr-mera-1", username: "arjun_thapa", avatar_id: 9, rating: 5, body: "Five 8,000m peaks from the summit. I've trekked a lot in the Himalaya and this panorama tops everything. Glacier approach is tiring but not technical.", created_at: "2025-05-08T11:05:00Z", user_id: "" },
@@ -1840,11 +1806,7 @@ export const adventures: Adventure[] = [
     // Matches the Rishikesh rafting profile on the ACE page. Totals 14, so it reads Moderate:
     // water is the real ask; steady paddling, nothing to carry, town and road always close.
     ace: { stamina:2, power:2, strength:1, agility:2, water:4, altitude:0, focus:2, nerve:1 },
-    operators: [
-      { name: "Red Chilli Adventure", verified: false, priceFrom: "₹1,500", googleRating: 0, website: "https://www.redchilliadventure.com/collections/rafting-on-ganga-rishikesh", priceCheckedAt: "2026-10-26" },
-      { name: "Camp Ganga Vatika", verified: false, priceFrom: "₹1,000", googleRating: 0, website: "https://campgangavatika.com/shivpuri-rafting.php", priceCheckedAt: "2026-10-26" },
-      { name: "Himalayan Moments", verified: false, priceFrom: "₹1,000", googleRating: 0, website: "https://www.riverraftinginrishikesh.com/products/rishikesh-river-rafting-ct1", priceCheckedAt: "2026-10-26" },
-    ],
+    operators: [],
     tags: ["Ganga", "white water", "Rishikesh", "beginner-friendly", "Kaudiyala"], featured: false,
     seedReviews: [
       { id: "sr-raft-1", username: "ankita_s", avatar_id: 3, rating: 5, body: "Did the Shivpuri run with college friends, none of us had rafted before. Roller Coaster soaked everyone in the first ten seconds. The guide let us jump in on a calm stretch, best part of the day.", created_at: "2025-04-12T10:20:00Z", user_id: "" },
@@ -1924,6 +1886,9 @@ const HIDDEN_OPERATORS = new Set(["treks and trails india"]);
   // Operators kept off the site for now, wherever they're listed (by hand or from the sheet).
   // Their rows stay in the data files, so taking a name out of this list brings them back.
   for (const a of adventures) a.operators = a.operators.filter((o) => !HIDDEN_OPERATORS.has(o.name.toLowerCase()));
+  // Only treks have researched operators so far. Every other adventure (rides, cycling, rafting,
+  // climbs) gets none until its real operator data arrives, so nothing auto-generated is shown
+  for (const a of adventures) if (a.type !== "Trekking") a.operators = [];
   // The latest fee read from the operator's own page (scripts/import-operator-offers.ts)
   // replaces the hand-entered one
   const latest = operatorPrices as Record<string, Record<string, { priceFrom: string; checkedAt?: string }>>;

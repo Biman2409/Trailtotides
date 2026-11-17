@@ -376,17 +376,6 @@
    "fromSheet": true
   }
  ],
- "lobuche-peak": [
-  {
-   "name": "WhiteMagic Adventure",
-   "verified": false,
-   "priceFrom": "₹2,45,000",
-   "googleRating": 0,
-   "website": "https://whitemagicadventure.com/climb-trekking-peaks/lobuche-east-6119m-gokyo",
-   "priceCheckedAt": "2026-11-12",
-   "fromSheet": true
-  }
- ],
  "manaslu-circuit": [
   {
    "name": "WhiteMagic Adventure",
@@ -553,17 +542,6 @@
    "priceFrom": "₹22,550",
    "googleRating": 0,
    "website": "https://www.bikatadventures.com/Home/Itinerary/satopanth-lake-trek",
-   "priceCheckedAt": "2026-11-12",
-   "fromSheet": true
-  }
- ],
- "rishikesh-river-rafting": [
-  {
-   "name": "Bikat Adventures",
-   "verified": false,
-   "priceFrom": "₹900",
-   "googleRating": 0,
-   "website": "https://www.bikatadventures.com/Home/Itinerary/ganga-river-rafting-shivpuri-rishikesh",
    "priceCheckedAt": "2026-11-12",
    "fromSheet": true
   }

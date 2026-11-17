@@ -1,24 +1,4 @@
 {
- "manali-leh-bike-expedition": {
-  "price": 28000,
-  "full": false,
-  "operator": "StoneHead Bikes"
- },
- "spiti-valley-cycling": {
-  "price": 26999,
-  "full": false,
-  "operator": "Spiti Holiday Adventure"
- },
- "ladakh-circuit": {
-  "price": 44000,
-  "full": false,
-  "operator": "Dream Riders Group"
- },
- "zanskar-valley-bike": {
-  "price": 38000,
-  "full": false,
-  "operator": "Ride On Bike Trips"
- },
  "kedarkantha-trek": {
   "price": 12475,
   "full": true,
@@ -33,11 +13,6 @@
   "price": 19530,
   "full": true,
   "operator": "Trek The Himalayas"
- },
- "spiti-valley-bike": {
-  "price": 26999,
-  "full": false,
-  "operator": "Spiti Holiday Adventure"
  },
  "ali-bedni-bugyal": {
   "price": 11813,
@@ -189,20 +164,10 @@
   "full": true,
   "operator": "Bikat Adventures"
  },
- "lobuche-peak": {
-  "price": 194250,
-  "full": true,
-  "operator": "Trek The Himalayas"
- },
  "manaslu-circuit": {
   "price": 97125,
   "full": true,
   "operator": "Bikat Adventures"
- },
- "mera-peak": {
-  "price": 194250,
-  "full": true,
-  "operator": "Trek The Himalayas"
  },
  "panch-kedar": {
   "price": 67725,
@@ -258,11 +223,6 @@
   "price": 15593,
   "full": true,
   "operator": "Trek The Himalayas"
- },
- "rishikesh-river-rafting": {
-  "price": 945,
-  "full": true,
-  "operator": "Bikat Adventures"
  },
  "everest-base-camp-gokyo-lakes": {
   "price": 101000,
