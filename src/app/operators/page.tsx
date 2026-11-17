@@ -149,9 +149,9 @@ export default async function OperatorsPage() {
               The people who <span style={{ color: "var(--accent-ink)" }}>take you there</span>
             </h1>
             <p className="text-base sm:text-[17px] mt-5 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              Companies running treks, rides and expeditions across India. The ones marked{" "}
+              Companies running treks across India and Nepal. The ones marked{" "}
               <span className="inline-flex items-center gap-1 font-semibold" style={{ color: "var(--accent-green)" }}><ShieldCheck className="w-4 h-4" />Verified</span>{" "}
-              have been reviewed and approved by our team for safety, quality and expertise.
+              have had their listing reviewed by our team.
             </p>
           </div>
           {/* Operator actions live in the "For operators" block below; this page leads with the operators */}

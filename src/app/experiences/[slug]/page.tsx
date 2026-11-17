@@ -468,7 +468,8 @@ export default async function ExperiencePage({ params }: Props) {
             }}
             trail={trail}
             stats={[
-                { label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
+                // Treks count trailhead to trailhead; operators' trips are longer as they add the travel days
+                { label: adventure.type === "Trekking" ? "On the trail" : "Duration", value: adventure.durationRange ?? adventure.durationDays },
                 ...(adventure.distance ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
                 ...((adventure.altitude || adventure.depth) ? [{ label: adventure.type === "Diving" ? "Max Depth" : "Max Altitude", value: adventure.depth ?? adventure.altitude }] : []),
                 { label: "Best Season", value: adventure.bestSeason },

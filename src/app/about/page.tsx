@@ -184,8 +184,9 @@ export default function AboutPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { value: String(adventures.length), label: "Adventures catalogued" },
-              { value: String(new Set(adventures.map(a => a.region)).size), label: "Regions covered" },
-              { value: String(new Set(adventures.map(a => a.type)).size) + "+", label: "Adventure types" },
+              // Every adventure's region is "Himalayas", so count the states (and Nepal) they're in instead
+              { value: String(new Set(adventures.flatMap(a => a.state.split(/\s*[/,]\s*/).map(s => s.trim()).filter(Boolean))).size), label: "States & countries" },
+              { value: String(new Set(adventures.map(a => a.type)).size), label: "Adventure types" },
               { value: "2026", label: "Year founded" },
             ].map(({ value, label }) => (
               <div key={label} className="text-center">

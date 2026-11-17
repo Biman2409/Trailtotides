@@ -119,7 +119,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
                 {traveller && (
                   <span className="inline-flex items-center gap-1"><Star className="w-3.5 h-3.5 text-[#ff8a4c] fill-[#ff8a4c]" />{traveller.avg} Travellers ({traveller.count})</span>
                 )}
-                {op.offer?.days ? <span>{op.offer.days} days</span> : null}
+                {op.offer?.days ? <span>{op.offer.days}-day trip</span> : null}
               </div>
             </div>
             <div className="text-right shrink-0">
@@ -184,7 +184,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
             const url = op.offer?.url ?? op.website;
             const on = selected.includes(op.name);
             const meta = [
-              op.offer?.days ? `${op.offer.days} days` : null,
+              op.offer?.days ? `${op.offer.days}-day trip` : null,
               next,
             ].filter(Boolean).join(" · ");
             return (

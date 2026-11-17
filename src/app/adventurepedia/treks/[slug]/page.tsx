@@ -150,7 +150,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
   const faq: [string, string][] = [
     [`How difficult is the ${a.name}?`, `It's rated ${difficultyOf(a)} on Trail to Tides. ${FITNESS[difficultyOf(a)] ? `A fair benchmark before you go: ${FITNESS[difficultyOf(a)].charAt(0).toLowerCase()}${FITNESS[difficultyOf(a)].slice(1)}` : ""} The highest point is ${a.altitude ?? "high"}, so pace and acclimatisation matter as much as fitness.`],
     [`When is the best time for the ${a.name}?`, `${a.bestSeason}. ${seasonNotes(a)[0]?.replace(/\*\*/g, "") ?? ""}`],
-    [`How many days does the ${a.name} take?`, `${a.durationDays} including travel to and from the trailhead${trail ? `, with ${walkDays.length} walking ${walkDays.length === 1 ? "day" : "days"}` : ""}. Add a buffer day for weather or road delays.`],
+    [`How many days does the ${a.name} take?`, `${a.durationDays} on the trail${a.baseCamp ? `, from ${a.baseCamp}` : ""}${trail ? `, with ${walkDays.length} walking ${walkDays.length === 1 ? "day" : "days"}` : ""}. Operators' trips run longer because they add the travel to and from the trailhead, so check their trip length, and add a buffer day for weather or road delays.`],
     [`How do I reach the ${a.name}?`, access ? `Most groups meet in ${access.gateway}. Nearest airport: ${access.air}. Nearest railway: ${access.rail}.${access.drive ? ` ${access.drive}.` : ""}` : `Your operator arranges transport from the nearest town.`],
     ...(price ? [[`How much does the ${a.name} cost?`, `Listed operators charge from ${price.text} per person. Check what's included: transport, permits, meals, tents and offloading vary.`] as [string, string]] : []),
     [`Do I need a permit for the ${a.name}?`, permitNotes(a).join(" ") || "Ask your operator; most arrange permits as part of the package."],
@@ -199,7 +199,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
         <div className="max-w-6xl mx-auto -mt-0 pt-6">
           <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-px rounded-2xl overflow-hidden" style={{ background: "var(--border-subtle)", border: "1px solid var(--border-subtle)" }}>
             {([
-              [Clock, "Duration", a.durationRange ?? a.durationDays],
+              [Clock, "On the trail", a.durationRange ?? a.durationDays],
               [Route, "Distance", a.distanceRange ?? a.distance ?? "—"],
               [Mountain, "Highest point", a.altitude ?? "—"],
               [Gauge, "Difficulty", difficultyOf(a)],

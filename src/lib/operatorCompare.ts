@@ -194,7 +194,7 @@ export function compareOperators(ops: OperatorCardData[], travellers: (Rating | 
     {
       title: "The trip",
       fields: [
-        field("days", "Duration", (op) => op.offer?.days ? { text: `${op.offer.days} day${op.offer.days === 1 ? "" : "s"}` } : missing()),
+        field("days", "Trip length", (op) => op.offer?.days ? { text: `${op.offer.days} day${op.offer.days === 1 ? "" : "s"}` } : missing()),
         field("route", "Starts / ends", (op) => op.offer?.startEnd ? { text: op.offer.startEnd } : missing()),
         field("dates", "Departures", (op) => {
           const exact = upcoming(op, today);

@@ -300,7 +300,7 @@ function Facts({ a, trail }: { a: Adventure; trail: Trail | null }) {
   const height = (v: string) => v.replace(/\s*\(.*\)\s*$/, "").replace(/(\d)\s*m$/, "$1 m");
   const start = a.baseCamp ?? a.startingPoint ?? (trail ? trail.stops[0]?.name : undefined);
   const cells: [React.ReactNode, string, string, string?][] = [
-    [<CalendarDays key="d" className="w-3.5 h-3.5" />, "Duration", a.durationDays],
+    [<CalendarDays key="d" className="w-3.5 h-3.5" />, a.type === "Trekking" ? "On the trail" : "Duration", a.durationDays],
     [<Route key="r" className="w-3.5 h-3.5" />, "Distance", trail ? `${trailWalkKm(trail)} km` : a.distance ?? "—"],
     a.depth
       ? [<Waves key="w" className="w-3.5 h-3.5" />, "Depth", a.depth]
