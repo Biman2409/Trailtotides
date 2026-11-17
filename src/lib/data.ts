@@ -339,7 +339,7 @@ export const adventures: Adventure[] = [
   featured: true,
   seedReviews: [
     { id: "sr-kedarkantha-1", username: "priyanka_h", avatar_id: 4, rating: 5, body: "My first ever summit! Watching Bandarpunch and Swargarohini go pink at sunrise is something I still think about. Walking up through the pine forest with headlamps at night was special too.", created_at: "2025-01-18T09:30:00Z", user_id: "" },
-    { id: "sr-kedarkantha-2", username: "aditya_snow", rating: 5, body: "3rd time doing Kedarkantha. January is the month: waist deep snow in the forest, clear sky at the top. Went with Indiahikes, well run, and the hot food at camp in minus temps was surprisingly good.", created_at: "2025-01-28T11:05:00Z", user_id: "" },
+    { id: "sr-kedarkantha-2", username: "aditya_snow", rating: 5, body: "3rd time doing Kedarkantha. January is the month: waist deep snow in the forest, clear sky at the top. The group was well run, and the hot food at camp in minus temps was surprisingly good.", created_at: "2025-01-28T11:05:00Z", user_id: "" },
     { id: "sr-kedarkantha-3", username: "tanya_kapoor", rating: 4, body: "Great for beginners but summit day is no joke. We started at 4am, topped out around 8:30 just as clouds rolled in. Sankri base has decent tents and toilets now. Minus one star because late December was very crowded.", created_at: "2025-12-27T13:20:00Z", user_id: "" },
   ],
 },
@@ -422,7 +422,7 @@ export const adventures: Adventure[] = [
   seedReviews: [
     { id: "sr-tarsar-1", username: "faiza_mir", avatar_id: 1, rating: 5, body: "Eight years of trekking and Tarsar at dusk is still my favourite picture in my head. Pink peaks above, one shepherd crossing the meadow below. Kashmir's high valleys are on another level for colour.", created_at: "2025-07-25T21:03:00Z", user_id: "" },
     { id: "sr-tarsar-2", username: "ajay_j", rating: 5, body: "Most people only talk about Tarsar but Marsar was the more dramatic lake for me, and far fewer people go. Coming down from the pass into that bowl felt like finding a secret. Shepherds shared tea with us even though we had no common language.", created_at: "2025-08-05T22:27:00Z", user_id: "" },
-    { id: "sr-tarsar-3", username: "divya", rating: 4, body: "Went with Indiahikes, campsites on the meadows were lovely. Only issue: the trail between Tarsar and the pass isn't marked and our group took a wrong turn in morning fog. Stay close to the guide up there.", created_at: "2025-07-18T06:42:00Z", user_id: "" },
+    { id: "sr-tarsar-3", username: "divya", rating: 4, body: "The campsites on the meadows were lovely. Only issue: the trail between Tarsar and the pass isn't marked and our group took a wrong turn in morning fog. Stay close to the guide up there.", created_at: "2025-07-18T06:42:00Z", user_id: "" },
   ],
 },
 {
@@ -723,7 +723,7 @@ export const adventures: Adventure[] = [
     tags: ["winter trek", "frozen lake", "Uttarakhand", "snow forest", "Trishul view"], featured: false,
     seedReviews: [
       { id: "sr-brah-1", username: "tanmay", avatar_id: 7, rating: 5, body: "Walking through the snowy forest at night with headlamps... still giving me goosebumps. Frozen lake with Trishul behind it. Wow.", created_at: "2025-01-15T21:03:00Z", user_id: "" },
-      { id: "sr-brah-2", username: "asha_w", rating: 5, body: "Perfect first winter trek. Indiahikes gear was solid and the guides managed our group really well at around minus 10.", created_at: "2025-02-08T22:27:00Z", user_id: "" },
+      { id: "sr-brah-2", username: "asha_w", rating: 5, body: "Perfect first winter trek. The gear was solid and the guides managed our group really well at around minus 10.", created_at: "2025-02-08T22:27:00Z", user_id: "" },
       { id: "sr-brah-3", username: "kishore_b", rating: 4, body: "Cold nights, no getting around that. The summit view of Trishul and Nanda Ghunti makes up for it. January for the best snow.", created_at: "2025-01-28T06:42:00Z", user_id: "" },
     ],
   },
@@ -1073,7 +1073,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-pp-1", username: "nitin", avatar_id: 10, rating: 5, body: "Glacier crossing was terrifying and amazing at the same time. 15 Himalayan treks before this and none of them felt this big.", created_at: "2025-07-25T13:20:00Z", user_id: "" },
       { id: "sr-pp-2", username: "kaveri_s", rating: 5, body: "9 days, about 80 km, a glacier in the middle. Every day looked different. The Pin side is orange and ochre and silent, nothing like the Parvati side.", created_at: "2025-08-02T15:48:00Z", user_id: "" },
-      { id: "sr-pp-3", username: "manish_pp", rating: 4, body: "Indiahikes ran it well but I wish I'd had some glacier experience before this. Don't underprepare. Views from the pass are incredible.", created_at: "2025-07-30T17:12:00Z", user_id: "" },
+      { id: "sr-pp-3", username: "manish_pp", rating: 4, body: "Well run, but I wish I'd had some glacier experience before this. Don't underprepare. Views from the pass are incredible.", created_at: "2025-07-30T17:12:00Z", user_id: "" },
     ],
   },
   {
@@ -1866,6 +1866,9 @@ export const adventures: Adventure[] = [
 
 /** Operators hidden from every page for now (lower-case names): no rating, not verified */
 const HIDDEN_OPERATORS = new Set(["treks and trails india"]);
+/** For now only these operators are shown (lower-case names). Everyone else stays in the data
+ *  files, so adding a name back here brings them back */
+const SHOWN_OPERATORS = new Set(["bikat adventures", "trek the himalayas"]);
 
 // ── Operator facts that must read the same on every page ─────────────────────────────────────
 // Runs once when this module loads, so every page (cards, comparison, directory, map) sees the
@@ -1885,7 +1888,7 @@ const HIDDEN_OPERATORS = new Set(["treks and trails india"]);
   }
   // Operators kept off the site for now, wherever they're listed (by hand or from the sheet).
   // Their rows stay in the data files, so taking a name out of this list brings them back.
-  for (const a of adventures) a.operators = a.operators.filter((o) => !HIDDEN_OPERATORS.has(o.name.toLowerCase()));
+  for (const a of adventures) a.operators = a.operators.filter((o) => !HIDDEN_OPERATORS.has(o.name.toLowerCase()) && SHOWN_OPERATORS.has(o.name.toLowerCase()));
   // Only treks have researched operators so far. Every other adventure (rides, cycling, rafting,
   // climbs) gets none until its real operator data arrives, so nothing auto-generated is shown
   for (const a of adventures) if (a.type !== "Trekking") a.operators = [];
