@@ -68,7 +68,10 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, priceIsF
   const bookDirect = operatorCount === 1 && !!operatorWebsite;
 
   const handleBook = () => {
-    if (bookDirect) {
+    if (operatorCount === 0) {
+      // No operators yet: point to similar adventures instead of an empty list
+      document.getElementById("similar")?.scrollIntoView({ behavior: "smooth" });
+    } else if (bookDirect) {
       openOperator({ url: operatorWebsite!, operator: operatorName ?? "Operator", source: "mobile_bar", slug });
     } else {
       // Straight into the side-by-side comparison, with the section scrolled into view behind it
@@ -127,7 +130,7 @@ export default function MobileBookBar({ slug, adventureName, priceFrom, priceIsF
           onClick={handleBook}
           className="shrink-0 h-11 px-5 flex items-center justify-center gap-1 rounded-full text-[#1c1814] text-[14px] font-medium transition-colors bg-[#ff5100] active:bg-[#e64900]"
         >
-          {bookDirect ? "Visit site" : operatorCount > MAX_COMPARE ? "Compare" : operatorCount > 1 ? `Compare ${operatorCount}` : "See operators"}
+          {operatorCount === 0 ? "Similar adventures" : bookDirect ? "Visit site" : operatorCount > MAX_COMPARE ? "Compare" : operatorCount > 1 ? `Compare ${operatorCount}` : "See operators"}
           <ChevronRight className="w-4 h-4" />
         </button>
       </div>

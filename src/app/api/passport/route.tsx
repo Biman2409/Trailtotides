@@ -124,7 +124,7 @@ function IdImage({ data }: { data: PassportData }) {
         <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
           <Label>Capability</Label>
           <span style={{ display: "flex", fontSize: 34, marginTop: 4 }}>{data.hasAceData ? `ACE ${data.aceScore}/40` : "Not assessed yet"}</span>
-          {data.hasAceData && <span style={{ display: "flex", fontSize: 26, color: MUTED }}>{`Strongest in ${RADAR_AXIS_LABELS[data.topAxis]}`}</span>}
+          {data.hasAceData && data.topAxis && <span style={{ display: "flex", fontSize: 26, color: MUTED }}>{`Strongest in ${RADAR_AXIS_LABELS[data.topAxis]}`}</span>}
         </div>
       </div>
 

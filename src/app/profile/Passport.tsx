@@ -137,7 +137,7 @@ function IdPage({ data }: { data: PassportData }) {
           {data.hasAceData ? (
             <>
               <p className="text-[14px]">ACE<sup className="tm">™</sup> score {data.aceScore}/40</p>
-              <p className="text-[13px]" style={{ color: "var(--pp-muted)" }}>Strongest in {RADAR_AXIS_LABELS[data.topAxis]}</p>
+              {data.topAxis && <p className="text-[13px]" style={{ color: "var(--pp-muted)" }}>Strongest in {RADAR_AXIS_LABELS[data.topAxis]}</p>}
             </>
           ) : (
             <p className="text-[13px]" style={{ color: "var(--pp-muted)" }}>

@@ -617,9 +617,13 @@ function CapabilityPanel({ axisLabels, axisDesc, axisColors, axisIcons, userAxes
   userAxes: ACE;
 }) {
   const [hovered, setHovered] = useState<AceAxis | null>(null);
-  const sorted = [...AXIS_ORDER].sort((a, b) => userAxes[b as AceAxis] - userAxes[a as AceAxis]);
-  const strongest = sorted.slice(0, 2);
-  const weakest = sorted.slice(-2).reverse();
+  // Only axes that really are the highest or lowest: with ties, naming the first two in list
+  // order called Stamina "strongest" and Nerve "room to grow" for a profile of all 3s
+  const vals = AXIS_ORDER.map((a) => userAxes[a as AceAxis]);
+  const max = Math.max(...vals), min = Math.min(...vals);
+  const even = max === min;
+  const strongest = AXIS_ORDER.filter((a) => userAxes[a as AceAxis] === max).slice(0, 2);
+  const weakest = AXIS_ORDER.filter((a) => userAxes[a as AceAxis] === min).slice(0, 2);
 
   return (
     <div className={`${panel} p-5 sm:p-7`} style={panelStyle}>
@@ -637,6 +641,11 @@ function CapabilityPanel({ axisLabels, axisDesc, axisColors, axisIcons, userAxes
                 highlightAxis={hovered}
               />
             </div>
+            {even ? (
+              <p className="w-full mt-3 rounded-xl px-3 py-2.5 text-[12px] font-semibold t-text" style={{ border: "1px solid var(--border-subtle)" }}>
+                Even across all eight, {max}/5 each
+              </p>
+            ) : (
             <div className="w-full grid grid-cols-2 gap-2 mt-3">
               <div className="rounded-xl px-3 py-2.5" style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.22)" }}>
                 <p className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "#10b981" }}>Strongest</p>
@@ -647,6 +656,7 @@ function CapabilityPanel({ axisLabels, axisDesc, axisColors, axisIcons, userAxes
                 <p className="text-[12px] font-semibold mt-0.5 truncate t-text">{weakest.map((a) => axisLabels[a]).join(" · ")}</p>
               </div>
             </div>
+            )}
           </div>
 
           {/* Tiles */}

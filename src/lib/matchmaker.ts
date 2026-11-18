@@ -1,5 +1,6 @@
 import type { ACE } from "./ace";
 import type { MedicalFlags } from "./matchmakerQuestions";
+import { hasSession } from "./signedIn";
 
 // ─── localStorage helpers ─────────────────────────────────────────────────────
 
@@ -55,6 +56,7 @@ export function clearProfile(): void {
 
 /** Save profile to Supabase (fire-and-forget, only for logged-in users) */
 export async function saveProfileToServer(profile: StoredProfile): Promise<void> {
+  if (!(await hasSession())) return;
   try {
     await fetch("/api/ace-profile", {
       method: "POST",
@@ -118,6 +120,7 @@ export function clearMedicalFlags(): void {
 // ─── Medical flags — server sync ───────────────────────────────────────────────
 
 export async function saveMedicalFlagsToServer(flags: MedicalFlags): Promise<void> {
+  if (!(await hasSession())) return;
   try {
     await fetch("/api/ace-medical", {
       method: "POST",
@@ -151,6 +154,7 @@ export function loadConsent(): StoredConsent | null {
 
 /** Fire-and-forget — consent is stored as a sibling of ace_profile in the same POST body shape via api/ace-profile. */
 export async function saveConsentToServer(consent: StoredConsent): Promise<void> {
+  if (!(await hasSession())) return;
   try {
     await fetch("/api/ace-consent", {
       method: "POST",

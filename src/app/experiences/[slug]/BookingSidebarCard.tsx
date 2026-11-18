@@ -49,8 +49,13 @@ export default function BookingSidebarCard({ slug, priceFrom, priceIsFull, opera
   // sole operator gets booked directly.
   const bookDirect = operatorCount === 1 && !!operatorWebsite;
 
+  // No operators yet: the useful next step is a similar adventure that has some
+  const noOperators = operatorCount === 0;
+
   const handleBook = () => {
-    if (bookDirect) {
+    if (noOperators) {
+      document.getElementById("similar")?.scrollIntoView({ behavior: "smooth" });
+    } else if (bookDirect) {
       openOperator({ url: operatorWebsite!, operator: operatorName ?? "Operator", source: "sidebar", slug });
     } else {
       // Straight into the side-by-side comparison, with the section scrolled into view behind it
@@ -72,7 +77,10 @@ export default function BookingSidebarCard({ slug, priceFrom, priceIsFull, opera
           </p>
         </div>
       ) : (
-        <p className="text-[15px] font-medium" style={{ color: "var(--text-primary)" }}>Contact for pricing</p>
+        <div>
+          <p className="text-[15px] font-medium" style={{ color: "var(--text-primary)" }}>{noOperators ? "No operators listed yet" : "Contact for pricing"}</p>
+          {noOperators && <p className="text-[13px] mt-0.5" style={{ color: "var(--text-secondary)" }}>We&apos;re adding operators for this adventure.</p>}
+        </div>
       )}
 
       {(operatorCount > 0 || nextDeparture || seasonUrgency) && (
@@ -93,7 +101,7 @@ export default function BookingSidebarCard({ slug, priceFrom, priceIsFull, opera
           onClick={handleBook}
           className="w-full h-11 flex items-center justify-center gap-1.5 rounded-full text-[#1c1814] text-[14px] font-medium transition-colors bg-[#ff5100] hover:bg-[#e64900]"
         >
-          {bookDirect && operatorName
+          {noOperators ? "See similar adventures" : bookDirect && operatorName
             ? `Book on ${operatorName}'s site`
             : operatorCount > MAX_COMPARE ? "Pick operators to compare" : operatorCount > 1 ? `Compare ${operatorCount} operators` : "See operators"}
           <ChevronRight className="w-4 h-4" />

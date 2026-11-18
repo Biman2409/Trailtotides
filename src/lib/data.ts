@@ -775,7 +775,7 @@ export const adventures: Adventure[] = [
     ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹10,000", googleRating: 4.8, website: "https://indiahikes.com/deoriatal-chandrashila-trek" },
-      { name: "Trek The Himalayas", verified: true, priceFrom: "₹9,500", googleRating: 4.7, website: "https://trekthehimalayas.com/deoriatal-chandrashila-trek" },
+      { name: "Trek The Himalayas", verified: true, priceFrom: "₹9,500", googleRating: 4.7, website: "https://trekthehimalayas.com/chopta-chandrashila-deoria-tal-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹9,000", googleRating: 4.3, website: "https://trekupindia.com/trek/chopta-chandrashila-tungnath" },
     ],
     tags: ["Chandrashila", "Deoria Tal", "Uttarakhand", "summit", "Kedarnath view"], featured: false,
@@ -1010,7 +1010,7 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹10,500", googleRating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/Kuari-pass-trek" },
       { name: "Indiahikes", verified: true, priceFrom: "₹12,000", googleRating: 4.8, website: "https://indiahikes.com/kuari-pass" },
-      { name: "Trek The Himalayas", verified: true, priceFrom: "₹11,900", googleRating: 4.7, website: "https://trekthehimalayas.com/winter-kuari-pass-trek" },
+      { name: "Trek The Himalayas", verified: true, priceFrom: "₹11,900", googleRating: 4.7, website: "https://trekthehimalayas.com/kuari-pass-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹10,000", googleRating: 4.3, website: "https://www.trekupindia.com/kuari-pass-trek" },
     ],
     tags: ["Kuari Pass", "winter trek", "Nanda Devi view", "Uttarakhand", "panorama"], featured: false,
@@ -1153,7 +1153,7 @@ export const adventures: Adventure[] = [
     safetyNotes: "Winter temperatures can drop sharply at night — quality sleeping bag essential. Trail can be icy in January and February. Carry a local guide from Yuksom.",
     ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
     operators: [
-      { name: "Trek The Himalayas", verified: true, priceFrom: "₹12,600", googleRating: 4.7, website: "https://trekthehimalayas.com/bajre-dara-trek" },
+      { name: "Trek The Himalayas", verified: true, priceFrom: "₹12,600", googleRating: 4.7, website: "https://trekthehimalayas.com/Bajre-Dara-trek" },
     ],
     tags: ["Sikkim", "winter trek", "rhododendron", "Kangchenjunga", "meadow"], featured: false,
     seedReviews: [
@@ -1235,7 +1235,7 @@ export const adventures: Adventure[] = [
     whoNot: "You want snow peaks, glaciers or high passes · You need phone signal: prepaid SIMs from outside J&K don't work there (postpaid does) · You want any comforts: it's tents and shepherd huts",
     safetyNotes: "Permits required for foreign nationals. Trail is remote — carry extra food and a guide from Srinagar/Doodhpathri. Weather can change rapidly in August.",
     operators: [
-      { name: "Trek The Himalayas", verified: true, priceFrom: "₹16,800", googleRating: 4.7, website: "https://trekthehimalayas.com/doodhpathri-trek" },
+      { name: "Trek The Himalayas", verified: true, priceFrom: "₹16,800", googleRating: 4.7, website: "https://trekthehimalayas.com/doodhpathri-Trek" },
     ],
     tags: ["Doodhpathri", "Kashmir", "meadow", "Pir Panjal", "remote"], featured: false,
     seedReviews: [
@@ -1342,7 +1342,7 @@ export const adventures: Adventure[] = [
     safetyNotes: "ACAP permit required. Some sections above Swanta are poorly marked — guide recommended. Cold nights at ridge camp even in April.",
     ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
     operators: [
-      { name: "Trek The Himalayas", verified: true, priceFrom: "₹40,000", googleRating: 4.7, website: "https://trekthehimalayas.com/khopra-ridge" },
+      { name: "Trek The Himalayas", verified: true, priceFrom: "₹40,000", googleRating: 4.7, website: "https://trekthehimalayas.com/KhopraRidge" },
     ],
     tags: ["Khopra Danda", "Annapurna", "Dhaulagiri", "Nepal", "ridge"], featured: false,
     seedReviews: [
@@ -1686,7 +1686,7 @@ export const adventures: Adventure[] = [
     safetyNotes: "Trail involves boulder scrambling above Vasundhara Falls and glacier moraine navigation. River crossings can be dangerous in snowmelt. No rescue access beyond Badrinath. Go with an experienced local guide.",
     ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:5, focus:4, nerve:3 },
     operators: [
-      { name: "Trek The Himalayas", verified: true, priceFrom: "₹22,500", googleRating: 4.7, website: "https://trekthehimalayas.com/satopanth-lake-trek" },
+      { name: "Trek The Himalayas", verified: true, priceFrom: "₹22,500", googleRating: 4.7, website: "https://trekthehimalayas.com/Satopanth-Lake-Trek" },
     ],
     tags: ["Satopanth", "glacial lake", "Badrinath", "sacred", "Uttarakhand"], featured: false,
     seedReviews: [

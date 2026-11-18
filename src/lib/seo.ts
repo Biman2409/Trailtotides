@@ -47,11 +47,11 @@ export const theRoute = (a: Pick<Adventure, "name" | "type">) => {
  */
 export function experienceTitle(a: Adventure, { year = new Date().getFullYear() }: { year?: number } = {}): Metadata["title"] {
   const head = `${routeLabel(a)} ${year}`;
-  const title = [
-    `${head}: Compare Operators & Prices`,
-    `${head}: Operators & Prices`,
-    `${head}: Compare Prices`,
-  ].find((t) => t.length <= TITLE_MAX) ?? head;
+  // No operators yet: the page is a guide, so the title doesn't promise prices to compare
+  const options = a.operators.length
+    ? [`${head}: Compare Operators & Prices`, `${head}: Operators & Prices`, `${head}: Compare Prices`]
+    : [`${head}: Route, Season & Difficulty`, `${head}: Route & Season`, `${head}: Guide`];
+  const title = options.find((t) => t.length <= TITLE_MAX) ?? head;
   return title.length + BRAND.length <= TITLE_MAX ? title : { absolute: title };
 }
 
@@ -62,14 +62,17 @@ export function experienceTitle(a: Adventure, { year = new Date().getFullYear() 
 export function experienceDescription(a: Adventure, { priceFrom }: { priceFrom?: number }): string {
   const verified = a.operators.some((o) => o.verified) ? "verified" : "local";
   const n = a.operators.length;
-  const lead = n > 1 ? `Compare ${n} ${verified} operators and prices for ${theRoute(a)}` : `Book ${theRoute(a)} with a ${verified} operator`;
+  const lead = n > 1 ? `Compare ${n} ${verified} operators and prices for ${theRoute(a)}`
+    : n === 1 ? `Book ${theRoute(a)} with a ${verified} operator`
+    : `Plan ${theRoute(a)}: route, best season, difficulty and how fit you need to be`;
   const describe = (facts: boolean, close: string) => [
     lead,
     facts && priceFrom ? ` (from ${inr(priceFrom)})` : "",
     close,
   ].join("");
   return [
-    describe(true, ", matched to your fitness. Discover adventure with Trail to Tides."),
+    // "How fit you need to be" already says it for an adventure with no operators yet
+    ...(n > 0 ? [describe(true, ", matched to your fitness. Discover adventure with Trail to Tides.")] : []),
     describe(true, ". Discover adventure with Trail to Tides."),
     describe(false, ". Discover adventure with Trail to Tides."),
     describe(true, "."),

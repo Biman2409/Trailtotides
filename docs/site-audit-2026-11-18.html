@@ -1,0 +1,190 @@
+<title>Trail to Tides Site Audit, 18 Nov 2026</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: one reading column; summary tiles, then fixed / open / verified / inventory, each a plain table or list */
+:root {
+  --bg: #fbfaf8; --surface: #ffffff; --fg: #1c1814; --muted: #5f574f; --line: #e6e1da;
+  --accent: #ff5100; --accent-ink: #1c1814; --ok: #1f8a5b; --warn: #b26a00; --bad: #c2372b;
+  --ok-bg: #e8f5ee; --warn-bg: #fdf3e2; --bad-bg: #fbeceb;
+  --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --body: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12100e; --surface: #1b1815; --fg: #f1ece6; --muted: #a89f95; --line: #2f2a25;
+  --ok: #4cc28c; --warn: #f0a83a; --bad: #f07a6e; --ok-bg: #15281f; --warn-bg: #2b2112; --bad-bg: #2c1715; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12100e; --surface: #1b1815; --fg: #f1ece6; --muted: #a89f95; --line: #2f2a25;
+  --ok: #4cc28c; --warn: #f0a83a; --bad: #f07a6e; --ok-bg: #15281f; --warn-bg: #2b2112; --bad-bg: #2c1715; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); }
+.wrap { max-width: 920px; margin: 0 auto; padding-block: 40px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: 34px; letter-spacing: -0.01em; }
+h2 { font-size: 22px; margin-top: 44px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h3 { font-size: 16px; margin-top: 22px; }
+p { margin: 10px 0; max-width: 68ch; }
+.eyebrow { font: 600 12px/1 var(--body); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.lede { color: var(--muted); font-size: 16px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 24px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.tile b { display: block; font: 700 28px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.tile span { color: var(--muted); font-size: 13px; }
+.scroll { overflow-x: auto; margin-top: 12px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; color: var(--muted); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+td.n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.ok { background: var(--ok-bg); color: var(--ok); }
+.warn { background: var(--warn-bg); color: var(--warn); }
+.bad { background: var(--bad-bg); color: var(--bad); }
+code { font: 13px/1.4 ui-monospace, Consolas, monospace; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 1px 4px; overflow-wrap: anywhere; }
+ul { padding-left: 20px; margin: 8px 0; } li { margin: 6px 0; max-width: 72ch; }
+.item { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-top: 12px; }
+.item h3 { margin: 0 0 4px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.item p { margin: 6px 0 0; }
+.where { color: var(--muted); font-size: 13px; }
+footer { margin-top: 48px; color: var(--muted); font-size: 13px; }
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Trail to Tides · audit of www.trailtotides.com · 18 November 2026</p>
+  <h1>Site audit and fixes</h1>
+  <p class="lede">Every public page was crawled, the main journeys were run in a real browser on a production build, and the code, data and outbound links were checked. Confirmed problems were fixed on branch <code>audit/master-2026-11-18</code> (from master at e2510a9b). Nothing is committed or deployed yet.</p>
+
+  <div class="tiles">
+    <div class="tile"><b>905</b><span>URLs crawled (177 pages + query variants)</span></div>
+    <div class="tile"><b>0</b><span>broken internal links</span></div>
+    <div class="tile"><b>15</b><span>problems fixed and checked in the browser</span></div>
+    <div class="tile"><b>61 / 61</b><span>tests pass (2 new); lint and build clean</span></div>
+  </div>
+
+  <h2>Fixed and verified</h2>
+  <p>Each fix was checked on a fresh production build (<code>next build</code> + <code>next start</code>), not just by reading the code.</p>
+
+  <div class="item">
+    <h3><span class="pill bad">Dead end</span> 12 adventures with no operators sent people to an empty list</h3>
+    <p>On Triund, Mera Peak, Lobuche, Rudranath, Yulla Kanda, Everest Three Passes, rafting and the five bike/cycle trips, the booking card said "Contact for pricing" and the phone bar said "See operators", both leading to "No operators listed yet". Cards said "Price: On request" with nobody to ask. Now the card says <b>No operators listed yet</b> and the button is <b>See similar adventures</b>, which scrolls to the similar trips (checked: it lands on them). Listing cards say <b>Operators coming soon</b>.</p>
+    <p class="where">BookingSidebarCard.tsx · MobileBookBar.tsx · AdventureCard.tsx</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="pill bad">SEO</span> Those 12 pages promised operators in Google</h3>
+    <p>Titles read "Triund Trek 2026: Compare Operators &amp; Prices" and descriptions "Book the Triund Trek with a local operator". Now: "Triund Trek 2026: Route, Season &amp; Difficulty" and "Plan the Triund Trek: route, best season, difficulty and how fit you need to be." A test now fails if a page with no operators mentions operators or booking.</p>
+    <p class="where">src/lib/seo.ts · tests/data.test.ts</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="pill bad">Dead links</span> X, YouTube and LinkedIn accounts don't exist</h3>
+    <p><code>twitter.com/trailtotides</code>, <code>youtube.com/@trailtotides</code> and <code>linkedin.com/company/trailtotides</code> all return "not found". They were in the footer, the contact page, every email and the site's structured data (<code>sameAs</code>, which tells Google these are your profiles). Removed everywhere; Instagram, which is real, stays.</p>
+    <p class="where">Footer.tsx · ContactClient.tsx · layout.tsx · email.ts</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="pill bad">Dead links</span> 6 Trek The Himalayas booking links were 404s</h3>
+    <p>Deoriatal–Chandrashila, Kuari Pass, Bajre Dara, Doodhpathri, Khopra Ridge and Satopanth pointed to pages THT has moved. Their site returns 404 pages with a 200 status and blocks scripts, so these were checked in a real browser against THT's own sitemap. All 51 THT links now open the right trek page.</p>
+    <p class="where">src/lib/data.ts</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="pill bad">Dead links</span> Suunto and COROS app links in the offline-maps guide</h3>
+    <p>Both returned 404. Now <code>app.suunto.com</code> and <code>coros.com/getapp</code> (both checked, 200).</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="pill warn">Compass.AI</span> Budget questions got a false answer</h3>
+    <p>"Adventures under 15000 rupees" got "Trail to Tides does not list prices". Budgets are now answered from the site's own "from" prices: "17 adventures start under ₹15,000… Kareri Lake from ₹6,195, Beas Kund from ₹7,875, Bhrigu Lake from ₹7,875". Also handles "below 10k", place and activity ("trek in Uttarakhand below 10k") and budgets nothing fits.</p>
+    <p class="where">src/app/api/chat/route.ts</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="pill warn">Compass.AI</span> "Something easier" recommended a harder motorbike trip</h3>
+    <p>After Pin Parvati Pass (Extreme), "too difficult, something easier nearby?" returned the Zanskar motorcycle ride (Hard, not a trek, 200+ km away). "Easier / harder than X" is now answered from the catalogue: the same activity, rated easier or harder, nearest first. Pin Parvati → Yulla Kanda, Pin Bhaba Pass, Sar Pass; "harder than Kedarkantha" → Bali Pass, Rupin Pass, Buran Ghati. "Kedarkantha" is now recognised even though the trek's name is "Kedarkantha Summit Trek".</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="pill warn">Search</span> One typo or a common abbreviation found nothing</h3>
+    <p>"kedarkanta", "goechla" and "EBC" returned 0 results on Explore. The header search box was stricter still: it matched only the exact phrase, so "himachal trek" found nothing. Both now match word by word, forgive one wrong letter (two in long words) and know EBC, ABC, KGL and VoF. Short words still have to match exactly, so "ali" doesn't match half the catalogue.</p>
+    <p class="where">src/lib/textMatch.ts (new, shared) · exploreHelpers.ts · SearchModal.tsx</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="pill warn">ACE</span> "Strongest" and "Room to grow" on a profile with no differences</h3>
+    <p>A profile of eight 3/5 scores was told its strongest capabilities were Stamina and Power and that Nerve and Focus had room to grow, which was just list order. Ties now show only the axes that really are highest or lowest, and an even profile reads "Even across all eight, 3/5 each". The passport's "Strongest in…" line had the same bug and is fixed too.</p>
+    <p class="where">MatchmakerClient.tsx · passportData.ts · Passport.tsx · api/passport</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="pill warn">Reliability</span> Signed-out visitors sent 4–5 failing requests per Matchmaker run</h3>
+    <p>The profile, consent, medical answers and XP were posted to the server for everyone, so signed-out visitors got 401 errors in the console every time. These saves now check for a signed-in session first; the profile still saves in the browser as before.</p>
+    <p class="where">src/lib/signedIn.ts (new) · matchmaker.ts · awardXP.ts</p>
+  </div>
+
+  <div class="item">
+    <h3><span class="pill ok">Cleanup</span> Smaller fixes</h3>
+    <ul>
+      <li>Sending broken JSON to <code>/api/chat</code> returned a 500 error; it now returns a 400 that says what's wrong.</li>
+      <li>Removed <code>src/components/ui/custom/Skeleton.tsx</code>, which nothing used.</li>
+    </ul>
+  </div>
+
+  <h2>Needs your decision</h2>
+  <div class="scroll"><table>
+    <tr><th>Item</th><th>What I found</th><th>Suggestion</th></tr>
+    <tr><td>Goechala permits in Compass.AI</td><td>Asked about permits, Compass said Goechala needs an Inner Line Permit. That comes from the AI's general knowledge; for Indian trekkers it's doubtful.</td><td>Add the structured permit data per trek (already on the open list) and answer permits from it.</td></tr>
+    <tr><td>Editor's Choice picks you can't book</td><td>2 of the 11 Editor's Choice adventures (Manali–Leh ride, Ladakh circuit) have no operators.</td><td>Keep them for inspiration, or feature only bookable ones until operators are added.</td></tr>
+    <tr><td>"India's first adventure platform"</td><td>The tagline under the logo on every page is a claim nobody can verify.</td><td>Keep it, or use something checkable such as "Find, compare and book adventures in India".</td></tr>
+    <tr><td>Content-Security-Policy header</td><td>The site sends nosniff, frame and referrer headers but no CSP. Vercel adds HSTS in production.</td><td>Add a CSP in report-only mode first, then enforce it once the reports are clean.</td></tr>
+    <tr><td>Beginner suggestions</td><td>"Beginner-friendly Himalayan trek" returns three Moderate treks; Triund (the only Easy trek) isn't suggested, partly because it has no operator.</td><td>Your call whether Easy should outrank bookable.</td></tr>
+  </table></div>
+
+  <h2>Checked and working</h2>
+  <ul>
+    <li><b>Crawl:</b> 177 pages and 688 query variants. All return 200 except two intended sign-in redirects (<code>/profile</code>, <code>/matchmaker/group</code>). Every indexable page has a title, description, canonical and share image; there are no duplicate titles or descriptions, and every query variant's canonical points back to its base page. The sitemap lists exactly the 171 indexable pages. Unknown adventures, operators, stories, passports and compare codes return real 404s.</li>
+    <li><b>Numbers agree:</b> 59 adventures; Earth 51 + 4 + 1 + 2 = 58 plus 1 rafting trip; regions add up to 60 because some routes cross two; 2 operators; Explore, the Map and Compass return the same results for the same filters (e.g. 2 Sikkim treks in each).</li>
+    <li><b>ACE Matchmaker:</b> quick match run end to end. Questions advance, progress survives a page refresh ("Pick up where you left off, Question 9 of 14"), and health questions can be skipped. 36 Ready + 20 Stretch + 3 Not yet = 59; 24 of 40 points gives Trailblazer, 8 points short of Vanguard (32). The scoring script tested 2,832 profile and adventure pairs: nobody is called Ready while 2 or more points short on any axis.</li>
+    <li><b>Compass.AI:</b> 10 product scenarios run against the live AI: no made-up adventures and no invented prices in any of them.</li>
+    <li><b>Explore:</b> filters, sorting and the no-results state ("Nothing on Trail to Tides matches…" with ways forward).</li>
+    <li><b>Map:</b> loads, clusters by difficulty, and filters match the catalogue.</li>
+    <li><b>Phones and tablets:</b> 23 main pages at 375 px and 768 px. None scrolls sideways.</li>
+    <li><b>Code and dependencies:</b> lint clean, 61 tests pass, production build clean, 0 known vulnerabilities in production dependencies, no stray debug logging or TODOs. Difficulty is shown from one source (ACE) everywhere.</li>
+  </ul>
+
+  <h2>Not verified</h2>
+  <p>These need a signed-in account, a live deploy or outside services, so they weren't tested in this pass:</p>
+  <ul>
+    <li>Signed-in journeys: Group Match, reviews, photo upload, story submission, the operator dashboard, admin, Google sign-in and emails. These were last tested end to end on 16 Nov with test accounts.</li>
+    <li>The live site after deploying these fixes, and real slow-network or third-party outage behaviour.</li>
+    <li>Whether you have X, YouTube or LinkedIn accounts under other names. If you do, send me the links and I'll add them back.</li>
+  </ul>
+
+  <h2>Low priority</h2>
+  <ul>
+    <li>The Trek The Himalayas operator page embeds all 1,479 upcoming start dates: 283 kB raw, about 40 kB once compressed. It could load the calendar data on demand.</li>
+    <li>The home page HTML is 592 kB raw, mostly inline SVG and page data. The hero headline is drawn on a canvas, which slows the main paint on phones (a known design trade-off).</li>
+    <li><code>npm outdated</code> shows major versions available for Next 16, framer-motion 14 and lucide 1.x. None has a security fix, so upgrade when there's time to retest.</li>
+  </ul>
+
+  <h2>Page inventory</h2>
+  <p>Every route in <code>src/app</code>, with what was checked. "Crawled" means it returned 200 with complete SEO tags; "Journey" means it was used as a visitor would in the browser.</p>
+  <div class="scroll"><table>
+    <tr><th>Route</th><th>Pages</th><th>Type and data</th><th>Status</th></tr>
+    <tr><td><code>/</code></td><td class="n">1</td><td>Home: hero search, in season, Editor's Choice, Matchmaker demo, map demo, genres, regions, stories. Catalogue + stories (Supabase)</td><td><span class="pill ok">Journey</span></td></tr>
+    <tr><td><code>/explore</code></td><td class="n">1</td><td>Catalogue with search, type/region/month filters, sort, paging. Catalogue + lead prices</td><td><span class="pill ok">Journey · fixed</span></td></tr>
+    <tr><td><code>/map</code></td><td class="n">1</td><td>Leaflet map, clustering, filters, fit. Catalogue + trails</td><td><span class="pill ok">Journey</span></td></tr>
+    <tr><td><code>/matchmaker</code>, <code>/ace</code></td><td class="n">2</td><td>Quiz, results, training; how ACE works. Saved in the browser; on the account when signed in</td><td><span class="pill ok">Journey · fixed</span></td></tr>
+    <tr><td><code>/matchmaker/group</code>, <code>/group/[code]</code></td><td class="n">2</td><td>Group Match. Supabase, sign-in required</td><td><span class="pill warn">Redirect checked only</span></td></tr>
+    <tr><td><code>/experiences/[slug]</code></td><td class="n">59</td><td>Adventure page: facts, ACE check, booking, operators, reviews, trail, similar. Plus 37 GPX downloads</td><td><span class="pill ok">Crawled · journey · fixed</span></td></tr>
+    <tr><td><code>/destinations</code>, <code>/[slug]</code></td><td class="n">7</td><td>Regions: Uttarakhand, Himachal, Nepal, Ladakh, J&amp;K, Sikkim</td><td><span class="pill ok">Crawled</span></td></tr>
+    <tr><td><code>/operators</code>, <code>/[slug]</code></td><td class="n">3</td><td>Operator index, Bikat Adventures, Trek The Himalayas, with departure calendars</td><td><span class="pill ok">Crawled</span></td></tr>
+    <tr><td><code>/adventurepedia/…</code></td><td class="n">90</td><td>Hub, 13 guides, 22 activities, trek index + 53 trek guides, offline maps</td><td><span class="pill ok">Crawled · links fixed</span></td></tr>
+    <tr><td><code>/stories</code>, <code>/[slug]</code>, <code>/submit</code></td><td class="n">4</td><td>Stories from Supabase; submit needs sign-in</td><td><span class="pill ok">Crawled</span></td></tr>
+    <tr><td><code>/about</code>, <code>/contact</code>, <code>/terms</code>, <code>/privacy</code></td><td class="n">4</td><td>Static pages</td><td><span class="pill ok">Crawled · fixed</span></td></tr>
+    <tr><td><code>/auth/*</code></td><td class="n">8</td><td>Login, signup, forgot/reset password, confirm, operator signup, dashboard and settings</td><td><span class="pill warn">Pages load; sign-in not tested</span></td></tr>
+    <tr><td><code>/profile</code>, <code>/settings</code>, <code>/passport/[user]</code>, <code>/compare/[code]</code>, <code>/admin</code></td><td class="n">5</td><td>Account pages</td><td><span class="pill warn">404s and redirects checked</span></td></tr>
+    <tr><td><code>/trailpedia</code>, <code>/guides/offline-maps</code></td><td class="n">2</td><td>Old addresses</td><td><span class="pill ok">308 to Adventurepedia</span></td></tr>
+    <tr><td><code>/api/*</code></td><td class="n">40</td><td>Chat, search, ACE, XP, reviews, photos, stories, groups, outbound clicks…</td><td><span class="pill ok">Bad input and auth checked</span></td></tr>
+  </table></div>
+
+  <footer>Method: local production build, crawler from <code>/</code> and the sitemap, browser runs in the Claude desktop browser, the repo's audit scripts (<code>audit-adventures</code>, <code>audit-ace</code>, <code>audit-links</code>, <code>audit-compass</code>), plus outbound links checked one by one. The brief stopped partway through Phase 5 (at "15. Database"), so later phases weren't specified; the database side was covered at the level above.</footer>
+</div>

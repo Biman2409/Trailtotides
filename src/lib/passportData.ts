@@ -163,7 +163,9 @@ export async function computePassportData(origin: string, demoMode?: string | nu
   const userAceRaw = user.user_metadata?.ace_profile as Record<string, number> | undefined;
   const userAce: Record<string, number> = Object.fromEntries(RADAR_AXES.map((ax) => [ax, userAceRaw?.[ax] ?? 0]));
   const hasAceData = RADAR_AXES.some((ax) => userAce[ax] > 0);
-  const topAxis = RADAR_AXES.reduce((best, ax) => (userAce[ax] > userAce[best] ? ax : best), RADAR_AXES[0]);
+  // "" when every axis is the same score: no axis is the strongest then
+  const evenAce = RADAR_AXES.every((ax) => userAce[ax] === userAce[RADAR_AXES[0]]);
+  const topAxis = evenAce ? "" : RADAR_AXES.reduce((best, ax) => (userAce[ax] > userAce[best] ? ax : best), RADAR_AXES[0]);
   const aceScore = hasAceData ? Math.round(RADAR_AXES.reduce((sum, ax) => sum + userAce[ax], 0)) : null;
 
   // Achievement badges — same source as the Trophy Cabinet on /profile.

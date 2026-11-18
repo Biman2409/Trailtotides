@@ -1,6 +1,7 @@
 // Search, sorting and small fact helpers for the Explore page (and its cards / list rows).
 import { getLowestPrice, type Adventure, type Month } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
+import { editDistance, matchesWords } from "@/lib/textMatch";
 
 export const MONTHS: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -26,16 +27,7 @@ export const difficultyLevel = (a: Adventure) => LEVEL[computeDifficulty(getACE(
 
 // ─── Search ──────────────────────────────────────────────────────────────────
 // Every word must match somewhere (name, place, activity, tags, tagline) — so "himachal trek"
-// finds treks in Himachal instead of looking for that exact phrase.
-
-const SYNONYMS: Record<string, string[]> = {
-  trek: ["trekking"], treks: ["trekking"], hike: ["trekking"], hiking: ["trekking"],
-  bike: ["motorcycling", "cycling"], biking: ["motorcycling", "cycling"], ride: ["motorcycling", "cycling"],
-  motorbike: ["motorcycling"], cycle: ["cycling"], climb: ["mountaineering", "rock climbing"],
-  kashmir: ["jammu & kashmir"], himachal: ["himachal pradesh"], uk: ["uttarakhand"],
-  beginner: ["easy", "moderate"], easy: ["easy"], winter: ["dec", "jan", "feb"], snow: ["winter", "snow"],
-  lake: ["lake", "lakes"], lakes: ["lake", "lakes"], pass: ["pass"], summit: ["summit", "peak"],
-};
+// finds treks in Himachal instead of looking for that exact phrase. Synonyms: src/lib/textMatch.ts
 
 function haystack(a: Adventure): string {
   return [
@@ -45,19 +37,7 @@ function haystack(a: Adventure): string {
 }
 
 export function matchesSearch(a: Adventure, query: string): boolean {
-  const words = query.toLowerCase().split(/[\s,]+/).filter((w) => w.length > 1);
-  if (words.length === 0) return true;
-  const hay = haystack(a);
-  return words.every((w) => hay.includes(w) || (SYNONYMS[w] ?? []).some((s) => hay.includes(s)));
-}
-
-function editDistance(a: string, b: string): number {
-  const dp = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
-  for (let j = 1; j <= b.length; j++) dp[0][j] = j;
-  for (let i = 1; i <= a.length; i++)
-    for (let j = 1; j <= b.length; j++)
-      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
-  return dp[a.length][b.length];
+  return matchesWords(haystack(a), query);
 }
 
 /** "Did you mean" — closest adventure names and places to a query that found nothing. */

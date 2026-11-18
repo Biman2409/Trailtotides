@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, X, MapPin, BookOpen, ArrowRight, Loader2, Library } from "lucide-react";
 import Image from "next/image";
 import type { SearchResult } from "@/app/api/search/route";
+import { matchesWords } from "@/lib/textMatch";
 
 interface Props {
   open: boolean;
@@ -53,12 +54,8 @@ export default function SearchModal({ open, onClose }: Props) {
       setResults([]);
       return;
     }
-    const q = query.toLowerCase();
-    const filtered = allResults.filter(
-      (r) =>
-        r.title.toLowerCase().includes(q) ||
-        r.subtitle.toLowerCase().includes(q)
-    );
+    // Word by word, forgiving a typo, as Explore does: "himachal trek" and "kedarkanta" both find something
+    const filtered = allResults.filter((r) => matchesWords(`${r.title} ${r.subtitle}`, query));
     setResults(filtered);
     setSelectedIndex(0);
   }, [query, allResults]);

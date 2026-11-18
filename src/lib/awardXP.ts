@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { XP_LABELS, type XPAction } from "@/lib/xp";
 import type { Achievement } from "@/lib/achievements";
+import { hasSession } from "@/lib/signedIn";
 
 // Before badges were tracked on the account, each browser kept its own list of the ones
 // it had announced. It's sent once to seed the account's list, then dropped.
@@ -56,6 +57,8 @@ export async function announceNewTrophies(): Promise<void> {
 }
 
 export async function awardXP(action: XPAction, slug?: string): Promise<void> {
+  // XP lives on an account: signed out, there's nothing to award it to
+  if (!(await hasSession())) return;
   try {
     const res = await fetch("/api/xp", {
       method: "POST",

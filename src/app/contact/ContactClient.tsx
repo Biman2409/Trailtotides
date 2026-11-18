@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, MotionConfig } from "framer-motion";
-import { ArrowRight, Check, Copy, Instagram, Youtube, Twitter, MapPin, Clock, Mail, MessageCircle, Mountain, Handshake, Newspaper, AlertTriangle, Sparkles, Loader2 } from "lucide-react";
+import { ArrowRight, Check, Copy, Instagram, MapPin, Clock, Mail, MessageCircle, Mountain, Handshake, Newspaper, AlertTriangle, Sparkles, Loader2 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
@@ -124,8 +124,6 @@ export default function ContactPage() {
               <div className="mt-8 flex items-center gap-3">
                 {[
                   { href: "https://instagram.com/trailtotides", label: "Instagram", Icon: Instagram },
-                  { href: "https://youtube.com/@trailtotides", label: "YouTube", Icon: Youtube },
-                  { href: "https://twitter.com/trailtotides", label: "X (Twitter)", Icon: Twitter },
                 ].map(({ href, label, Icon }) => (
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
                     className="w-11 h-11 rounded-full flex items-center justify-center transition-all hover:-translate-y-0.5 hover:text-[#ff5100]"

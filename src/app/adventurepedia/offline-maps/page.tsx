@@ -253,8 +253,8 @@ export default function OfflineMapsGuide() {
                 <P>Outdoor watches follow a GPX as a <B>course</B> or <B>route</B>: the line on the screen, a buzz if you stray. Get the file onto your phone or computer first; menu names vary a little by app version.</P>
                 <div className="rounded-xl px-4 my-4" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
                   <AppRow name="Garmin" href="https://connect.garmin.com/modern/courses" cost="Garmin Connect, free" how={<>On connect.garmin.com: <B>Training &amp; Planning → Courses → Import</B>, save, <B>Send to Device</B>. On the watch: <B>Navigate → Courses</B>.</>} />
-                  <AppRow name="Suunto" href="https://www.suunto.com/suunto-app/" cost="Suunto app, free" how={<>Share the GPX to the Suunto app; it saves a route. Sync, then start an exercise with navigation.</>} />
-                  <AppRow name="Coros" href="https://coros.com/app" cost="Coros app, free" how={<>Share the GPX to the Coros app to import a route, then sync the watch.</>} />
+                  <AppRow name="Suunto" href="https://app.suunto.com/" cost="Suunto app, free" how={<>Share the GPX to the Suunto app; it saves a route. Sync, then start an exercise with navigation.</>} />
+                  <AppRow name="Coros" href="https://coros.com/getapp" cost="Coros app, free" how={<>Share the GPX to the Coros app to import a route, then sync the watch.</>} />
                   <AppRow name="Others" href="https://www.topografix.com/gpx.asp" cost="Wahoo, Polar, Amazfit, handheld GPS" how={<>Nearly all import GPX in their app or desktop software as a route or course.</>} />
                 </div>
               </Section>

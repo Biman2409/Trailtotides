@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Youtube, Twitter, Mail, Linkedin } from "lucide-react";
+import { Instagram, Mail } from "lucide-react";
 import { Mountain } from "@/lib/localIcons";
 import { tm } from "@/lib/tm";
 
@@ -118,12 +118,9 @@ export default function Footer() {
                     </span>
                   </a>
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
                     {[
                       { Icon: Instagram, href: "https://instagram.com/trailtotides", name: "Instagram" },
-                      { Icon: Twitter, href: "https://twitter.com/trailtotides", name: "Twitter" },
-                      { Icon: Youtube, href: "https://youtube.com/@trailtotides", name: "Youtube" },
-                      { Icon: Linkedin, href: "https://linkedin.com/company/trailtotides", name: "Linkedin" }
                     ].map(({ Icon, href, name }, i) => (
                       <a
                         key={i}

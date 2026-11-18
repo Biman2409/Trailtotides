@@ -151,8 +151,6 @@ function themedImage(light: string, dark: string, attrs: string, style: string) 
 }
 const SOCIAL = [
   ['Instagram', 'https://instagram.com/trailtotides'],
-  ['YouTube', 'https://youtube.com/@trailtotides'],
-  ['X', 'https://twitter.com/trailtotides'],
 ];
 
 /**

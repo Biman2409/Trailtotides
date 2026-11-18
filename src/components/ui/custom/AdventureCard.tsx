@@ -269,7 +269,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
                   ₹{lowestPrice.toLocaleString("en-IN")}
                 </span>
               ) : (
-                <span className="block text-sm font-semibold leading-none" style={{ color: "var(--text-secondary)" }}>On request</span>
+                <span className="block text-sm font-semibold leading-none" style={{ color: "var(--text-secondary)" }}>{operatorCount > 0 ? "On request" : "Operators coming soon"}</span>
               )}
             </div>
             {operatorCount > 0 && (

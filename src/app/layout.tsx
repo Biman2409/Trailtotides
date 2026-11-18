@@ -212,9 +212,6 @@ export default function RootLayout({
                 ],
                 sameAs: [
                   "https://instagram.com/trailtotides",
-                  "https://twitter.com/trailtotides",
-                  "https://youtube.com/@trailtotides",
-                  "https://linkedin.com/company/trailtotides",
                 ],
               },
               {

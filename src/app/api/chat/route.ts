@@ -6,6 +6,7 @@ import { rateLimitShared, getClientIp } from "@/lib/rateLimit";
 import { getACE, computeDifficulty, computeMatchScore, READY_MIN, STRETCH_MIN, type ACE } from "@/lib/ace";
 import { stripEmphasis } from "@/lib/emphasis";
 import { nextSteps, trainingTip, AXIS_LABEL } from "@/lib/fitness";
+import { fromPrice } from "@/lib/leadPrices";
 import { parseTrip, applyTrip, hasTrip, fitsTrip, failingChecks, tripPhrase, relaxedNote, kmFrom, type Check, type TripAsk } from "@/lib/tripAsk";
 
 // Gemini's free tier via its OpenAI-compatible endpoint — no billing required.
@@ -108,7 +109,7 @@ ${CATALOG_STR}
 
 ## Hard rules:
 - ONLY use slugs from the catalog above. Never invent slugs, adventures or operators.
-- The catalog has no prices, operators, dates or availability. Never state a price, fee, operator name, batch date, availability, permit cost or current trail/road/weather condition as fact. For prices and operators, point to the adventure's page on Trail to Tides, where operators' own prices are compared; for permits and conditions, say rules change and to confirm with the local forest/tourism office or the operator.
+- This catalog has no prices, operators, dates or availability (budgets are answered separately). Never say Trail to Tides doesn't list prices: each adventure's page compares operators' prices. Never state a price, fee, operator name, batch date, availability, permit cost or current trail/road/weather condition as fact. For prices and operators, point to the adventure's page on Trail to Tides, where operators' own prices are compared; for permits and conditions, say rules change and to confirm with the local forest/tourism office or the operator.
 - Health and safety: give general guidance only, never medical advice. For heart, lung or other medical conditions at altitude, say to see a doctor before booking.
 - Difficulty is the catalog's "difficulty" field (Easy, Moderate, Hard, Advanced, Extreme) and nothing else. Never call an adventure easier or harder than that field says.
 - When the user asks for a difficulty ("moderate", "easy", "challenging"…), recommend ONLY adventures whose "difficulty" field is that level. If none fit the rest of the request, say so and offer the nearest level, naming it.
@@ -514,12 +515,14 @@ function keywordCanAnswer(query: string): boolean {
   });
 }
 
-/** Adventures the visitor named ("hampta pass" finds "Hampta Pass Trek") */
+/** Adventures the visitor named ("hampta pass" finds "Hampta Pass Trek"; "kedarkantha" finds
+ *  "Kedarkantha Summit Trek" by its slug, kedarkantha-trek) */
 function namedIn(query: string) {
   const q = query.toLowerCase();
   return adventures.filter((a) => {
     const name = a.name.toLowerCase().replace(/\s+(trek|ride|climb|expedition|circuit|trail)$/, "");
-    return name.length > 3 && q.includes(name);
+    const short = a.slug.replace(/-(trek|ride|climb|expedition|circuit|trail|bike|cycling)$/, "").replace(/-/g, " ");
+    return (name.length > 3 && q.includes(name)) || (short.length > 4 && new RegExp(`\\b${short}\\b`).test(q));
   });
 }
 
@@ -576,6 +579,74 @@ function isComingSoonQuery(query: string): boolean {
       "kayak", "kayaking"].some((w) => q.includes(w));
 }
 
+// ─── Budget and "easier than…" — answered from the data, not by the model ────
+
+/** "under ₹15,000", "below 20k", "budget of 12000 rupees" → rupees, or null */
+function budgetOf(query: string): number | null {
+  const m = query.toLowerCase().replace(/,/g, "").match(/\b(?:under|below|less than|within|up ?to|max(?:imum)?|cheaper than|budget(?: of| is)?)\s*(?:rs\.?|inr|₹)?\s*(\d+(?:\.\d+)?)\s*(k|thousand|lakhs?|l)?\b/);
+  if (!m) return null;
+  const n = Number(m[1]) * (m[2] === "k" || m[2] === "thousand" ? 1000 : m[2]?.startsWith("l") ? 100000 : 1);
+  return n >= 1000 && n <= 1000000 ? n : null;
+}
+
+const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
+
+/** Adventures whose listed "from" price fits the budget, within the activity and place asked for, cheapest first */
+function budgetAnswer(query: string, budget: number) {
+  const { types, places } = requestLimits(query);
+  const fits = adventures.filter((a) => {
+    const p = fromPrice(a);
+    return p !== null && p <= budget && (types.length === 0 || types.includes(a.type)) && (places.length === 0 || places.some((pl) => a.state.includes(pl)));
+  });
+  const trip = parseTrip(query);
+  const pool = hasTrip(trip) ? applyTrip(fits, trip).list : fits;
+  const picks = [...pool].sort((a, b) => fromPrice(a)! - fromPrice(b)!).slice(0, 3);
+  const text = picks.length
+    ? pool.length === 1
+      ? `1 adventure starts under ${inr(budget)} on Trail to Tides, by the operator's listed starting price (open it to see what's included):`
+      : `${pool.length} adventures start under ${inr(budget)} on Trail to Tides. The cheapest${pool.length > picks.length ? ` ${picks.length}` : ""}, by the operator's listed starting price (open each to see what it includes):`
+    : `Nothing on Trail to Tides starts under ${inr(budget)}${types.length || places.length ? " for that" : ""} yet. The lowest listed starting price is ${inr(Math.min(...adventures.map(fromPrice).filter((p): p is number => p !== null)))}.`;
+  return {
+    text,
+    picks,
+    recommendations: picks.map((a) => ({ slug: a.slug, name: a.name, reason: `From ${inr(fromPrice(a)!)}. ${factualReason(a)}` })),
+  };
+}
+
+const EASIER = /\b(easier|less (?:hard|difficult|tough|challenging|strenuous)|too (?:hard|difficult|tough|much|challenging)|gentler|simpler)\b/i;
+const HARDER = /\b(harder|tougher|more (?:challenging|difficult)|too easy|bigger challenge)\b/i;
+const kmApart = (a: { lat: number; lng: number }, b: { lat: number; lng: number }) => {
+  const r = Math.PI / 180, dLat = (b.lat - a.lat) * r, dLng = (b.lng - a.lng) * r;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLng / 2) ** 2;
+  return 12742 * Math.asin(Math.sqrt(h));
+};
+
+/**
+ * "Too hard for me, something easier nearby?" after an adventure was named: the same activity,
+ * rated easier (or harder), nearest to it first. The model used to answer this with whatever
+ * it liked (a Hard motorcycle ride as the "easier" alternative to a trek).
+ */
+function refineAnswer(messages: { role: string; content: string }[]) {
+  const last = messages[messages.length - 1].content;
+  const dir = EASIER.test(last) ? -1 : HARDER.test(last) ? 1 : 0;
+  if (!dir) return null;
+  let ref: typeof adventures[0] | undefined = namedIn(last)[0];
+  for (let i = messages.length - 2; !ref && i >= 0; i--) ref = namedIn(messages[i].content)[0];
+  if (!ref) return null;
+  const refLevel = LEVEL[computeDifficulty(getACE(ref))];
+  const wantedType = requestLimits(last).types[0] ?? ref.type;
+  const pool = adventures.filter((a) => a !== ref && a.type === wantedType && Math.sign(LEVEL[computeDifficulty(getACE(a))] - refLevel) === dir);
+  const picks = pool.sort((a, b) => kmApart(ref!, a) - kmApart(ref!, b)).slice(0, 3);
+  const word = dir < 0 ? "Easier" : "Harder";
+  return {
+    text: picks.length
+      ? `${word} than ${ref.name} (rated ${computeDifficulty(getACE(ref))}), nearest first:`
+      : `Nothing ${word.toLowerCase()} than ${ref.name} of that kind is on Trail to Tides yet.`,
+    picks,
+    recommendations: picks.map((a) => ({ slug: a.slug, name: a.name, reason: `${factualReason(a)} About ${Math.round(kmApart(ref!, a) / 10) * 10} km from ${ref!.name}.` })),
+  };
+}
+
 // ─── Route handler ────────────────────────────────────────────────────────────
 
 /** The most recent turns sent to the model, and the most characters kept from each */
@@ -592,7 +663,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const body = await req.json();
+    const body = await req.json().catch(() => null);
+    if (!body || typeof body !== "object") return NextResponse.json({ error: "Send JSON with a messages list" }, { status: 400 });
     const { recommendationRounds, ace: rawAce } = body;
     const userAce = parseAce(rawAce);
     // Only the visitor's and Compass's own turns, the recent ones, each kept short: the browser
@@ -629,6 +701,12 @@ export async function POST(req: NextRequest) {
     // Keywords first: instant and free, and right for anything that names an activity, place or
     // trek. The AI only answers what keywords can't place: vague asks, follow-ups, open questions.
     const firstQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
+    // Budgets and "easier/harder than that one" come straight from the catalogue's own prices and ratings
+    const budget = budgetOf(firstQuery);
+    const exact = budget ? budgetAnswer(firstQuery, budget) : refineAnswer(messages);
+    if (exact) {
+      return NextResponse.json({ text: exact.text, recommendations: exact.recommendations, cards: exact.picks, suggestAce: shouldSuggestAce });
+    }
     if (keywordCanAnswer(firstQuery) && !isComingSoonQuery(firstQuery)) {
       const kw = keywordAnswer(firstQuery, userAce);
       if (kw.picks.length > 0) {

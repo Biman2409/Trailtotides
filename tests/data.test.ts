@@ -99,3 +99,24 @@ test("search: every word must match; synonyms work; nonsense finds nothing", () 
   assert.ok(adventures.some((a) => matchesSearch(a, "bike ladakh")));
   assert.equal(adventures.filter((a) => matchesSearch(a, "zzqx")).length, 0);
 });
+
+test("search forgives a small typo and knows trekkers' abbreviations, but short words match exactly", () => {
+  const find = (q: string) => adventures.filter((a) => matchesSearch(a, q)).map((a) => a.slug);
+  assert.ok(find("kedarkanta").includes("kedarkantha-trek"));
+  assert.ok(find("goechla").includes("goechala"));
+  assert.ok(find("EBC").includes("everest-base-camp"));
+  assert.deepEqual(find("kgl"), ["kashmir-great-lakes"]);
+  assert.deepEqual(find("zzzzqq"), []);
+});
+
+test("experience titles and descriptions don't promise operators an adventure doesn't have", async () => {
+  const { experienceTitle, experienceDescription } = await import("../src/lib/seo");
+  for (const a of adventures) {
+    const title = JSON.stringify(experienceTitle(a));
+    const desc = experienceDescription(a, {});
+    if (a.operators.length === 0) {
+      assert.doesNotMatch(title, /operator|price/i, a.slug);
+      assert.doesNotMatch(desc, /operator|book /i, a.slug);
+    }
+  }
+});
