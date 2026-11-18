@@ -1065,7 +1065,7 @@ export const adventures: Adventure[] = [
     safetyNotes: "Glacier crossing requires crampons, ropes, and ice axes. Crevasse risk is real — never cross without a rope team. Book with an operator who employs certified mountain guides.",
     ace: { stamina:5, power:4, strength:5, agility:5, water:4, altitude:5, focus:5, nerve:5 },
     operators: [
-      { name: "Bikat Adventures", verified: true, priceFrom: "₹40,000", googleRating: 4.8, website: "" },
+      { name: "Bikat Adventures", verified: true, priceFrom: "₹40,000", googleRating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/Pin-parwati-pass-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹45,000", googleRating: 4.7, website: "https://trekthehimalayas.com/pin-parvati-pass-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹35,000", googleRating: 4.3, website: "https://www.trekupindia.com/pin-parvati-pass-trek" },
     ],
