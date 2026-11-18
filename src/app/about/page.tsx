@@ -53,25 +53,22 @@ const VALUES = [
 
 const TEAM = [
   {
-    name: "Arjun Mehta",
-    role: "Co-founder · Trail runner & trekker",
-    bio: "Former software engineer who left a tech job to trek the length of the Western Ghats. Built Trail to Tides after spending two years frustrated by the lack of reliable information for Indian adventures.",
+    name: "Biman Barai",
+    role: "Founder · Motorcyclist & Mountaineer",
+    bio: "A rider and a climber in equal measure, Biman has spent years exploring India on two wheels, returning again and again to the high roads of Ladakh. On foot, he has trekked and climbed across the Himalaya, from remote valleys to high passes. He founded Trail to Tides to share that experience and help every explorer go further, better prepared.",
+    initial: "B",
+  },
+  {
+    name: "Rohit Panikar",
+    role: "Co-founder · Motorcyclist & Ocean Explorer",
+    bio: "Rohit is as much at home on the open road as he is out on the ocean. He has ridden the Himalayan passes of Ladakh and Nepal, explored coral reefs as a scuba diver and chased waves as a surfer. At Trail to Tides, he brings that love of land and sea to every journey, from mountain roads to open water.",
+    initial: "R",
+  },
+  {
+    name: "Aditya Yadav",
+    role: "Co-founder · Skier & Mountaineer",
+    bio: "Driven by a passion bordering on obsession, Aditya lives for the edge and refuses to accept limits. He drops into high-alpine couloirs on skis, hammers across punishing terrain on two wheels and keeps climbing ever higher. At Trail to Tides, he brings that relentless drive to every journey, inspiring explorers to push past what they thought possible.",
     initial: "A",
-    adventures: "47 adventures completed",
-  },
-  {
-    name: "Priya Nair",
-    role: "Co-founder · Diver & coastal explorer",
-    bio: "Marine biologist and PADI Divemaster. Has dived in the Andamans, Lakshadweep, and the Malabar coast. Handles operator verification and the water-based section of the platform.",
-    initial: "P",
-    adventures: "PADI Divemaster · 12 years underwater",
-  },
-  {
-    name: "Vikram Singh",
-    role: "Lead Rider · Biking & Himalayan routes",
-    bio: "Motorcycle journalist and long-distance rider. Has ridden Manali–Leh five times and the Zanskar route twice. Responsible for all biking content and operator relationships in Ladakh.",
-    initial: "V",
-    adventures: "60,000+ km ridden across India",
   },
 ];
 
@@ -158,13 +155,13 @@ export default function AboutPage() {
       <FadeInSection as="section" className="py-20 lg:py-28 px-6 lg:px-8 t-bg-surface2 border-t border-[var(--border-subtle)]">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
-            The Team
+            The Founders
           </p>
           <h2 className="text-4xl font-bold tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
             People who&apos;ve been there
           </h2>
           <p className="text-base mb-14 max-w-xl" style={{ color: "var(--text-secondary)" }}>
-            Everyone who works on Trail to Tides has done the adventures. No desk-bound curation here.
+            Riders, climbers, a skier and a diver. We built the platform we wanted for our own adventures.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TEAM.map((member) => (
@@ -174,8 +171,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="font-semibold text-lg mb-1" style={{ color: "var(--text-primary)" }}>{member.name}</h3>
                 <p className="text-[#ff5100] text-xs font-medium mb-4">{member.role}</p>
-                <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--text-secondary)" }}>{member.bio}</p>
-                <p className="text-xs pt-4" style={{ color: "var(--text-muted)", borderTop: "1px solid var(--border-subtle)" }}>{member.adventures}</p>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{member.bio}</p>
               </div>
             ))}
           </div>
@@ -191,7 +187,7 @@ export default function AboutPage() {
               // Every adventure's region is "Himalayas", so count the states (and Nepal) they're in instead
               { value: String(new Set(adventures.flatMap(a => a.state.split(/\s*[/,]\s*/).map(s => s.trim()).filter(Boolean))).size), label: "States & countries" },
               { value: String(new Set(adventures.map(a => a.type)).size), label: "Adventure types" },
-              { value: "2026", label: "Year founded" },
+              { value: "2025", label: "Year founded" },
             ].map(({ value, label }) => (
               <div key={label} className="text-center">
                 <div className="text-[#ff5100] text-5xl font-bold mb-2">{value}</div>

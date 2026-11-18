@@ -197,7 +197,7 @@ export default function RootLayout({
                 description:
                   "Find, compare and book adventures across India — matched to your fitness, picked by Compass.AI, then booked directly with the operators who run them.",
                 email: "hello@trailtotides.com",
-                foundingDate: "2024",
+                foundingDate: "2025",
                 areaServed: {
                   "@type": "GeoShape",
                   name: "Indian Subcontinent",
