@@ -10,6 +10,7 @@ import VerifiedToast from "@/components/VerifiedToast";
 import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";
 import { Analytics } from "@vercel/analytics/next";
+import { LIVE_SOCIAL } from "@/lib/social";
 
 const greatVibes = Great_Vibes({
   variable: "--font-cursive",
@@ -210,9 +211,7 @@ export default function RootLayout({
                   "Adventure Travel",
                   "India Travel",
                 ],
-                sameAs: [
-                  "https://instagram.com/trailtotides",
-                ],
+                sameAs: LIVE_SOCIAL.map((s) => s.href),
               },
               {
                 "@context": "https://schema.org",

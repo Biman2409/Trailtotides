@@ -2,12 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, MotionConfig } from "framer-motion";
-import { ArrowRight, Check, Copy, Instagram, MapPin, Clock, Mail, MessageCircle, Mountain, Handshake, Newspaper, AlertTriangle, Sparkles, Loader2 } from "lucide-react";
+import { ArrowRight, Check, Copy, Instagram, Youtube, Twitter, Linkedin, MapPin, Clock, Mail, MessageCircle, Mountain, Handshake, Newspaper, AlertTriangle, Sparkles, Loader2 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
 import { sendContactMessage } from "./actions";
 import { CONTACT_TOPICS } from "./topics";
+import { SOCIAL_ACCOUNTS } from "@/lib/social";
+
+const SOCIAL_ICON: Record<string, typeof Instagram> = { Instagram, X: Twitter, YouTube: Youtube, LinkedIn: Linkedin };
 
 const INBOX = "hello@trailtotides.com";
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -122,15 +125,23 @@ export default function ContactPage() {
               </motion.dl>
 
               <div className="mt-8 flex items-center gap-3">
-                {[
-                  { href: "https://instagram.com/trailtotides", label: "Instagram", Icon: Instagram },
-                ].map(({ href, label, Icon }) => (
+                {SOCIAL_ACCOUNTS.map(({ href, name: label, live }) => {
+                  const Icon = SOCIAL_ICON[label];
+                  // Not made yet: the icon stays, without a link to a page that doesn't exist
+                  return !live ? (
+                    <span key={label} title={`${label}: coming soon`} aria-label={`${label}, coming soon`} role="img"
+                      className="w-11 h-11 rounded-full flex items-center justify-center opacity-50 cursor-default"
+                      style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-default)" }}>
+                      <Icon className="w-4 h-4" />
+                    </span>
+                  ) : (
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
                     className="w-11 h-11 rounded-full flex items-center justify-center transition-all hover:-translate-y-0.5 hover:text-[#ff5100]"
                     style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-default)" }}>
                     <Icon className="w-4 h-4" />
                   </a>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

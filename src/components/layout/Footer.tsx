@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { Instagram, Mail } from "lucide-react";
+import { Instagram, Youtube, Twitter, Mail, Linkedin } from "lucide-react";
+import { SOCIAL_ACCOUNTS } from "@/lib/social";
+
+const SOCIAL_ICON: Record<string, typeof Instagram> = { Instagram, X: Twitter, YouTube: Youtube, LinkedIn: Linkedin };
 import { Mountain } from "@/lib/localIcons";
 import { tm } from "@/lib/tm";
 
@@ -119,9 +122,15 @@ export default function Footer() {
                   </a>
 
                   <div className="flex items-center gap-4">
-                    {[
-                      { Icon: Instagram, href: "https://instagram.com/trailtotides", name: "Instagram" },
-                    ].map(({ Icon, href, name }, i) => (
+                    {SOCIAL_ACCOUNTS.map(({ href, name, live }, i) => {
+                      const Icon = SOCIAL_ICON[name];
+                      // Not made yet: the icon stays, without a link to a page that doesn't exist
+                      return !live ? (
+                        <span key={i} title={`${name}: coming soon`} aria-label={`${name}, coming soon`} role="img"
+                          className="flex items-center justify-center w-10 h-10 -m-2 opacity-50 cursor-default">
+                          <Icon className="w-5.5 h-5.5" strokeWidth={1.25} style={{ color: "var(--text-muted)" }} />
+                        </span>
+                      ) : (
                       <a
                         key={i}
                         href={href}
@@ -132,7 +141,8 @@ export default function Footer() {
                       >
                         <Icon className="w-5.5 h-5.5 group-hover:text-[#ff5100] transition-colors duration-300" strokeWidth={1.25} style={{ color: "var(--text-muted)" }} />
                       </a>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>

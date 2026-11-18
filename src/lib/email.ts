@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { LIVE_SOCIAL } from './social';
 
 const resend = process.env.RESEND_API_KEY 
   ? new Resend(process.env.RESEND_API_KEY) 
@@ -149,9 +150,8 @@ function themedImage(light: string, dark: string, attrs: string, style: string) 
   return `<img class="only-light" src="${light}" ${attrs} style="display: block; ${style}">`
     + `<!--[if !mso]><!--><img class="only-dark" src="${dark}" ${attrs} style="display: none; max-height: 0; overflow: hidden; mso-hide: all; ${style}"><!--<![endif]-->`;
 }
-const SOCIAL = [
-  ['Instagram', 'https://instagram.com/trailtotides'],
-];
+// Only accounts that exist (src/lib/social.ts)
+const SOCIAL = LIVE_SOCIAL.map((s) => [s.name, s.href]);
 
 /**
  * One look for every email: white, or the website's dark theme when the reader's mail app is in
