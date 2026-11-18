@@ -5,6 +5,7 @@ import { SOCIAL_ACCOUNTS } from "@/lib/social";
 const SOCIAL_ICON: Record<string, typeof Instagram> = { Instagram, X: Twitter, YouTube: Youtube, LinkedIn: Linkedin };
 import { Mountain } from "@/lib/localIcons";
 import { tm } from "@/lib/tm";
+import { ABOUT_PAGE_LIVE } from "@/lib/pageSwitches";
 
 export default function Footer() {
   return (
@@ -70,7 +71,7 @@ export default function Footer() {
                   </h2>
                   <ul className="space-y-4">
                     {[
-                      { label: "About", href: "/about" },
+                      ...(ABOUT_PAGE_LIVE ? [{ label: "About", href: "/about" }] : []),
                       { label: "Contact", href: "/contact" },
                       { label: "Terms of Service", href: "/terms" },
                       { label: "Privacy Policy", href: "/privacy" },

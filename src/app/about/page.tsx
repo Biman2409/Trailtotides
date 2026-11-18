@@ -6,6 +6,8 @@ import Footer from "@/components/layout/Footer";
 import { ArrowRight, Mountain, Map, Sparkles, BadgeCheck, Users } from "lucide-react";
 import { adventures } from "@/lib/data";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
+import { notFound } from "next/navigation";
+import { ABOUT_PAGE_LIVE } from "@/lib/pageSwitches";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -74,6 +76,8 @@ const TEAM = [
 ];
 
 export default function AboutPage() {
+  // Off while the page is reworked (src/lib/pageSwitches.ts)
+  if (!ABOUT_PAGE_LIVE) notFound();
   return (
     <div className="min-h-screen">
       <Navbar />

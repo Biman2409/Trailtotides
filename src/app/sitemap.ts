@@ -6,6 +6,7 @@ import { GUIDES } from "@/lib/adventurepedia";
 import { ACTIVITIES, activityHref } from "@/lib/activityGuides";
 import { trekAdventures } from "@/lib/trekGuides";
 import { operatorPages } from "@/lib/operatorPages";
+import { ABOUT_PAGE_LIVE } from "@/lib/pageSwitches";
 
 const BASE = "https://www.trailtotides.com";
 // Images served from /public need the full address in a sitemap
@@ -33,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...trekAdventures().map((a) => ({ url: `${BASE}/adventurepedia/treks/${a.slug}`, priority: 0.6 })),
     { url: `${BASE}/stories`, priority: 0.8 },
     { url: `${BASE}/operators`, priority: 0.7 },
-    { url: `${BASE}/about`, priority: 0.6 },
+    ...(ABOUT_PAGE_LIVE ? [{ url: `${BASE}/about`, priority: 0.6 }] : []),
     { url: `${BASE}/contact`, priority: 0.5 },
     { url: `${BASE}/privacy`, priority: 0.2 },
     { url: `${BASE}/terms`, priority: 0.2 },
