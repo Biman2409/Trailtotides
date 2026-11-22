@@ -158,6 +158,11 @@ function labelsOnly(s: any) {
 // and shaded relief under the labels, from the Terrarium elevation tiles (public, keyless)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function tuneStyle(gl: any, dark: boolean) {
+  // The base style names a few icons (e.g. "circle-11") its sprite sheet doesn't have; give each
+  // an empty image so MapLibre stops warning and nothing odd is drawn
+  gl.on("styleimagemissing", (e: { id: string }) => {
+    if (!gl.hasImage(e.id)) gl.addImage(e.id, { width: 1, height: 1, data: new Uint8Array(4) });
+  });
   const add = () => {
     if (gl.getSource("ttt-dem")) return;
     for (const l of gl.getStyle().layers) {

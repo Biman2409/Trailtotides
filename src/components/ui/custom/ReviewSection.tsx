@@ -12,7 +12,10 @@ interface Review {
   rating: number;
   body: string;
   created_at: string;
-  user_id: string;
+  /** Posted from a member account (false: a note the team added to the listing) */
+  member: boolean;
+  /** Posted by whoever is looking */
+  mine: boolean;
   avatar_id?: number | null;
 }
 
@@ -139,10 +142,10 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
 
   useEffect(() => { updateScrollState(); }, [reviews]);
 
-  const hasReviewed = currentUserId ? reviews.some((r) => r.user_id === currentUserId) : false;
+  const hasReviewed = currentUserId ? reviews.some((r) => r.mine) : false;
   // Only reviews posted from a member account count toward the score. Notes the team added to the
   // listing (no account behind them) are shown, but never averaged or counted as traveller reviews.
-  const travellerReviews = reviews.filter((r) => !!r.user_id);
+  const travellerReviews = reviews.filter((r) => r.member);
   const avgRating = travellerReviews.length > 0 ? travellerReviews.reduce((sum, r) => sum + r.rating, 0) / travellerReviews.length : null;
 
   useEffect(() => {
@@ -200,7 +203,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       if (res.ok) {
         setReviews((prev) => prev.filter((r) => r.id !== id));
         // Review XP is once per adventure: give it back when their last review here goes
-        if (!reviews.some((r) => r.id !== id && r.user_id === currentUserId)) revokeXP("review", slug);
+        if (!reviews.some((r) => r.id !== id && r.mine)) revokeXP("review", slug);
       }
     } finally {
       setDeleting(null);
@@ -410,18 +413,18 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-[13px] leading-none truncate" style={{ color: "var(--text-primary)" }}>{r.username}</p>
                       {/* Reviews that came with the listing (no account behind them) say so, rather than pass as a member's */}
-                      <p className="text-[12px] mt-1" style={{ color: "var(--text-tertiary)" }} title={r.user_id ? undefined : "Added to this listing by the Trail to Tides team, not posted from a member account"}>
-                        {r.user_id ? timeAgo(r.created_at) : "Team note, not a traveller review"}
+                      <p className="text-[12px] mt-1" style={{ color: "var(--text-tertiary)" }} title={r.member ? undefined : "Added to this listing by the Trail to Tides team, not posted from a member account"}>
+                        {r.member ? timeAgo(r.created_at) : "Team note, not a traveller review"}
                       </p>
                     </div>
-                    {currentUserId === r.user_id && (
+                    {r.mine && (
                       <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id} className="transition-colors shrink-0" style={{ color: "var(--text-muted)" }}>
                         {deleting === r.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
                       </button>
                     )}
                   </div>
                   {/* Stars read as a traveller's rating, so team notes don't carry them */}
-                  {r.user_id && <StarRating value={r.rating} />}
+                  {r.member && <StarRating value={r.rating} />}
                   <p className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{r.body}</p>
                 </div>
               ))}

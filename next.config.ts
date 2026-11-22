@@ -1,5 +1,24 @@
 import type { NextConfig } from "next";
 
+// Where the site loads things from: Supabase (data, auth, photos), Google sign-in, the map's
+// tiles and place search, the weather panel, and Leaflet's stylesheet. Images may come from any
+// https host (operator logos, Unsplash, map tiles).
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' https://accounts.google.com https://va.vercel-scripts.com https://unpkg.com",
+  "style-src 'self' 'unsafe-inline' https://unpkg.com https://accounts.google.com",
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' data:",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://accounts.google.com https://nominatim.openstreetmap.org https://api.open-meteo.com https://archive-api.open-meteo.com https://tiles.openfreemap.org https://server.arcgisonline.com https://vitals.vercel-insights.com",
+  "frame-src https://accounts.google.com",
+  "worker-src 'self' blob:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'self'",
+  "report-uri /api/csp-report",
+].join("; ");
+
 const nextConfig: NextConfig = {
   // Don't advertise the framework in every response
   poweredByHeader: false,
@@ -14,13 +33,9 @@ const nextConfig: NextConfig = {
           { key: "X-XSS-Protection",       value: "1; mode=block" },
           { key: "Referrer-Policy",        value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy",     value: "camera=(), microphone=(), geolocation=(self)" },
-        ],
-      },
-      {
-        // Cache static adventure images aggressively
-        source: "/experiences/:path*",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=3600, stale-while-revalidate=86400" },
+          // Report-only for now: browsers report what would be blocked to /api/csp-report and block
+          // nothing. Switch the key to Content-Security-Policy once the logs stay quiet.
+          { key: "Content-Security-Policy-Report-Only", value: CSP },
         ],
       },
       {

@@ -13,17 +13,17 @@ import { operatorPriceText } from "@/lib/leadPrices";
 
 export const metadata: Metadata = {
   title: "Adventure Operators",
-  description: "The trekking, motorcycling, cycling and rafting operators listed on Trail to Tides, with the adventures each runs, their Google ratings and which ones we've verified.",
+  description: "The trekking operators listed on Trail to Tides, with the adventures each runs, their prices, Google ratings and which ones we've verified.",
   openGraph: {
     title: "Adventure Operators — Trail to Tides",
-    description: "Trekking, motorcycling, cycling and rafting operators across India and Nepal, with the adventures each runs and which ones we've verified.",
+    description: "Trekking operators across India and Nepal, with the adventures each runs and which ones we've verified.",
     url: "https://www.trailtotides.com/operators",
     images: [{ url: "https://www.trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "Adventure Operators — Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Adventure Operators — Trail to Tides",
-    description: "Trekking, motorcycling, cycling and rafting operators across India and Nepal.",
+    description: "Trekking operators across India and Nepal.",
   },
   alternates: { canonical: "https://www.trailtotides.com/operators" },
 };
@@ -43,7 +43,8 @@ export default async function OperatorsPage() {
   const approvedSubs = submissions.filter((s) => s.status === "approved");
 
   // Dynamic operators from Supabase (unverified until manually verified)
-  const dynamicCards: OperatorCardData[] = profiles.map((p) => {
+  // Only operators an admin has approved; a fresh sign-up stays off the public directory
+  const dynamicCards: OperatorCardData[] = profiles.filter((p) => p.status === "approved").map((p) => {
     const opSubs = approvedSubs.filter((s) => s.operator_id === p.user_id);
     const prices: Record<string, string> = {};
     opSubs.forEach((s) => {

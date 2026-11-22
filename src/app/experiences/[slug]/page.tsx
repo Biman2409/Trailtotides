@@ -45,7 +45,7 @@ import { breadcrumbStructuredData } from "@/components/ui/custom/Breadcrumbs";
 import FitLists from "./FitLists";
 import { getSeasonUrgency } from "@/lib/seasonUrgency";
 import { parsePrice } from "@/lib/price";
-import { getNextDeparture } from "@/lib/nextDeparture";
+import { getNextDeparture, firstBookableDate } from "@/lib/nextDeparture";
 import SectionNav from "./SectionNav";
 import { hasTrekGuide } from "@/lib/trekGuides";
 import operatorOffers from "@/lib/operatorOffers.json";
@@ -53,6 +53,7 @@ import type { OperatorOffer } from "@/lib/operatorOffer";
 import { departuresOf, todayInIndia } from "@/lib/operatorPages";
 import DepartureCalendar, { type Departure } from "./DepartureCalendar";
 import BookTabs from "./BookTabs";
+import { textOf } from "@/lib/adventureText";
 
 // The page's body copy is small and calm, so its secondary and tertiary tones are
 // raised (from 60% / 35% of the text colour) to keep it easy to read in both themes
@@ -165,6 +166,7 @@ export default async function ExperiencePage({ params }: Props) {
   const { slug } = await params;
   const adventure = adventures.find((a) => a.slug === slug);
   if (!adventure) notFound();
+  const adventureText = textOf(adventure.slug);
 
   // Merge approved operator submissions (de-dupe by name)
   const approvedOps = await getApprovedOperatorsForAdventure(slug);
@@ -232,9 +234,11 @@ export default async function ExperiencePage({ params }: Props) {
   // Every start date we know, from operators' own pages and their listings here, one per operator per day
   const departures: Departure[] = allOperators.flatMap((o) => departuresOf(o));
   const todayIso = todayInIndia();
-  const upcomingDepartures = departures.filter((d) => d.date >= todayIso).length;
+  // Departures sooner than this can't really be booked, so they aren't counted or offered
+  const bookableFrom = firstBookableDate();
+  const upcomingDepartures = departures.filter((d) => d.date >= bookableFrom).length;
   // The earliest start date, with whose it is when that isn't the operator named beside the price
-  const firstDeparture = departures.filter((d) => d.date >= todayIso).sort((a, b) => a.date.localeCompare(b.date))[0];
+  const firstDeparture = departures.filter((d) => d.date >= bookableFrom).sort((a, b) => a.date.localeCompare(b.date))[0];
   const nextDate = getNextDeparture(departures.map((d) => d.date));
   const nextDeparture = nextDate && firstDeparture && featuredOp && firstDeparture.operator !== featuredOp.name && allOperators.length > 1
     ? `${nextDate} with ${firstDeparture.operator}`
@@ -522,7 +526,7 @@ export default async function ExperiencePage({ params }: Props) {
               }>
                 <div className="space-y-3">
                   <div className="max-w-[66ch]">
-                    <p className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{adventure.safetyNotes}</p>
+                    <p className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{adventureText.safetyNotes}</p>
                     {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
                       <HazardBadges
                         showAltitude={showAltitudeWarning}
@@ -556,7 +560,7 @@ export default async function ExperiencePage({ params }: Props) {
                   <ACEProfileSection ace={ace} slug={adventure.slug} name={adventure.name} estimated={!hasRealACE(adventure)} />
                   <FitLists
                     whoFor={adventure.whoFor}
-                    whoNot={adventure.whoNot}
+                    whoNot={adventureText.whoNot}
                     easier={easierAlternatives.length > 0 ? { href: "#easier", label: `Too much? See easier ${adventure.type.toLowerCase()} nearby` } : undefined}
                   />
                 </div>
@@ -570,7 +574,7 @@ export default async function ExperiencePage({ params }: Props) {
                     dateCount={upcomingDepartures}
                     operators={<OperatorsSection operators={allOperators} slug={adventure.slug} />}
                     dates={upcomingDepartures > 0
-                      ? <DepartureCalendar departures={departures} slug={adventure.slug} today={todayIso} trekName={adventure.name} />
+                      ? <DepartureCalendar departures={departures} slug={adventure.slug} today={todayIso} bookableFrom={bookableFrom} trekName={adventure.name} />
                       : undefined}
                   />
                 </div>

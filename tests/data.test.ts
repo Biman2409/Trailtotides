@@ -26,7 +26,7 @@ test("every adventure sits inside India or Nepal", () => {
 
 test("every adventure has the text, image and season its page needs", () => {
   for (const a of adventures) {
-    for (const f of ["name", "tagline", "description", "whoFor", "whoNot", "safetyNotes", "heroImage", "bestSeason", "durationDays"] as const) {
+    for (const f of ["name", "tagline", "description", "whoFor", "heroImage", "bestSeason", "durationDays"] as const) {
       assert.ok(a[f] && String(a[f]).trim().length > 2, `${a.slug} missing ${f}`);
     }
     assert.ok(a.bestMonths.length > 0, `${a.slug} has no best months`);
@@ -155,4 +155,27 @@ test("every team note belongs to a real adventure and has no member account", ()
 
 test("nothing without operators is featured or an Editor's Choice", () => {
   for (const a of adventures) if (a.operators.length === 0) assert.ok(!a.featured && !a.editorChoice, a.slug);
+});
+
+// The long "skip it if" and safety text lives in a server-only file
+import { textOf, ADVENTURE_TEXT_SLUGS } from "../src/lib/adventureText";
+test("every adventure has its 'skip it if' and safety text, and no stray entries", () => {
+  const slugs = new Set(adventures.map((a) => a.slug));
+  for (const a of adventures) {
+    const t = textOf(a.slug);
+    assert.ok(t.whoNot.trim().length >= 10, `${a.slug} whoNot`);
+    assert.ok(t.safetyNotes.trim().length >= 10, `${a.slug} safetyNotes`);
+  }
+  for (const s of ADVENTURE_TEXT_SLUGS) assert.ok(slugs.has(s), s);
+});
+
+// Departures closer than the booking lead time aren't offered
+import { getNextDeparture, firstBookableDate, BOOKING_LEAD_DAYS } from "../src/lib/nextDeparture";
+test("next departure skips dates too close to book", () => {
+  const now = new Date("2026-11-22T06:00:00Z"); // midday in India
+  assert.equal(BOOKING_LEAD_DAYS, 3);
+  assert.equal(firstBookableDate(now), "2026-11-25");
+  assert.equal(getNextDeparture(["2026-11-22", "2026-11-24", "2026-12-05"], now), "5 Dec");
+  assert.equal(getNextDeparture(["2026-11-22", "2026-11-25"], now), "25 Nov");
+  assert.equal(getNextDeparture(["2026-11-20"], now), null);
 });

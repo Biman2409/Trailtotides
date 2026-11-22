@@ -74,17 +74,19 @@ const chip = (on: boolean) => ({
  * starts when, then book that batch on the operator's page. On a trek page the dots are operators;
  * on an operator's page (by="trek") they are that operator's treks.
  */
-export default function DepartureCalendar({ departures, slug, today, by = "operator", trekName }: {
+export default function DepartureCalendar({ departures, slug, today, bookableFrom, by = "operator", trekName }: {
   departures: Departure[];
   slug?: string;
   today: string;
+  /** Departures before this date are too close to book and aren't listed (defaults to today) */
+  bookableFrom?: string;
   by?: "operator" | "trek";
   /** The trek's name on a trek page, for the calendar file */
   trekName?: string;
 }) {
   const upcoming = useMemo(
-    () => departures.filter((d) => d.date >= today).sort((a, b) => a.date.localeCompare(b.date) || (a.price ?? Infinity) - (b.price ?? Infinity)),
-    [departures, today],
+    () => departures.filter((d) => d.date >= (bookableFrom ?? today)).sort((a, b) => a.date.localeCompare(b.date) || (a.price ?? Infinity) - (b.price ?? Infinity)),
+    [departures, today, bookableFrom],
   );
   const keyOf = (d: Departure) => (by === "trek" ? d.trek ?? "" : d.operator);
   const groups = [...new Set(upcoming.map(keyOf))].sort();

@@ -6,7 +6,7 @@ import { rateLimitShared, getClientIp } from "@/lib/rateLimit";
 import { getACE, computeDifficulty, computeMatchScore, READY_MIN, STRETCH_MIN, type ACE } from "@/lib/ace";
 import { stripEmphasis } from "@/lib/emphasis";
 import { nextSteps, trainingTip, AXIS_LABEL } from "@/lib/fitness";
-import { fromPrice } from "@/lib/leadPrices";
+import { fromPrice, operatorPriceOf } from "@/lib/leadPrices";
 import { parseTrip, applyTrip, hasTrip, fitsTrip, failingChecks, tripPhrase, relaxedNote, kmFrom, type Check, type TripAsk } from "@/lib/tripAsk";
 
 // Gemini's free tier via its OpenAI-compatible endpoint — no billing required.
@@ -622,6 +622,32 @@ function budgetAnswer(query: string, budget: number) {
   };
 }
 
+const PRICE_QUESTION = /\b(price|prices|cost|costs|how much|cheapest|fee|fees|charge|charges|rate|rates)\b/i;
+
+/**
+ * "Kedarkantha price, which operator is cheapest?": answered from the listed prices, the same
+ * ones the adventure page shows, never from the model (which can't know them)
+ */
+function priceAnswer(query: string) {
+  if (!PRICE_QUESTION.test(query) || budgetOf(query)) return null;
+  const named = namedIn(query);
+  if (named.length !== 1) return null;
+  const a = named[0];
+  const ops = a.operators
+    .map((o) => ({ name: o.name, p: operatorPriceOf(a.slug, o) }))
+    .filter((o): o is { name: string; p: { price: number; full: boolean } } => !!o.p)
+    .sort((x, y) => x.p.price - y.p.price);
+  if (!ops.length) {
+    return { text: `${a.name} has no operators listed on Trail to Tides yet, so there's no price to show. Open it to see similar adventures you can book.`, picks: [a],
+      recommendations: [{ slug: a.slug, name: a.name, reason: factualReason(a) }] };
+  }
+  const fmt = (o: (typeof ops)[number]) => `${o.name} ${inr(o.p.price)}${o.p.full ? "" : " (their headline fee)"}`;
+  const text = ops.length === 1
+    ? `${a.name} is listed from ${fmt(ops[0])} per person${ops[0].p.full ? ", the full trip with GST and transport from the pick-up city" : ""}. Open it to see dates and what's included.`
+    : `${a.name}: the cheapest is ${fmt(ops[0])} per person, then ${ops.slice(1).map(fmt).join(", ")}. Prices are the full trip (fee, GST and transport from the pick-up city) where the operator lists it. Open it to compare dates and inclusions side by side.`;
+  return { text, picks: [a], recommendations: [{ slug: a.slug, name: a.name, reason: `From ${inr(ops[0].p.price)} with ${ops[0].name}. ${factualReason(a)}` }] };
+}
+
 const EASIER = /\b(easier|less (?:hard|difficult|tough|challenging|strenuous)|too (?:hard|difficult|tough|much|challenging)|gentler|simpler)\b/i;
 const HARDER = /\b(harder|tougher|more (?:challenging|difficult)|too easy|bigger challenge)\b/i;
 const kmApart = (a: { lat: number; lng: number }, b: { lat: number; lng: number }) => {
@@ -712,7 +738,7 @@ export async function POST(req: NextRequest) {
     const firstQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
     // Budgets and "easier/harder than that one" come straight from the catalogue's own prices and ratings
     const budget = budgetOf(firstQuery);
-    const exact = budget ? budgetAnswer(firstQuery, budget) : refineAnswer(messages);
+    const exact = priceAnswer(firstQuery) ?? (budget ? budgetAnswer(firstQuery, budget) : refineAnswer(messages));
     if (exact) {
       return NextResponse.json({ text: exact.text, recommendations: exact.recommendations, cards: exact.picks, suggestAce: shouldSuggestAce });
     }

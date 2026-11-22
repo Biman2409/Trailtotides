@@ -46,11 +46,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     images: d.adventures.slice(0, 1).map((a) => abs(a.heroImage)),
   }));
 
-  const adventurePages: MetadataRoute.Sitemap = adventures.map((a) => ({
-    url: `${BASE}/experiences/${a.slug}`,
-    priority: 0.8,
-    images: [abs(a.heroImage)],
-  }));
+  // An adventure page changes when its operators' prices are re-read, so the newest price check
+  // is a real "last modified" date (left out when none is recorded)
+  const adventurePages: MetadataRoute.Sitemap = adventures.map((a) => {
+    const checked = a.operators.map((o) => o.priceCheckedAt).filter((d): d is string => !!d && !isNaN(Date.parse(d))).sort().pop();
+    return {
+      url: `${BASE}/experiences/${a.slug}`,
+      ...(checked ? { lastModified: checked } : {}),
+      priority: 0.8,
+      images: [abs(a.heroImage)],
+    };
+  });
 
   const stories = await getPublishedStories().catch(() => []);
   const storyPages: MetadataRoute.Sitemap = stories.map((s) => ({

@@ -8,6 +8,7 @@ import { openOperator } from "@/lib/outbound";
 import { inr, fullTripCost } from "@/lib/operatorOffer";
 import { totalOf, knownFull, fullNote, sortOps } from "@/lib/operatorRank";
 import { MAX_COMPARE, shortDate, type Rating } from "@/lib/operatorCompare";
+import { firstBookableDate } from "@/lib/nextDeparture";
 
 /** Other parts of the page (the sidebar and the mobile Book bar) open the comparison with this event */
 export const OPEN_COMPARE_EVENT = "ttt:open-compare";
@@ -24,7 +25,7 @@ const star = <Star className="w-3 h-3 text-[#ff8a4c] fill-[#ff8a4c] shrink-0" />
 
 /** The next start date ("next 5 Dec"), or the batch months ("Jul, Aug") when only those are listed */
 function nextDeparture(op: OperatorCardData): string | undefined {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = firstBookableDate();
   const exact = (op.departureDates?.length ? op.departureDates : op.offer?.departures ?? []).filter((d) => d >= today).sort();
   if (exact.length) return `next ${shortDate(exact[0])}`;
   const months = op.offer?.batches ?? [];

@@ -17,7 +17,7 @@ const SITE = "https://www.trailtotides.com";
 
 export const metadata: Metadata = {
   title: "Adventurepedia: Trek GPX Trails, Offline",
-  description: "Download a trek's GPX trail, load it into Organic Maps, OsmAnd or Gaia GPS on Android or iPhone, and follow it with no signal. Plus GPS watches and troubleshooting.",
+  description: "Download a trek's GPX trail, load it into Organic Maps, OsmAnd or Gaia GPS, and follow it with no signal. Plus GPS watches and troubleshooting.",
   alternates: { canonical: `${SITE}/adventurepedia/offline-maps` },
   openGraph: { title: "Adventurepedia: Take your trek offline", url: `${SITE}/adventurepedia/offline-maps`, type: "article", images: [DEFAULT_OG_IMAGE] },
 };

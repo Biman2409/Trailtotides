@@ -2,6 +2,7 @@
 // Run: node --import ./tests/register.mjs scripts/audit-adventures.ts
 import { adventures } from "../src/lib/data";
 import { getACE, hasRealACE, computeDifficulty } from "../src/lib/ace";
+import { textOf } from "../src/lib/adventureText";
 const rows = adventures.map((a) => {
   const ace = getACE(a);
   const sum = Object.values(ace).reduce((x, y) => x + y, 0);
@@ -15,7 +16,8 @@ const seen = new Map<string, string>();
 for (const a of adventures) {
   for (const k of ["name", "slug", "id"] as const) { const v = String(a[k]).toLowerCase(); if (seen.has(k + v)) problems.push(`duplicate ${k}: ${v}`); seen.set(k + v, a.slug); }
   if (!(a.lat > 5 && a.lat < 37.5 && a.lng > 67 && a.lng < 98)) problems.push(`${a.slug}: coordinates outside India/Nepal box (${a.lat}, ${a.lng})`);
-  for (const f of ["description", "whoFor", "whoNot", "safetyNotes", "heroImage", "bestSeason", "tagline"] as const) if (!a[f] || String(a[f]).trim().length < 5) problems.push(`${a.slug}: missing ${f}`);
+  for (const f of ["description", "whoFor", "heroImage", "bestSeason", "tagline"] as const) if (!a[f] || String(a[f]).trim().length < 5) problems.push(`${a.slug}: missing ${f}`);
+  for (const [f, v] of Object.entries(textOf(a.slug))) if (v.trim().length < 5) problems.push(`${a.slug}: missing ${f}`);
   if (!a.bestMonths?.length) problems.push(`${a.slug}: no bestMonths`);
   if (!a.altitude && !["Diving", "River Rafting", "Kayaking"].includes(a.type)) problems.push(`${a.slug}: no altitude`);
   if (!a.distance && ["Trekking", "Motorcycling", "Cycling"].includes(a.type)) problems.push(`${a.slug}: no distance`);

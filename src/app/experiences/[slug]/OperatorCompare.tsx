@@ -6,6 +6,7 @@ import type { OperatorCardData } from "./OperatorCard";
 import { openOperator } from "@/lib/outbound";
 import { compareOperators, highlights, shortDate, MAX_COMPARE, type Cell, type Rating } from "@/lib/operatorCompare";
 import { leadPrice } from "@/lib/operatorRank";
+import { firstBookableDate } from "@/lib/nextDeparture";
 
 const muted = { color: "var(--text-tertiary)" } as const;
 const GREEN = "#3fa877";
@@ -80,7 +81,7 @@ export default function OperatorCompare({ all, selected, onToggle, ratings, slug
   const [showLists, setShowLists] = useState(false);
   const ops = useMemo(() => all.filter((o) => selected.includes(o.name)), [all, selected]);
   const travellers = ops.map((o) => ratings[o.name.trim().toLowerCase()] ?? null);
-  const today = new Date().toISOString().slice(0, 10);
+  const today = firstBookableDate();
   const sections = compareOperators(ops, travellers, today);
   const wins = ops.length > 1 ? highlights(sections, ops) : [];
   const fullField = sections[0].fields.find((f) => f.key === "full");

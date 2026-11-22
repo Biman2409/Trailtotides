@@ -24,6 +24,7 @@ import TrailElevation from "@/components/ui/custom/TrailElevation";
 import { dayBands } from "@/lib/trails/dayBands";
 import TrekChecklist, { type ChecklistItem } from "./TrekChecklist";
 import CompareTreksButton from "./CompareTreksButton";
+import { textOf } from "@/lib/adventureText";
 
 const SITE = "https://www.trailtotides.com";
 const fmt = (n: number) => Math.round(n).toLocaleString("en-IN");
@@ -38,7 +39,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!g) return {};
   const { a } = g;
   const url = `${SITE}${trekGuideHref(a.slug)}`;
-  const description = `${a.name} guide: ${a.durationDays}, ${a.distance ?? ""} to ${a.altitude ?? ""}. Best season, how to get there, day-by-day itinerary, permits, packing, fitness and costs.`.replace(/ ,/g, ",");
+  // The longest wording that stays within the ~160 characters search results show
+  const facts = `${a.name} guide: ${a.durationDays}, ${a.distance ?? ""} to ${a.altitude ?? ""}.`.replace(/ ,/g, ",");
+  const description = [" Best season, how to get there, day-by-day itinerary, permits, packing, fitness and costs.", " Season, getting there, itinerary, permits, packing and costs.", " Season, itinerary, permits and costs."]
+    .map((tail) => facts + tail).find((d) => d.length <= 160) ?? facts;
   return {
     // Longest wording that keeps the full title (with " | Trail to Tides") within ~65 characters,
     // so Google shows it whole
@@ -80,7 +84,8 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
   const prof = trail ? profile(trail) : null;
   const start = a.baseCamp ?? a.startingPoint ?? access?.roadhead;
   const whoFor = splitList(a.whoFor);
-  const whoNot = splitList(a.whoNot);
+  const { whoNot: whoNotText, safetyNotes } = textOf(a.slug);
+  const whoNot = splitList(whoNotText);
   const walkDays = trail?.days.filter((d) => d.kind === "walk") ?? [];
   const hardest = walkDays.length ? walkDays.reduce((m, d) => ((d.up ?? 0) > (m.up ?? 0) ? d : m), walkDays[0]) : null;
 
@@ -189,7 +194,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
               <ChevronRight className="w-3 h-3" />
               <span className="text-white/60">{a.state}</span>
             </nav>
-            <h1 className="text-[34px] sm:text-[52px] text-white leading-[1.04]" style={{ ...serif, letterSpacing: "-0.02em" }}>{a.name}</h1>
+            <h1 className="text-[34px] sm:text-[52px] text-white leading-[1.04]" style={{ ...serif, letterSpacing: "-0.02em" }}>{a.name} <span className="sr-only">guide</span></h1>
             <p className="text-[16px] sm:text-[18px] text-white/85 mt-2 max-w-2xl">{a.tagline}</p>
           </div>
         </div>
@@ -409,7 +414,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
 
             {/* ── Safety ── */}
             <Section id="safety" kicker="Safety" title="Safety on this trek">
-              <BlockView block={{ callout: "warn", title: "From the trail", text: a.safetyNotes }} />
+              <BlockView block={{ callout: "warn", title: "From the trail", text: safetyNotes }} />
               <BlockView block={{ list: [
                 ...(alt >= 3000 ? ["Altitude is the main risk. Don't go higher with symptoms; descend if they get worse."] : []),
                 ...(a.bestMonths.some((m) => ["Dec", "Jan", "Feb"].includes(m)) ? ["Ice on the trail in winter: put microspikes on early, not after the first slip."] : []),

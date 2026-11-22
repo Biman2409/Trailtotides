@@ -21,6 +21,9 @@ const WAYS = [
 export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--bg-page)" }}>
+      {/* Rendered here too: for a missing [slug] page Next swaps the tab title back to the
+          home page's after it loads, and React keeps this one in the head */}
+      <title>Page not found | Trail to Tides</title>
       <Navbar />
       <main className="flex-1 px-4 sm:px-6 pt-28 lg:pt-36 pb-20">
         <div className="max-w-2xl mx-auto">

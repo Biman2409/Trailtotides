@@ -22,7 +22,8 @@ export async function GET(req: NextRequest) {
   const slug = req.nextUrl.searchParams.get("slug");
   if (!slug) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
 
-  const seedReviews = SEED_REVIEWS[slug] ?? [];
+  // Team notes: shown as such, never counted as traveller reviews
+  const seedReviews = (SEED_REVIEWS[slug] ?? []).map(({ user_id: _unused, ...r }) => { void _unused; return { ...r, member: false, mine: false }; });
 
   const { data, error } = await admin
     .from("reviews")
@@ -39,19 +40,19 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Could not load reviews" }, { status: 500 });
   }
 
-  // Enrich DB reviews with avatar_id from user metadata
+  // Avatars from each reviewer's account, looked up one by one (one adventure has few
+  // reviewers; listing every account stops working past 1,000 of them)
   const dbReviews = data ?? [];
-  const uniqueUserIds = [...new Set(dbReviews.map((r) => r.user_id))];
+  const uniqueUserIds = [...new Set(dbReviews.map((r) => r.user_id as string))];
   const avatarMap: Record<string, number | null> = {};
-  if (uniqueUserIds.length > 0) {
-    const { data: { users } } = await admin.auth.admin.listUsers({ perPage: 1000 });
-    for (const u of users ?? []) {
-      if (uniqueUserIds.includes(u.id)) {
-        avatarMap[u.id] = u.user_metadata?.avatar_id ?? null;
-      }
-    }
-  }
-  const enrichedDb = dbReviews.map((r) => ({ ...r, avatar_id: avatarMap[r.user_id] ?? null }));
+  await Promise.all(uniqueUserIds.slice(0, 200).map(async (id) => {
+    const { data: u } = await admin.auth.admin.getUserById(id);
+    avatarMap[id] = u?.user?.user_metadata?.avatar_id ?? null;
+  }));
+  // Who wrote it stays private: the browser gets "a member wrote this" and "you wrote this",
+  // never the account id
+  const { data: { user } } = await (await createServerClient()).auth.getUser();
+  const enrichedDb = dbReviews.map(({ user_id, ...r }) => ({ ...r, avatar_id: avatarMap[user_id] ?? null, member: true, mine: !!user && user.id === user_id }));
 
   // Merge: real DB reviews first, then seed reviews that don't duplicate
   const dbIds = new Set(enrichedDb.map((r) => r.id));
@@ -109,7 +110,9 @@ export async function POST(req: NextRequest) {
   }
   // The adventure page is cached; refresh its rating
   revalidatePath(`/experiences/${slug}`);
-  return NextResponse.json({ review: { ...data, avatar_id } });
+  const { user_id: _omit, ...review } = data;
+  void _omit;
+  return NextResponse.json({ review: { ...review, avatar_id, member: true, mine: true } });
 }
 
 // DELETE /api/reviews?id=<id>  — delete own review

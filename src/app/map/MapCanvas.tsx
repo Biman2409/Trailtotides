@@ -340,10 +340,18 @@ export default function MapCanvas(props: Props) {
     markersRef.current.forEach((m) => { if (map.hasLayer(m)) map.removeLayer(m); });
     markersRef.current.clear();
     loose.current = null;
+    // Adventures that share a start point (EBC and EBC + Gokyo, the Spiti ride and cycle) would
+    // stack into one unclickable pin: fan each repeat out a little (~2 km) around the first
+    const atSpot = new Map<string, number>();
     for (const a of live.current.adventures) {
       // level: 1 (Easy) to 5 (Extreme), read by the cluster icon
       const opts = { icon: iconFor(a), riseOnHover: true, level: DIFFICULTY_BY_LEVEL.indexOf(difficultyOf(a)) + 1 || 3 } as L.MarkerOptions;
-      const m = leaflet.marker([a.lat, a.lng], opts)
+      const spot = `${a.lat.toFixed(4)},${a.lng.toFixed(4)}`;
+      const n = atSpot.get(spot) ?? 0;
+      atSpot.set(spot, n + 1);
+      const angle = n * 2.4; // golden-angle steps, so three or more don't line up
+      const pos: [number, number] = n === 0 ? [a.lat, a.lng] : [a.lat + 0.018 * Math.sin(angle), a.lng + 0.018 * Math.cos(angle)];
+      const m = leaflet.marker(pos, opts)
         .bindTooltip(peekHtml(a), { direction: "top", offset: [0, -18], className: "tm-tip tm-tip-peek", opacity: 1 });
       m.on("click", () => live.current.onSelect(a.slug));
       // Pins are buttons to a screen reader: give each its adventure's name

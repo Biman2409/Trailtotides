@@ -10,6 +10,7 @@ import Breadcrumbs from "@/components/ui/custom/Breadcrumbs";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
 import DepartureCalendar from "@/app/experiences/[slug]/DepartureCalendar";
 import { operatorPages, getOperatorPage, todayInIndia } from "@/lib/operatorPages";
+import { firstBookableDate } from "@/lib/nextDeparture";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import { inr } from "@/lib/operatorOffer";
 import WebsiteLink from "./WebsiteLink";
@@ -39,12 +40,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!op) return {};
   const n = op.treks.length;
   const prices = op.treks.map((t) => t.price).filter((p): p is number => !!p);
-  const title = `${op.name}: ${n} ${n === 1 ? "Adventure" : "Adventures"}, ${op.departures.length ? "Prices and Dates" : "Prices"}`;
-  const description = [
+  // Longest wording that keeps the full title (with " | Trail to Tides") within ~65 characters
+  const title = [`${op.name}: ${n} ${n === 1 ? "Adventure" : "Adventures"}, ${op.departures.length ? "Prices and Dates" : "Prices"}`, `${op.name}: ${n} ${n === 1 ? "Trek" : "Treks"}, Prices and Dates`, `${op.name}: ${n} ${n === 1 ? "Trek" : "Treks"} and Prices`]
+    .find((t) => t.length <= 47) ?? op.name;
+  const lead = [
     `${op.name} on Trail to Tides: ${op.treks.slice(0, 3).map((t) => t.adventure.name).join(", ")}${n > 3 ? ` and ${n - 3} more` : ""}`,
     prices.length ? `, from ${inr(Math.min(...prices))}` : "",
-    op.departures.length ? ". Every start date on one calendar." : ".",
   ].join("");
+  // The calendar line goes only when it fits in the ~160 characters search results show
+  const withDates = `${lead}. Every start date on one calendar.`;
+  const description = op.departures.length && withDates.length <= 160 ? withDates : `${lead}.`;
   const url = `${SITE}/operators/${slug}`;
   const image = op.treks[0]?.adventure.heroImage;
   return {
@@ -62,7 +67,9 @@ export default async function OperatorPage({ params }: Props) {
   if (!op) notFound();
 
   const today = todayInIndia();
-  const upcoming = op.departures.filter((d) => d.date >= today);
+  // Departures sooner than this can't really be booked
+  const bookableFrom = firstBookableDate();
+  const upcoming = op.departures.filter((d) => d.date >= bookableFrom);
   const prices = op.treks.map((t) => t.price).filter((p): p is number => !!p);
   const from = prices.length ? Math.min(...prices) : undefined;
   const types = [...new Set(op.treks.map((t) => t.adventure.type))];
@@ -71,7 +78,7 @@ export default async function OperatorPage({ params }: Props) {
   // Their adventures, soonest next start first; ones without dates after, by name
   const rows = op.treks
     .map((t) => {
-      const next = t.departures.map((d) => d.date).filter((d) => d >= today).sort();
+      const next = t.departures.map((d) => d.date).filter((d) => d >= bookableFrom).sort();
       return { ...t, next: next[0], count: next.length };
     })
     .sort((a, b) => (a.next ?? "9999").localeCompare(b.next ?? "9999") || a.adventure.name.localeCompare(b.adventure.name));
@@ -132,7 +139,7 @@ export default async function OperatorPage({ params }: Props) {
           <div className="max-w-7xl mx-auto">
             <h2 className="text-xl sm:text-2xl font-bold tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>Departure calendar</h2>
             <div className="max-w-4xl">
-              <DepartureCalendar departures={op.departures} today={today} by="trek" />
+              <DepartureCalendar departures={op.departures} today={today} bookableFrom={bookableFrom} by="trek" />
             </div>
           </div>
         </section>

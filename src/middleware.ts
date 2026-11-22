@@ -6,6 +6,11 @@ const NOINDEX_WITH_QUERY = new Set(["/explore", "/map", "/stories", "/operators"
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
+  // Signed-out visitors (most traffic) have no Supabase session cookie, so there's nothing to
+  // refresh: skip the round trip to Supabase and just apply the robots rule
+  const hasSession = request.cookies.getAll().some((c) => c.name.startsWith("sb-") && c.name.includes("auth-token"));
+  if (!hasSession) return withRobots(request, supabaseResponse);
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -29,13 +34,16 @@ export async function middleware(request: NextRequest) {
 
   await supabase.auth.getUser();
 
-  // Filtered, searched and map-positioned variants of a listing page show the same page as
-  // the clean one (their canonical): keep them out of the index, but follow their links
-  if (NOINDEX_WITH_QUERY.has(request.nextUrl.pathname) && request.nextUrl.search) {
-    supabaseResponse.headers.set("X-Robots-Tag", "noindex, follow");
-  }
+  return withRobots(request, supabaseResponse);
+}
 
-  return supabaseResponse;
+// Filtered, searched and map-positioned variants of a listing page show the same page as
+// the clean one (their canonical): keep them out of the index, but follow their links
+function withRobots(request: NextRequest, response: NextResponse) {
+  if (NOINDEX_WITH_QUERY.has(request.nextUrl.pathname) && request.nextUrl.search) {
+    response.headers.set("X-Robots-Tag", "noindex, follow");
+  }
+  return response;
 }
 
 export const config = {

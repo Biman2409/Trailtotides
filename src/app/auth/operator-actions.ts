@@ -32,7 +32,10 @@ export type OperatorProfile = {
   phone: string;
   website: string | null;
   logo_url: string | null;
-  status: "approved";
+  /** "pending" until an admin approves the operator's first listing. Only approved operators
+   *  receive travellers' quote requests (api/quotes), so a sign-up can't claim another
+   *  company's name and read its enquiries. Older files may lack the field: treat as pending. */
+  status: "pending" | "approved";
   created_at: string;
 };
 
@@ -195,7 +198,7 @@ export async function signUpOperator(formData: FormData) {
     phone,
     website,
     logo_url,
-    status: "approved",
+    status: "pending",
     created_at: new Date().toISOString(),
   };
 
@@ -408,6 +411,12 @@ export async function approveOperatorSubmission(submissionId: string) {
 
   // Ensure the operator's profile row has role = "operator"
   await adminClient.from("profiles").update({ role: "operator" }).eq("id", sub.operator_id);
+
+  // Approving their first listing approves the operator too (an admin has now looked at them)
+  const profile = await getOperatorProfile(sub.operator_id);
+  if (profile && profile.status !== "approved") {
+    await writeJsonFile(adminClient, "operator-profiles", `${sub.operator_id}.json`, { ...profile, status: "approved" });
+  }
 
   // The adventure page is cached; show the new operator now
   revalidatePath(`/experiences/${sub.adventure_slug}`);

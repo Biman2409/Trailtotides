@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { User } from "@supabase/supabase-js";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import AdminDashboardClient from "./AdminDashboardClient";
@@ -42,6 +43,18 @@ export default async function AdminPage() {
     return sizes.reduce((a, b) => a + b, 0);
   };
 
+  // Every account, page by page (one page stops at 1,000)
+  const allAccounts = async () => {
+    const users: User[] = [];
+    for (let page = 1; page <= 50; page++) {
+      const { data, error } = await adminClient.auth.admin.listUsers({ page, perPage: 1000 });
+      if (error || !data.users.length) break;
+      users.push(...data.users);
+      if (data.users.length < 1000) break;
+    }
+    return { data: { users } };
+  };
+
   const [
     { data: profiles },
     { data: messages },
@@ -52,7 +65,7 @@ export default async function AdminPage() {
   ] = await Promise.all([
     adminClient.from("profiles").select("*").order("created_at", { ascending: false }),
     adminClient.from("contact_messages").select("*").order("created_at", { ascending: false }),
-    adminClient.auth.admin.listUsers({ perPage: 1000 }),
+    allAccounts(),
     wishlistSaves(),
     count("saved_searches"),
     usersWithMedicalFlags(adminClient),
