@@ -37,7 +37,7 @@ import NearbyAdventuresMap from "./NearbyAdventuresMap";
 import BookingSidebarCard from "./BookingSidebarCard";
 import StickySidebar from "./StickySidebar";
 import { haversineKm } from "@/lib/geo";
-import { sortOps, leadPrice } from "@/lib/operatorRank";
+import { sortOps, leadPrice, totalOf } from "@/lib/operatorRank";
 import { destinationFor, lowestPrice } from "@/lib/destinations";
 import { SITE_URL, absoluteUrl, routeLabel, experienceTitle, experienceDescription, experienceFaq, faqStructuredData } from "@/lib/seo";
 import { jsonLd } from "@/lib/jsonLd";
@@ -305,7 +305,8 @@ export default async function ExperiencePage({ params }: Props) {
 
   const faqs = hasTrekGuide(adventure) ? [] : experienceFaq(adventure, { difficulty, priceFrom: lead ? parsePrice(lead.price) : undefined, operatorCount: allOperators.length });
 
-  const operatorPrices = allOperators.map((o) => parsePrice(o.priceFrom)).filter((p) => Number.isFinite(p) && p > 0);
+  // The same prices the page shows (full trip when known), so search results match the page
+  const operatorPrices = allOperators.map((o) => Math.round(totalOf(o))).filter((p) => Number.isFinite(p) && p > 0);
 
   // Structured data needs full URLs; some heroes live in /public
   const absoluteImage = absoluteUrl(adventure.heroImage);

@@ -138,12 +138,14 @@ export function computeMatchScore(userAce: ACE, adventureAce: ACE): number {
   let totalWeight = 0;
   let earnedWeight = 0;
   let maxGap = 0;
+  let shortByOne = 0;
 
   for (const ax of relevant) {
     const required = adventureAce[ax];
     const has = userAce[ax];
     const weight = required; // Higher requirement = more weight
     maxGap = Math.max(maxGap, required - has);
+    if (required - has === 1) shortByOne++;
 
     totalWeight += weight;
 
@@ -165,8 +167,12 @@ export function computeMatchScore(userAce: ACE, adventureAce: ACE): number {
   }
 
   const score = Math.round((earnedWeight / totalWeight) * 100);
-  if (maxGap >= 3) return Math.min(score, STRETCH_MIN - 1);
-  if (maxGap >= 2) return Math.min(score, READY_MIN - 1);
+  // The verdict follows the needs, never just the average:
+  //   Ready    = every need met
+  //   Stretch  = exactly one capability one level short
+  //   Not yet  = one capability two or more short, or two or more capabilities short
+  if (maxGap >= 2 || shortByOne >= 2) return Math.min(score, STRETCH_MIN - 1);
+  if (shortByOne === 1) return Math.min(score, READY_MIN - 1);
   return score;
 }
 

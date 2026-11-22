@@ -574,7 +574,7 @@ function Matching({ profiles }: { profiles: Profile[] }) {
   const steps = [
     { t: "We score the adventure", d: "Our team rates each one on all eight, using route data: altitude, terrain and trip reports." },
     { t: "You answer a few questions", d: "The quick match takes about two minutes, the full one about three. Your answers become your eight scores." },
-    { t: "You get a verdict", d: "Every adventure is marked Ready, Stretch or Not yet, with what to work on." },
+    { t: "You get a verdict", d: "Ready when you meet every need. Stretch when one capability is a level short. Not yet for anything more. Each comes with what to work on." },
   ];
 
   return (

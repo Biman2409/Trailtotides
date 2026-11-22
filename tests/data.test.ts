@@ -3,9 +3,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { adventures, allListedOperators } from "../src/lib/data";
 import { difficultyOf } from "../src/lib/ace";
-import { computeLeadPrices } from "../src/lib/leadPricesCompute";
+import { computeLeadPrices, computeOperatorPrices } from "../src/lib/leadPricesCompute";
+import operatorFullPrices from "../src/lib/operatorFullPrices.json";
+import { priceRange } from "../src/lib/trekGuides";
+import { sortAdventures } from "../src/lib/exploreHelpers";
 import leadPrices from "../src/lib/leadPrices.json";
-import { fromPrice } from "../src/lib/leadPrices";
+import { fromPrice, operatorPriceOf } from "../src/lib/leadPrices";
 import { filterAdventures, filtersFromParams, writeFilterParams, NO_FILTERS } from "../src/lib/adventureFilterState";
 import { days, matchesSearch } from "../src/lib/exploreHelpers";
 import { lowestPrice } from "../src/lib/destinations";
@@ -52,6 +55,24 @@ test("operators: hidden ones are gone, websites are https, the verified flag is 
 
 test("leadPrices.json is up to date with the operators and their offers", () => {
   assert.deepEqual(leadPrices, computeLeadPrices(), "run: node --import ./tests/register.mjs scripts/build-lead-prices.ts");
+});
+
+test("operatorFullPrices.json is up to date with the operators and their offers", () => {
+  assert.deepEqual(operatorFullPrices, computeOperatorPrices(), "run: node --import ./tests/register.mjs scripts/build-lead-prices.ts");
+});
+
+test("guides and operator lists never quote a lower 'from' than the adventure page", () => {
+  const k = adventures.find((a) => a.slug === "kedarkantha-trek")!;
+  assert.equal(operatorPriceOf(k.slug, k.operators.find((o) => o.name === "Bikat Adventures")!)?.price, 12475);
+  for (const a of adventures) {
+    const r = priceRange(a);
+    if (r && fromPrice(a) !== null) assert.equal(r.lo, fromPrice(a), a.slug);
+  }
+});
+
+test("Explore's price sort follows the price each card shows", () => {
+  const sorted = sortAdventures(adventures, "price", { monthIdx: 0 }).map((a) => fromPrice(a) ?? Infinity);
+  for (let i = 1; i < sorted.length; i++) assert.ok(sorted[i - 1] <= sorted[i], `out of order at ${i}: ${sorted[i - 1]} > ${sorted[i]}`);
 });
 
 test("one 'from' price: cards, filter, map, destination pages all read the page's lead price", () => {

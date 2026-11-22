@@ -140,7 +140,10 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
   useEffect(() => { updateScrollState(); }, [reviews]);
 
   const hasReviewed = currentUserId ? reviews.some((r) => r.user_id === currentUserId) : false;
-  const avgRating = reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : null;
+  // Only reviews posted from a member account count toward the score. Notes the team added to the
+  // listing (no account behind them) are shown, but never averaged or counted as traveller reviews.
+  const travellerReviews = reviews.filter((r) => !!r.user_id);
+  const avgRating = travellerReviews.length > 0 ? travellerReviews.reduce((sum, r) => sum + r.rating, 0) / travellerReviews.length : null;
 
   useEffect(() => {
     fetch(`/api/reviews?slug=${encodeURIComponent(slug)}`)
@@ -213,10 +216,10 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
           <>
             <span className="text-[20px] font-medium leading-none" style={{ color: "var(--text-primary)" }}>{avgRating.toFixed(1)}</span>
             <StarRating value={Math.round(avgRating)} />
-            <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>{reviews.length} review{reviews.length !== 1 ? "s" : ""}</span>
+            <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>{travellerReviews.length} traveller review{travellerReviews.length !== 1 ? "s" : ""}</span>
           </>
         ) : (
-          <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>No reviews yet</span>
+          <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>No traveller reviews yet</span>
         )}
       </div>
 
@@ -408,7 +411,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                       <p className="font-medium text-[13px] leading-none truncate" style={{ color: "var(--text-primary)" }}>{r.username}</p>
                       {/* Reviews that came with the listing (no account behind them) say so, rather than pass as a member's */}
                       <p className="text-[12px] mt-1" style={{ color: "var(--text-tertiary)" }} title={r.user_id ? undefined : "Added to this listing by the Trail to Tides team, not posted from a member account"}>
-                        {r.user_id ? timeAgo(r.created_at) : "Added by Trail to Tides"}
+                        {r.user_id ? timeAgo(r.created_at) : "Team note, not a traveller review"}
                       </p>
                     </div>
                     {currentUserId === r.user_id && (
@@ -417,7 +420,8 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                       </button>
                     )}
                   </div>
-                  <StarRating value={r.rating} />
+                  {/* Stars read as a traveller's rating, so team notes don't carry them */}
+                  {r.user_id && <StarRating value={r.rating} />}
                   <p className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{r.body}</p>
                 </div>
               ))}

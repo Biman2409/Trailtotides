@@ -2,12 +2,18 @@
 // leads with (the top of its Where to book list: the lowest full trip price when an operator's own
 // page gives one, otherwise the lowest headline fee). Cards, Explore, the map, Compare, the price
 // filter and Compass.AI read this small file instead of the 260 KB offers file.
+// Also writes src/lib/operatorFullPrices.json: each operator's price on each adventure, priced the
+// same way, for the guide pages, the operators directory and the map's pin card.
 // Run after import-operator-offers or any operator change:
 //   node --import ./tests/register.mjs scripts/build-lead-prices.ts
-// tests/data.test.ts fails when the file is out of date.
+// tests/data.test.ts fails when either file is out of date.
 import { writeFileSync } from "node:fs";
-import { computeLeadPrices } from "../src/lib/leadPricesCompute";
+import { computeLeadPrices, computeOperatorPrices } from "../src/lib/leadPricesCompute";
 
 const out = computeLeadPrices();
 writeFileSync("src/lib/leadPrices.json", JSON.stringify(out, null, 1) + "\n");
 console.log(`leadPrices.json: ${Object.keys(out).length} adventures`);
+
+const ops = computeOperatorPrices();
+writeFileSync("src/lib/operatorFullPrices.json", JSON.stringify(ops, null, 1) + "\n");
+console.log(`operatorFullPrices.json: ${Object.values(ops).reduce((n, o) => n + Object.keys(o).length, 0)} listings`);

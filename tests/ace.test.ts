@@ -300,3 +300,37 @@ test("XP levels are the eight from the brief, Drifter to Immortal, and Immortal 
   assert.equal(getXpTier(MAX_XP).name, "Immortal");
   assert.equal(getXpTier(MAX_XP - 1).name, "Legend");
 });
+
+// The rule from the 22 Nov audit: never Ready unless every need is met
+test("Ready only when every need is met, on every adventure", () => {
+  for (const a of adventures) {
+    const req = getACE(a);
+    for (const ax of AXES) {
+      if (req[ax] < 1) continue;
+      const exact = Object.fromEntries(AXES.map((k) => [k, req[k] || 1])) as unknown as ACE;
+      assert.equal(bucketFor(computeMatchScore(exact, req)).key, "ready", `${a.slug} exact match`);
+      if (req[ax] < 2) continue;
+      const oneShort = { ...exact, [ax]: req[ax] - 1 };
+      assert.equal(bucketFor(computeMatchScore(oneShort, req)).key, "stretch", `${a.slug} ${ax} one short`);
+    }
+  }
+});
+
+test("two capabilities one short, or one two short, is Not yet", () => {
+  for (const a of adventures) {
+    const req = getACE(a);
+    const needed = AXES.filter((ax) => req[ax] >= 2);
+    const base = Object.fromEntries(AXES.map((k) => [k, req[k] || 1])) as unknown as ACE;
+    if (needed.length >= 2) {
+      const two = { ...base, [needed[0]]: req[needed[0]] - 1, [needed[1]]: req[needed[1]] - 1 };
+      assert.equal(bucketFor(computeMatchScore(two, req)).key, "not-yet", `${a.slug} two short`);
+    }
+    const big = AXES.find((ax) => req[ax] >= 3);
+    if (big) assert.equal(bucketFor(computeMatchScore({ ...base, [big]: req[big] - 2 }, req)).key, "not-yet", `${a.slug} ${big} two short`);
+  }
+});
+
+test("the audit case: an all-1 beginner is not Ready for Doodhpathri (7 days, 6-7 hours a day)", () => {
+  const d = adventures.find((a) => a.slug === "doodhpathri")!;
+  assert.notEqual(bucketFor(computeMatchScore(flat(1), getACE(d))).key, "ready");
+});

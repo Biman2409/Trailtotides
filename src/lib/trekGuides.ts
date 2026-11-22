@@ -6,6 +6,7 @@
 import { adventures, type Adventure, type Month } from "./data";
 import { getTrail } from "./trails";
 import { difficultyOf } from "./ace";
+import { operatorPriceOf } from "./leadPrices";
 import type { Trail } from "./trails/shared";
 import type { SearchEntry } from "./adventurepedia";
 
@@ -190,8 +191,10 @@ export function packingNotes(a: Adventure): string[] {
   return out;
 }
 
+/** Operators' prices, priced as the adventure page prices them (full trip when known), so the
+ *  guide never quotes a lower "from" than the booking page */
 export function priceRange(a: Adventure) {
-  const nums = a.operators.map((o) => parseInt(o.priceFrom.replace(/[^0-9]/g, ""), 10)).filter((n) => n > 0);
+  const nums = a.operators.map((o) => operatorPriceOf(a.slug, o)?.price ?? 0).filter((n) => n > 0);
   if (!nums.length) return null;
   const fmt = (n: number) => `₹${n.toLocaleString("en-IN")}`;
   const lo = Math.min(...nums), hi = Math.max(...nums);

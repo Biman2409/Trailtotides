@@ -11,6 +11,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ChatBubble from "@/components/ChatBubble";
 import { getACE, difficultyOf, ACE_AXES, ACE_AXIS_LABELS, ACE_AXIS_COLORS } from "@/lib/ace";
+import { operatorPriceOf, operatorPriceText } from "@/lib/leadPrices";
 import { adventures } from "@/lib/data";
 import { haversineKm } from "@/lib/geo";
 import { sunTimes, clock } from "@/lib/sun";
@@ -152,7 +153,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
     [`When is the best time for the ${a.name}?`, `${a.bestSeason}. ${seasonNotes(a)[0]?.replace(/\*\*/g, "") ?? ""}`],
     [`How many days does the ${a.name} take?`, `${a.durationDays} on the trail${a.baseCamp ? `, from ${a.baseCamp}` : ""}${trail ? `, with ${walkDays.length} walking ${walkDays.length === 1 ? "day" : "days"}` : ""}. Operators' trips run longer because they add the travel to and from the trailhead, so check their trip length, and add a buffer day for weather or road delays.`],
     [`How do I reach the ${a.name}?`, access ? `Most groups meet in ${access.gateway}. Nearest airport: ${access.air}. Nearest railway: ${access.rail}.${access.drive ? ` ${access.drive}.` : ""}` : `Your operator arranges transport from the nearest town.`],
-    ...(price ? [[`How much does the ${a.name} cost?`, `Listed operators charge from ${price.text} per person. Check what's included: transport, permits, meals, tents and offloading vary.`] as [string, string]] : []),
+    ...(price ? [[`How much does the ${a.name} cost?`, `Listed operators charge from ${price.text} per person, the full trip price (fee, GST and transport from the pick-up city) where the operator lists it. Check what else is included: permits, meals, tents and offloading vary.`] as [string, string]] : []),
     [`Do I need a permit for the ${a.name}?`, permitNotes(a).join(" ") || "Ask your operator; most arrange permits as part of the package."],
   ];
 
@@ -432,9 +433,9 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
             <Section id="booking" kicker="Booking" title="Booking and cost">
               {price ? (
                 <>
-                  <p className="text-[15px] leading-[1.7] t-text-2 mb-4">{price.operators} operators run this trek on Trail to Tides, from <b className="t-text">{price.text}</b> per person. Prices usually cover the trek from the roadhead; check transport, permits and offloading.</p>
+                  <p className="text-[15px] leading-[1.7] t-text-2 mb-4">{price.operators} operators run this trek on Trail to Tides, from <b className="t-text">{price.text}</b> per person. Where the operator lists them, prices are the full trip: fee, GST and transport from the pick-up city. Check permits and offloading.</p>
                   <ul className="rounded-2xl overflow-hidden" style={card}>
-                    {[...a.operators].sort((x, y) => parseInt(x.priceFrom.replace(/\D/g, "")) - parseInt(y.priceFrom.replace(/\D/g, ""))).map((o, i) => (
+                    {[...a.operators].sort((x, y) => (operatorPriceOf(a.slug, x)?.price ?? Infinity) - (operatorPriceOf(a.slug, y)?.price ?? Infinity)).map((o, i) => (
                       <li key={o.name} className="flex items-center justify-between gap-3 px-4 py-3" style={{ borderTop: i ? "1px solid var(--border-subtle)" : undefined }}>
                         <span className="min-w-0 flex items-center gap-2 text-[14.5px] font-semibold t-text">
                           <span className="truncate">{o.name}</span>
@@ -442,7 +443,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
                         </span>
                         <span className="flex items-center gap-4 shrink-0 text-[13.5px] tabular-nums">
                           {o.googleRating > 0 && <span className="inline-flex items-center gap-1 t-text-3"><Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />{o.googleRating.toFixed(1)}</span>}
-                          <span className="font-semibold t-text">{o.priceFrom}</span>
+                          <span className="font-semibold t-text">{operatorPriceText(a.slug, o)}</span>
                         </span>
                       </li>
                     ))}

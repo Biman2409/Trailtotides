@@ -9,6 +9,7 @@ import { ShieldCheck } from "lucide-react";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
 import OperatorsClient, { OperatorCardData } from "./OperatorsClient";
 import { operatorSlug } from "@/lib/operatorPages";
+import { operatorPriceText } from "@/lib/leadPrices";
 
 export const metadata: Metadata = {
   title: "Adventure Operators",
@@ -79,7 +80,7 @@ export default async function OperatorsPage() {
         const matchedAdventures = adventures.filter((a) => a.operators.some((o) => o.name === op.name));
         matchedAdventures.forEach((a) => {
           const match = a.operators.find((o) => o.name === op.name);
-          if (match?.priceFrom) prices[a.slug] = match.priceFrom;
+          if (match) prices[a.slug] = operatorPriceText(a.slug, match);
         });
         staticCards.push({
           id: `static-${op.name}`,

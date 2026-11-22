@@ -10,6 +10,7 @@ import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks
 import type { Adventure, Month } from "@/lib/data";
 import { useCompare } from "@/contexts/CompareContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { operatorPriceText } from "@/lib/leadPrices";
 import { AXIS_LABEL } from "@/lib/fitness";
 import { MONTHS } from "@/lib/homeCuration";
 import { track } from "@/lib/analytics";
@@ -233,7 +234,7 @@ export default function PinCard({
                         {checked !== null && <> · price checked {checked === 0 ? "today" : `${checked}d ago`}</>}
                       </span>
                     </span>
-                    <span className="text-[11.5px] font-bold text-white/80 shrink-0">{o.priceFrom}</span>
+                    <span className="text-[11.5px] font-bold text-white/80 shrink-0">{operatorPriceText(a.slug, o)}</span>
                     <ArrowUpRight className="w-3.5 h-3.5 text-white/30 group-hover:text-white/70 shrink-0" />
                   </a>
                 </li>

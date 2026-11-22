@@ -1,5 +1,6 @@
 // Search, sorting and small fact helpers for the Explore page (and its cards / list rows).
 import { getLowestPrice, type Adventure, type Month } from "@/lib/data";
+import { fromPrice } from "@/lib/leadPrices";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import { editDistance, matchesWords } from "@/lib/textMatch";
 
@@ -91,7 +92,8 @@ export const SORT_LABELS: Record<SortKey, string> = {
 export function sortAdventures(list: Adventure[], key: SortKey, opts: { monthIdx: number; score?: (a: Adventure) => number }): Adventure[] {
   const out = [...list];
   const month = MONTHS[opts.monthIdx];
-  const price = (a: Adventure) => getLowestPrice(a) ?? Number.MAX_SAFE_INTEGER;
+  // The price the card shows (the full trip when known), so the order matches what people read
+  const price = (a: Adventure) => fromPrice(a) ?? Number.MAX_SAFE_INTEGER;
   switch (key) {
     case "match":
       if (opts.score) return out.sort((x, y) => opts.score!(y) - opts.score!(x));
