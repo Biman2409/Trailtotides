@@ -1,10 +1,21 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/authz";
 import { callbackLink } from "@/lib/authLinks";
 import { sendVerificationEmail } from "@/lib/email";
+import { rateLimitShared } from "@/lib/rateLimit";
+import { operatorSignupSchema } from "@/lib/operatorSignup";
+
+// Operator sign-up creates an account and sends an email, so it gets the same per-IP limit as
+// traveller sign-up (5 per 15 minutes), and every field is checked before anything is created
+
+async function clientIp() {
+  const h = await headers();
+  return (h.get("x-forwarded-for") ?? "").split(",")[0].trim() || h.get("x-real-ip") || "unknown";
+}
 
 // ─── Storage-based operator system ───────────────────────────────────────────
 // Uses Supabase Storage buckets (operator-profiles, operator-submissions)
@@ -115,21 +126,27 @@ export async function getSubmissionsForOperator(operatorId: string): Promise<Ope
 // ─── Server actions ───────────────────────────────────────────────────────────
 
 export async function signUpOperator(formData: FormData) {
+  const field = (k: string) => String(formData.get(k) ?? "");
+  const parsed = operatorSignupSchema().safeParse({
+    contact_name: field("contact_name"),
+    company_name: field("company_name"),
+    email: field("email"),
+    country_code: field("country_code") || "+91",
+    phone: field("phone"),
+    website: field("website"),
+    logo_url: field("logo_url"),
+    password: field("password"),
+  });
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Some fields are missing or invalid." };
+
+  const { allowed } = await rateLimitShared(`operator-signup:${await clientIp()}`, 5, 15 * 60 * 1000);
+  if (!allowed) return { error: "Too many sign-ups from here. Try again in a few minutes." };
+
   const adminClient = await createAdminClient();
-
-  const contact_name = formData.get("contact_name") as string;
-  const company_name = formData.get("company_name") as string;
-  const email = formData.get("email") as string;
-  const country_code = (formData.get("country_code") as string) || "+91";
-  const phone_number = formData.get("phone") as string;
-  const phone = `${country_code}${phone_number}`;
-  const website = (formData.get("website") as string) || null;
-  const logo_url = (formData.get("logo_url") as string) || null;
-  const password = formData.get("password") as string;
-
-  if (password.length < 8) {
-    return { error: "Password must be at least 8 characters." };
-  }
+  const { contact_name, company_name, email, password } = parsed.data;
+  const phone = `${parsed.data.country_code}${parsed.data.phone}`;
+  const website = parsed.data.website || null;
+  const logo_url = parsed.data.logo_url || null;
 
   // Same as traveller sign-up: the account starts unverified and the emailed link opens it
   const { data, error: signUpError } = await adminClient.auth.admin.generateLink({

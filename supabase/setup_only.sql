@@ -23,8 +23,8 @@ CREATE SEQUENCE IF NOT EXISTS public.user_public_id_seq START 1;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 DO $$ BEGIN CREATE POLICY "Users view own profile" ON public.profiles FOR SELECT USING (auth.uid() = id); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-DO $$ BEGIN CREATE POLICY "Users update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-DO $$ BEGIN CREATE POLICY "Insert own profile" ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+-- Profile updates (display fields only) and the role guard: run
+-- migrations/20261122000000_lock_profile_roles_and_story_moderation.sql after this file.
 -- SECURITY DEFINER avoids the infinite-recursion error you get from querying
 -- public.profiles directly inside a policy defined on public.profiles.
 CREATE OR REPLACE FUNCTION public.is_admin(uid uuid)
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS public.stories (
   tags text[] DEFAULT '{}',
   region text NOT NULL DEFAULT 'Himalayas',
   date text NOT NULL,
-  status text NOT NULL DEFAULT 'published' CHECK (status IN ('published', 'draft', 'pending')),
+  status text NOT NULL DEFAULT 'pending' CHECK (status IN ('published', 'draft', 'pending')),
   submitted_by uuid REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
@@ -85,8 +85,6 @@ CREATE TABLE IF NOT EXISTS public.stories (
 ALTER TABLE public.stories ENABLE ROW LEVEL SECURITY;
 
 DO $$ BEGIN CREATE POLICY "Anyone can read published stories" ON public.stories FOR SELECT USING (status = 'published'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-DO $$ BEGIN CREATE POLICY "Auth users can insert stories" ON public.stories FOR INSERT WITH CHECK (auth.uid() IS NOT NULL); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-DO $$ BEGIN CREATE POLICY "Authors can update own stories" ON public.stories FOR UPDATE USING (auth.uid() = submitted_by); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN CREATE POLICY "Service role full access" ON public.stories FOR ALL TO service_role USING (true) WITH CHECK (true); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- 3. Contact messages

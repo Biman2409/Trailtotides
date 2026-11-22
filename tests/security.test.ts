@@ -29,3 +29,50 @@ test("a file must be the type it claims ('image/jpg' counts as JPEG)", () => {
   assert.equal(bytesMatchType(PNG, "image/jpeg"), false);
   assert.equal(bytesMatchType(WEBP, "image/webp"), true);
 });
+
+// Operator sign-up: every field is checked before an account is made or an email is sent
+import { operatorSignupSchema } from "../src/lib/operatorSignup";
+import { readFileSync } from "node:fs";
+
+const SB = "https://abc.supabase.co";
+const good = {
+  contact_name: "Asha Rawat", company_name: "Summit Adventures", email: " Asha@Example.com ",
+  country_code: "+91", phone: "98765 43210", website: "https://summitadventures.com",
+  logo_url: `${SB}/storage/v1/object/public/operator-profiles/abc-logo.png`, password: "longenough",
+};
+
+test("a valid operator sign-up passes and is normalised", () => {
+  const r = operatorSignupSchema(SB).safeParse(good);
+  assert.ok(r.success);
+  assert.equal(r.data.email, "asha@example.com");
+  assert.equal(r.data.phone, "9876543210");
+  assert.ok(operatorSignupSchema(SB).safeParse({ ...good, website: "", logo_url: "" }).success);
+});
+
+test("operator sign-up refuses bad input and logos hosted elsewhere", () => {
+  const bad: Partial<typeof good>[] = [
+    { email: "not-an-email" }, { phone: "12" }, { phone: "98765abc10" }, { country_code: "91" },
+    { website: "javascript:alert(1)" }, { website: "summit" }, { contact_name: "x".repeat(81) },
+    { company_name: "" }, { password: "short" },
+    { logo_url: "https://evil.example/logo.png" },
+    { logo_url: `${SB}/storage/v1/object/public/avatars/x.png` },
+  ];
+  for (const b of bad) assert.equal(operatorSignupSchema(SB).safeParse({ ...good, ...b }).success, false, JSON.stringify(b));
+});
+
+test("the security migration locks profile roles and story publishing", () => {
+  const sql = readFileSync("supabase/migrations/20261122000000_lock_profile_roles_and_story_moderation.sql", "utf8");
+  assert.match(sql, /REVOKE INSERT, UPDATE ON public\.profiles FROM anon, authenticated/);
+  const grant = sql.match(/GRANT UPDATE \(([^)]*)\) ON public\.profiles TO authenticated/);
+  assert.ok(grant, "column grant present");
+  assert.doesNotMatch(grant![1], /\brole\b|public_id|\bid\b/);
+  assert.match(sql, /BEFORE UPDATE ON public\.profiles/);
+  assert.match(sql, /DROP POLICY IF EXISTS "Auth users can insert stories"/);
+  assert.match(sql, /DROP POLICY IF EXISTS "Authors can update own stories"/);
+  assert.match(sql, /status SET DEFAULT 'pending'/);
+  for (const f of ["supabase/setup.sql", "supabase/setup_only.sql"]) {
+    const s = readFileSync(f, "utf8");
+    assert.doesNotMatch(s, /CREATE POLICY "Users update own profile" ON public\.profiles FOR UPDATE USING \(auth\.uid\(\) = id\);/, f);
+    assert.doesNotMatch(s, /Authors can update own stories" ON/, f);
+  }
+});
