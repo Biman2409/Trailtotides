@@ -1,0 +1,490 @@
+<title>Trail to Tides Audit, 22 Nov 2026</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: one reading column. Scores first, then the issue register (the core), then test results, data, security, inventory, roadmap */
+:root {
+  --bg: #fbfaf8; --surface: #ffffff; --fg: #1c1814; --muted: #5f574f; --line: #e6e1da;
+  --accent: #ff5100; --ok: #1f8a5b; --warn: #b26a00; --bad: #c2372b; --info: #3d6fb6;
+  --ok-bg: #e8f5ee; --warn-bg: #fdf3e2; --bad-bg: #fbeceb; --info-bg: #eaf0fa; --p0: #8f1d14; --p0-bg: #f8dcd8;
+  --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12100e; --surface: #1b1815; --fg: #f1ece6; --muted: #a89f95; --line: #2f2a25;
+  --ok: #4cc28c; --warn: #f0a83a; --bad: #f07a6e; --info: #7fa8e8; --p0: #ff9d92;
+  --ok-bg: #15281f; --warn-bg: #2b2112; --bad-bg: #2c1715; --info-bg: #17202e; --p0-bg: #3a1511; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12100e; --surface: #1b1815; --fg: #f1ece6; --muted: #a89f95; --line: #2f2a25;
+  --ok: #4cc28c; --warn: #f0a83a; --bad: #f07a6e; --info: #7fa8e8; --p0: #ff9d92;
+  --ok-bg: #15281f; --warn-bg: #2b2112; --bad-bg: #2c1715; --info-bg: #17202e; --p0-bg: #3a1511; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 40px 80px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: 34px; letter-spacing: -0.01em; margin-top: 6px; }
+h2 { font-size: 22px; margin-top: 48px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h3 { font-size: 16px; margin-top: 26px; }
+p { margin: 10px 0; max-width: 72ch; }
+ul, ol { padding-left: 20px; max-width: 74ch; } li { margin: 4px 0; }
+code { font: 13px var(--mono); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; overflow-wrap: anywhere; }
+.eyebrow { font: 600 12px/1 var(--body); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.lede { color: var(--muted); font-size: 16px; }
+.overall { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; margin-top: 26px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.overall b { font: 700 52px/1 var(--display); font-variant-numeric: tabular-nums; }
+.overall b small { font-size: 20px; color: var(--muted); }
+.overall p { margin: 0; flex: 1 1 300px; min-width: 0; }
+.scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px 22px; margin-top: 18px; }
+.score { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; }
+.score span { font-size: 14px; } .score em { font: 600 14px var(--display); font-style: normal; font-variant-numeric: tabular-nums; }
+.bar { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 3px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 18px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.tile b { display: block; font: 700 26px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.tile span { color: var(--muted); font-size: 13px; }
+.scroll { overflow-x: auto; margin-top: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+th { font: 600 12px var(--body); letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.id { font: 600 12.5px var(--mono); white-space: nowrap; }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font: 700 11.5px/1.6 var(--body); white-space: nowrap; }
+.p0 { background: var(--p0-bg); color: var(--p0); } .p1 { background: var(--bad-bg); color: var(--bad); }
+.p2 { background: var(--warn-bg); color: var(--warn); } .p3 { background: var(--info-bg); color: var(--info); } .p4 { background: var(--line); color: var(--muted); }
+.pass { background: var(--ok-bg); color: var(--ok); } .fail { background: var(--bad-bg); color: var(--bad); } .part { background: var(--warn-bg); color: var(--warn); } .nt { background: var(--line); color: var(--muted); }
+.conf { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.issue { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-top: 12px; }
+.issue header { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: baseline; }
+.issue header strong { font: 600 15.5px/1.35 var(--display); flex: 1 1 320px; min-width: 0; }
+.issue dl { display: grid; grid-template-columns: 110px 1fr; gap: 6px 14px; margin: 12px 0 0; font-size: 14px; }
+.issue dt { color: var(--muted); font-size: 12.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; padding-top: 2px; }
+.issue dd { margin: 0; min-width: 0; }
+@media (max-width: 560px) { .issue dl { grid-template-columns: 1fr; gap: 2px; } .issue dd { margin-bottom: 8px; } }
+.note { border-left: 3px solid var(--accent); padding: 8px 14px; background: var(--surface); border-radius: 0 8px 8px 0; margin-top: 14px; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.cols > div { min-width: 0; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 18px; font-size: 14px; }
+.toc a { color: var(--fg); text-decoration-color: var(--accent); text-underline-offset: 3px; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+<div class="eyebrow">Audit · 22 November 2026 · commit 8fdb32b3 (= live master)</div>
+<h1>Trail to Tides platform audit</h1>
+<p class="lede">An independent pass over the whole site and codebase: every public route crawled, the core journeys driven by hand, the catalogue checked by script, Compass.AI sent real questions, and the security model read line by line. Nothing was changed. This report ends with a fix order for you to approve.</p>
+
+<nav class="toc" aria-label="Sections">
+<a href="#a">A. Executive summary</a><a href="#b">B. Issue register</a><a href="#c">C. Pages</a><a href="#d">D. Functional tests</a><a href="#e">E. Data quality</a><a href="#f">F. Architecture &amp; security</a><a href="#g">G. Roadmap</a><a href="#scope">Scope &amp; limits</a>
+</nav>
+
+<h2 id="a">A. Executive summary</h2>
+<div class="overall">
+  <b>62<small>/100</small></b>
+  <p><strong>Not production-ready yet, but close on most fronts.</strong> The site is fast to navigate, stable (61/61 tests, clean build, no broken links in 179 pages, no console errors) and its SEO is strong. What holds the score down: one likely privilege-escalation hole in the database rules, a price that differs depending on which page you read, a Ready verdict that breaks your own ACE rule, reviews that are all team-written, and heavy images on the map. Most of the top fixes are small.</p>
+</div>
+
+<div class="scores" role="list">
+  <div class="score" role="listitem"><span>Product</span><em>70</em><div class="bar"><i style="width:70%;background:var(--warn)"></i></div></div>
+  <div class="score" role="listitem"><span>UI / UX</span><em>78</em><div class="bar"><i style="width:78%;background:var(--ok)"></i></div></div>
+  <div class="score" role="listitem"><span>Functionality</span><em>72</em><div class="bar"><i style="width:72%;background:var(--warn)"></i></div></div>
+  <div class="score" role="listitem"><span>Data quality</span><em>64</em><div class="bar"><i style="width:64%;background:var(--warn)"></i></div></div>
+  <div class="score" role="listitem"><span>ACE™</span><em>68</em><div class="bar"><i style="width:68%;background:var(--warn)"></i></div></div>
+  <div class="score" role="listitem"><span>Compass.AI</span><em>60</em><div class="bar"><i style="width:60%;background:var(--warn)"></i></div></div>
+  <div class="score" role="listitem"><span>Maps</span><em>70</em><div class="bar"><i style="width:70%;background:var(--warn)"></i></div></div>
+  <div class="score" role="listitem"><span>Technical architecture</span><em>64</em><div class="bar"><i style="width:64%;background:var(--warn)"></i></div></div>
+  <div class="score" role="listitem"><span>Security</span><em>45</em><div class="bar"><i style="width:45%;background:var(--bad)"></i></div></div>
+  <div class="score" role="listitem"><span>Performance</span><em>58</em><div class="bar"><i style="width:58%;background:var(--warn)"></i></div></div>
+  <div class="score" role="listitem"><span>SEO</span><em>84</em><div class="bar"><i style="width:84%;background:var(--ok)"></i></div></div>
+  <div class="score" role="listitem"><span>Commercial readiness</span><em>50</em><div class="bar"><i style="width:50%;background:var(--bad)"></i></div></div>
+</div>
+
+<div class="tiles">
+  <div class="tile"><b>1</b><span>P0 critical (needs one SQL check)</span></div>
+  <div class="tile"><b>7</b><span>P1 high</span></div>
+  <div class="tile"><b>12</b><span>P2 medium</span></div>
+  <div class="tile"><b>15</b><span>P3 low</span></div>
+  <div class="tile"><b>6</b><span>P4 enhancement</span></div>
+</div>
+
+<h3>What works well (verified)</h3>
+<ul>
+  <li>Build, type-check, lint and all 61 unit tests pass. Production dependencies have 0 known vulnerabilities.</li>
+  <li>179 pages crawled: 177 return 200, 2 correctly redirect to login. 0 broken internal links, 0 broken assets, 0 orphan pages. All 171 indexable pages are in the sitemap with unique titles, descriptions, canonicals, one H1 and valid structured data.</li>
+  <li>Search tolerates typos ("kedarkanta" finds Kedarkantha) and unsupported searches get a useful empty state.</li>
+  <li>The ACE safety gate holds: of 2,832 profile × adventure pairs, none is called Ready or Stretch with a gap of 2+ on one capability.</li>
+  <li>Every admin server action re-checks the admin role. Every upload sniffs the real file bytes. Anonymous reads of profiles, contact messages and click logs return nothing.</li>
+  <li>No horizontal scrolling at 375 px or 1440 px on the pages tested. Layout shift on the home page is 0.003.</li>
+</ul>
+
+<h2 id="b">B. Issue register</h2>
+<p>Ranked by severity. <strong>Confirmed</strong> means reproduced or proven from code and live data. <strong>Suspected</strong> means the code makes it near-certain but one live check is still needed. Complexity: S under an hour, M a few hours, L a day or more.</p>
+
+<h3>P0 — Critical</h3>
+
+<article class="issue">
+<header><span class="pill p0">P0</span><code>SEC-01</code><strong>Any signed-in user can probably make themselves an admin</strong><span class="conf">Suspected, high confidence</span></header>
+<dl>
+<dt>Where</dt><dd><code>supabase/setup.sql:51</code> policy "Users update own profile"; <code>src/lib/authz.ts</code> <code>requireAdmin()</code></dd>
+<dt>What</dt><dd>The update policy on <code>profiles</code> is <code>USING (auth.uid() = id)</code> with no <code>WITH CHECK</code>, no column grant and no trigger. The <code>role</code> column accepts <code>'admin'</code>. The anon key is public by design, so a user can send one REST call with their own session token: <code>PATCH /rest/v1/profiles?id=eq.&lt;me&gt;</code> <code>{"role":"admin"}</code>. <code>requireAdmin()</code> trusts that column.</dd>
+<dt>Evidence</dt><dd>No <code>REVOKE UPDATE</code> or role guard anywhere in <code>supabase/</code> (the match-group tables do have column grants, so the pattern is known). I could not read live policies over the API, and I didn't create a test account to try it.</dd>
+<dt>Impact</dt><dd>Full admin: read every profile and email, read contact messages, delete or ban users, approve operators, delete reviews and stories.</dd>
+<dt>Fix</dt><dd>Run in the Supabase SQL editor: <code>REVOKE UPDATE ON public.profiles FROM authenticated, anon; GRANT UPDATE (full_name, phone, avatar_url, username, updated_at) ON public.profiles TO authenticated;</code> Then add it as a migration. To confirm first: <code>select policyname, cmd, qual, with_check from pg_policies where tablename='profiles';</code> plus <code>select privilege_type, column_name from information_schema.column_privileges where table_name='profiles' and grantee='authenticated';</code></dd>
+<dt>Complexity</dt><dd>S · no code change</dd>
+</dl>
+</article>
+
+<h3>P1 — High</h3>
+
+<article class="issue">
+<header><span class="pill p1">P1</span><code>SEC-02</code><strong>Story authors can publish their own story and skip moderation</strong><span class="conf">Suspected, high confidence</span></header>
+<dl>
+<dt>Where</dt><dd><code>supabase/migrations/20260629000000_create_stories.sql:47</code>; <code>src/lib/stories.ts:125</code></dd>
+<dt>What</dt><dd>"Authors can update own stories" has no column limit, and the public site shows any row with <code>status = 'published'</code>. A submitter can change their pending story to published, or rewrite it after approval, including <code>hero_image</code> pointing at any URL.</dd>
+<dt>Impact</dt><dd>Unmoderated spam or defamatory content on a page in your sitemap.</dd>
+<dt>Fix</dt><dd>Drop the author update policy, or limit it with <code>WITH CHECK (status = 'pending')</code> and column grants. The default <code>status 'published'</code> should become <code>'pending'</code>.</dd>
+<dt>Complexity</dt><dd>S</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p1">P1</span><code>SEC-03</code><strong>Operator sign-up has no rate limit or input checks</strong><span class="conf">Confirmed in code</span></header>
+<dl>
+<dt>Where</dt><dd><code>src/app/auth/operator-actions.ts:117</code> <code>signUpOperator</code></dd>
+<dt>What</dt><dd>A public server action. Each call creates an account and sends a verification email from your domain through Resend. Traveller sign-up is limited to 5 per 15 minutes; operator sign-up has no limit. Email, phone, company name and website aren't validated.</dd>
+<dt>Impact</dt><dd>Anyone can loop it to email-bomb arbitrary addresses, burn the Resend quota and damage trailtotides.com's sender reputation, which also delays your real verification emails.</dd>
+<dt>Fix</dt><dd>Reuse the <code>signUp</code> limiter (per IP), plus a zod schema with length limits.</dd>
+<dt>Complexity</dt><dd>S</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p1">P1</span><code>DATA-01</code><strong>The same trek shows two different "from" prices</strong><span class="conf">Confirmed</span></header>
+<dl>
+<dt>Where</dt><dd>Base price (<code>priceFrom</code>) is shown by <code>src/lib/trekGuides.ts:193</code> (guide + FAQ), <code>src/app/operators/page.tsx:82</code>, <code>src/app/map/PinCard.tsx:236</code>, <code>src/app/adventurepedia/treks/[slug]/page.tsx:437</code> and the JSON-LD in <code>src/app/experiences/[slug]/page.tsx:308</code>. The full-trip lead price is used everywhere else.</dd>
+<dt>Evidence</dt><dd>Kedarkantha headline <strong>₹12,475</strong> (Bikat, full trip). Its Adventurepedia guide says "₹9,500 to ₹11,250". /operators lists Bikat's Kedarkantha at ₹9,500 while /operators/bikat-adventures says ₹12,475. The adventure page's own structured data tells Google <code>lowPrice: 9500</code>. 44 of 47 bookable adventures differ.</dd>
+<dt>Impact</dt><dd>Visitors see a cheaper price, click through and find a higher one, which erodes trust. Google can drop rich results when the structured-data price doesn't match the visible page.</dd>
+<dt>Fix</dt><dd>One helper (the lead price from <code>leadPrices.ts</code> / <code>operatorRank.ts</code>) used everywhere, base fee shown only as "base fee" inside the compare dashboard.</dd>
+<dt>Complexity</dt><dd>M</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p1">P1</span><code>FUNC-01</code><strong>Explore "Price: low to high" sorts out of order</strong><span class="conf">Confirmed in browser</span></header>
+<dl>
+<dt>Where</dt><dd><code>src/lib/exploreHelpers.ts:94</code></dd>
+<dt>What</dt><dd>Sorting uses the base price (<code>getLowestPrice</code>), but cards show the lead price.</dd>
+<dt>Evidence</dt><dd>Rendered order: ₹6,195 · ₹7,875 · ₹7,875 · ₹9,660 · <strong>₹12,475 · ₹9,975</strong> · ₹12,975 · <strong>₹14,543 · ₹14,025 · ₹11,025</strong> …</dd>
+<dt>Fix</dt><dd>Sort by the displayed lead price. This falls out of DATA-01.</dd>
+<dt>Complexity</dt><dd>S</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p1">P1</span><code>ACE-01</code><strong>"Ready" is given when requirements are not met</strong><span class="conf">Confirmed</span></header>
+<dl>
+<dt>Where</dt><dd><code>src/lib/ace.ts:133–171</code> <code>computeMatchScore</code>, <code>READY_MIN = 80</code></dd>
+<dt>What</dt><dd>Falling 1 short on any number of capabilities still scores 75% credit each, so the total can clear 80 and read Ready. Your brief's rule: never Ready if a requirement isn't satisfied.</dd>
+<dt>Evidence</dt><dd>I took the Quick match with the lowest answer every time ("can move under 1 hour", "never slept above 2,500 m"). Result: <strong>Ready</strong> for Triund (needs stamina 2) and Doodhpathri (needs stamina 2 and altitude 2; listed as 7 days and 49 km, and its own "for you if" says "walk 6–7 hours a day"). The same profile is Stretch for Sandakphu (5 days, 55 km).</dd>
+<dt>Fix</dt><dd>Ready = every requirement met. Stretch = at most one capability 1 short. Not yet = everything else. This is your call because it moves many verdicts. Rerun <code>scripts/audit-ace.ts</code> after.</dd>
+<dt>Complexity</dt><dd>S code + product decision</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p1">P1</span><code>TRUST-01</code><strong>Every review on the site is team-written, and they count toward the rating</strong><span class="conf">Confirmed</span></header>
+<dl>
+<dt>Where</dt><dd><code>seedReviews</code> in <code>src/lib/data.ts</code>; <code>src/app/api/reviews/route.ts:57</code> merges them; review section average</dd>
+<dt>Evidence</dt><dd>Live <code>reviews</code> table: 0 rows. Kedarkantha shows "4.7 · 3 reviews" from <code>priyanka_h</code>, <code>aditya_snow</code>, <code>tanya_kapoor</code>, each tagged "Added by Trail to Tides".</dd>
+<dt>Impact</dt><dd>Persona names and a star average read as real traveller reviews. India's consumer-review standard (IS 19000:2022) and the CCPA's dark-pattern guidance treat that as misleading. It's a brand risk before it's a legal one.</dd>
+<dt>Fix</dt><dd>Keep them out of the count and average and show "No traveller reviews yet", or move them into an "Our team's notes" block. Open decision since 17 Nov.</dd>
+<dt>Complexity</dt><dd>S</dd>
+</dl>
+</article>
+
+<h3>P2 — Medium</h3>
+
+<article class="issue">
+<header><span class="pill p2">P2</span><code>PERF-01</code><strong>Map and Compass load full-size photos for tiny thumbnails</strong><span class="conf">Confirmed</span></header>
+<dl>
+<dt>Where</dt><dd><code>unoptimized</code> or raw <code>&lt;img&gt;</code> in <code>map/PeekCarousel.tsx:62</code> (72 px), <code>ResultsList.tsx:39</code> (56 px), <code>CompareTray.tsx:22</code> (40 px), <code>FilterDock.tsx:192</code> (32 px), <code>PinCard.tsx:86</code>, <code>MapCanvas.tsx:97/493</code>, <code>components/ChatBubble.tsx:64</code></dd>
+<dt>Evidence</dt><dd>The originals are 600–906 KB (triund.jpeg 906 KB). The map's first screen loaded 8 of them, roughly 5–7 MB, while the rest of the site goes through the Supabase resizer.</dd>
+<dt>Fix</dt><dd>Remove <code>unoptimized</code>, and build plain <code>&lt;img&gt;</code> URLs with <code>imageLoader()</code> at the right width.</dd>
+<dt>Complexity</dt><dd>S</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p2">P2</span><code>SEC-04</code><strong>Shared rate limits still not switched on</strong><span class="conf">Confirmed live</span></header>
+<dl>
+<dt>What</dt><dd><code>rate_limits</code> returns 404 on the live project, so <code>rateLimitShared</code> falls back to a per-instance memory counter. The 20-per-5-minute cap on Compass (OpenAI cost) and the upload caps multiply with every serverless instance.</dd>
+<dt>Fix</dt><dd>Run <code>supabase/migrations/20261116000000_create_rate_limits.sql</code> in the SQL editor. Open since 16 Nov.</dd>
+<dt>Complexity</dt><dd>S · no code change</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p2">P2</span><code>COMP-01</code><strong>Compass invents "coastal adventures"</strong><span class="conf">Confirmed</span></header>
+<dl>
+<dt>Evidence</dt><dd>Asked "hi", it replied "Are you in the mood for the mountains, or would you like to explore our coastal adventures?" The catalogue has none (Explore says "coming soon").</dd>
+<dt>Fix</dt><dd>Make the system prompt say there are no coastal trips yet, and add a deterministic greeting reply.</dd>
+<dt>Complexity</dt><dd>S</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p2">P2</span><code>COMP-02</code><strong>Compass ignores the month when a place name matches an adventure</strong><span class="conf">Confirmed</span></header>
+<dl>
+<dt>Where</dt><dd><code>src/app/api/chat/route.ts:520</code> <code>namedIn()</code>, then <code>keywordAnswer()</code> returns before the season check</dd>
+<dt>Evidence</dt><dd>"motorbike trip in ladakh in january" returned Ladakh Circuit, Manali–Leh and Zanskar (all Jun–Sep, passes closed in winter) with no warning. The slug <code>ladakh-circuit</code> turns into the word "ladakh", so any Ladakh question is treated as naming that ride.</dd>
+<dt>Fix</dt><dd>Only treat a full adventure name as "named", and run the month and length checks on named picks too.</dd>
+<dt>Complexity</dt><dd>S</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p2">P2</span><code>COMP-03</code><strong>Compass claims "3 days" for 4-day treks</strong><span class="conf">Confirmed</span></header>
+<dl>
+<dt>Evidence</dt><dd>"3 day trek near delhi" returned Panwali Kantha, Dayara Bugyal and Kedarkantha (all 4 days) with "Here are 3 treks for 3 days near Delhi". Five real options of 3 days or less exist (Beas Kund, Bhrigu Lake, Kareri Lake, Chandrakhani Pass, Triund).</dd>
+<dt>Fix</dt><dd>Use an exact or ±0 match first, and say so in the reply when it has to widen.</dd>
+<dt>Complexity</dt><dd>S</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p2">P2</span><code>COM-01</code><strong>Beginners are steered to adventures they can't book</strong><span class="conf">Confirmed</span></header>
+<dl>
+<dt>Evidence</dt><dd>Compass's only answer to "easy trek in December for a first timer" is Triund (no operators). With a beginner ACE profile, Explore's "Best match for me" top 3 includes Triund and Yulla Kanda, both "Operators coming soon". Manali–Leh is Featured and Editor's Choice with no operators.</dd>
+<dt>Fix</dt><dd>Rank bookable adventures first at equal fit. Don't feature or pick unbookable ones until they have operators.</dd>
+<dt>Complexity</dt><dd>S–M</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p2">P2</span><code>OPS-01</code><strong>"Verified" means different things on different pages</strong><span class="conf">Confirmed in code</span></header>
+<dl>
+<dt>Where</dt><dd><code>src/app/auth/operator-actions.ts:268</code> sets <code>verified: true</code> for any operator with one admin-approved listing. The directory sets <code>verified: false</code> for the same operator. <code>verified</code> in <code>data.ts</code> is a hand-set boolean with no recorded check.</dd>
+<dt>Impact</dt><dd>The badge can't be defended if an operator or a traveller asks what it means.</dd>
+<dt>Fix</dt><dd>Decide what Verified means (documents, insurance, site visit), store who verified and when, and derive the badge from that in one place.</dd>
+<dt>Complexity</dt><dd>M + decision</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p2">P2</span><code>OPS-02</code><strong>Operator role writes are likely rejected by the database</strong><span class="conf">Suspected</span></header>
+<dl>
+<dt>Where</dt><dd><code>operator-actions.ts:174</code> and <code>:381</code> write <code>role: "operator"</code>; the <code>profiles.role</code> check in <code>setup.sql</code> allows only <code>user</code> and <code>admin</code>. Errors are ignored.</dd>
+<dt>Impact</dt><dd><code>profile.role === "operator"</code> checks in <code>profile/page.tsx:66</code> and the Navbar would never pass for a real operator. Live data has no operator accounts yet (3 admin, 2 user), so it's untested.</dd>
+<dt>Fix</dt><dd>Add <code>'operator'</code> to the check (behind SEC-01's column lock), or read the role from one place (<code>app_metadata</code>).</dd>
+<dt>Complexity</dt><dd>S</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p2">P2</span><code>PRIV-01</code><strong>Health answers ride in the login token</strong><span class="conf">Confirmed in code</span></header>
+<dl>
+<dt>Where</dt><dd><code>src/app/api/ace-medical/route.ts:50</code> stores the answers in <code>user_metadata</code></dd>
+<dt>What</dt><dd><code>user_metadata</code> is copied into the session token, so heart, joint, medication, smoking and alcohol answers travel in a cookie with every request and can be read by any script on the page. It's also writable by the user.</dd>
+<dt>Fix</dt><dd>Move them to a private table with row-level security, read only by the server. The privacy policy wording stays true.</dd>
+<dt>Complexity</dt><dd>M</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p2">P2</span><code>PERF-02</code><strong>The whole catalogue ships to the browser</strong><span class="conf">Confirmed</span></header>
+<dl>
+<dt>Evidence</dt><dd><code>data.ts</code> (descriptions and seed reviews included) is a 203 KB browser chunk (52 KB gzipped), imported by 19 client components including four on the home page. The home HTML is 590 KB (85 KB gzipped), 207 KB of it serialised React data.</dd>
+<dt>Fix</dt><dd>Pass slim card objects (slug, name, image, price, ACE) from server components instead of importing <code>adventures</code> in client code.</dd>
+<dt>Complexity</dt><dd>M–L</dd>
+</dl>
+</article>
+
+<article class="issue">
+<header><span class="pill p2">P2</span><code>PERF-03</code><strong>Operator data is read file by file on every request</strong><span class="conf">Confirmed in code</span></header>
+<dl>
+<dt>What</dt><dd><code>getAllOperatorSubmissions()</code> and <code>getAllOperatorProfiles()</code> download every JSON file in Storage. /operators is <code>force-dynamic</code>, so this runs for every visitor (slowest page: 644 ms locally with almost no files). Each adventure page does it on every refresh. Cost grows with every operator.</dd>
+<dt>Fix</dt><dd>Move submissions and profiles into tables (or cache them with a revalidate tag on approve).</dd>
+<dt>Complexity</dt><dd>M</dd>
+</dl>
+</article>
+
+<h3>P3 — Low</h3>
+<div class="scroll"><table>
+<thead><tr><th>ID</th><th>Issue</th><th>Evidence / location</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td class="id">COMP-04</td><td>Compass doesn't answer a direct price question</td><td>"kedarkantha price and which operator is cheapest" got a generic line, though the data has ₹12,475 with Bikat</td><td>Answer price questions from <code>leadPrices.json</code></td></tr>
+<tr><td class="id">DATA-02</td><td>Map pins stacked on identical coordinates</td><td>EBC = EBC + Gokyo (28.000, 86.849); Spiti bike = Spiti cycling (32.247, 78.035)</td><td>Use each route's own start or high point</td></tr>
+<tr><td class="id">DATA-03</td><td>Two pairs of adventures share one hero photo</td><td>EBC / Three Passes; Gokyo / EBC + Gokyo</td><td>New photos (known, pending)</td></tr>
+<tr><td class="id">DATA-04</td><td>Legacy <code>difficulty</code> field disagrees with the shown rating on most adventures</td><td><code>scripts/audit-adventures.ts</code>; the site always shows the computed rating, so nothing is wrong on screen</td><td>Delete the field or sync it so nobody reuses it</td></tr>
+<tr><td class="id">DATA-05</td><td>Unpriced or unlinked listings</td><td>Bajre Dara / THT and Kareri / Bikat "On request"; Pin Parvati / Bikat has no website, so no Book link</td><td>Fill from the operators</td></tr>
+<tr><td class="id">DATA-06</td><td>"Next departure" can be today</td><td>Kedarkantha showed "Next departure 22 Nov" on 22 Nov</td><td>Hide departures closer than ~3 days</td></tr>
+<tr><td class="id">DATA-07</td><td>Doodhpathri facts look off</td><td>7 days / 49 km / 2,730 m; operators list 3,981 m (open since 17 Nov)</td><td>Check against an operator itinerary</td></tr>
+<tr><td class="id">PERF-04</td><td>Home LCP is the canvas-painted hero</td><td>2.3 s locally with zero network; about 7 s on a throttled phone (16 Nov)</td><td>Design trade-off you accepted; a static first frame would fix it</td></tr>
+<tr><td class="id">PERF-05</td><td>Middleware calls Supabase on every page view</td><td><code>src/middleware.ts</code> <code>auth.getUser()</code> runs on static pages too</td><td>Skip it when there's no auth cookie</td></tr>
+<tr><td class="id">PERF-06</td><td>Adventure pages can stay stale for up to a day</td><td><code>next.config.ts</code> sets <code>max-age=3600, stale-while-revalidate=86400</code> on /experiences, above the 10-minute refresh</td><td>Shorten, or drop the header and let ISR rule</td></tr>
+<tr><td class="id">SCALE-01</td><td>User lists cap at 1,000</td><td><code>listUsers({perPage:1000})</code> in reviews GET and /admin; badge rarity reads every account</td><td>Store avatar ids on the review row; paginate admin</td></tr>
+<tr><td class="id">SEC-05</td><td>No Content-Security-Policy</td><td>Other security headers are present</td><td>Start in report-only mode (open decision)</td></tr>
+<tr><td class="id">SEC-06</td><td>Reviewer user ids are public</td><td><code>/api/reviews</code> returns <code>user_id</code></td><td>Return an <code>isMine</code> flag instead</td></tr>
+<tr><td class="id">OPS-03</td><td>Operator profiles start as "approved"</td><td><code>operator-actions.ts:167</code>; listings still need admin approval</td><td>Start as pending; part of OPS-01</td></tr>
+<tr><td class="id">UX-01</td><td>404 tab title flips to the home title after load</td><td>/experiences/unknown: "Page not found", then "Trail to Tides — Find, Compare…"</td><td>Known Next 15 behaviour; set the title in the not-found layout</td></tr>
+<tr><td class="id">COPY-01</td><td>"India's first adventure platform" in the header</td><td>An unsupported superlative (ASCI code); open since 18 Nov</td><td>Your call</td></tr>
+</tbody></table></div>
+
+<h3>P4 — Enhancements</h3>
+<div class="scroll"><table>
+<thead><tr><th>ID</th><th>Opportunity</th><th>Detail</th></tr></thead>
+<tbody>
+<tr><td class="id">SEO-01</td><td>Trim long meta text</td><td>9 descriptions over 160 characters; 2 operator titles over 65</td></tr>
+<tr><td class="id">SEO-02</td><td>Add <code>lastmod</code> to the sitemap</td><td>Only the 2 stories carry it; adventures could use their price-check date</td></tr>
+<tr><td class="id">SEO-03</td><td>Give trek guide and trek page different H1s</td><td>Titles differ (book vs itinerary), H1s are identical</td></tr>
+<tr><td class="id">MAP-01</td><td>Missing map sprite</td><td>Console: <code>Image "circle-11" could not be loaded</code></td></tr>
+<tr><td class="id">HYG-01</td><td>Dependency tidy-up</td><td><code>@types/leaflet</code> belongs in devDependencies; dev-only advisories (xlsx has no fix; don't run <code>npm audit fix</code>, it breaks lint)</td></tr>
+<tr><td class="id">GROW-01</td><td>Collect real reviews</td><td>A post-trip email linked from outbound clicks would replace TRUST-01's seed reviews with real ones</td></tr>
+</tbody></table></div>
+
+<h2 id="c">C. Page-by-page</h2>
+<p>179 URLs crawled from the sitemap and every internal link on a local production build of the live commit. Status is mine: <span class="pill pass">Good</span> works with no notable issue, <span class="pill part">Issues</span> works but has register items, <span class="pill nt">Not tested</span> needs sign-in.</p>
+<div class="scroll"><table>
+<thead><tr><th>Route</th><th>Count</th><th>Purpose</th><th>Status</th><th>Issues</th></tr></thead>
+<tbody>
+<tr><td><code>/</code></td><td>1</td><td>Hero, Compass prompt, matchmaker teaser, map demo, editor's picks</td><td><span class="pill part">Issues</span></td><td>PERF-02, PERF-04, COM-01</td></tr>
+<tr><td><code>/explore</code></td><td>1</td><td>Catalogue, filters, sort, search</td><td><span class="pill part">Issues</span></td><td>FUNC-01, COM-01</td></tr>
+<tr><td><code>/experiences/[slug]</code></td><td>59</td><td>Adventure detail, ACE check, operators, compare, reviews, map</td><td><span class="pill part">Issues</span></td><td>DATA-01 (JSON-LD), TRUST-01, DATA-06, PERF-03, PERF-06</td></tr>
+<tr><td><code>/map</code></td><td>1</td><td>Clustered map, filters, near me, Compass</td><td><span class="pill part">Issues</span></td><td>PERF-01, DATA-02, DATA-01 (pin card)</td></tr>
+<tr><td><code>/matchmaker</code>, <code>/ace</code></td><td>2</td><td>ACE quiz and explainer</td><td><span class="pill part">Issues</span></td><td>ACE-01</td></tr>
+<tr><td><code>/matchmaker/group</code></td><td>2</td><td>Group match (sign-in)</td><td><span class="pill nt">Not tested</span></td><td>Redirect to login works</td></tr>
+<tr><td><code>/operators</code>, <code>/operators/[slug]</code></td><td>3</td><td>Directory and operator pages</td><td><span class="pill part">Issues</span></td><td>DATA-01, OPS-01, PERF-03</td></tr>
+<tr><td><code>/adventurepedia/treks/[slug]</code></td><td>53</td><td>Trek guides (itinerary, permits, FAQ)</td><td><span class="pill part">Issues</span></td><td>DATA-01 (price range + FAQ)</td></tr>
+<tr><td><code>/adventurepedia</code> + guides + activities</td><td>37</td><td>Library, how-tos, activity pages</td><td><span class="pill pass">Good</span></td><td>Coming-soon activities are labelled clearly</td></tr>
+<tr><td><code>/destinations</code>, <code>/destinations/[slug]</code></td><td>7</td><td>States and countries</td><td><span class="pill pass">Good</span></td><td>—</td></tr>
+<tr><td><code>/stories</code>, <code>/stories/[slug]</code>, <code>/stories/submit</code></td><td>4</td><td>Stories and submission</td><td><span class="pill part">Issues</span></td><td>SEC-02</td></tr>
+<tr><td><code>/about</code>, <code>/contact</code>, <code>/terms</code>, <code>/privacy</code></td><td>4</td><td>Company pages</td><td><span class="pill pass">Good</span></td><td>Contact has honeypot + timing check (not submitted)</td></tr>
+<tr><td><code>/auth/*</code></td><td>8</td><td>Login, sign-up, reset, operator sign-up</td><td><span class="pill part">Issues</span></td><td>SEC-03 (forms not submitted)</td></tr>
+<tr><td><code>/profile</code>, <code>/settings</code>, <code>/passport/[u]</code></td><td>3</td><td>Account, passport, XP</td><td><span class="pill nt">Not tested</span></td><td>PRIV-01; redirects to login with <code>next</code></td></tr>
+<tr><td><code>/admin</code>, operator dashboard</td><td>3</td><td>Back office</td><td><span class="pill nt">Not tested</span></td><td>SEC-01 decides who reaches it</td></tr>
+</tbody></table></div>
+
+<h2 id="d">D. Functional test report</h2>
+<div class="scroll"><table>
+<thead><tr><th>Test</th><th>Expected</th><th>Actual</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>Build, types, lint, unit tests</td><td>All clean</td><td>Build OK, tsc 0, lint 0, 61/61 tests</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Crawl every public URL</td><td>200 or intended redirect</td><td>177 × 200, 2 × 307 to login with <code>next</code></td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Internal links and assets</td><td>None broken</td><td>0 broken, 0 orphans</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Console on main pages</td><td>No app errors</td><td>Only the Vercel analytics 404 (expected off Vercel) and MAP-01</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Search: typo "kedarkanta"</td><td>Finds Kedarkantha</td><td>Kedarkantha only, URL <code>?q=</code> synced</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Search: "scuba diving goa"</td><td>Helpful empty state</td><td>"Coast and island adventures are coming soon" + Compass and In-season buttons</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Sort: price low to high</td><td>Ascending prices</td><td>Out of order</td><td><span class="pill fail">FAIL</span> FUNC-01</td></tr>
+<tr><td>Same price across pages</td><td>One "from" price</td><td>₹12,475 vs ₹9,500</td><td><span class="pill fail">FAIL</span> DATA-01</td></tr>
+<tr><td>ACE quick match, all lowest answers</td><td>14 steps, result, no Ready with unmet needs</td><td>Flow works; 2 Ready / 14 Stretch / 43 Not yet; Ready with unmet needs</td><td><span class="pill part">PARTIAL</span> ACE-01</td></tr>
+<tr><td>ACE gate script (2,832 pairs)</td><td>No Ready/Stretch with gap ≥ 2</td><td>0 / 0 / 0</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>ACE result kept when signed out</td><td>Kept on this device</td><td>Map and Explore re-ranked by it after reload</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Compass: under ₹10,000 in May</td><td>Real picks under budget</td><td>Kareri ₹6,195, Chandrakhani ₹9,660, Deoriatal ₹9,975, all in season</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Compass: hard, Nepal, October</td><td>Hard Nepal treks</td><td>Annapurna Circuit, Manaslu, EBC</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Compass: "too difficult" after Pin Parvati</td><td>Easier treks nearby</td><td>Yulla Kanda, Pin Bhaba, Sar Pass (17 Nov bug fixed)</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Compass: scuba in Andamans</td><td>Honest "not listed"</td><td>Honest reply, no invented trips</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Compass: prompt injection</td><td>Refuses</td><td>Refused, stayed on topic</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Compass: "hi"</td><td>No invented catalogue</td><td>Offered "coastal adventures"</td><td><span class="pill fail">FAIL</span> COMP-01</td></tr>
+<tr><td>Compass: Ladakh bike in January</td><td>Season warning</td><td>Closed-season rides, no warning</td><td><span class="pill fail">FAIL</span> COMP-02</td></tr>
+<tr><td>Compass: 3-day trek</td><td>3-day treks</td><td>4-day treks called "3 days"</td><td><span class="pill fail">FAIL</span> COMP-03</td></tr>
+<tr><td>Compass: price question</td><td>States the price</td><td>Generic line</td><td><span class="pill part">PARTIAL</span> COMP-04</td></tr>
+<tr><td>Compass speed</td><td>Quick</td><td>Data answers 0.2–0.5 s; model answers 1.7–8.1 s</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Map loads, clusters, card rail</td><td>Pins and cards</td><td>Loads, clusters by region, rail shows prices and fit</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Map image weight</td><td>Resized thumbnails</td><td>Raw 600–900 KB originals</td><td><span class="pill fail">FAIL</span> PERF-01</td></tr>
+<tr><td>Mobile 375 px: home, adventure</td><td>No sideways scroll</td><td>Width 375 = scroll width</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Desktop 1440 px: explore, operators</td><td>No sideways scroll</td><td>Width 1434 = scroll width</td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Anonymous access to private tables</td><td>Nothing returned</td><td>profiles, contact_messages, outbound_clicks, reviews: <code>[]</code></td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Admin actions re-check role</td><td>Every action</td><td>All 17 call <code>requireAdmin()</code></td><td><span class="pill pass">PASS</span></td></tr>
+<tr><td>Sign-up, login, reset, contact, operator sign-up submit</td><td>—</td><td>Not submitted: each sends real email or creates a real account</td><td><span class="pill nt">NOT TESTED</span></td></tr>
+<tr><td>Saves, reviews, photos, groups, XP, operator dashboard, admin</td><td>—</td><td>Need a signed-in test account</td><td><span class="pill nt">NOT TESTED</span></td></tr>
+<tr><td>Map "Near me"</td><td>—</td><td>Needs a location permission prompt</td><td><span class="pill nt">NOT TESTED</span></td></tr>
+</tbody></table></div>
+
+<h2 id="e">E. Data quality</h2>
+<div class="cols">
+<div>
+<h3>Catalogue at a glance</h3>
+<ul>
+<li>59 adventures: 51 treks, 4 motorcycle, 2 mountaineering, 1 cycling, 1 rafting</li>
+<li>Shown rating: 2 Easy, 30 Moderate, 20 Hard, 5 Advanced, 2 Extreme</li>
+<li>Operators: 38 have 2, 9 have 1, 12 have none (4 treks + 8 non-trek, data pending)</li>
+<li>No duplicate slugs or names; all coordinates fall inside their state or country</li>
+<li>Difficulty is consistent everywhere: every page and Compass use the computed rating</li>
+<li>Only 3 operator prices lack a checked date (was 54 on 17 Nov)</li>
+</ul>
+</div>
+<div>
+<h3>Problems found</h3>
+<ul>
+<li>Two "from" prices per trek (DATA-01), in 44 of 47 bookable adventures</li>
+<li>Two pairs of identical coordinates (DATA-02)</li>
+<li>2 "On request" prices, 1 listing with no website (DATA-05)</li>
+<li>Doodhpathri length and altitude (DATA-07)</li>
+<li>0 real reviews; all ratings come from seed reviews (TRUST-01)</li>
+<li>Featured / Editor's Choice without operators: Manali–Leh, Ladakh Circuit (COM-01)</li>
+</ul>
+</div>
+</div>
+<div class="note"><strong>Single source of truth.</strong> Price: <code>leadPrices.json</code> built from operator offers. Difficulty: <code>difficultyOf()</code> (already done). Verified: one stored record per operator (OPS-01, to build). Seasons: <code>bestMonths</code> (the free-text <code>bestSeason</code> should be generated from it). Not flagged as defects: thin ACE and operator data on non-trek adventures, which you said is on the way.</div>
+<p>I added <code>scripts/audit-catalogue.ts</code> (uncommitted) to rerun these checks after data imports. Its season comparison has a known false positive on year-wrapping ranges; I checked those by hand and they're fine.</p>
+
+<h2 id="f">F. Architecture &amp; security</h2>
+<div class="cols">
+<div>
+<h3>Stack</h3>
+<ul>
+<li>Next.js 15.5 App Router, React 19, Tailwind 4, on Vercel</li>
+<li>Supabase: auth (email + Google), Postgres with row-level security, Storage</li>
+<li>OpenAI for Compass, with data-only answers first and the model as fallback</li>
+<li>Resend for email; Vercel Analytics</li>
+<li>Catalogue lives in code (<code>data.ts</code>, 208 KB) plus generated JSON</li>
+</ul>
+</div>
+<div>
+<h3>Structural risks</h3>
+<ul>
+<li>Several stores are JSON files in Storage (operator profiles and listings, XP, wishlists, reactions). Every read lists and downloads files, writes can overwrite each other, and none of it is protected by row-level security. Fine for 5 users, not for 5,000 (PERF-03).</li>
+<li>Roles live in three places: <code>profiles.role</code>, <code>user_metadata.role</code>, and the operator JSON. Pick one, ideally <code>app_metadata</code>, which users can't edit.</li>
+<li>Large client files (Matchmaker 91 KB, Group 75 KB, MapDemo 68 KB source) will slow every future change.</li>
+</ul>
+</div>
+</div>
+<h3>Security checklist</h3>
+<div class="scroll"><table>
+<thead><tr><th>Area</th><th>Finding</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Access control</td><td>Profile role self-update; story self-publish</td><td><span class="pill p0">SEC-01</span> <span class="pill p1">SEC-02</span></td></tr>
+<tr><td>Abuse / rate limits</td><td>Operator sign-up unlimited; shared limiter not applied</td><td><span class="pill p1">SEC-03</span> <span class="pill p2">SEC-04</span></td></tr>
+<tr><td>Privacy</td><td>Health data in session token; reviewer ids public</td><td><span class="pill p2">PRIV-01</span> <span class="pill p3">SEC-06</span></td></tr>
+<tr><td>Secrets</td><td>None in client code or repo; service key only server-side</td><td><span class="pill pass">OK</span></td></tr>
+<tr><td>XSS</td><td>No raw HTML rendering besides escaped JSON-LD</td><td><span class="pill pass">OK</span></td></tr>
+<tr><td>SQL injection</td><td>All queries through the Supabase client; no raw SQL</td><td><span class="pill pass">OK</span></td></tr>
+<tr><td>CSRF</td><td>Server actions use Next's origin check; JSON APIs need the session cookie (SameSite=Lax)</td><td><span class="pill pass">OK</span></td></tr>
+<tr><td>Uploads</td><td>Byte sniffing, size caps, extension from type, SVG refused</td><td><span class="pill pass">OK</span></td></tr>
+<tr><td>Admin functions</td><td>All re-check the role on the server</td><td><span class="pill pass">OK</span> (depends on SEC-01)</td></tr>
+<tr><td>Headers</td><td>nosniff, frame, referrer and permissions set; no CSP</td><td><span class="pill p3">SEC-05</span></td></tr>
+<tr><td>Dependencies</td><td>Production 0 vulnerabilities; 8 dev-only (xlsx, brace-expansion, minimatch)</td><td><span class="pill pass">OK</span></td></tr>
+</tbody></table></div>
+
+<h2 id="g">G. Remediation roadmap</h2>
+<div class="scroll"><table>
+<thead><tr><th>Phase</th><th>Items</th><th>Effort</th><th>Needs you?</th></tr></thead>
+<tbody>
+<tr><td><strong>Immediate</strong> — today</td><td>SEC-01 lock the role column, SEC-02 stories, SEC-03 operator sign-up limit, SEC-04 apply rate-limit table</td><td>~2 h</td><td>Two SQL runs in Supabase (I can drive the SQL editor in your browser if you're signed in)</td></tr>
+<tr><td><strong>1. Core functionality</strong></td><td>DATA-01 one price, FUNC-01 sort, ACE-01 Ready rule, TRUST-01 reviews, COMP-01/02/03</td><td>~1 day</td><td>Yes: ACE-01 rule and TRUST-01 approach</td></tr>
+<tr><td><strong>2. Data &amp; UX</strong></td><td>COM-01 bookable first, OPS-01/02 verified + role, PRIV-01 health data table, DATA-02…07, UX-01, COMP-04</td><td>~1.5 days</td><td>Yes: what "Verified" means; Doodhpathri facts</td></tr>
+<tr><td><strong>3. Performance &amp; SEO</strong></td><td>PERF-01 images, PERF-02 slim client data, PERF-03 operator tables, PERF-05/06, SEO-01…03</td><td>~2 days</td><td>No</td></tr>
+<tr><td><strong>4. Enhancements</strong></td><td>CSP (report-only), real-review collection, sitemap lastmod, field Web Vitals monitoring, MAP-01, HYG-01, COPY-01</td><td>ongoing</td><td>COPY-01 tagline</td></tr>
+</tbody></table></div>
+<p>Regression check after each batch: <code>npm test</code>, tsc, lint, build, <code>scripts/audit-ace.ts</code>, <code>scripts/audit-catalogue.ts</code>, the crawl, and the Compass question set above.</p>
+
+<h2 id="scope">Scope &amp; limits</h2>
+<ul>
+<li>Tested on a local production build of commit <code>8fdb32b3</code>, which is exactly what's live, rather than on www, because Vercel's firewall blocked scripted requests from this machine on 14 Nov. Live Supabase data was read (counts only, no rows exposed); nothing was written.</li>
+<li>Signed-in journeys weren't tested this pass: that needs throwaway test accounts, which I'll only create with your OK.</li>
+<li>No forms were submitted (they send real email). No operator sites were clicked through (they block bots; links were checked on 18 Nov).</li>
+<li>Web Vitals are lab numbers from one machine, not field data. Compass token cost wasn't measured (no billing access); about half of the tested questions were answered from data without a model call.</li>
+<li>Earlier audits' fixes (16–18 Nov) were spot-checked, not re-tested one by one.</li>
+</ul>
+</div>
