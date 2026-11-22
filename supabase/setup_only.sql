@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   email text,
   phone text,
   avatar_url text,
-  role text NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin')),
+  role text NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin', 'operator')),
   username text UNIQUE,
   public_id text UNIQUE,
   created_at timestamptz DEFAULT now(),

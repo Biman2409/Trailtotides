@@ -84,7 +84,7 @@ export default function PinCard({
   return (
     <article className="tm-card" style={{ "--g": g.color } as React.CSSProperties}>
       <div className="relative h-32 lg:h-40 shrink-0 tm-on-photo">
-        <Image src={a.heroImage} alt="" fill className="object-cover" sizes="380px" unoptimized />
+        <Image src={a.heroImage} alt="" fill className="object-cover" sizes="380px" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, var(--tm-card) 2%, rgba(var(--tm-bg),0.35) 55%, rgba(0,0,0,0.25))" }} />
         <div className="absolute top-3 left-3 flex items-center gap-1.5">
           <span className="tm-chip" style={{ color: g.color, borderColor: `${g.color}55` }}>{a.type}</span>

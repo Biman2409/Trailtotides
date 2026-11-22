@@ -1,7 +1,7 @@
 // Search, sorting and small fact helpers for the Explore page (and its cards / list rows).
 import { getLowestPrice, type Adventure, type Month } from "@/lib/data";
 import { fromPrice } from "@/lib/leadPrices";
-import { getACE, computeDifficulty } from "@/lib/ace";
+import { getACE, computeDifficulty, READY_MIN, STRETCH_MIN } from "@/lib/ace";
 import { editDistance, matchesWords } from "@/lib/textMatch";
 
 export const MONTHS: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -95,9 +95,14 @@ export function sortAdventures(list: Adventure[], key: SortKey, opts: { monthIdx
   // The price the card shows (the full trip when known), so the order matches what people read
   const price = (a: Adventure) => fromPrice(a) ?? Number.MAX_SAFE_INTEGER;
   switch (key) {
-    case "match":
-      if (opts.score) return out.sort((x, y) => opts.score!(y) - opts.score!(x));
-      return out;
+    case "match": {
+      if (!opts.score) return out;
+      // Best verdict first (Ready, then Stretch, then Not yet); within a verdict, ones you can book
+      // come before "operators coming soon", then the closer fit
+      const verdict = (a: Adventure) => { const s = opts.score!(a); return s >= READY_MIN ? 2 : s >= STRETCH_MIN ? 1 : 0; };
+      const bookable = (a: Adventure) => Number(a.operators.length > 0);
+      return out.sort((x, y) => verdict(y) - verdict(x) || bookable(y) - bookable(x) || opts.score!(y) - opts.score!(x));
+    }
     case "price": return out.sort((x, y) => price(x) - price(y));
     case "shortest": return out.sort((x, y) => days(x) - days(y));
     case "highest": return out.sort((x, y) => (maxAltitudeM(y) ?? 0) - (maxAltitudeM(x) ?? 0));

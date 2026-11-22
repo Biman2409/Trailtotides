@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import { headers } from "next/headers";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/authz";
@@ -78,7 +78,13 @@ async function writeJsonFile(
 ): Promise<void> {
   const blob = new Blob([JSON.stringify(obj)], { type: "application/json" });
   await adminClient.storage.from(bucket).upload(path, blob, { upsert: true });
+  // Every operator write goes through here, so the cached lists below are dropped right away
+  revalidateTag(OPERATOR_DATA_TAG);
 }
+
+// Operator profiles and listings are JSON files in Storage. Reading them means listing and
+// downloading every file, so the lists are cached and only rebuilt after a write (or hourly).
+const OPERATOR_DATA_TAG = "operator-data";
 
 async function listAllFiles(
   adminClient: Awaited<ReturnType<typeof createAdminClient>>,
@@ -97,16 +103,20 @@ export async function getOperatorProfile(userId: string): Promise<OperatorProfil
   return readJsonFile(adminClient, "operator-profiles", `${userId}.json`) as Promise<OperatorProfile | null>;
 }
 
-export async function getAllOperatorProfiles(): Promise<OperatorProfile[]> {
+const cachedOperatorProfiles = unstable_cache(async (): Promise<OperatorProfile[]> => {
   const adminClient = await createAdminClient();
   const files = await listAllFiles(adminClient, "operator-profiles");
   const profiles = await Promise.all(
     files.map((f) => readJsonFile(adminClient, "operator-profiles", f.name))
   );
   return profiles.filter(Boolean) as OperatorProfile[];
+}, ["operator-profiles"], { tags: [OPERATOR_DATA_TAG], revalidate: 3600 });
+
+export async function getAllOperatorProfiles(): Promise<OperatorProfile[]> {
+  return cachedOperatorProfiles();
 }
 
-export async function getAllOperatorSubmissions(): Promise<OperatorSubmission[]> {
+const cachedOperatorSubmissions = unstable_cache(async (): Promise<OperatorSubmission[]> => {
   const adminClient = await createAdminClient();
   const files = await listAllFiles(adminClient, "operator-submissions");
   const subs = await Promise.all(
@@ -116,6 +126,10 @@ export async function getAllOperatorSubmissions(): Promise<OperatorSubmission[]>
   return result.sort(
     (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
+}, ["operator-submissions"], { tags: [OPERATOR_DATA_TAG], revalidate: 3600 });
+
+export async function getAllOperatorSubmissions(): Promise<OperatorSubmission[]> {
+  return cachedOperatorSubmissions();
 }
 
 export async function getSubmissionsForOperator(operatorId: string): Promise<OperatorSubmission[]> {
@@ -273,16 +287,13 @@ export async function getApprovedOperatorsForAdventure(adventureSlug: string): P
     (s) => s.adventure_slug === adventureSlug && s.status === "approved"
   );
 
-  const adminClient = await createAdminClient();
+  if (!approved.length) return [];
+  const profiles = new Map((await getAllOperatorProfiles()).map((p) => [p.user_id, p]));
 
   return Promise.all(
     approved.map(async (sub) => {
-      // Try to get website from the operator's profile
-      const profile = (await readJsonFile(
-        adminClient,
-        "operator-profiles",
-        `${sub.operator_id}.json`
-      )) as OperatorProfile | null;
+      // The website comes from the operator's profile (the cached list, not a file per listing)
+      const profile = profiles.get(sub.operator_id) ?? null;
 
       const priceNum = parseInt(sub.price_from.replace(/[^\d]/g, ""), 10);
       const priceFrom = isNaN(priceNum)
@@ -291,7 +302,8 @@ export async function getApprovedOperatorsForAdventure(adventureSlug: string): P
 
       return {
         name: sub.operator_name,
-        verified: true,
+        // An approved listing is not a verified operator: the badge comes only from our own check
+        verified: false,
         priceFrom,
         googleRating: 0,
         website: sub.website ?? profile?.website ?? undefined,

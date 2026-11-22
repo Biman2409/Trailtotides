@@ -59,7 +59,7 @@ export default function PeekCarousel({ list, fits, onHover, onOpen }: {
           <button key={a.slug} type="button" data-slug={a.slug} onClick={() => onOpen(a.slug)}
             className="tm-peekcard snap-center shrink-0 text-left" style={{ "--c": difficultyColor(diff) } as React.CSSProperties}>
             <span className="relative w-[72px] h-full shrink-0 overflow-hidden rounded-l-[15px]">
-              <Image src={a.heroImage} alt="" fill className="object-cover" sizes="72px" unoptimized />
+              <Image src={a.heroImage} alt="" fill className="object-cover" sizes="72px" />
               {fit && <span className="absolute bottom-1 left-1 text-[9.5px] font-black px-1 rounded" style={{ background: "rgba(11,13,16,0.85)", color: fit.bucket.color }}>{fit.score}</span>}
             </span>
             <span className="min-w-0 flex-1 py-2 pl-2.5 pr-2.5 flex flex-col justify-center">

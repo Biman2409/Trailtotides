@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { fromPrice } from "@/lib/leadPrices";
+import imageLoader from "@/lib/imageLoader";
 import { X, ArrowUp, ChevronRight, RotateCcw, Mountain, Bike, Sparkles, Snowflake, Gauge, Compass as CompassIcon } from "lucide-react";
 import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import Link from "next/link";
@@ -61,7 +62,7 @@ function PickCard({ adventure, reason, ace }: { adventure: Adventure; reason?: s
     >
       <span className="relative w-[76px] h-[76px] rounded-xl overflow-hidden shrink-0">
         {/* eslint-disable-next-line @next/next/no-img-element -- small thumbnail, many hosts */}
-        <img src={adventure.heroImage} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        <img src={imageLoader({ src: adventure.heroImage, width: 160 })} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         {b && (
           <span className="absolute bottom-1 left-1 text-[10px] font-bold px-1.5 py-0.5 rounded-md text-white tabular-nums" style={{ background: "rgba(0,0,0,0.65)" }}>
             <span style={{ color: b.color }}>●</span> {match}%

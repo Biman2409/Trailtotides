@@ -141,3 +141,18 @@ test("experience titles and descriptions don't promise operators an adventure do
     }
   }
 });
+
+// Team notes live in their own server-only file (kept out of the browser catalogue)
+import { SEED_REVIEWS } from "../src/lib/seedReviews";
+test("every team note belongs to a real adventure and has no member account", () => {
+  const slugs = new Set(adventures.map((a) => a.slug));
+  for (const [slug, notes] of Object.entries(SEED_REVIEWS)) {
+    assert.ok(slugs.has(slug), slug);
+    for (const n of notes) assert.ok(!("user_id" in n) || !(n as { user_id?: string }).user_id, `${slug} ${n.id}`);
+  }
+  assert.ok(Object.keys(SEED_REVIEWS).length >= 50);
+});
+
+test("nothing without operators is featured or an Editor's Choice", () => {
+  for (const a of adventures) if (a.operators.length === 0) assert.ok(!a.featured && !a.editorChoice, a.slug);
+});

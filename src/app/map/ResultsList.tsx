@@ -36,7 +36,7 @@ function Row({ a, fit, month, active, onPick, onHover }: {
         style={{ "--g": c } as React.CSSProperties}
       >
         <span className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0">
-          <Image src={a.heroImage} alt="" fill className="object-cover" sizes="56px" unoptimized />
+          <Image src={a.heroImage} alt="" fill className="object-cover" sizes="56px" />
           {fit && <span className="absolute bottom-1 left-1 text-[9px] font-black px-1 rounded" style={{ background: "rgba(11,13,16,0.85)", color: fit.bucket.color }}>{fit.score}</span>}
         </span>
         <span className="min-w-0 flex-1">

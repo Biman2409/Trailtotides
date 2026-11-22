@@ -7,6 +7,7 @@ import type { GeoJsonObject } from "geojson";
 import { adventures as allAdventures, type Adventure, type Month } from "@/lib/data";
 import type { Trail } from "@/lib/trails/shared";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
+import imageLoader from "@/lib/imageLoader";
 import {
   BASE_LAYERS, LIGHT_BASE, createBaseLayer, INDIA_CENTER, INDIA_ZOOM, INDIA_BOUNDS, loadLeaflet, inSeason, esc,
   difficultyOf, difficultyColor, priceFrom, formatINR, verifiedOperators,
@@ -94,7 +95,7 @@ function peekHtml(a: Adventure) {
   const price = priceFrom(a);
   const v = verifiedOperators(a).length;
   return `<div class="tm-peek">
-    <img src="${esc(a.heroImage)}" alt="" loading="lazy" />
+    <img src="${esc(imageLoader({ src: a.heroImage, width: 160 }))}" alt="" loading="lazy" />
     <div class="tm-peek-body">
       <b>${esc(a.name)}</b>
       <span>${esc(a.type)} · ${esc(a.durationDays)} · <em style="color:${difficultyColor(diff)}">${esc(diff)}</em></span>
@@ -490,11 +491,11 @@ export default function MapCanvas(props: Props) {
       const alt = esc(photo.caption || photo.adventureName);
       const icon = leaflet.divIcon({
         className: "",
-        html: `<div class="tm-photo"><img src="${esc(photo.url)}" alt="${alt}" /></div>`,
+        html: `<div class="tm-photo"><img src="${esc(imageLoader({ src: photo.url, width: 96 }))}" alt="${alt}" /></div>`,
         iconSize: [44, 44], iconAnchor: [22, 22],
       });
       const html = `<div class="tm-pop">
-          <img src="${esc(photo.url)}" alt="${alt}" />
+          <img src="${esc(imageLoader({ src: photo.url, width: 480 }))}" alt="${alt}" />
           <div class="tm-pop-body">
             <b>${esc(photo.adventureName)}</b>
             ${photo.caption ? `<span>${esc(photo.caption)}</span>` : ""}

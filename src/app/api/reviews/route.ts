@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { adventures } from "@/lib/data";
+import { SEED_REVIEWS } from "@/lib/seedReviews";
 import { rateLimit } from "@/lib/rateLimit";
 import { z } from "zod";
 
@@ -22,8 +22,7 @@ export async function GET(req: NextRequest) {
   const slug = req.nextUrl.searchParams.get("slug");
   if (!slug) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
 
-  const adventure = adventures.find((a) => a.slug === slug);
-  const seedReviews = adventure?.seedReviews ?? [];
+  const seedReviews = SEED_REVIEWS[slug] ?? [];
 
   const { data, error } = await admin
     .from("reviews")

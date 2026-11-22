@@ -2,10 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createAdminSupabase } from "@supabase/supabase-js";
 import { z } from "zod";
+import { readMedicalFlags, saveMedicalFlags, deleteMedicalFlags } from "@/lib/aceMedicalStore";
 
-// Mirrors api/ace-profile/route.ts exactly, but writes to a separate
-// user_metadata key (ace_medical) — architecturally isolated from the
-// scored ACE profile. The client scores from the answers before saving;
+// Kept apart from the scored ACE profile, in a private table rather than user_metadata. The client scores from the answers before saving;
 // this route only stores the flags for cautions and later refinement.
 const medicalFlagsSchema = z.object({
   version: z.literal(1),
@@ -27,13 +26,14 @@ function adminClient() {
   );
 }
 
+// Answers live in the private ace_medical table (see src/lib/aceMedicalStore.ts), never in the
+// login token. The browser only reads them back to prefill the questions on a retake.
 export async function GET() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ flags: null });
-
-  const flags = user.user_metadata?.ace_medical ?? null;
-  return NextResponse.json({ flags });
+  const flags = await readMedicalFlags(adminClient(), user);
+  return NextResponse.json({ flags }, { headers: { "Cache-Control": "private, no-store" } });
 }
 
 export async function POST(req: NextRequest) {
@@ -41,20 +41,13 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
-  const parsed = medicalFlagsSchema.safeParse(await req.json());
+  const parsed = medicalFlagsSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid medical flags" }, { status: 400 });
   }
 
-  const admin = adminClient();
-  await admin.auth.admin.updateUserById(user.id, {
-    user_metadata: {
-      ...user.user_metadata,
-      ace_medical: parsed.data,
-    },
-  });
-
-  return NextResponse.json({ ok: true });
+  const ok = await saveMedicalFlags(adminClient(), user, parsed.data);
+  return ok ? NextResponse.json({ ok: true }) : NextResponse.json({ error: "Could not save" }, { status: 500 });
 }
 
 export async function DELETE() {
@@ -62,12 +55,6 @@ export async function DELETE() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
-  // See api/ace-profile/route.ts DELETE — updateUserById merges
-  // user_metadata, so clearing a field needs an explicit null, not omission.
-  const admin = adminClient();
-  await admin.auth.admin.updateUserById(user.id, {
-    user_metadata: { ...user.user_metadata, ace_medical: null },
-  });
-
+  await deleteMedicalFlags(adminClient(), user);
   return NextResponse.json({ ok: true });
 }

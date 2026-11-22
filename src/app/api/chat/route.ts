@@ -83,7 +83,8 @@ ${CATALOG_STR}
 → Do NOT write more than one sentence before the recommendations block.
 
 **Vague request** ("something fun", "I want a trip", "recommend anything"):
-→ Ask ONE focused question: "Mountains or coast?" / "How many days?" / "Trek, bike, or something else?"
+→ Ask ONE focused question: "How many days?" / "Which month?" / "Trek, bike ride or rafting?"
+→ Never offer or mention coastal, beach, island or sea trips: none are live yet. Every live adventure is in the Himalayas.
 → No recommendations yet.
 
 **Refinement** ("something easier", "different state", "shorter"):
@@ -434,6 +435,8 @@ function pickFallback(query: string, ace: ACE | null, limit = 3) {
     const fitting = scored.filter((x) => x.s >= STRETCH_MIN);
     list = (fitting.length > 0 ? fitting : scored).sort((x, y) => y.s - x.s).map((x) => x.a);
   }
+  // Adventures you can book come first; "operators coming soon" ones only fill the gaps
+  list = [...list.filter((a) => a.operators.length > 0), ...list.filter((a) => a.operators.length === 0)];
   return list.slice(0, limit);
 }
 
@@ -522,7 +525,9 @@ function namedIn(query: string) {
   return adventures.filter((a) => {
     const name = a.name.toLowerCase().replace(/\s+(trek|ride|climb|expedition|circuit|trail)$/, "");
     const short = a.slug.replace(/-(trek|ride|climb|expedition|circuit|trail|bike|cycling)$/, "").replace(/-/g, " ");
-    return (name.length > 3 && q.includes(name)) || (short.length > 4 && new RegExp(`\\b${short}\\b`).test(q));
+    // A slug that boils down to a place ("ladakh", "spiti") names the region, not this adventure
+    const isPlace = PLACE_WORDS.some(([re]) => re.test(short));
+    return (name.length > 3 && q.includes(name)) || (!isPlace && short.length > 4 && new RegExp(`\\b${short}\\b`).test(q));
   });
 }
 
@@ -550,6 +555,10 @@ function keywordAnswer(query: string, ace: ACE | null) {
     text = named.length === 1
       ? `Here's ${named[0].name}${more ? `, plus ${more} more like it` : ""}.`
       : `Here are the ones you named${more ? `, plus ${more} more like them` : ""}.`;
+    // Named, but asked for a month it doesn't run in: say so rather than recommend it silently
+    const askedTrip = parseTrip(query);
+    const offSeason = askedTrip.months.length ? named.filter((a) => failingChecks(a, askedTrip).includes("months")) : [];
+    if (offSeason.length) text += ` Heads up: ${offSeason.map((a) => `${a.name} runs ${a.bestSeason}`).join("; ")}, so it's out of season for the month you asked.`;
   }
   const trip = parseTrip(query);
   if (!text && picks.length && hasTrip(trip)) {

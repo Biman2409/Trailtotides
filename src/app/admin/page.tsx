@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import AdminDashboardClient from "./AdminDashboardClient";
+import { usersWithMedicalFlags } from "@/lib/aceMedicalStore";
 import { getAllOperatorProfiles, getAllOperatorSubmissions } from "@/app/auth/operator-actions";
 import { adminGetAllReviews, adminGetAllPhotos, adminGetAllGroups } from "./actions";
 import { adventures } from "@/lib/data";
@@ -47,12 +48,14 @@ export default async function AdminPage() {
     { data: { users: authUsers } },
     wishlistCount,
     savedSearchCount,
+    withHealthAnswers,
   ] = await Promise.all([
     adminClient.from("profiles").select("*").order("created_at", { ascending: false }),
     adminClient.from("contact_messages").select("*").order("created_at", { ascending: false }),
     adminClient.auth.admin.listUsers({ perPage: 1000 }),
     wishlistSaves(),
     count("saved_searches"),
+    usersWithMedicalFlags(adminClient),
   ]);
 
   // Book clicks out to operators in the last 30 days, and the operator that got the most
@@ -84,7 +87,7 @@ export default async function AdminPage() {
         // Saved flat ({ stamina: 3, ... }) by /api/ace-profile
         ace: ace && typeof ace === "object" ? (ace as Record<string, number>) : null,
         ace_updated_at: (au.user_metadata?.ace_profile_updated_at as string | undefined) ?? null,
-        has_health_answers: !!au.user_metadata?.ace_medical,
+        has_health_answers: withHealthAnswers.has(au.id) || !!au.user_metadata?.ace_medical,
         avatar_id: au.user_metadata?.avatar_id ?? null,
       };
     })

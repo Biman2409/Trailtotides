@@ -19,7 +19,7 @@ export default function CompareTray({ onFocus }: { onFocus: (slug: string) => vo
         return (
           <span key={a.id} className="relative w-10 h-10 group">
             <button type="button" onClick={() => onFocus(a.slug)} title={a.name} className="block w-10 h-10 rounded-xl overflow-hidden relative" style={{ boxShadow: `0 0 0 1.5px ${genreOf(a.type).color}` }}>
-              <Image src={a.heroImage} alt={a.name} fill className="object-cover" sizes="40px" unoptimized />
+              <Image src={a.heroImage} alt={a.name} fill className="object-cover" sizes="40px" />
             </button>
             <button type="button" onClick={() => remove(a.id)} aria-label={`Remove ${a.name} from compare`}
               className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#1b1e22] border border-white/20 grid place-items-center text-white/70 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity">

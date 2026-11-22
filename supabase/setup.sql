@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   email text,
   phone text,
   avatar_url text,
-  role text NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin')),
+  role text NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin', 'operator')),
   username text UNIQUE,
   -- Permanent, human-readable id shown on the profile and Adventure
   -- Passport: 'TTT' + number for admins (TTT0, TTT1, TTT2, ...), a

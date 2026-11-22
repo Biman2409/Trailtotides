@@ -64,7 +64,8 @@ export function parseTrip(query: string, now = new Date()): TripAsk {
   const range = /(\d{1,2})\s*(?:-|–|to)\s*(\d{1,2})\s*[- ]?days?\b/.exec(q);
   const single = /\b(\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten)\s*[- ]?(?:days?|d)\b/.exec(q);
   if (range) days = { min: +range[1], max: +range[2] };
-  else if (single) { const n = WORD_NUM[single[1]] ?? +single[1]; days = { min: Math.max(1, n - 1), max: n + 1 }; label.length = `${n} days`; }
+  // "3 days" means up to 3: a 2-day trip fits, a 4-day one doesn't
+  else if (single) { const n = WORD_NUM[single[1]] ?? +single[1]; days = { min: Math.max(1, n - 1), max: n }; label.length = `${n} days`; }
   else if (/\blong weekend\b/.test(q)) { days = { min: 1, max: 4 }; label.length = "a long weekend"; }
   else if (/\bweekend\b/.test(q)) { days = { min: 1, max: 3 }; label.length = "a weekend"; }
   else if (/\b(a|one) week\b|\bweek[- ]long\b/.test(q)) { days = { min: 6, max: 8 }; label.length = "a week"; }

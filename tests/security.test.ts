@@ -76,3 +76,12 @@ test("the security migration locks profile roles and story publishing", () => {
     assert.doesNotMatch(s, /Authors can update own stories" ON/, f);
   }
 });
+
+test("the health-answers migration keeps the table private and allows the operator role", () => {
+  const sql = readFileSync("supabase/migrations/20261122010000_private_ace_medical_and_operator_role.sql", "utf8");
+  assert.match(sql, /CREATE TABLE IF NOT EXISTS public\.ace_medical/);
+  assert.match(sql, /ENABLE ROW LEVEL SECURITY/);
+  assert.match(sql, /REVOKE ALL ON public\.ace_medical FROM anon, authenticated/);
+  assert.doesNotMatch(sql, /CREATE POLICY/);
+  assert.match(sql, /CHECK \(role IN \('user', 'admin', 'operator'\)\)/);
+});

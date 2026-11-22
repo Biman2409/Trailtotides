@@ -189,7 +189,7 @@ function WhereMenu({ f, set, onPlace, onAdventure }: {
           <Group title="Adventures">
             {advs.map((a) => (
               <button key={a.slug} type="button" onClick={() => onAdventure(a)} className="tm-mrow">
-                <span className="relative w-8 h-8 rounded-lg overflow-hidden shrink-0"><Image src={a.heroImage} alt="" fill className="object-cover" sizes="32px" unoptimized /></span>
+                <span className="relative w-8 h-8 rounded-lg overflow-hidden shrink-0"><Image src={a.heroImage} alt="" fill className="object-cover" sizes="32px" /></span>
                 <span className="min-w-0 flex-1 text-left">
                   <span className="block text-[12.5px] font-semibold text-white/90 truncate">{a.name}</span>
                   <span className="block text-[10.5px] text-white/40 truncate">{a.type} · {a.state}</span>

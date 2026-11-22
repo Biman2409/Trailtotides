@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { readMedicalFlags } from "@/lib/aceMedicalStore";
 import { adventures } from "@/lib/data";
 import { deriveMedicalCautions } from "@/lib/medicalCautions";
 import type { MedicalFlags } from "@/lib/matchmakerQuestions";
@@ -12,7 +13,7 @@ export async function GET(req: NextRequest) {
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  const flags = (user?.user_metadata?.ace_medical as MedicalFlags | undefined) ?? null;
+  const flags: MedicalFlags | null = user ? await readMedicalFlags(await createAdminClient(), user) : null;
   return NextResponse.json(
     { notes: deriveMedicalCautions(flags, adventure) },
     { headers: { "Cache-Control": "private, no-store" } },
