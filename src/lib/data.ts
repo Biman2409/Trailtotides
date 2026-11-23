@@ -861,7 +861,7 @@ export const adventures: Adventure[] = [
     whoFor: "You've crossed a snow pass above 5,000m before · You can use crampons and an ice axe, and walk roped on a crevassed glacier · You can do a 10–14 hour pass day after a week of walking · You can take 11–12 days off: 9 on the trail, the drive in to Barshaini and out from Mud, and a spare day for weather",
     ace: { stamina:5, power:4, strength:5, agility:5, water:4, altitude:5, focus:5, nerve:5 },
     operators: [
-      { name: "Bikat Adventures", verified: true, priceFrom: "₹40,000", googleRating: 4.8, website: "" },
+      { name: "Bikat Adventures", verified: true, priceFrom: "₹40,000", googleRating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/Pin-parwati-pass-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹45,000", googleRating: 4.7, website: "https://trekthehimalayas.com/pin-parvati-pass-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹35,000", googleRating: 4.3, website: "https://www.trekupindia.com/pin-parvati-pass-trek" },
     ],
