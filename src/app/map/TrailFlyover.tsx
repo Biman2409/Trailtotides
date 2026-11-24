@@ -20,7 +20,7 @@ const RAD = Math.PI / 180;
 /** A whole trek takes about this long at 1×, whatever its length */
 const PLAY_SECONDS = 75;
 const SPEEDS = [1, 2, 4] as const;
-const EXAGGERATION = 1.35;
+const EXAGGERATION = 1.6;
 
 type Pt = { km: number; lat: number; lng: number; ele: number };
 
@@ -87,7 +87,7 @@ export default function TrailFlyover({ adventure: a, trail, onClose }: { adventu
     // in a Himalayan valley that puts the camera inside the mountain.
     const camera = (k: number) => {
       const p = at(k);
-      return { center: [p.lng, p.lat] as [number, number], zoom: 13.1, pitch: 60, elevation: p.ele * EXAGGERATION };
+      return { center: [p.lng, p.lat] as [number, number], zoom: 12.7, pitch: 66, elevation: p.ele * EXAGGERATION };
     };
     const tick = (now: number) => {
       if (!s.playing) return;
@@ -144,15 +144,34 @@ export default function TrailFlyover({ adventure: a, trail, onClose }: { adventu
         const bounds: [[number, number], [number, number]] = [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]];
         map = new ml.Map({
           container: box, style: DARK_STYLE, bounds, fitBoundsOptions: { padding: 60 },
-          pitch: 50, maxPitch: 72, attributionControl: { compact: true }, dragRotate: true,
+          pitch: 58, maxPitch: 78, attributionControl: { compact: true }, dragRotate: true,
         });
         map.on("error", () => {}); // a missing tile isn't worth a console line each
         map.on("style.load", () => {
           if (cancelled) return;
-          tuneStyle(map, true);
+          tuneStyle(map, true, { relief: false });
+          // The dark style is near black, which hides the relief in 3D. Here only: a slate ground,
+          // glaciers as snow, forest and water tinted, so the shading below has something to show on.
+          const paint = (layer: string, prop: string, value: unknown) => { if (map.getLayer(layer)) map.setPaintProperty(layer, prop, value); };
+          paint("background", "background-color", "#3b4047");
+          paint("landcover_glacier", "fill-color", "#dfe6ee");
+          paint("landcover_glacier", "fill-opacity", 0.85);
+          paint("landcover_ice_shelf", "fill-color", "#dfe6ee");
+          paint("landcover_wood", "fill-color", "#34452f");
+          paint("landcover_wood", "fill-opacity", 0.75);
+          paint("landuse_park", "fill-color", "#34452f");
+          paint("water", "fill-color", "#22394a");
+          paint("waterway", "line-color", "#2c4a5e");
           map.addSource("fly-terrain", { type: "raster-dem", tiles: [TERRARIUM], encoding: "terrarium", tileSize: 256, maxzoom: 14 });
+          map.addSource("fly-shade", { type: "raster-dem", tiles: [TERRARIUM], encoding: "terrarium", tileSize: 256, maxzoom: 14 });
           map.setTerrain({ source: "fly-terrain", exaggeration: EXAGGERATION });
-          map.setSky?.({ "sky-color": "#0b0f14", "horizon-color": "#2a2420", "fog-color": "#0b0f14", "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.6, "fog-ground-blend": 0.4 });
+          // Strong shading with warm light on the sunlit faces: ridges, valleys and slopes read at a glance
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const firstLabel = map.getStyle().layers.find((l: any) => l.type === "symbol")?.id;
+          map.addLayer({ id: "fly-hillshade", type: "hillshade", source: "fly-shade", paint: {
+            "hillshade-exaggeration": 0.85, "hillshade-shadow-color": "#07090c", "hillshade-highlight-color": "rgba(255,236,214,0.55)", "hillshade-accent-color": "#1a1f26",
+          } }, firstLabel);
+          map.setSky?.({ "sky-color": "#14202e", "horizon-color": "#6b7d92", "fog-color": "#33404e", "sky-horizon-blend": 0.5, "horizon-fog-blend": 0.5, "fog-ground-blend": 0.25 });
           map.addSource("fly-line", { type: "geojson", lineMetrics: true, data: { type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: pts.map((p) => [p.lng, p.lat]) } } });
           map.addLayer({ id: "fly-trail-casing", type: "line", source: "fly-line", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "rgba(0,0,0,0.55)", "line-width": 7 } });
           map.addLayer({ id: "fly-trail", type: "line", source: "fly-line", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-width": 3.5, "line-gradient": ["step", ["line-progress"], "#ff5100", 0.0001, "rgba(255,255,255,0.55)"] } });

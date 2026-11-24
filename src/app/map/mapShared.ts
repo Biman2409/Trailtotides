@@ -157,8 +157,9 @@ function labelsOnly(s: any) {
 
 // English labels (the styles show local scripts beside them), India's official map (see above),
 // and shaded relief under the labels, from the Terrarium elevation tiles (public, keyless)
+/** relief: false leaves the shaded relief to the caller (the 3D view shades its own) */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function tuneStyle(gl: any, dark: boolean) {
+export function tuneStyle(gl: any, dark: boolean, { relief = true }: { relief?: boolean } = {}) {
   // The base style names a few icons (e.g. "circle-11") its sprite sheet doesn't have; give each
   // an empty image so MapLibre stops warning and nothing odd is drawn
   gl.on("styleimagemissing", (e: { id: string }) => {
@@ -181,6 +182,7 @@ export function tuneStyle(gl: any, dark: boolean) {
     outline.layers.forEach((l) => gl.addLayer(l, below));
     // The relief's elevation images (~1.3 MB over India) would share the connection with the map's
     // own tiles; add it once the map has drawn, so the map shows first and the relief fades in
+    if (!relief) return;
     gl.once("idle", addRelief);
     setTimeout(addRelief, 4000);
   };
