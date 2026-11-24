@@ -40,19 +40,20 @@ function Row({ a, fit, month, active, onPick, onHover }: {
           {fit && <span className="absolute bottom-1 left-1 text-[9px] font-black px-1 rounded" style={{ background: "rgba(11,13,16,0.85)", color: fit.bucket.color }}>{fit.score}</span>}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: c, boxShadow: `0 0 6px ${c}88` }} />
-            <span className="text-[13px] font-semibold text-white/90 truncate">{a.name}</span>
+          <span className="block text-[13px] font-semibold text-white/90 truncate">{a.name}</span>
+          {/* One line of facts: the type only when it isn't a trek (most are), difficulty in the
+              pins' colour, then the price */}
+          <span className="block text-[11.5px] text-white/50 truncate mt-0.5">
+            {a.type !== "Trekking" && <>{a.type} · </>}{a.durationDays} · <span style={{ color: c }}>{diff}</span>
+            {price !== null && <> · from <b className="font-semibold text-white/85">{formatINR(price)}</b></>}
           </span>
-          <span className="block text-[11px] text-white/45 truncate mt-0.5">
-            {a.type} · {a.durationDays} · <span style={{ color: difficultyColor(diff) }}>{diff}</span>
-          </span>
-          <span className="flex items-center gap-2 mt-1 text-[11.5px]">
-            {fit && <span className="font-semibold" style={{ color: fit.bucket.color }}>{fit.bucket.label}</span>}
-            {v > 0 && <span className="inline-flex items-center gap-0.5 text-[var(--tm-mint)]/80"><BadgeCheck className="w-3 h-3" />{v}</span>}
-            {price !== null && <span className="text-white/55">from <b className="text-white/85">{formatINR(price)}</b></span>}
-            {off && month && <span className="text-white/30">Off-season</span>}
-          </span>
+          {(fit || v > 0 || (off && month)) && (
+            <span className="flex items-center gap-2 mt-1 text-[11px] truncate">
+              {fit && <span className="font-semibold" style={{ color: fit.bucket.color }}>{fit.bucket.label}</span>}
+              {v > 0 && <span className="inline-flex items-center gap-1 text-[var(--tm-mint)]/80"><BadgeCheck className="w-3 h-3 shrink-0" />{v} verified {v === 1 ? "operator" : "operators"}</span>}
+              {off && month && <span className="text-white/30">Off-season</span>}
+            </span>
+          )}
         </span>
         <button
           type="button"

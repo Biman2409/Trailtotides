@@ -36,7 +36,7 @@ import CompareTray from "./CompareTray";
 import { fitFor, haversineKm, BASE_KEY, type Fit, type LayerKey } from "./mapShared";
 import PeekCarousel from "./PeekCarousel";
 import MapEmptyState from "./MapEmptyState";
-import MapKey from "./MapKey";
+import { FilterChips, KeyFit } from "./MapKey";
 import { trailUrl, type Trail } from "@/lib/trails/shared";
 
 
@@ -464,22 +464,13 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
       onPlace={(lat, lng, name) => { apiRef.current?.flyTo(lat, lng, 9); apiRef.current?.placePin(lat, lng, name); }}
       onAdventure={(a) => select(a.slug)}
       floating={floating}
-      trailing={floating ? filtersButton : undefined}
+      trailing={filtersButton}
     />
   );
 
-  // The map key: difficulty and best months as columns of what's on the map, your fit, and the
-  // filters you've set as chips. It stands in for the old colour legend.
-  const mapKey = (
-    <MapKey
-      f={f} set={set} filterWith={filterWith} monthIdx={monthIdx} score={score} canFit={canFit}
-      group={group ? { code: group.code, name: group.name } : null}
-      groups={loggedIn ? groups : []} groupLoading={groupLoading} onGroup={chooseGroup}
-      onMore={() => setFiltersOpen(true)}
-      morePanelCount={f.durs.length + (f.maxPrice ? 1 : 0) + (f.editorOnly ? 1 : 0)}
-      onClear={clearAll}
-    />
-  );
+  // What you've set, as chips to remove one by one, under the control row. Difficulty, Season and
+  // Your fit live in the Filters panel with everything else, so there's one row of controls.
+  const filterChips = <FilterChips f={f} set={set} onClear={clearAll} />;
 
   // The count leads the list: what's in view, then sort
   const statusLine = (
@@ -504,14 +495,6 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
             <BookmarkPlus className="w-3.5 h-3.5" /><span className="hidden lg:inline">Save</span>
           </button>
         )}
-        {/* Filters: duration, price, editor picks and the rest, beside Sort */}
-        <button type="button" onClick={() => setFiltersOpen(true)} aria-expanded={filtersOpen}
-          className="hidden lg:inline-flex relative items-center gap-1.5 h-[30px] px-2.5 rounded-[9px] text-[12px] font-semibold text-white transition-colors"
-          style={{ background: "rgba(255,81,0,0.14)", border: "1px solid rgba(255,125,71,0.45)" }}
-          aria-label={panelCount(f) ? `Filters, ${panelCount(f)} set` : "Filters"}>
-          <SlidersHorizontal className="w-3.5 h-3.5" /> Filters
-          {panelCount(f) > 0 && <b className="min-w-4 h-4 px-1 rounded-full bg-[#ff5100] text-[#1c1814] text-[9px] font-bold grid place-items-center">{panelCount(f)}</b>}
-        </button>
       </div>
     </div>
   );
@@ -623,7 +606,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
               <div className={`p-3 space-y-2 border-b border-white/[0.06] ${selectedAdv ? "hidden" : ""}`}>
                 <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} />
                 {dock(false)}
-                {mapKey}
+                {filterChips}
               </div>
               {!selectedAdv && <div className="px-3.5 pt-3 pb-2">{statusLine}</div>}
               <div className={`flex-1 overflow-y-auto px-3.5 tm-scroll ${selectedAdv ? "pt-3" : "pb-3.5 pt-1"}`}>{body}</div>
@@ -643,8 +626,8 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
                   <Play className="w-3.5 h-3.5 fill-current" /> Fly in 3D
                 </FlyTrail>
               )}
-              <button type="button" onClick={() => apiRef.current?.reset()} className="tm-glass rounded-xl h-10 px-3 text-[11.5px] font-semibold text-white/70 hover:text-white inline-flex items-center gap-1.5" title="Back to the whole of India">
-                <Compass className="w-3.5 h-3.5" /> Reset View
+              <button type="button" onClick={() => apiRef.current?.reset()} className="tm-glass rounded-xl w-10 h-10 text-white/70 hover:text-white grid place-items-center" title="Back to the whole of India" aria-label="Reset view: back to the whole of India">
+                <Compass className="w-4 h-4" />
               </button>
               {layersMenu}
             </div>
@@ -689,7 +672,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
                     <PeekCarousel list={listed.length ? listed : shown} fits={fits} onHover={setHovered} onOpen={select} />
                   ) : (
                     <>
-                      {mapKey}
+                      {filterChips}
                       {statusLine}
                       <CompareTray onFocus={select} />
                     </>
@@ -718,6 +701,11 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
           sortKey={sortKey} setSort={setSort} sortEverywhere
           hasProfile={canFit}
           countWith={(patch) => filterWith({ ...f, ...patch }).length}
+          // Your ACE fit and group picks lead the panel (they were the map key's third pill)
+          top={<KeyFit f={f} set={set} filterWith={filterWith} score={score} canFit={canFit}
+            group={group ? { code: group.code, name: group.name } : null}
+            groups={loggedIn ? groups : []} groupLoading={groupLoading} onGroup={chooseGroup} />}
+          hideFit
         />
       )}
 
@@ -895,6 +883,8 @@ const PAGE_CSS = `
   .tm-cmp { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; color: rgba(var(--tm-ink),0.35); border: 1px solid rgba(var(--tm-ink),0.08); transition: all .2s; }
   .tm-row:hover .tm-cmp { color: rgba(var(--tm-ink),0.7); }
   .tm-cmp:hover:not(:disabled) { color: rgb(var(--tm-fg)); border-color: rgba(var(--tm-ink),0.3); }
+  /* With a mouse, compare shows on the row you point at (or once it's on); touch keeps it in view */
+  @media (hover: hover) { .tm-cmp:not(.is-on) { opacity: 0; } .tm-row:hover .tm-cmp, .tm-row:focus-within .tm-cmp, .tm-cmp:focus-visible { opacity: 1; } }
   .tm-cmp.is-on { color: var(--tm-mint); border-color: rgba(111,240,224,0.4); background: rgba(111,240,224,0.1); }
   .tm-cmp:disabled { opacity: 0.35; cursor: not-allowed; }
 

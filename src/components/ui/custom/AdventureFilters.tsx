@@ -206,7 +206,7 @@ const CAT_CSS = `
 
 /* ── Full panel: bottom sheet on phones, side drawer on larger screens ──────── */
 
-export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun = "adventure", sortKey, setSort, hasProfile, countWith, sortEverywhere = false }: {
+export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun = "adventure", sortKey, setSort, hasProfile, countWith, sortEverywhere = false, top, hideFit = false }: {
   f: AdventureFilterState;
   set: (patch: Partial<AdventureFilterState>) => void;
   onClose: () => void;
@@ -221,6 +221,10 @@ export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun 
   countWith?: (patch: Partial<AdventureFilterState>) => number;
   /** Show Sort by on every screen (the map has no sort menu of its own); else phones only */
   sortEverywhere?: boolean;
+  /** A section to lead the panel with (the map puts your ACE fit and group picks here) */
+  top?: React.ReactNode;
+  /** Leave out the panel's own "Your fitness" section, when top already covers it */
+  hideFit?: boolean;
 }) {
   const closeRef = useRef(onClose);
   // An option's count: what you'd get with just it chosen in its group, everything else as set
@@ -250,6 +254,7 @@ export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun 
         </div>
 
         <div className="flex-1 overflow-y-auto px-5 py-5 space-y-6">
+          {top}
           {/* Sort lives here on phones (the toolbar select is hidden there) */}
           <Section title="Sort by" className={sortEverywhere ? "" : "md:hidden"}>
             {(Object.keys(SORT_LABELS) as SortKey[]).filter((k) => k !== "match" || hasProfile).map((k) => (
@@ -278,7 +283,7 @@ export function FilterPanel({ f, set, onClose, onClear, resultCount, resultNoun 
               </Opt>
             ))}
           </Section>
-          {hasProfile && (
+          {hasProfile && !hideFit && (
             <Section title="Your fitness">
               <Opt on={f.fit === "ready"} onClick={() => set({ fit: f.fit === "ready" ? null : "ready" })} count={n({ fit: "ready" })}>Ready for me</Opt>
               <Opt on={f.fit === "stretch"} onClick={() => set({ fit: f.fit === "stretch" ? null : "stretch" })} count={n({ fit: "stretch" })}>A stretch</Opt>

@@ -107,6 +107,53 @@ export default function MapKey({ f, set, filterWith, monthIdx, score, canFit, gr
   );
 }
 
+/** The filters you've set, as chips to remove one by one: under the map's control row */
+export function FilterChips({ f, set, onClear }: { f: AdventureFilterState; set: (p: Partial<AdventureFilterState>) => void; onClear: () => void }) {
+  const chips = activeChips(f, set);
+  if (!chips.length) return null;
+  return (
+    <div className="mk-chips">
+      {chips.map((c) => (
+        <button key={c.key} type="button" onClick={c.remove} className="mk-chip" aria-label={`Remove ${c.label}`}>
+          {c.label}<X className="w-3 h-3" />
+        </button>
+      ))}
+      {chips.length > 1 && <button type="button" onClick={onClear} className="mk-clear">Clear all</button>}
+      <style>{KEY_CSS}</style>
+    </div>
+  );
+}
+
+/** Your ACE fit (and a group's), leading the Filters panel; without a profile, the way to get one */
+export function KeyFit({ f, set, filterWith, score, canFit, group, groups, groupLoading, onGroup }: ChartProps & {
+  score?: (a: Adventure) => number;
+  canFit: boolean;
+  group: { code: string; name: string } | null;
+  groups: { code: string; name: string; memberCount: number }[];
+  groupLoading: boolean;
+  onGroup: (code: string) => void;
+}) {
+  return (
+    <div className="mk">
+      {canFit && score ? (
+        <FitChoices f={f} set={set} filterWith={filterWith} score={score} group={group} groups={groups} groupLoading={groupLoading} onGroup={onGroup} />
+      ) : (
+        <div className="mk-drop">
+        <Link href="/matchmaker" onClick={() => track("map_fitness_cta", { from: "filters" })} className="flex flex-row items-center gap-3 hover:brightness-110">
+          <MatchmakerMark className="w-5 h-5 shrink-0 text-[var(--tm-peach)]" />
+          <span className="min-w-0 flex-1">
+            <span className="block text-[13px] font-semibold" style={{ color: "rgb(var(--tm-fg))" }}>{tm("Find what you're ready for")}</span>
+            <span className="block text-[11.5px]" style={{ color: "rgba(var(--tm-fg),0.6)" }}>{tm("The 2-min Adventure Matchmaker rates every adventure for you")}</span>
+          </span>
+          <ChevronDown className="w-4 h-4 -rotate-90 opacity-60 shrink-0" />
+        </Link>
+        </div>
+      )}
+      <style>{KEY_CSS}</style>
+    </div>
+  );
+}
+
 const toggle = <T,>(list: T[], v: T) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
 
 type ChartProps = { f: AdventureFilterState; set: (p: Partial<AdventureFilterState>) => void; filterWith: (f: AdventureFilterState) => Adventure[] };
