@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { X, Play, Pause, RotateCcw, Mountain, BedDouble, LocateFixed } from "lucide-react";
 import { trailProfile, type Trail } from "@/lib/trails/shared";
 import { loadLeaflet, loadMapLibre, tuneStyle, TERRARIUM } from "./mapShared";
-import { DARK_STYLE } from "./mapAssets";
+import { DARK_STYLE, MAPBOX_CSS, MAPBOX_JS, MAPBOX_STYLE, MAPBOX_TOKEN } from "./mapAssets";
 
 // "Fly the trail": the trek in 3D, the camera walking the mapped line over real terrain.
 //   - The camera looks at the walker at the trail's own height, and checks its line of sight to
@@ -27,13 +27,32 @@ const RAD = Math.PI / 180;
 /** A whole trek takes about this long at 1×, whatever its length */
 const PLAY_SECONDS = 75;
 const SPEEDS = [1, 2, 4] as const;
-const EXAGGERATION = 1.6;
+/** Mapbox's sharper terrain needs less raising than the open elevation tiles */
+const EXAGGERATION = MAPBOX_TOKEN ? 1.35 : 1.6;
 /** The camera's preferred tilt, and how low it may drop to see over a ridge */
 const PITCH = 70, PITCH_MIN = 34;
 /** How long after you stop moving the map the walk carries on */
 const RESUME_MS = 2500;
 /** Names that mark a place worth calling out: passes, summits, lakes, camps at the top */
 const NOTABLE = /\b(la|pass|peak|top|ri|summit|base camp|kund|tal|lake|glacier|bugyal|kantha)\b/i;
+
+/** With a Mapbox token the view runs on Mapbox GL JS (satellite imagery, Mapbox terrain); without one,
+ *  on MapLibre with the site's own style. Everything else is the same on both. */
+const USE_MAPBOX = !!MAPBOX_TOKEN;
+const FONT_BOLD = USE_MAPBOX ? ["DIN Pro Bold", "Arial Unicode MS Bold"] : ["Noto Sans Bold"];
+let mapboxPromise: Promise<void> | null = null;
+function loadMapbox(): Promise<void> {
+  if (mapboxPromise) return mapboxPromise;
+  mapboxPromise = new Promise((resolve, reject) => {
+    if (!document.querySelector(`link[rel="stylesheet"][href="${MAPBOX_CSS}"]`)) {
+      const l = document.createElement("link"); l.rel = "stylesheet"; l.href = MAPBOX_CSS; document.head.appendChild(l);
+    }
+    const sc = document.createElement("script");
+    sc.src = MAPBOX_JS; sc.onload = () => resolve(); sc.onerror = () => { mapboxPromise = null; reject(new Error("Mapbox didn't load")); };
+    document.head.appendChild(sc);
+  });
+  return mapboxPromise;
+}
 
 /** The walker: the trekker from the profile-photo avatars (avatar-10, "Peak Finder": brown hair,
  *  goggles up, navy jacket with orange shoulders and collar, ice axe), walking, on a white disc */
@@ -222,14 +241,18 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
     // whether any of it is underground. queryTerrainElevation gives absolute heights in the
     // exaggerated scene's metres, the same as the camera's altitude.
     const blocked = (): boolean => {
-      const tr = map?.transform;
-      if (!tr?.getCameraLngLat || !tr?.getCameraAltitude) return false;
-      const cam = tr.getCameraLngLat(), camAlt = tr.getCameraAltitude();
-      const w = at(s.km), wAlt = map.queryTerrainElevation([w.lng, w.lat]) ?? w.ele * EXAGGERATION;
+      if (!map) return false;
+      // Where the camera is: Mapbox says through its free camera, MapLibre through its transform
+      let cam: { lng: number; lat: number }, camAlt: number;
+      if (map.getFreeCameraOptions) { const pos = map.getFreeCameraOptions().position; if (!pos) return false; cam = pos.toLngLat(); camAlt = pos.toAltitude(); }
+      else if (map.transform?.getCameraLngLat) { cam = map.transform.getCameraLngLat(); camAlt = map.transform.getCameraAltitude(); }
+      else return false;
+      const q = (ll: [number, number]) => (USE_MAPBOX ? map.queryTerrainElevation(ll, { exaggerated: true }) : map.queryTerrainElevation(ll));
+      const w = at(s.km), wAlt = q([w.lng, w.lat]) ?? w.ele * EXAGGERATION;
       for (let i = 1; i < 9; i++) {
         const t = i / 10;
         const lng = cam.lng + (w.lng - cam.lng) * t, lat = cam.lat + (w.lat - cam.lat) * t, alt = camAlt + (wAlt - camAlt) * t;
-        const g = map.queryTerrainElevation([lng, lat]);
+        const g = q([lng, lat]);
         if (g != null && g + 50 > alt) return true;
       }
       return false;
@@ -332,21 +355,48 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       back: () => { s.resume = true; backToTrail(); },
     };
 
-    loadLeaflet()
-      .then((leaflet) => loadMapLibre(leaflet))
+    (USE_MAPBOX ? loadMapbox() : loadLeaflet().then((leaflet) => loadMapLibre(leaflet)))
       .then(() => {
         if (cancelled) return;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const ml = (window as any).maplibregl;
+        const ml = USE_MAPBOX ? (window as any).mapboxgl : (window as any).maplibregl;
         const lats = pts.map((p) => p.lat), lngs = pts.map((p) => p.lng);
         const bounds: [[number, number], [number, number]] = [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]];
         map = new ml.Map({
-          container: box, style: DARK_STYLE, bounds, fitBoundsOptions: { padding: 60 },
-          pitch: 58, maxPitch: 78, attributionControl: { compact: true }, dragRotate: true,
+          container: box, style: USE_MAPBOX ? MAPBOX_STYLE : DARK_STYLE, bounds, fitBoundsOptions: { padding: 60 },
+          pitch: 58, maxPitch: USE_MAPBOX ? 85 : 78, dragRotate: true,
+          // Mapbox's own logo and credit stay as its terms ask; MapLibre's credit folds away
+          ...(USE_MAPBOX ? { accessToken: MAPBOX_TOKEN, projection: "mercator" } : { attributionControl: { compact: true } }),
         });
         map.on("error", () => {}); // a missing tile isn't worth a console line each
         map.on("style.load", () => {
           if (cancelled) return;
+          if (USE_MAPBOX) setUpMapbox(); else setUpMapLibre();
+          addTrailLayers();
+        });
+      })
+      .catch(() => setFailed(true));
+
+    // Mapbox: satellite imagery with Mapbox terrain, fog for depth, and India's official map: the
+    // style's boundaries and labels switched to Mapbox's India worldview, our outline on top
+    const setUpMapbox = () => {
+      map.addSource("fly-terrain", { type: "raster-dem", url: "mapbox://mapbox.mapbox-terrain-dem-v1", tileSize: 512, maxzoom: 14 });
+      map.setTerrain({ source: "fly-terrain", exaggeration: EXAGGERATION });
+      map.setFog?.({ range: [1, 9], color: "#c8d3df", "horizon-blend": 0.12, "high-color": "#3d5a85", "space-color": "#0b1020", "star-intensity": 0 });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      for (const l of map.getStyle().layers as any[]) {
+        const f = map.getFilter(l.id);
+        const js = f ? JSON.stringify(f) : "";
+        if (js.includes('"worldview"') && js.includes('"US"')) map.setFilter(l.id, JSON.parse(js.split('"US"').join('"IN"')));
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const firstLabel = map.getStyle().layers.find((l: any) => l.type === "symbol")?.id;
+      map.addSource("fly-india", { type: "geojson", data: `${window.location.origin}/india-boundary.geojson` });
+      map.addLayer({ id: "fly-india", type: "line", source: "fly-india", paint: { "line-color": "rgba(255,255,255,0.75)", "line-width": 1.6 } }, firstLabel);
+    };
+
+    // MapLibre: the site's own style, re-toned for 3D, with open elevation tiles and strong shading
+    const setUpMapLibre = () => {
           tuneStyle(map, true, { relief: false });
           // The dark style is near black, which hides the relief in 3D. Here only: a slate ground,
           // glaciers as snow, forest and water tinted, so the shading below has something to show on.
@@ -370,6 +420,10 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
             "hillshade-exaggeration": 0.85, "hillshade-shadow-color": "#07090c", "hillshade-highlight-color": "rgba(255,236,214,0.55)", "hillshade-accent-color": "#1a1f26",
           } }, firstLabel);
           map.setSky?.({ "sky-color": "#14202e", "horizon-color": "#6b7d92", "fog-color": "#33404e", "sky-horizon-blend": 0.5, "horizon-fog-blend": 0.5, "fog-ground-blend": 0.25 });
+    };
+
+    // The trail, its stops and landmarks, the hiker, and the controls' hooks: the same on both engines
+    const addTrailLayers = () => {
 
           // Context: named peaks around the trail from the map data, quiet and only once you're close
           const halo = { "text-halo-color": "rgba(10,12,16,0.85)", "text-halo-width": 1.4, "text-halo-blur": 0.4 };
@@ -399,15 +453,15 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
             geometry: { type: "Point", coordinates: [st.lng, st.lat] },
           })) } });
           map.addLayer({ id: "fly-stop", type: "circle", source: "fly-stops", paint: { "circle-radius": 10, "circle-color": ["case", ["get", "first"], "#16a34a", "#ff5100"], "circle-stroke-color": "#ffffff", "circle-stroke-width": 2, "circle-pitch-alignment": "viewport", "circle-pitch-scale": "viewport" } });
-          map.addLayer({ id: "fly-stop-n", type: "symbol", source: "fly-stops", layout: { "text-field": ["get", "n"], "text-font": ["Noto Sans Bold"], "text-size": 11, "text-allow-overlap": true, "text-ignore-placement": true, "text-pitch-alignment": "viewport" }, paint: { "text-color": ["case", ["get", "first"], "#ffffff", "#1c1814"] } });
+          map.addLayer({ id: "fly-stop-n", type: "symbol", source: "fly-stops", layout: { "text-field": ["get", "n"], "text-font": FONT_BOLD, "text-size": 11, "text-allow-overlap": true, "text-ignore-placement": true, "text-pitch-alignment": "viewport" }, paint: { "text-color": ["case", ["get", "first"], "#ffffff", "#1c1814"] } });
           map.addLayer({ id: "fly-stop-name", type: "symbol", source: "fly-stops", layout: {
             "text-field": ["case", ["get", "notable"], ["format", ["get", "name"], { "font-scale": 1 }, "\n", {}, ["get", "ele"], { "font-scale": 0.82 }], ["get", "name"]],
-            "text-font": ["Noto Sans Bold"], "text-size": ["case", ["get", "notable"], 13, 11], "text-anchor": "left", "text-offset": [1.1, 0], "text-justify": "left",
+            "text-font": FONT_BOLD, "text-size": ["case", ["get", "notable"], 13, 11], "text-anchor": "left", "text-offset": [1.1, 0], "text-justify": "left",
             "text-pitch-alignment": "viewport", "text-padding": 4,
           }, paint: { "text-color": ["case", ["get", "notable"], "#ffd9c2", "rgba(255,255,255,0.85)"], ...halo } });
           // Side summits off the line (Gokyo Ri, Kala Patthar): a triangle, name and height
           map.addSource("fly-side", { type: "geojson", data: { type: "FeatureCollection", features: trail.side.map((st) => ({ type: "Feature", properties: { label: `▲ ${st.name}${st.ele != null ? `\n${fmt(st.ele)} m` : ""}` }, geometry: { type: "Point", coordinates: [st.lng, st.lat] } })) } });
-          map.addLayer({ id: "fly-side", type: "symbol", source: "fly-side", layout: { "text-field": ["get", "label"], "text-font": ["Noto Sans Bold"], "text-size": 12, "text-anchor": "bottom", "text-pitch-alignment": "viewport" }, paint: { "text-color": "#a7f3e8", ...halo } });
+          map.addLayer({ id: "fly-side", type: "symbol", source: "fly-side", layout: { "text-field": ["get", "label"], "text-font": FONT_BOLD, "text-size": 12, "text-anchor": "bottom", "text-pitch-alignment": "viewport" }, paint: { "text-color": "#a7f3e8", ...halo } });
 
           map.addSource("fly-walker", { type: "geojson", data: { type: "Feature", properties: {}, geometry: { type: "Point", coordinates: [pts[0].lng, pts[0].lat] } } });
           map.addLayer({ id: "fly-walker-glow", type: "circle", source: "fly-walker", paint: { "circle-radius": 22, "circle-color": "rgba(255,154,102,0.45)", "circle-blur": 0.8, "circle-pitch-alignment": "viewport", "circle-pitch-scale": "viewport" } });
@@ -443,9 +497,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
           cleanups.push(() => window.removeEventListener("pointerup", release), () => clearTimeout(wheelEnd));
           map.on("moveend", (e: { originalEvent?: Event }) => { if (e.originalEvent && s.resume) letGo(); });
           if (!reduced) setTimeout(() => { if (!cancelled) start(); }, 900);
-        });
-      })
-      .catch(() => setFailed(true));
+    };
 
     return () => {
       cancelled = true; cancelAnimationFrame(raf); clearTimeout(resumeTimer); clearInterval(countdown); clearTimeout(calloutTimer);

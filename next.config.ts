@@ -5,11 +5,11 @@ import type { NextConfig } from "next";
 // https host (operator logos, Unsplash, map tiles).
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://accounts.google.com https://va.vercel-scripts.com https://unpkg.com",
-  "style-src 'self' 'unsafe-inline' https://unpkg.com https://accounts.google.com",
+  "script-src 'self' 'unsafe-inline' https://accounts.google.com https://va.vercel-scripts.com https://unpkg.com https://api.mapbox.com",
+  "style-src 'self' 'unsafe-inline' https://unpkg.com https://api.mapbox.com https://accounts.google.com",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://accounts.google.com https://nominatim.openstreetmap.org https://api.open-meteo.com https://archive-api.open-meteo.com https://tiles.openfreemap.org https://server.arcgisonline.com https://s3.amazonaws.com https://vitals.vercel-insights.com",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://accounts.google.com https://nominatim.openstreetmap.org https://api.open-meteo.com https://archive-api.open-meteo.com https://tiles.openfreemap.org https://server.arcgisonline.com https://s3.amazonaws.com https://api.mapbox.com https://events.mapbox.com https://vitals.vercel-insights.com",
   "frame-src https://accounts.google.com",
   "worker-src 'self' blob:",
   "object-src 'none'",
