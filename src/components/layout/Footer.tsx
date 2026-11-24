@@ -42,15 +42,13 @@ export default function Footer() {
                     Platform
                   </h2>
                   <ul className="space-y-4">
+                    {/* The same sections, in the same order, as the menu at the top */}
                     {[
                       { label: "Explore", href: "/explore" },
-                      { label: "Destinations", href: "/destinations" },
                       { label: "Map", href: "/map" },
-                                            { label: "Matchmaker", href: "/matchmaker" },
-                      { label: "Stories", href: "/stories" },
-                      { label: "Learn", href: "/adventurepedia" },
-                      { label: "How ACE™ works", href: "/ace" },
+                      { label: "Matchmaker", href: "/matchmaker" },
                       { label: "Operators", href: "/operators" },
+                      { label: "Learn", href: "/adventurepedia" },
                     ].map((link) => (
                       <li key={link.label}>
                         <Link
@@ -73,7 +71,7 @@ export default function Footer() {
                     {[
                       ...(ABOUT_PAGE_LIVE ? [{ label: "About", href: "/about" }] : []),
                       { label: "Contact", href: "/contact" },
-                      { label: "Terms of Service", href: "/terms" },
+                      { label: "Terms of Use", href: "/terms" },
                       { label: "Privacy Policy", href: "/privacy" },
                     ].map((link) => (
                       <li key={link.label}>
