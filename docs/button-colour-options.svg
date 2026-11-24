@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="420" viewBox="0 0 880 420" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <rect width="880" height="420" fill="#eae5da"/>
+  <text x="440" y="42" text-anchor="middle" font-size="22" font-weight="600" fill="#1c1814">Button colour: option A vs option B</text>
+
+  <g transform="translate(40,70)">
+    <rect width="380" height="310" rx="16" fill="#ffffff" stroke="#d8cfc0"/>
+    <text x="24" y="40" font-size="18" font-weight="600" fill="#1c1814">A · Same orange, dark text</text>
+    <text x="24" y="64" font-size="14" fill="#5b5249">#ff5100 fill + #1c1814 text</text>
+    <rect x="24" y="92" width="332" height="52" rx="26" fill="#ff5100"/>
+    <text x="190" y="125" text-anchor="middle" font-size="17" font-weight="600" fill="#1c1814">Book this trek</text>
+    <rect x="24" y="160" width="160" height="40" rx="20" fill="#ff5100"/>
+    <text x="104" y="186" text-anchor="middle" font-size="14" font-weight="600" fill="#1c1814">Compare</text>
+    <rect x="196" y="160" width="160" height="40" rx="20" fill="#ff5100"/>
+    <text x="276" y="186" text-anchor="middle" font-size="14" font-weight="600" fill="#1c1814">Visit site</text>
+    <text x="24" y="240" font-size="15" font-weight="600" fill="#1f7a4d">Contrast 5.40 : 1 · passes</text>
+    <text x="24" y="266" font-size="13" fill="#5b5249">Brand orange unchanged everywhere.</text>
+    <text x="24" y="286" font-size="13" fill="#5b5249">Only the button text colour changes.</text>
+  </g>
+
+  <g transform="translate(460,70)">
+    <rect width="380" height="310" rx="16" fill="#ffffff" stroke="#d8cfc0"/>
+    <text x="24" y="40" font-size="18" font-weight="600" fill="#1c1814">B · Slightly deeper orange</text>
+    <text x="24" y="64" font-size="14" fill="#5b5249">#d63f00 fill + white text</text>
+    <rect x="24" y="92" width="332" height="52" rx="26" fill="#d63f00"/>
+    <text x="190" y="125" text-anchor="middle" font-size="17" font-weight="600" fill="#ffffff">Book this trek</text>
+    <rect x="24" y="160" width="160" height="40" rx="20" fill="#d63f00"/>
+    <text x="104" y="186" text-anchor="middle" font-size="14" font-weight="600" fill="#ffffff">Compare</text>
+    <rect x="196" y="160" width="160" height="40" rx="20" fill="#d63f00"/>
+    <text x="276" y="186" text-anchor="middle" font-size="14" font-weight="600" fill="#ffffff">Visit site</text>
+    <text x="24" y="240" font-size="15" font-weight="600" fill="#1f7a4d">Contrast 4.59 : 1 · passes</text>
+    <text x="24" y="266" font-size="13" fill="#5b5249">Keeps white text; buttons a shade</text>
+    <text x="24" y="286" font-size="13" fill="#5b5249">deeper than the logo orange.</text>
+  </g>
+</svg>
