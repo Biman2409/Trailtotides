@@ -23,7 +23,7 @@ declare global { interface Window { L: typeof L } }
 const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services";
 const OSM_CREDIT = '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
 const OPENFREEMAP_CREDIT = `<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> · © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> · ${OSM_CREDIT}`;
-const TERRARIUM = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
+export const TERRARIUM = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
 
 export interface BaseStyle {
   label: string;
@@ -158,7 +158,7 @@ function labelsOnly(s: any) {
 // English labels (the styles show local scripts beside them), India's official map (see above),
 // and shaded relief under the labels, from the Terrarium elevation tiles (public, keyless)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function tuneStyle(gl: any, dark: boolean) {
+export function tuneStyle(gl: any, dark: boolean) {
   // The base style names a few icons (e.g. "circle-11") its sprite sheet doesn't have; give each
   // an empty image so MapLibre stops warning and nothing odd is drawn
   gl.on("styleimagemissing", (e: { id: string }) => {
