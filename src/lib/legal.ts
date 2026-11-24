@@ -30,7 +30,7 @@ export const TERMS_SECTIONS: LegalSection[] = [
   },
   {
     title: "5. Maps, trails, grades and forecasts",
-    content: `Trail maps, distances, heights, GPX downloads and the 3D "Fly the trail" view are drawn from OpenStreetMap, public elevation data and, in the 3D view, Mapbox's imagery and terrain. Some stretches have no mapped path and are drawn along the terrain, and these are marked. Difficulty grades, ACE™ ratings, Adventure Matchmaker scores and weather forecasts are estimates to help you plan. None of them replaces a guide, a proper map, local advice or your own judgement on the day, and none of them is a navigation aid to rely on alone.`,
+    content: `Trail maps, distances, heights, GPX downloads and the 3D "Fly the trail" view are drawn from OpenStreetMap, public elevation data. Some stretches have no mapped path and are drawn along the terrain, and these are marked. Difficulty grades, ACE™ ratings, Adventure Matchmaker scores and weather forecasts are estimates to help you plan. None of them replaces a guide, a proper map, local advice or your own judgement on the day, and none of them is a navigation aid to rely on alone.`,
   },
   {
     title: "6. Adventure risk",
@@ -54,7 +54,7 @@ export const TERMS_SECTIONS: LegalSection[] = [
   },
   {
     title: "11. Our content and other people's",
-    content: `The Platform's text, design, adventure data, ACE™ ratings and trail work belong to Trail to Tides or to the people who licensed them to us. Don't copy or republish them in bulk without our written permission. Map data is © OpenStreetMap contributors; map tiles come from OpenFreeMap, satellite imagery from Esri and its partners (and, in the 3D view, from Mapbox and its partners), elevation from the public Terrain Tiles dataset, and some photos from Unsplash. Their credits are shown on the Platform and their own terms apply. Links to operators' and other sites are for your convenience; we don't control those sites.`,
+    content: `The Platform's text, design, adventure data, ACE™ ratings and trail work belong to Trail to Tides or to the people who licensed them to us. Don't copy or republish them in bulk without our written permission. Map data is © OpenStreetMap contributors; map tiles come from OpenFreeMap, satellite imagery from Esri and its partners, elevation from the public Terrain Tiles dataset, and some photos from Unsplash. Their credits are shown on the Platform and their own terms apply. Links to operators' and other sites are for your convenience; we don't control those sites.`,
   },
   {
     title: "12. Liability",
@@ -83,7 +83,7 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
   },
   {
     title: "3. Who sees your information",
-    content: `Operators: when you request a quote, your name, email address, chosen dates, group size and message go to our inbox and to each operator you picked who has an approved account here. Each email goes separately, so operators don't see each other. Once an operator has your details, their own privacy policy applies. Clicking "Book" takes you to the operator's own website.\n\nOther people on the Platform: your username and profile photo appear with your reviews and published stories. Members of a Group Match you join see your name and capability scores. If you make your Adventure Passport public, anyone with the link can see your rank, stamps, badges and capability radar, but never your health answers.\n\nService providers who run parts of the Platform for us: Supabase (database, sign-in and file storage), Vercel (hosting and analytics), Resend (sending emails), Zoho (our email inbox), Mapbox (the 3D trail view) and Google (Google sign-in and Compass.AI, see section 5). They handle your data only to provide their service to us.\n\nWe don't sell your data or share it for advertising. We'd disclose it to authorities only where the law requires.`,
+    content: `Operators: when you request a quote, your name, email address, chosen dates, group size and message go to our inbox and to each operator you picked who has an approved account here. Each email goes separately, so operators don't see each other. Once an operator has your details, their own privacy policy applies. Clicking "Book" takes you to the operator's own website.\n\nOther people on the Platform: your username and profile photo appear with your reviews and published stories. Members of a Group Match you join see your name and capability scores. If you make your Adventure Passport public, anyone with the link can see your rank, stamps, badges and capability radar, but never your health answers.\n\nService providers who run parts of the Platform for us: Supabase (database, sign-in and file storage), Vercel (hosting and analytics), Resend (sending emails), Zoho (our email inbox) and Google (Google sign-in and Compass.AI, see section 5). They handle your data only to provide their service to us.\n\nWe don't sell your data or share it for advertising. We'd disclose it to authorities only where the law requires.`,
   },
   {
     title: "4. Fitness and health answers (Adventure Matchmaker)",
@@ -95,7 +95,7 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
   },
   {
     title: "6. Maps, photos and weather",
-    content: `Maps load straight from the services that draw them: OpenFreeMap for the map, Esri for satellite imagery, the public Terrain Tiles dataset on Amazon Web Services for heights and 3D terrain, and Open-Meteo for weather forecasts. The 3D "Fly the trail" view loads its satellite imagery, terrain and map data from Mapbox, which also collects anonymous usage data about how its maps load. Searching for a place on the map uses OpenStreetMap's Nominatim. Like any website you visit, these services receive your IP address and the area or place being looked up.\n\n"Near me" asks your browser for your location only when you tap it. It's used in your browser to find adventures nearby and isn't sent to us or stored.`,
+    content: `Maps load straight from the services that draw them: OpenFreeMap for the map, Esri for satellite imagery, the public Terrain Tiles dataset on Amazon Web Services for heights and 3D terrain, and Open-Meteo for weather forecasts. Searching for a place on the map uses OpenStreetMap's Nominatim. Like any website you visit, these services receive your IP address and the area or place being looked up.\n\n"Near me" asks your browser for your location only when you tap it. It's used in your browser to find adventures nearby and isn't sent to us or stored.`,
   },
   {
     title: "7. Cookies and browser storage",
