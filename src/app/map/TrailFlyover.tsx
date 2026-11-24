@@ -27,8 +27,7 @@ const RAD = Math.PI / 180;
 /** A whole trek takes about this long at 1×, whatever its length */
 const PLAY_SECONDS = 75;
 const SPEEDS = [1, 2, 4] as const;
-/** Mapbox's sharper terrain needs less raising than the open elevation tiles */
-const EXAGGERATION = MAPBOX_TOKEN ? 1.35 : 1.6;
+const EXAGGERATION = 1.6;
 /** The camera's preferred tilt, and how low it may drop to see over a ridge */
 const PITCH = 70, PITCH_MIN = 34;
 /** How long after you stop moving the map the walk carries on */
@@ -377,12 +376,13 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       })
       .catch(() => setFailed(true));
 
-    // Mapbox: satellite imagery with Mapbox terrain, fog for depth, and India's official map: the
-    // style's boundaries and labels switched to Mapbox's India worldview, our outline on top
+    // Mapbox: the Outdoors map (contours, peaks, passes, glaciers) draped on the open elevation tiles,
+    // fog for depth, and India's official map: the style's boundaries and labels switched to Mapbox's
+    // India worldview, our outline on top. Mapbox's own terrain and satellite need a paid account.
     const setUpMapbox = () => {
-      map.addSource("fly-terrain", { type: "raster-dem", url: "mapbox://mapbox.mapbox-terrain-dem-v1", tileSize: 512, maxzoom: 14 });
+      map.addSource("fly-terrain", { type: "raster-dem", tiles: [TERRARIUM], encoding: "terrarium", tileSize: 256, maxzoom: 14 });
       map.setTerrain({ source: "fly-terrain", exaggeration: EXAGGERATION });
-      map.setFog?.({ range: [1, 9], color: "#c8d3df", "horizon-blend": 0.12, "high-color": "#3d5a85", "space-color": "#0b1020", "star-intensity": 0 });
+      map.setFog?.({ range: [1, 9], color: "#dfe7ee", "horizon-blend": 0.1, "high-color": "#7ea3cc", "space-color": "#1b2a40", "star-intensity": 0 });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       for (const l of map.getStyle().layers as any[]) {
         const f = map.getFilter(l.id);
@@ -392,7 +392,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const firstLabel = map.getStyle().layers.find((l: any) => l.type === "symbol")?.id;
       map.addSource("fly-india", { type: "geojson", data: `${window.location.origin}/india-boundary.geojson` });
-      map.addLayer({ id: "fly-india", type: "line", source: "fly-india", paint: { "line-color": "rgba(255,255,255,0.75)", "line-width": 1.6 } }, firstLabel);
+      map.addLayer({ id: "fly-india", type: "line", source: "fly-india", paint: { "line-color": "rgba(90,70,110,0.7)", "line-width": 1.6 } }, firstLabel);
     };
 
     // MapLibre: the site's own style, re-toned for 3D, with open elevation tiles and strong shading

@@ -14,8 +14,9 @@ export const DARK_STYLE = "https://tiles.openfreemap.org/styles/dark";
 export const PLANET_TILEJSON = "https://tiles.openfreemap.org/planet";
 
 /** Mapbox GL JS for the 3D "Fly the trail" view, used when a public token is set
- *  (NEXT_PUBLIC_MAPBOX_TOKEN, restricted to the site's URLs in Mapbox); without one it uses MapLibre */
+ *  (NEXT_PUBLIC_MAPBOX_TOKEN); without one it uses MapLibre. Outdoors, not satellite: satellite and
+ *  Mapbox terrain need a payment method on the account, so heights come from the open Terrain Tiles */
 export const MAPBOX_JS = "https://api.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.js";
 export const MAPBOX_CSS = "https://api.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.css";
 export const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
-export const MAPBOX_STYLE = "mapbox://styles/mapbox/satellite-streets-v12";
+export const MAPBOX_STYLE = "mapbox://styles/mapbox/outdoors-v12";
