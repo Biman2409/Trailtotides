@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { preconnect } from "react-dom";
 import MapClient from "./MapClient";
 import { TRAIL_SLUGS } from "@/lib/trails";
 
@@ -17,6 +18,10 @@ export const metadata: Metadata = {
 };
 
 export default function MapPage() {
+  // Open the tile connections while the map script loads, so the basemap and terrain arrive
+  // with the pins instead of seconds after them
+  preconnect("https://tiles.openfreemap.org", { crossOrigin: "anonymous" });
+  preconnect("https://s3.amazonaws.com", { crossOrigin: "anonymous" });
   return (
     <>
       {/* The map is the page; this names it for screen readers and search */}

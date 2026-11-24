@@ -268,17 +268,33 @@ export default function MapCanvas(props: Props) {
         maxClusterRadius: 44,
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
+        // Handled below, so the zoom keeps the pins clear of the panel, the sheet and the edges
+        zoomToBoundsOnClick: false,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         iconCreateFunction: (c: any) => {
           const n = c.getChildCount();
-          const size = n >= 20 ? 44 : 38;
+          // Zoomed right out (the whole-India view on a phone) neighbouring clusters can sit ~50 px
+          // apart, close enough for full-size bubbles' glows to run together, so they shrink there
+          const small = map.getZoom() < 4.5;
+          const size = small ? (n >= 20 ? 32 : 28) : n >= 20 ? 44 : 38;
           // The ring takes the average difficulty inside, so the zoomed-out map still reads as a difficulty map
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const levels: number[] = c.getAllChildMarkers().map((m: any) => m.options.level ?? 3);
           const avg = Math.round(levels.reduce((s, l) => s + l, 0) / Math.max(1, levels.length));
           const ring = difficultyColor(DIFFICULTY_BY_LEVEL[avg - 1] ?? "Hard");
-          return leaflet.divIcon({ className: "", html: `<div class="tm-cluster" style="width:${size}px;height:${size}px;--ring:${ring}">${n}</div>`, iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
+          // Leaflet copies the title onto the marker, so screen readers hear more than a bare number
+          c.options.title = `${n} adventures here, zoom in`;
+          return leaflet.divIcon({ className: "", html: `<div class="tm-cluster" style="width:${size}px;height:${size}px;--ring:${ring}${small ? ";font-size:11px" : ""}" aria-hidden="true">${n}</div>`, iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
         },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cluster.on("clusterclick", (e: any) => {
+        const c = e.layer, b: L.LatLngBounds = c.getBounds();
+        const { left, bottom, top = 0 } = live.current.insets;
+        const opts = { paddingTopLeft: [left + 48, top + 48] as [number, number], paddingBottomRight: [48, bottom + 48] as [number, number] };
+        // Pins on one spot, or already as close as the map goes: fan them out instead
+        if (b.getNorthEast().equals(b.getSouthWest()) || map.getZoom() >= map.getMaxZoom() || map.getBoundsZoom(b, false, leaflet.point(left + 96, top + bottom + 96)) <= map.getZoom()) c.spiderfy();
+        else map.flyToBounds(b, { ...opts, duration: 0.8 });
       });
       map.addLayer(cluster);
       clusterRef.current = cluster;
