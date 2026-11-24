@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowUp, Loader2, X, MessageCircle } from "lucide-react";
 import { CompassAIMark } from "@/components/ui/custom/BrandMarks";
 import { askCompass, COMPASS_GRADIENT } from "@/lib/compass";
+import { PICKS_NOTE } from "@/lib/compassSearch";
 import { track } from "@/lib/analytics";
 import type { ACE } from "@/lib/ace";
 
@@ -119,6 +120,7 @@ export default function CompassBar({
           {asked && <p className="text-white/40 truncate">“{asked}”</p>}
           {reply && <p className="text-white/75 mt-0.5">{reply}</p>}
           {error && <p className="text-[var(--tm-peach-2)] mt-0.5">{error}</p>}
+          {asked && !error && <p className="text-white/40 mt-1 text-[10.5px]">{PICKS_NOTE}</p>}
           <div className="flex items-center gap-3 mt-1.5">
             {asked && (
               <button type="button" onClick={() => askCompass(asked)} className="inline-flex items-center gap-1 font-semibold text-[var(--tm-peach)] hover:underline">

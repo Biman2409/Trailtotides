@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  Search, SlidersHorizontal, X, LayoutGrid, List, ChevronRight, Heart, RotateCcw, Map as MapIcon, ArrowRight,
+  SlidersHorizontal, X, LayoutGrid, List, ChevronRight, Heart, RotateCcw, Map as MapIcon, ArrowRight,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -29,7 +29,9 @@ import {
   NO_FILTERS, filtersFromParams, writeFilterParams, filterAdventures, anyFilter,
   CategoryBar, FilterPanel, type AdventureFilterState,
 } from "@/components/ui/custom/AdventureFilters";
-import { askCompass } from "@/lib/compass";
+import { useCompassSearch, looksLikeTrip } from "@/lib/compassSearch";
+import { CompassPicks } from "@/components/ui/custom/CompassSearch";
+import { CompassAIMark } from "@/components/ui/custom/BrandMarks";
 
 type View = "grid" | "list";
 
@@ -98,6 +100,18 @@ export default function ExploreClient() {
   const search = f.search;
   const suggestions = results.length === 0 && search ? searchSuggestions(adventures, search) : [];
 
+  // Compass.AI on the same box: a described trip ("a weekend trek near Delhi") gets its picks above
+  // the results once you pause typing (or press Enter); clearing the box clears them
+  const compass = useCompassSearch({ ace: fitAce, source: "explore", autoAsk: false });
+  const { ask: askPicks, clear: clearPicks, answer: picksAnswer } = compass;
+  useEffect(() => {
+    const q = search.trim();
+    if (!q) { if (picksAnswer.status !== "idle") clearPicks(); return; }
+    if (!looksLikeTrip(q) || q === picksAnswer.question) return;
+    const t = setTimeout(() => askPicks(q), 1100);
+    return () => clearTimeout(t);
+  }, [search]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // A misspelt search ("kedarkanta") shows the likely adventure straight away, and says so
   const corrected = useMemo(() => {
     // Not for places we don't run yet: "goa" isn't a typo for "Ghati"
@@ -147,22 +161,25 @@ export default function ExploreClient() {
       {/* ── Toolbar ── */}
       <div className="sticky top-16 z-40" style={{ background: "var(--bg-page)", borderBottom: "1px solid var(--border-subtle)" }}>
         <div className="max-w-7xl mx-auto px-5 lg:px-8 py-2.5 flex items-center gap-2">
-          <div className="relative flex-1 min-w-0 sm:max-w-sm">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--text-tertiary)" }} />
+          {/* Compass.AI search: words filter the list as you type; a described trip (or Enter) gets
+              Compass.AI's picks above the results, right here */}
+          <form role="search" onSubmit={(e) => { e.preventDefault(); if (search.trim()) compass.ask(search); }} className="relative flex-1 min-w-0 sm:max-w-md">
+            <CompassAIMark className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "#ff7d47" }} />
             <input
               value={search}
               onChange={(e) => set({ search: e.target.value })}
-              placeholder="Search treks, places…"
-              aria-label="Search adventures"
+              placeholder="Search, or describe a trip for Compass.AI…"
+              aria-label="Search adventures, or describe a trip and press Enter for Compass.AI's picks"
+              enterKeyHint="search"
               className="w-full pl-10 pr-8 py-2.5 rounded-xl text-sm border border-transparent focus:border-[#ff5100]/50 transition-colors"
               style={{ background: "var(--bg-surface-2)", color: "var(--text-primary)", outline: "none" }}
             />
             {search && (
-              <button onClick={() => set({ search: "" })} aria-label="Clear search" className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1" style={{ color: "var(--text-tertiary)" }}>
+              <button type="button" onClick={() => { set({ search: "" }); compass.clear(); }} aria-label="Clear search" className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1" style={{ color: "var(--text-tertiary)" }}>
                 <X className="w-3.5 h-3.5" />
               </button>
             )}
-          </div>
+          </form>
 
           <label className="hidden md:flex items-center gap-2 text-sm ml-auto" style={{ color: "var(--text-tertiary)" }}>
             Sort
@@ -255,6 +272,11 @@ export default function ExploreClient() {
 
       {/* ── Results ── */}
       <main className="max-w-7xl mx-auto px-5 lg:px-8 py-6 lg:py-8">
+        {compass.answer.status !== "idle" && (
+          <div id="compass-picks" className="mb-6 max-w-3xl scroll-mt-32">
+            <CompassPicks answer={compass.answer} onRetry={() => compass.ask(compass.answer.question)} />
+          </div>
+        )}
         {anyActive && (
           <div className="flex items-center justify-between gap-3 mb-5">
             <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
@@ -278,7 +300,7 @@ export default function ExploreClient() {
           <div className="text-center py-16 max-w-xl mx-auto">
             <p className="text-4xl mb-4" aria-hidden>{comingSoon ? comingSoon.icon : "🗺️"}</p>
             <h2 className="text-xl font-bold t-text mb-2">
-              {comingSoon ? `${comingSoon.label} are coming soon` : `Nothing on Trail to Tides matches “${search}” yet`}
+              {comingSoon ? `${comingSoon.label} are coming soon` : compass.answer.status !== "idle" ? "No listing uses those exact words" : `Nothing on Trail to Tides matches “${search}” yet`}
             </h2>
             <p className="text-sm mb-6" style={{ color: "var(--text-secondary)" }}>
               {comingSoon
@@ -286,9 +308,11 @@ export default function ExploreClient() {
                 : "Try a trek, a place or an activity, or describe the trip and let Compass.AI pick."}
             </p>
             <div className="flex flex-wrap justify-center gap-2">
-              <button onClick={() => askCompass(comingSoon ? `Something like ${search}` : search)} className="h-10 px-4 rounded-full text-sm font-semibold text-[#1c1814]" style={{ background: "#ff5100" }}>
-                Ask Compass.AI
-              </button>
+              {compass.answer.status === "idle" && (
+                <button onClick={() => { compass.ask(comingSoon ? `Something like ${search}` : search); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="h-10 px-4 rounded-full text-sm font-semibold text-[#1c1814]" style={{ background: "#ff5100" }}>
+                  Ask Compass.AI
+                </button>
+              )}
               <Link href={`/explore?month=${MONTHS[monthIdx]}`} onClick={() => setF({ ...NO_FILTERS, months: [MONTHS[monthIdx]] })} className="h-10 px-4 inline-flex items-center rounded-full text-sm font-semibold" style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
                 In season now
               </Link>
