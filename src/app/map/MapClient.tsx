@@ -5,7 +5,7 @@ import { STRETCH_MIN } from "@/lib/ace";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
 import {
-  SlidersHorizontal, Loader2, Compass, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen, BookmarkPlus, X, Download,
+  SlidersHorizontal, Loader2, Compass, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen, BookmarkPlus, X, Download, Play,
 } from "lucide-react";
 import { nearFrom } from "@/lib/alerts";
 import { EMAIL_ALERTS } from "@/lib/features";
@@ -31,6 +31,7 @@ import CompassBar, { type CompassPick } from "./CompassBar";
 import ResultsList from "./ResultsList";
 import PinCard from "./PinCard";
 import ItineraryPanel from "./ItineraryPanel";
+import FlyTrail from "./FlyTrail";
 import CompareTray from "./CompareTray";
 import { fitFor, haversineKm, BASE_KEY, type Fit, type LayerKey } from "./mapShared";
 import PeekCarousel from "./PeekCarousel";
@@ -636,6 +637,12 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
                   <Download className="w-3.5 h-3.5" /> GPX
                 </a>
               )}
+              {gpxFor && trail?.slug === gpxFor.slug && (
+                <FlyTrail name={gpxFor.name} trail={trail} onOpen={() => track("fly_trail_open", { slug: gpxFor.slug, from: "map_bar" })}
+                  className="tm-btn-primary rounded-xl h-10 px-3 text-[11.5px] font-semibold inline-flex items-center gap-1.5" title={`Fly the ${gpxFor.name} trail in 3D`}>
+                  <Play className="w-3.5 h-3.5 fill-current" /> Fly in 3D
+                </FlyTrail>
+              )}
               <button type="button" onClick={() => apiRef.current?.reset()} className="tm-glass rounded-xl h-10 px-3 text-[11.5px] font-semibold text-white/70 hover:text-white inline-flex items-center gap-1.5" title="Back to the whole of India">
                 <Compass className="w-3.5 h-3.5" /> Reset View
               </button>
@@ -662,6 +669,13 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
                 className="tm-gpx tm-glass absolute z-[999] h-10 px-2.5 rounded-xl inline-flex items-center gap-1 text-[11px] font-bold" style={{ top: 56, right: 56 }}>
                 <Download className="w-3.5 h-3.5" />GPX
               </a>
+            )}
+            {/* Beside GPX, where a phone sees it at once (the card's own row is below the fold) */}
+            {gpxFor && trail?.slug === gpxFor.slug && (
+              <FlyTrail name={gpxFor.name} trail={trail} onOpen={() => track("fly_trail_open", { slug: gpxFor.slug, from: "map_bar" })}
+                className="tm-btn-primary absolute z-[999] h-10 px-2.5 rounded-xl inline-flex items-center gap-1 text-[11px] font-bold" style={{ top: 56, right: 126 }}>
+                <Play className="w-3.5 h-3.5 fill-current" />Fly in 3D
+              </FlyTrail>
             )}
 
             <MobileSheet height={sheetH} state={sheet} onState={setSheet} areaH={areaH}>
@@ -892,6 +906,10 @@ const PAGE_CSS = `
   .tm-itin:hover:not(:disabled) { background: rgba(255,81,0,0.14); border-color: rgba(255,125,71,0.6); }
   .tm-itin[data-on] { background: rgba(255,81,0,0.18); border-color: var(--tm-orange); }
   .tm-itin:disabled { cursor: default; opacity: 0.75; }
+  /* Fly the trail in 3D: the card's brightest row, so it's found without opening anything */
+  .tm-itin-fly { background: linear-gradient(135deg, rgba(255,81,0,0.22), rgba(255,125,71,0.10)); border-color: rgba(255,125,71,0.55); }
+  .tm-itin-fly:hover:not(:disabled) { background: linear-gradient(135deg, rgba(255,81,0,0.32), rgba(255,125,71,0.16)); }
+  .tm-itin-icon-fly { color: #fff; background: linear-gradient(135deg,#ff5100,var(--tm-orange)); box-shadow: 0 4px 14px -4px rgba(255,81,0,0.7); }
   .tm-itin-icon { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; color: var(--tm-peach); background: rgba(255,81,0,0.15); }
   .tm-card-actions { position: sticky; bottom: 0; z-index: 2; padding: 10px 12px 12px; background: rgba(var(--tm-bg),0.96); backdrop-filter: blur(10px);
                      border-top: 1px solid rgba(var(--tm-ink),0.07); border-radius: 0 0 20px 20px; }

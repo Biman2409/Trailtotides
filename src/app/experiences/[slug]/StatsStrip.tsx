@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { CalendarDays, ChevronDown, CloudSun, Mountain, RotateCw } from "lucide-react";
+import { ArrowRight, CalendarDays, ChevronDown, CloudSun, Mountain, Play, RotateCw } from "lucide-react";
+import FlyTrail from "@/app/map/FlyTrail";
+import { track } from "@/lib/analytics";
 import { useWeather, WeatherDetails } from "./WeatherWidget";
 import { ItineraryPanel, ElevationPanel, TrailWeather } from "./TrailPanels";
 import type { Trail } from "@/lib/trails/shared";
@@ -28,10 +30,13 @@ const BASE_TABS: typeof TRAIL_TABS = [{ key: "weather", label: "Weather", icon: 
  * profile and the weather at every place the itinerary sleeps; the rest get the forecast for
  * their base.
  */
-export default function StatsStrip({ stats, weather: place, trail }: {
+export default function StatsStrip({ stats, weather: place, trail, name, slug }: {
   stats: Stat[];
   weather: Place;
   trail?: Trail | null;
+  /** The adventure's name and slug, for "Fly the trail in 3D" */
+  name?: string;
+  slug?: string;
 }) {
   const [panel, setPanel] = useState<Panel | null>(null);
   const toggle = (p: Panel) => setPanel((cur) => (cur === p ? null : p));
@@ -92,6 +97,22 @@ export default function StatsStrip({ stats, weather: place, trail }: {
             )}
           </div>
         </div>
+
+        {/* The trail in 3D, walked day by day: right under the facts, so it's seen without digging */}
+        {hasTrail && trail && name && (
+          <FlyTrail name={name} trail={trail} onOpen={() => track("fly_trail_open", { slug: slug ?? trail.slug, from: "adventure_glance" })}
+            className="w-full flex items-center gap-3 px-3 sm:px-3.5 py-2.5 text-left transition-[filter] hover:brightness-110"
+            style={{ borderTop: "1px solid var(--border-subtle)", background: "linear-gradient(135deg, rgba(255,81,0,0.13), rgba(255,81,0,0.03))" }}>
+            <span className="w-9 h-9 rounded-xl grid place-items-center shrink-0 text-white" style={{ background: "linear-gradient(135deg,#ff5100,#ff7d47)", boxShadow: "0 4px 14px -4px rgba(255,81,0,0.7)" }}>
+              <Play className="w-4 h-4 fill-current" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[14px] font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>Fly the trail in 3D</span>
+              <span className="block text-[12px] leading-snug mt-0.5" style={{ color: "var(--text-secondary)" }}>Walk all {trail.days.length} days over the real terrain</span>
+            </span>
+            <ArrowRight className="w-4 h-4 shrink-0" style={{ color: "var(--accent-ink)" }} />
+          </FlyTrail>
+        )}
       </div>
     </section>
   );

@@ -5,7 +5,7 @@ import { loginHref } from "@/lib/loginHref";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, GitCompareArrows, Check, Users, Route, Mountain, Waves, CalendarDays, MapPin, ChevronRight, Loader2 } from "lucide-react";
+import { Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, GitCompareArrows, Check, Users, Route, Mountain, Waves, CalendarDays, MapPin, ChevronRight, Loader2, Play } from "lucide-react";
 import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import type { Adventure, Month } from "@/lib/data";
 import { useCompare } from "@/contexts/CompareContext";
@@ -17,6 +17,7 @@ import { track } from "@/lib/analytics";
 import { openOperator, operatorHref, recordOutbound } from "@/lib/outbound";
 import { trailClimbM, trailHighPoint, trailWalkKm, type Trail } from "@/lib/trails/shared";
 import { tm } from "@/lib/tm";
+import FlyTrail from "./FlyTrail";
 import {
   genreOf, difficultyOf, difficultyColor, verifiedOperators, priceFrom, formatINR, daysAgo, inSeason, type Fit,
 } from "./mapShared";
@@ -142,6 +143,17 @@ export default function PinCard({
             </span>
             <ChevronRight className="w-4 h-4 text-white/40 shrink-0" />
           </button>
+        )}
+        {/* ...and the same trail in 3D, walked day by day */}
+        {hasTrail && trail && (
+          <FlyTrail name={a.name} trail={trail} className="tm-itin tm-itin-fly" onOpen={() => track("fly_trail_open", { slug: a.slug, from: "map_card" })}>
+            <span className="tm-itin-icon tm-itin-icon-fly"><Play className="w-4 h-4 fill-current" /></span>
+            <span className="min-w-0 flex-1 text-left">
+              <span className="block text-[13px] font-bold text-white">Fly the trail in 3D</span>
+              <span className="block text-[11px] text-white/50 truncate">Walk it day by day over the real terrain</span>
+            </span>
+            <ChevronRight className="w-4 h-4 text-white/40 shrink-0" />
+          </FlyTrail>
         )}
         {!hasTrail && (
           <div className="tm-panel flex items-center gap-2.5">

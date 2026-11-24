@@ -472,6 +472,8 @@ export default async function ExperiencePage({ params }: Props) {
               isBaseCamp: !!(adventure.baseCamp || adventure.startingPoint),
             }}
             trail={trail}
+            name={adventure.name}
+            slug={adventure.slug}
             stats={[
                 // Treks count trailhead to trailhead; operators' trips are longer as they add the travel days
                 { label: adventure.type === "Trekking" ? "On the trail" : "Duration", value: adventure.durationRange ?? adventure.durationDays },

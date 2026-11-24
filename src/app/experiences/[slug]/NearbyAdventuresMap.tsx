@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, Download } from "lucide-react";
+import { ArrowRight, ChevronDown, Download, Play } from "lucide-react";
+import FlyTrail from "@/app/map/FlyTrail";
+import { track } from "@/lib/analytics";
 import type { Adventure } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import { haversineKm } from "@/lib/geo";
@@ -373,6 +375,14 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
           className="absolute inset-0 pointer-events-none"
           style={{ boxShadow: `inset 0 0 20px 0px rgba(0,0,0,${isDark ? 0.35 : 0.1})` }}
         />
+        {/* The same trail in 3D, from the map that shows it */}
+        {trail && (
+          <FlyTrail name={current.name} trail={trail} onOpen={() => track("fly_trail_open", { slug: current.slug, from: "adventure_map" })}
+            className="absolute bottom-3 left-3 z-[500] inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl text-[12.5px] font-bold text-white transition-[filter] hover:brightness-110"
+            style={{ background: "linear-gradient(135deg,#ff5100,#ff7d47)", boxShadow: "0 6px 20px -6px rgba(255,81,0,0.7), 0 2px 8px rgba(0,0,0,0.3)" }}>
+            <Play className="w-3.5 h-3.5 fill-current" /> Fly the trail in 3D
+          </FlyTrail>
+        )}
       </div>
 
       {/* Take the trail offline */}

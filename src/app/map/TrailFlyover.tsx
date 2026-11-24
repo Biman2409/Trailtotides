@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { X, Play, Pause, RotateCcw } from "lucide-react";
-import type { Adventure } from "@/lib/data";
 import { trailProfile, type Trail } from "@/lib/trails/shared";
 import { dayBands } from "@/lib/trails/dayBands";
 import { loadLeaflet, loadMapLibre, tuneStyle, TERRARIUM } from "./mapShared";
@@ -30,7 +29,7 @@ function bearing(a: Pt, b: Pt) {
   return (Math.atan2(y, x) / RAD + 360) % 360;
 }
 
-export default function TrailFlyover({ adventure: a, trail, onClose }: { adventure: Adventure; trail: Trail; onClose: () => void }) {
+export default function TrailFlyover({ name, trail, onClose }: { name: string; trail: Trail; onClose: () => void }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const ctl = useRef<{ toggle: () => void; restart: () => void; seek: (f: number) => void; speed: (s: number) => void } | null>(null);
@@ -219,7 +218,7 @@ export default function TrailFlyover({ adventure: a, trail, onClose }: { adventu
   const frac = total > 0 ? km / total : 0;
 
   return createPortal(
-    <div className="tm-page fixed inset-0 z-[3000] bg-[#0b0f14]" role="dialog" aria-modal="true" aria-label={`${a.name}: the trail in 3D`}>
+    <div className="tm-fly fixed inset-0 z-[3000] bg-[#0b0f14] text-white" role="dialog" aria-modal="true" aria-label={`${name}: the trail in 3D`}>
       {/* MapLibre makes its container position: relative, so it fills a positioned wrapper */}
       <div className="absolute inset-0"><div ref={boxRef} className="w-full h-full" /></div>
 
@@ -227,7 +226,7 @@ export default function TrailFlyover({ adventure: a, trail, onClose }: { adventu
       <div className="absolute top-0 inset-x-0 p-3 sm:p-4 flex items-start gap-3 pointer-events-none">
         <div className="tm-glass rounded-2xl px-4 py-3 min-w-0 pointer-events-auto">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Fly the trail</p>
-          <h2 className="text-[16px] sm:text-[18px] font-bold text-white leading-tight truncate">{a.name}</h2>
+          <h2 className="text-[16px] sm:text-[18px] font-bold text-white leading-tight truncate">{name}</h2>
         </div>
         <button ref={closeRef} type="button" onClick={onClose} aria-label="Close the 3D view"
           className="ml-auto tm-glass rounded-xl w-11 h-11 grid place-items-center text-white/80 hover:text-white pointer-events-auto"><X className="w-4 h-4" /></button>
@@ -290,6 +289,15 @@ export default function TrailFlyover({ adventure: a, trail, onClose }: { adventu
       </div>
 
       <style>{`
+        /* Its own copies of the map page's glass, buttons and colours, so it looks the same opened
+           from the adventure page, where the map's styles aren't loaded */
+        .tm-fly { --tm-ink: 255,255,255; --tm-fg: 255,255,255; --tm-bg: 17,20,24; --tm-card: #111418; --tm-peach: #ff9a66; --tm-orange: #ff7d47; font-family: var(--font-dm-sans, 'DM Sans'), sans-serif; }
+        .tm-fly .tm-glass { background: rgba(17,20,24,0.86); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 16px 48px rgba(0,0,0,0.45); }
+        .tm-fly .tm-btn { height: 40px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); transition: all .2s; }
+        .tm-fly .tm-btn:hover:not(:disabled) { background: rgba(255,255,255,0.09); }
+        .tm-fly .tm-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+        .tm-fly .tm-btn-primary { color: #fff; border: 0; background: linear-gradient(135deg,#ff5100,#ff7d47); box-shadow: 0 6px 20px -6px rgba(255,81,0,0.6); }
+        @media (prefers-reduced-transparency: reduce) { .tm-fly .tm-glass { background: #111418; backdrop-filter: none; } }
         .tm-fly-shadow { text-shadow: 0 2px 18px rgba(0,0,0,0.8), 0 1px 3px rgba(0,0,0,0.9); }
         .tm-fly-day { animation: tm-fly-day 0.6s ease-out both; }
         @keyframes tm-fly-day { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }

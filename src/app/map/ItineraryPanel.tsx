@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { X, Download, ArrowRight, Box, ArrowUp, ArrowDown, BedDouble, Route, Mountain, CalendarDays, TrendingUp } from "lucide-react";
 import type { Adventure } from "@/lib/data";
@@ -9,9 +7,7 @@ import TrailElevation from "@/components/ui/custom/TrailElevation";
 import { dayBands } from "@/lib/trails/dayBands";
 import { trailClimbM, trailHighPoint, trailProfile, trailWalkKm, type Trail } from "@/lib/trails/shared";
 import { hasTrekGuide, trekGuideHref } from "@/lib/trekGuides";
-
-// The 3D view loads only when someone opens it
-const TrailFlyover = dynamic(() => import("./TrailFlyover"), { ssr: false });
+import FlyTrail from "./FlyTrail";
 
 // The trail's itinerary and elevation, opened from the adventure's card without leaving the
 // map: beside the panel on a desktop, over the map on a phone. The trail stays drawn behind it.
@@ -21,7 +17,6 @@ const fmt = (n: number) => Math.round(n).toLocaleString("en-IN");
 export default function ItineraryPanel({ adventure: a, trail, onClose, phone }: {
   adventure: Adventure; trail: Trail; onClose: () => void; phone?: boolean;
 }) {
-  const [flying, setFlying] = useState(false);
   const pts = trailProfile(trail).map((p) => [p.km, p.ele] as [number, number]);
   // The number a place has on the map (1 is the start), or null when it isn't a mapped stop
   const stopNo = (name: string) => { const i = trail.stops.findIndex((s) => s.name === name); return i < 0 ? null : i + 1; };
@@ -54,13 +49,13 @@ export default function ItineraryPanel({ adventure: a, trail, onClose, phone }: 
           ))}
         </div>
 
-        <button type="button" onClick={() => setFlying(true)} className="tm-btn w-full !h-12 !justify-start !px-3.5 gap-2.5">
+        <FlyTrail name={a.name} trail={trail} className="tm-btn w-full !h-12 !justify-start !px-3.5 gap-2.5">
           <Box className="w-4 h-4 text-[var(--tm-peach)] shrink-0" />
           <span className="text-left leading-tight">
             <span className="block text-white">Fly the trail in 3D</span>
             <span className="block text-[11px] font-medium text-white/50">Walk it day by day over the real terrain</span>
           </span>
-        </button>
+        </FlyTrail>
 
         <TrailElevation pts={pts} bands={dayBands(trail)} compact peakM={top.ele} />
 
@@ -102,7 +97,6 @@ export default function ItineraryPanel({ adventure: a, trail, onClose, phone }: 
           {hasTrekGuide(a) ? "Full trek guide" : "Full details"} <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </footer>
-      {flying && <TrailFlyover adventure={a} trail={trail} onClose={() => setFlying(false)} />}
     </section>
   );
 }
