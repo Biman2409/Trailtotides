@@ -22,6 +22,9 @@ export default function SectionNav({ hasFaq = false, hasDates = false }: { hasFa
   const items = NAV_ITEMS.filter((item) => (item.id !== "faq" || hasFaq) && (item.id !== "dates" || hasDates));
   const [active, setActive] = useState(items[0].id);
   const navRef = useRef<HTMLElement>(null);
+  // After a tap on the menu, the tapped item stays marked while the page scrolls and the section
+  // opens: measuring mid-jump (or when the jump stops a little short) would mark the one above it
+  const lockUntil = useRef(0);
 
   // The active item is the last section whose top has scrolled past the reading line. Measured
   // on every scroll (once per frame) rather than with an observer, so a jump straight to a
@@ -30,6 +33,7 @@ export default function SectionNav({ hasFaq = false, hasDates = false }: { hasFa
     let frame = 0;
     const update = () => {
       frame = 0;
+      if (Date.now() < lockUntil.current) return;
       let current = items[0].id;
       for (const { id } of items) {
         const el = document.getElementById(id);
@@ -73,7 +77,11 @@ export default function SectionNav({ hasFaq = false, hasDates = false }: { hasFa
                 key={id}
                 href={`#${id}`}
                 // Opens the section if it's collapsed, so jumping to it shows its details
-                onClick={() => window.dispatchEvent(new CustomEvent(OPEN_SECTION_EVENT, { detail: id }))}
+                onClick={() => {
+                  lockUntil.current = Date.now() + 1200;
+                  setActive(id);
+                  window.dispatchEvent(new CustomEvent(OPEN_SECTION_EVENT, { detail: id }));
+                }}
                 aria-current={isActive ? "true" : undefined}
                 className="relative py-3 lg:py-4 text-[14px] whitespace-nowrap transition-colors duration-200"
                 style={{ color: isActive ? "var(--text-primary)" : "var(--text-tertiary)" }}

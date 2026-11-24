@@ -60,7 +60,9 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
               : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.15)" }
             }
           >
-            <CheckCircle2 className={`w-4 h-4 ${done ? "fill-[#4ade80]/20" : ""}`} />
+            <CheckCircle2 className={`w-4 h-4 ${done ? "fill-[#4ade80]/20" : ""}`} aria-hidden />
+            {/* Named in words: a bare tick doesn't say what it records */}
+            <span>{done ? "Done" : "Done it?"}</span>
           </button>
         </TooltipTrigger>
         {/* Below, like the other hero buttons: above would sit behind the navbar */}

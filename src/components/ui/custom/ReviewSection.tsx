@@ -222,7 +222,10 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
             <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>{travellerReviews.length} traveller review{travellerReviews.length !== 1 ? "s" : ""}</span>
           </>
         ) : (
-          <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>No traveller reviews yet</span>
+          // Say what the cards below are, so "none yet" doesn't sit over three reviews-looking notes
+          <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
+            No traveller reviews yet{reviews.length > 0 && !loading ? <>. Meanwhile, notes from our team</> : null}
+          </span>
         )}
       </div>
 
@@ -414,7 +417,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                       <p className="font-medium text-[13px] leading-none truncate" style={{ color: "var(--text-primary)" }}>{r.username}</p>
                       {/* Reviews that came with the listing (no account behind them) say so, rather than pass as a member's */}
                       <p className="text-[12px] mt-1" style={{ color: "var(--text-tertiary)" }} title={r.member ? undefined : "Added to this listing by the Trail to Tides team, not posted from a member account"}>
-                        {r.member ? timeAgo(r.created_at) : "Team note, not a traveller review"}
+                        {r.member ? timeAgo(r.created_at) : "From the Trail to Tides team"}
                       </p>
                     </div>
                     {r.mine && (

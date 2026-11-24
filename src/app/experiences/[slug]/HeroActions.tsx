@@ -81,11 +81,12 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
     }
   }
 
-  const btnBase = "flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 backdrop-blur-md";
-  // Wishlist, Compare and Share say what they do from tablet up; phones keep the icons, which the
-  // screen-reader labels name
-  const labelled = "flex items-center justify-center gap-1.5 h-9 min-w-9 px-2 sm:px-3 rounded-xl text-[13px] font-medium transition-all duration-200 backdrop-blur-md";
-  const label = (text: string) => <span className="hidden sm:inline">{text}</span>;
+  // Every button says what it does, phones included: the compare and tick icons are hard to guess
+  // on their own. The heart and share icons are ones everyone knows, so phones keep those bare to
+  // fit the row beside the back button
+  const labelled = "flex items-center justify-center gap-1 sm:gap-1.5 h-9 min-w-9 px-2 sm:px-3 rounded-xl text-[12px] sm:text-[13px] font-medium whitespace-nowrap transition-all duration-200 backdrop-blur-md";
+  const label = (text: string) => <span>{text}</span>;
+  const wideLabel = (text: string) => <span className="hidden sm:inline">{text}</span>;
 
   return (
     <div className="absolute top-20 right-5 lg:right-8 z-20 flex items-center gap-1.5 sm:gap-2">
@@ -105,7 +106,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
             {/* Always a heart, so it reads as the wishlist; logged-out visitors
                 get the log-in prompt when they tap it */}
             <Heart className={`w-4 h-4 ${saved ? "fill-[#ff7d47]" : ""}`} aria-hidden />
-            {label(saved ? "Saved" : "Save")}
+            {wideLabel(saved ? "Saved" : "Save")}
           </button>
         </TooltipTrigger>
         <TooltipContent {...TIP_BELOW}>{saved ? "In your wishlist" : "Add to wishlist"}</TooltipContent>
@@ -117,7 +118,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
           <button
             onClick={handleCompare}
             disabled={!inCompare && isFull}
-            aria-label={inCompare ? "Remove from compare" : "Compare"}
+            aria-label={inCompare ? "Remove from trek comparison" : "Compare with other treks"}
             className={`${labelled} disabled:opacity-40 disabled:cursor-not-allowed`}
             style={inCompare
               ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)", boxShadow: "0 0 12px rgba(255,81,0,0.2)" }
@@ -125,14 +126,15 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
             }
           >
             {inCompare ? <CheckCheck className="w-4 h-4" aria-hidden /> : <GitCompareArrows className="w-4 h-4" aria-hidden />}
-            {label(inCompare ? "Comparing" : "Compare")}
+            {/* "treks" so it isn't mistaken for the operator comparison under Where to book */}
+            {label(inCompare ? "Comparing" : "Compare")}{!inCompare && wideLabel(" treks")}
           </button>
         </TooltipTrigger>
-        <TooltipContent {...TIP_BELOW}>{inCompare ? "Added to compare" : isFull ? "Compare full" : "Compare"}</TooltipContent>
+        <TooltipContent {...TIP_BELOW}>{inCompare ? "Added to your trek comparison" : isFull ? "Trek comparison is full" : "Compare with other treks"}</TooltipContent>
       </Tooltip>
 
       {/* ── Mark as done (third) — beside Wishlist and Compare, the personal actions ── */}
-      <CheckInButton slug={adventure.slug} variant="page" className={btnBase} />
+      <CheckInButton slug={adventure.slug} variant="page" className={labelled} />
 
       {/* ── Share (last) — the outward action, at the edge ── */}
       <Tooltip>
@@ -144,7 +146,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
             style={{ background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }}
           >
             {shared ? <Check className="w-4 h-4" aria-hidden /> : <Share2 className="w-4 h-4" aria-hidden />}
-            {label(shared ? "Copied" : "Share")}
+            {wideLabel(shared ? "Copied" : "Share")}
           </button>
         </TooltipTrigger>
         <TooltipContent {...TIP_BELOW}>{shared ? "Copied" : "Share"}</TooltipContent>

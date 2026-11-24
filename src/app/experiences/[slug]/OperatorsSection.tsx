@@ -167,7 +167,9 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
   const ready = selected.length >= 2 || (selected.length === 0 && few);
 
   const prompt = selected.length === 0
-    ? few ? `Tick operators, or compare all ${operators.length}` : `Tick up to ${MAX_COMPARE} to compare`
+    ? few
+      ? operators.length === 2 ? "See both side by side" : `See all ${operators.length} side by side, or tick a few`
+      : `Tick up to ${MAX_COMPARE} to compare`
     : selected.length === 1 ? "Tick one more to compare"
       : `${selected.length} of ${MAX_COMPARE} picked`;
 
@@ -245,8 +247,10 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
         )}
 
         {/* The compare bar: sticks to the bottom of the screen while the list is in view, above the
-            phone nav bar (about 80px) that shows while the Book bar steps aside for this list */}
-        <div ref={barRef} className="sticky bottom-[calc(env(safe-area-inset-bottom,0px)+88px)] lg:bottom-4 z-[5] rounded-2xl px-3 py-2.5 flex items-center gap-3 transition-shadow"
+            phone nav bar (about 80px) that shows while the Book bar steps aside for this list. A short
+            list fits on screen with the bar right under it, so there it stays put rather than floating
+            over the operators */}
+        <div ref={barRef} className={`${visible.length > 3 ? "sticky bottom-[calc(env(safe-area-inset-bottom,0px)+88px)] lg:bottom-4" : ""} z-[5] rounded-2xl px-3 py-2.5 flex items-center gap-3 transition-shadow`}
           style={{
             background: "var(--bg-surface)",
             border: `1px solid ${nudge ? "#ff5100" : selected.length ? "rgba(255,81,0,0.45)" : "var(--border-default)"}`,
@@ -272,7 +276,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
             style={ready ? undefined : { border: "1px solid rgba(255,81,0,0.55)", opacity: 0.6 }}
           >
             <ArrowUpDown className="w-4 h-4 shrink-0" aria-hidden />
-            {selected.length >= 2 ? `Compare ${selected.length}` : few && selected.length === 0 ? `Compare all ${operators.length}` : "Compare"}
+            {selected.length >= 2 ? `Compare ${selected.length}` : few && selected.length === 0 ? (operators.length === 2 ? "Compare both" : `Compare all ${operators.length}`) : "Compare"}
           </button>
         </div>
       </div>

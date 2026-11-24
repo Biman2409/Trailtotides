@@ -81,6 +81,13 @@ export function trailEnds(t: Trail): { from: string; to: string } {
   return { from, to };
 }
 
+/** The route in words: "A → B", or "Out and back from A" when it ends where it began
+ *  ("Dhundi → Dhundi" looks like a typo) */
+export function trailRoute(t: Trail): string {
+  const { from, to } = trailEnds(t);
+  return from === to ? `Out and back from ${from}` : `${from} → ${to}`;
+}
+
 /** Metres climbed over the itinerary's days */
 export const trailClimbM = (t: Trail) => Math.round(t.days.reduce((s, d) => s + (d.up ?? 0), 0) / 10) * 10;
 

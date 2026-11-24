@@ -481,11 +481,13 @@ export default async function ExperiencePage({ params }: Props) {
                 ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
                 ...(adventure.type === "Motorcycling" && adventure.startingPoint ? [{ label: "Starting Point", value: adventure.startingPoint }] : []),
                 {
-                  label: "Difficulty",
+                  // With an operator grade to set it beside, the label says whose grade the big one is
+                  label: operatorGrade ? "Our grade" : "Difficulty",
                   // Our ACE grade weighs altitude and cold, so it can sit above the operators' own
                   // grade: say so, rather than leave "Hard" beside their "Easy to moderate"
                   value: operatorGrade
-                    ? <span title={`Our ACE grade. The operators' own grade is ${operatorGrade}.`}>{difficulty}<span className="block text-[11px] font-normal leading-tight mt-0.5" style={{ color: "var(--text-tertiary)" }}>operators say {operatorGrade.toLowerCase()}</span></span>
+                    // Whose grade is whose, in words: a bare "operators say easy" under "Moderate" reads as a contradiction
+                    ? <span title={`Our ACE grade, which weighs altitude and cold. The operators' own grade is ${operatorGrade}.`}>{difficulty}<span className="block text-[11px] font-normal leading-tight mt-0.5" style={{ color: "var(--text-tertiary)" }}>operators: {operatorGrade.toLowerCase()}</span></span>
                     : difficulty,
                 },
             ]}
@@ -512,7 +514,8 @@ export default async function ExperiencePage({ params }: Props) {
                 <p className="text-[14px] leading-[1.6] max-w-[70ch]" style={{ color: "var(--text-secondary)" }}>
                   <Emphasis
                     text={adventure.description}
-                    className="font-medium [color:var(--text-primary)] box-decoration-clone bg-[linear-gradient(transparent_64%,rgba(255,81,0,0.18)_64%)]"
+                    // Brighter text only: the orange underline band made every highlight read as a link
+                    className="font-medium [color:var(--text-primary)]"
                   />
                 </p>
               </AccordionSection>
@@ -520,9 +523,12 @@ export default async function ExperiencePage({ params }: Props) {
               {/* Safety & Prep: collapsed to its hazards in one line, the notes, packing list
                   and guides a tap away */}
               <AccordionSection id="safety" label="safety and prep" title="What to know before you go" defaultOpen={safetyOpen} mobileDefaultOpen={false} peek={
-                <Peek>{hazards.length
-                  ? <>Prepare for <span style={{ color: "var(--text-primary)" }}>{hazards.join(", ").toLowerCase()}</span>. Safety notes, packing list and guides inside</>
-                  : "Safety notes, packing list and guides"}</Peek>
+                // The warnings themselves show even while folded, so nobody has to open the section to learn them
+                <Peek>
+                  {hazards.length > 0 && <>Prepare for <span style={{ color: "var(--text-primary)" }}>{hazards.join(", ").toLowerCase()}</span>. </>}
+                  {adventureText.safetyNotes && <span style={{ color: "var(--text-primary)" }}>{adventureText.safetyNotes} </span>}
+                  <span className="whitespace-nowrap">Packing list and guides inside</span>
+                </Peek>
               }>
                 <div className="space-y-3">
                   <div className="max-w-[66ch]">

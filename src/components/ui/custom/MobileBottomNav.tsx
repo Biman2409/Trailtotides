@@ -48,7 +48,9 @@ export default function MobileBottomNav() {
           boxShadow: "0 -4px 24px rgba(0,0,0,0.1), 0 8px 32px rgba(0,0,0,0.12)",
         }}
       >
-        <div className="grid grid-cols-6 px-1 py-1">
+        {/* Six columns that share the width but never squeeze a label below its own size,
+            so the longest one ("Matchmaker") isn't cut off on a narrow phone */}
+        <div className="grid grid-cols-[repeat(6,minmax(min-content,1fr))] px-1 py-1">
           {links.map(({ href, label, icon: Icon, isHome }) => {
             const isActive = isHome
               ? pathname === "/"
