@@ -7,6 +7,7 @@ import { GENRE_GROUPS } from "@/lib/filterOptions";
 import type { ACE } from "@/lib/ace";
 import { matchScore, bucketFor, gapsFor, weeksToReady, type Bucket, type Gap, type GroupMember } from "@/lib/fitness";
 import { DIFFICULTY_CONFIG } from "@/components/ui/custom/DifficultyMeter";
+import { LEAFLET_CSS, CLUSTER_CSS, LEAFLET_JS, CLUSTER_JS, MAPLIBRE_CSS, MAPLIBRE_JS, BRIDGE_JS, DARK_STYLE } from "./mapAssets";
 
 declare global { interface Window { L: typeof L } }
 
@@ -44,7 +45,7 @@ export const BASE_KEY = "ttt-map-base";
 export const BASE_LAYERS: Record<LayerKey, BaseStyle> = {
   map: {
     label: "Default",
-    style: "https://tiles.openfreemap.org/styles/dark",
+    style: DARK_STYLE,
     dark: true,
     maxZoom: 16,
     attribution: `${OPENFREEMAP_CREDIT} · Elevation: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a>`,
@@ -52,7 +53,7 @@ export const BASE_LAYERS: Record<LayerKey, BaseStyle> = {
   satellite: {
     label: "Satellite",
     url: `${ESRI}/World_Imagery/MapServer/tile/{z}/{y}/{x}`,
-    labels: "https://tiles.openfreemap.org/styles/dark",
+    labels: DARK_STYLE,
     dark: true,
     maxZoom: 18,
     attribution: `Imagery © <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>, Maxar, Earthstar Geographics and the GIS User Community · Labels: ${OPENFREEMAP_CREDIT}`,
@@ -164,7 +165,7 @@ function tuneStyle(gl: any, dark: boolean) {
     if (!gl.hasImage(e.id)) gl.addImage(e.id, { width: 1, height: 1, data: new Uint8Array(4) });
   });
   const add = () => {
-    if (gl.getSource("ttt-dem")) return;
+    if (gl.getSource("ttt-india")) return;
     for (const l of gl.getStyle().layers) {
       const field = l.layout?.["text-field"];
       if (field && JSON.stringify(field).includes("name:nonlatin")) {
@@ -178,6 +179,14 @@ function tuneStyle(gl: any, dark: boolean) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const below = gl.getStyle().layers.find((l: any) => l.type === "symbol")?.id;
     outline.layers.forEach((l) => gl.addLayer(l, below));
+    // The relief's elevation images (~1.3 MB over India) would share the connection with the map's
+    // own tiles; add it once the map has drawn, so the map shows first and the relief fades in
+    gl.once("idle", addRelief);
+    setTimeout(addRelief, 4000);
+  };
+  const addRelief = () => {
+    // The timer can outlive the map (closed, or its style swapped): then there's nothing to add to
+    try { if (!gl.style || gl.getSource("ttt-dem")) return; } catch { return; }
     gl.addSource("ttt-dem", { type: "raster-dem", tiles: [TERRARIUM], encoding: "terrarium", tileSize: 256, maxzoom: 14 });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const firstLabel = gl.getStyle().layers.find((l: any) => l.type === "symbol")?.id;
@@ -216,7 +225,8 @@ function loadScript(src: string): Promise<void> {
 }
 
 function loadCss(href: string) {
-  if (document.querySelector(`link[href="${href}"]`)) return;
+  // Only a stylesheet counts: the /map page also preloads these files with <link rel="preload">
+  if (document.querySelector(`link[rel="stylesheet"][href="${href}"]`)) return;
   const link = document.createElement("link");
   link.rel = "stylesheet";
   link.href = href;
@@ -229,10 +239,10 @@ export function loadLeaflet(): Promise<typeof L> {
   if (leafletPromise) return leafletPromise;
   leafletPromise = new Promise((resolve) => {
     if (typeof window === "undefined") return;
-    loadCss("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css");
-    loadCss("https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css");
-    loadScript("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js")
-      .then(() => loadScript("https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"))
+    loadCss(LEAFLET_CSS);
+    loadCss(CLUSTER_CSS);
+    loadScript(LEAFLET_JS)
+      .then(() => loadScript(CLUSTER_JS))
       .then(() => resolve(window.L));
   });
   return leafletPromise;
@@ -244,12 +254,12 @@ let maplibrePromise: Promise<void> | null = null;
 
 export function loadMapLibre(leaflet: typeof L): Promise<void> {
   if (maplibrePromise) return maplibrePromise;
-  loadCss("https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css");
-  maplibrePromise = loadScript("https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js")
+  loadCss(MAPLIBRE_CSS);
+  maplibrePromise = loadScript(MAPLIBRE_JS)
     .then(() => {
       // The bridge attaches L.maplibreGL to whatever window.L is when it runs: make that our Leaflet
       window.L = leaflet;
-      return loadScript("https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js");
+      return loadScript(BRIDGE_JS);
     });
   return maplibrePromise;
 }
