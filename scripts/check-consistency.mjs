@@ -52,8 +52,11 @@ for (const f of readdirSync(DIR).filter((f) => f.endsWith(".json")).sort()) {
   let idx = 0;
   for (const d of t.days) {
     if (d.kind !== "walk") continue;
-    const A = pos.get(d.from), B = pos.get(d.to); if (!A || !B || d.via?.length || d.from === d.to) { continue; }
+    const A = pos.get(d.from), B = pos.get(d.to); if (!A || !B || d.from === d.to) continue;
     const a = near(A.lat, A.lng, idx), b = near(B.lat, B.lng, a.i); idx = b.i;
+    // Days with side trips aren't measured, but still move on along the line, or a place the
+    // route passes twice (Lobuche before and after Base Camp) is matched on the wrong visit
+    if (d.via?.length) continue;
     if (a.off > 300 || b.off > 300) continue;
     const km = Math.abs(cum[b.i] - cum[a.i]) / 1000;
     if (Math.abs(km - d.km) > Math.max(1, 0.2 * d.km)) add("day km", `day ${d.day} ${d.from} → ${d.to}: itinerary ${d.km} km, along the line ${km.toFixed(1)} km`);
