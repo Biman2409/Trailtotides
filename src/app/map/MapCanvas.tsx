@@ -275,7 +275,8 @@ export default function MapCanvas(props: Props) {
           const n = c.getChildCount();
           // Zoomed right out (the whole-India view on a phone) neighbouring clusters can sit ~50 px
           // apart, close enough for full-size bubbles' glows to run together, so they shrink there
-          const small = map.getZoom() < 4.5;
+          // (phones open India at zoom 4–4.5, desktops at 5)
+          const small = map.getZoom() < 5;
           const size = small ? (n >= 20 ? 32 : 28) : n >= 20 ? 44 : 38;
           // The ring takes the average difficulty inside, so the zoomed-out map still reads as a difficulty map
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
