@@ -273,10 +273,10 @@ export default function MapCanvas(props: Props) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         iconCreateFunction: (c: any) => {
           const n = c.getChildCount();
-          // Zoomed right out (the whole-India view on a phone) neighbouring clusters can sit ~50 px
-          // apart, close enough for full-size bubbles' glows to run together, so they shrink there
-          // (phones open India at zoom 4–4.5, desktops at 5)
-          const small = map.getZoom() < 5;
+          // On a phone's whole-India view neighbouring clusters can sit ~50 px apart, close enough
+          // for full-size bubbles' glows to run together, so they shrink there. Phones and desktops
+          // both open India at zoom 5, so it's the map's width that tells them apart.
+          const small = map.getSize().x < 640 && map.getZoom() < 6;
           const size = small ? (n >= 20 ? 32 : 28) : n >= 20 ? 44 : 38;
           // The ring takes the average difficulty inside, so the zoomed-out map still reads as a difficulty map
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -298,6 +298,9 @@ export default function MapCanvas(props: Props) {
         else map.flyToBounds(b, { ...opts, duration: 0.8 });
       });
       map.addLayer(cluster);
+      // Icons are made once per cluster and reused; redraw them after a zoom so the bubble size
+      // follows the zoom the map settled at (the first ones are drawn before India is fitted)
+      map.on("zoomend", () => cluster.refreshClusters());
       clusterRef.current = cluster;
       photoRef.current = leaflet.layerGroup().addTo(map);
       trophyRef.current = leaflet.layerGroup().addTo(map);
