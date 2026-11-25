@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { X, Play, Pause, RotateCcw, Mountain, BedDouble, LocateFixed } from "lucide-react";
-import { trailProfile, type Trail } from "@/lib/trails/shared";
+import { X, Play, Pause, RotateCcw, Mountain, BedDouble, LocateFixed, Car } from "lucide-react";
+import { driveAt, trailProfile, type Trail } from "@/lib/trails/shared";
 import { loadLeaflet, loadMapLibre, tuneStyle, TERRARIUM } from "./mapShared";
 import { DARK_STYLE, MAPBOX_CSS, MAPBOX_JS, MAPBOX_STYLE, MAPBOX_TOKEN } from "./mapAssets";
 
@@ -77,8 +77,26 @@ const HIKER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" w
 </svg>`;
 const HIKER_URL = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(HIKER_SVG)}`;
 
+/** On a road stretch (a circuit of treks joined by drives) the walker is a car: a small jeep seen
+ *  from the side, on a white disc ringed in the road's blue */
+const CAR_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<circle cx="32" cy="32" r="29.5" fill="#f4f7fb" stroke="#3b82f6" stroke-width="3.5"/>
+<path d="M13 38 L13 31.5 Q13 29.5 15 29.2 L21 28.4 L25.6 21.6 Q26.6 20.2 28.4 20.2 L40.6 20.2 Q42.4 20.2 43.4 21.8 L46.8 28.4 L49.6 29.2 Q51.4 29.8 51.4 31.8 L51.4 38 Q51.4 39.6 49.8 39.6 L14.6 39.6 Q13 39.6 13 38 Z" fill="#1f3a5c"/>
+<path d="M27.6 22.6 L40 22.6 Q41 22.6 41.5 23.5 L43.8 28.2 L24.6 28.2 Z" fill="#9fd4ff"/>
+<path d="M33.4 22.6 L33.4 28.2" stroke="#1f3a5c" stroke-width="1.6"/>
+<rect x="13" y="32.2" width="38.4" height="2.6" fill="#ff7a1a"/>
+<rect x="47.4" y="30.6" width="3.2" height="2" rx="0.8" fill="#ffd27a"/>
+<circle cx="22" cy="40.4" r="5.4" fill="#1b1f24"/><circle cx="22" cy="40.4" r="2.2" fill="#9aa5b1"/>
+<circle cx="43" cy="40.4" r="5.4" fill="#1b1f24"/><circle cx="43" cy="40.4" r="2.2" fill="#9aa5b1"/>
+</svg>`;
+const CAR_URL = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(CAR_SVG)}`;
+/** How many times faster the car goes than the walker, so the drives take their share of the play
+ *  without a 200 km road swamping the walking. The profile draws road km this much shorter */
+const ROAD_FASTER = 8;
+const ROAD = "#3b82f6";
+
 type Pt = { km: number; lat: number; lng: number; ele: number };
-type Callout = { key: string; km: number; kind: "landmark" | "night"; title: string; meta: string; note?: string; day?: number };
+type Callout = { key: string; km: number; kind: "landmark" | "night" | "road"; title: string; meta: string; note?: string; day?: number };
 
 function bearing(a: Pt, b: Pt) {
   const y = Math.sin((b.lng - a.lng) * RAD) * Math.cos(b.lat * RAD);
@@ -103,12 +121,15 @@ function dayMarks(trail: Trail, pts: Pt[]): DayBand[] {
   const out: DayBand[] = [];
   let cursor = 0;
   for (const d of trail.days) {
-    if (d.kind !== "walk" || !d.to) continue;
+    if ((d.kind !== "walk" && d.kind !== "drive") || !d.to) continue;
     const place = placeOf(d.to);
     if (!place) continue;
     let best = -1, bestD = Infinity;
     for (let i = cursor; i < pts.length; i++) { const m = dist(place, pts[i]); if (m < bestD) { bestD = m; best = i; } }
     if (best < 0 || bestD > 1500) continue;
+    // A day out and back from where it started (Chopta to Tungnath and back): the line only goes
+    // out, so the day runs to its end
+    if (best === cursor && d.via?.length && cursor < pts.length - 1) best = pts.length - 1;
     const from = pts[cursor].km, to = pts[best].km;
     if (to - from >= 0.2) out.push({ day: d.day, from, to, label: `Day ${d.day}: ${d.from} to ${d.to}${d.km != null ? `, ${d.km} km` : ""}` });
     cursor = best;
@@ -153,7 +174,18 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
   const [callout, setCallout] = useState<Callout | null>(null);
   /** Looking around: seconds until the walk carries on, or "stay" when you chose to stay */
   const [lookAround, setLookAround] = useState<number | "stay" | null>(null);
+  /** The road stretch the car is on, if it's on one */
+  const [road, setRoad] = useState<{ from: string; to: string } | null>(null);
   const total = trail.lengthKm;
+
+  // Play and profile distance: road km count 1/ROAD_FASTER, so the walking gets its share of both
+  const { eff, effTotal, kmOfEff } = useMemo(() => {
+    const drives = trail.drives ?? [];
+    const eff = (k: number) => drives.reduce((e, d) => e - (clamp(k, d.fromKm, d.toKm) - d.fromKm) * (1 - 1 / ROAD_FASTER), k);
+    const effTotal = eff(total);
+    const kmOfEff = (e: number) => { let lo = 0, hi = total; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (eff(m) < e) lo = m; else hi = m; } return (lo + hi) / 2; };
+    return { eff, effTotal, kmOfEff };
+  }, [trail, total]);
 
   // The line with the distance along it at every point, and the days laid along it
   const pts = useMemo<Pt[]>(() => { const prof = trailProfile(trail); return trail.line.map((p, i) => ({ km: prof[i].km, lat: p[0], lng: p[1], ele: p[2] })); }, [trail]);
@@ -161,10 +193,11 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
   const profile = useMemo(() => {
     // The profile thinned to ~240 points, for the live chart
     const p = trailProfile(trail), n = 240, out: { km: number; ele: number }[] = [];
-    for (let i = 0; i < n; i++) { const k = (i / (n - 1)) * total; const q = p.find((x) => x.km >= k) ?? p[p.length - 1]; out.push({ km: k, ele: q.ele }); }
+    // evenly along the profile as drawn (road km shorter), so the walking keeps its detail
+    for (let i = 0; i < n; i++) { const k = kmOfEff((i / (n - 1)) * effTotal); const q = p.find((x) => x.km >= k) ?? p[p.length - 1]; out.push({ km: k, ele: q.ele }); }
     const lo = Math.min(...out.map((x) => x.ele)), hi = Math.max(...out.map((x) => x.ele));
     return { pts: out, lo, hi };
-  }, [trail, total]);
+  }, [trail, kmOfEff, effTotal]);
 
   useEffect(() => {
     const box = boxRef.current;
@@ -193,6 +226,8 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       pitch: PITCH, pitchWant: PITCH, zoomOff: 0, zoomOffWant: 0, losAt: 0,
       // Walking when you took the camera, so the walk carries on after
       resume: false,
+      // On a road stretch, by car
+      car: false,
     };
     const baseZoom = () => 13.5 - 0.35 * Math.log2(s.speed);
     // Development only: lets a test read the camera's state
@@ -207,7 +242,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
         const td = d && trail.days.find((x) => x.day === d.day);
         setDay(td ? {
           n: td.day, title: `${td.from} → ${td.to}`,
-          sub: [td.km != null ? `${td.km} km` : "", td.up ? `${fmt(td.up)} m up` : "", td.down ? `${fmt(td.down)} m down` : ""].filter(Boolean).join(" · "),
+          sub: [td.km != null ? `${td.km} km${td.driveKm ? " on foot" : ""}` : "", td.up ? `${fmt(td.up)} m up` : "", td.down ? `${fmt(td.down)} m down` : "", td.driveKm ? `${fmt(td.driveKm)} km by road` : ""].filter(Boolean).join(" · "),
           note: td.note || undefined, via: td.via?.length ? td.via.join(", ") : undefined,
         } : null);
       }
@@ -226,6 +261,16 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
     const moveWalker = (k: number) => {
       const p = at(k);
       map?.getSource("fly-walker")?.setData({ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: [p.lng, p.lat] } });
+      // On a road stretch the walker is a car, and the drive is called out as it starts
+      const r = driveAt(trail, k);
+      if (!!r !== s.car) {
+        s.car = !!r;
+        if (map?.getLayer("fly-walker")?.type === "symbol" && map.hasImage("fly-car")) map.setLayoutProperty("fly-walker", "icon-image", s.car ? "fly-car" : "fly-hiker");
+        map?.setPaintProperty("fly-walker-glow", "circle-color", s.car ? "rgba(59,130,246,0.45)" : "rgba(255,154,102,0.45)");
+        setRoad(r ? { from: r.from, to: r.to } : null);
+        if (r) showCallout({ key: `r-${r.fromKm}`, km: k, kind: "road", title: `By road to ${r.to}`, meta: `${Math.round(r.toKm - r.fromKm)} km from ${r.from}` });
+        else setCallout((cur) => (cur?.kind === "road" ? null : cur)); // on foot again: the drive's callout goes
+      }
     };
 
     // The camera looks at the walker at the trail's own height. Left to itself MapLibre reads the
@@ -264,8 +309,11 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
     const steer = (now: number, dt: number) => {
       if (now - s.losAt > 120) {
         s.losAt = now;
-        if (blocked()) { s.pitchWant = Math.max(PITCH_MIN, s.pitchWant - 9); s.zoomOffWant = Math.max(-1.4, s.zoomOffWant - 0.22); }
-        else { s.pitchWant = Math.min(PITCH, s.pitchWant + 2); s.zoomOffWant = Math.min(0, s.zoomOffWant + 0.05); }
+        // On the road the camera stands further back: the car covers ground fast, and the valley it
+        // drives through is the view
+        const far = s.car ? -1.6 : 0;
+        if (blocked()) { s.pitchWant = Math.max(PITCH_MIN, s.pitchWant - 9); s.zoomOffWant = Math.max(-1.4 + far, s.zoomOffWant - 0.22); }
+        else { s.pitchWant = Math.min(PITCH, s.pitchWant + 2); s.zoomOffWant = s.zoomOffWant > far ? Math.max(far, s.zoomOffWant - 0.12) : Math.min(far, s.zoomOffWant + 0.05); }
       }
       // Backing off is quick, coming back in is gentle
       const k = 1 - Math.exp(-dt * (s.pitchWant < s.pitch ? 4 : 1.8));
@@ -279,11 +327,12 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       // slow phone drawing a few frames a second still keeps time
       const dt = Math.min(0.25, (now - s.last) / 1000);
       s.last = now;
-      // Slow a little near a callout, so there's time to read it
-      const base = (total / PLAY_SECONDS) * s.speed;
+      // Slow a little near a callout, so there's time to read it. A circuit with drives plays for
+      // longer, and the car goes ROAD_FASTER times the walker's pace
+      const base = (effTotal / (trail.drives?.length ? PLAY_SECONDS * 2 : PLAY_SECONDS)) * s.speed;
       const next = events.find((e) => e.km > s.km - 0.05);
       const near = next ? Math.abs(next.km - s.km) : 1e9;
-      const v = base * (0.4 + 0.6 * smooth(clamp(near / Math.max(0.3, base * 1.2), 0, 1)));
+      const v = base * (s.car ? ROAD_FASTER : 1) * (0.4 + 0.6 * smooth(clamp(near / Math.max(0.3, base * 1.2), 0, 1)));
       const prevKm = s.km;
       s.km = Math.min(total, s.km + v * dt);
       for (const e of events) if (e.km > prevKm && e.km <= s.km) showCallout(e);
@@ -462,6 +511,12 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
           map.addSource("fly-line", { type: "geojson", lineMetrics: true, data: { type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: pts.map((p) => [p.lng, p.lat]) } } });
           map.addLayer({ id: "fly-trail-casing", type: "line", source: "fly-line", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "rgba(0,0,0,0.55)", "line-width": 7 } });
           map.addLayer({ id: "fly-trail", type: "line", source: "fly-line", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-width": 3.5, "line-gradient": ["step", ["line-progress"], "#ff5100", 0.0001, "rgba(255,255,255,0.55)"] } });
+          // Road stretches between the treks: dashed blue over the trail line
+          if (trail.drives?.length) {
+            map.addSource("fly-roads", { type: "geojson", data: { type: "Feature", properties: {}, geometry: { type: "MultiLineString",
+              coordinates: trail.drives.map((d) => pts.filter((p) => p.km >= d.fromKm - 0.01 && p.km <= d.toKm + 0.01).map((p) => [p.lng, p.lat])) } } });
+            map.addLayer({ id: "fly-road", type: "line", source: "fly-roads", layout: { "line-cap": "butt", "line-join": "round" }, paint: { "line-color": ROAD, "line-width": 3.5, "line-dasharray": [2, 1.4] } });
+          }
 
           // Stops numbered as on the main map and in the itinerary, drawn as layers so they lie on
           // the terrain with the line. Passes, summits and base camps also carry their name and
@@ -490,14 +545,15 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
           map.addLayer({ id: "fly-walker-glow", type: "circle", source: "fly-walker", paint: { "circle-radius": 22, "circle-color": "rgba(255,154,102,0.45)", "circle-blur": 0.8, "circle-pitch-alignment": "viewport", "circle-pitch-scale": "viewport" } });
           // The walker is a small hiker; until its image has loaded (or if it can't), a dot
           map.addLayer({ id: "fly-walker", type: "circle", source: "fly-walker", paint: { "circle-radius": 6, "circle-color": "#ffffff", "circle-stroke-color": "#ff5100", "circle-stroke-width": 3, "circle-pitch-alignment": "viewport", "circle-pitch-scale": "viewport" } });
-          const hiker = new Image(64, 64);
-          hiker.src = HIKER_URL;
-          hiker.decode().then(() => {
+          const hiker = new Image(64, 64), car = new Image(64, 64);
+          hiker.src = HIKER_URL; car.src = CAR_URL;
+          Promise.all([hiker.decode(), car.decode()]).then(() => {
             if (cancelled || !map.getStyle()) return;
             if (!map.hasImage("fly-hiker")) map.addImage("fly-hiker", hiker, { pixelRatio: 2 });
+            if (!map.hasImage("fly-car")) map.addImage("fly-car", car, { pixelRatio: 2 });
             map.removeLayer("fly-walker");
             map.addLayer({ id: "fly-walker", type: "symbol", source: "fly-walker", layout: {
-              "icon-image": "fly-hiker", "icon-size": 1, "icon-allow-overlap": true, "icon-ignore-placement": true, "icon-pitch-alignment": "viewport",
+              "icon-image": s.car ? "fly-car" : "fly-hiker", "icon-size": 1, "icon-allow-overlap": true, "icon-ignore-placement": true, "icon-pitch-alignment": "viewport",
             } });
           }).catch(() => { /* keep the dot */ });
 
@@ -527,7 +583,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       cleanups.forEach((f) => f());
       ctl.current = null; try { map?.remove(); } catch { /* already gone */ }
     };
-  }, [trail, total, bands, pts]);
+  }, [trail, total, bands, pts, effTotal]);
 
   // Esc closes, Space plays and pauses; focus starts on Close
   useEffect(() => {
@@ -545,11 +601,12 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
 
   // The live profile: area under the elevation, walked part in orange, the walker as a dot
   const W = 600, H = 64, PAD = 4;
-  const x = (k: number) => (k / total) * W;
+  // Across the profile road km are drawn ROAD_FASTER times shorter (eff), as the car plays them
+  const x = (k: number) => (eff(k) / effTotal) * W;
   const y = (e: number) => PAD + (1 - (e - profile.lo) / Math.max(1, profile.hi - profile.lo)) * (H - PAD * 2);
   const area = `M0,${H} ` + profile.pts.map((p) => `L${x(p.km).toFixed(1)},${y(p.ele).toFixed(1)}`).join(" ") + ` L${W},${H} Z`;
   const ridge = profile.pts.map((p, i) => `${i ? "L" : "M"}${x(p.km).toFixed(1)},${y(p.ele).toFixed(1)}`).join(" ");
-  const frac = total > 0 ? km / total : 0;
+  const frac = effTotal > 0 ? eff(km) / effTotal : 0;
   const walkBands = bands.filter((b) => b.to > b.from);
   // Day numbers thin out when there are too many to fit
   const every = walkBands.length > 12 ? 2 : 1;
@@ -588,8 +645,8 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       {callout && (
         <div className="absolute inset-x-0 bottom-[214px] sm:bottom-[206px] flex justify-center pointer-events-none px-4" aria-live="polite">
           <div key={callout.key} className="tm-fly-call tm-glass rounded-2xl px-4 py-3 max-w-[460px] flex gap-3 items-start">
-            <span className="w-9 h-9 rounded-xl grid place-items-center shrink-0" style={{ background: callout.kind === "night" ? "rgba(111,240,224,0.14)" : "rgba(255,81,0,0.18)", color: callout.kind === "night" ? "#6ff0e0" : "#ff9a66" }}>
-              {callout.kind === "night" ? <BedDouble className="w-4 h-4" /> : <Mountain className="w-4 h-4" />}
+            <span className="w-9 h-9 rounded-xl grid place-items-center shrink-0" style={{ background: callout.kind === "night" ? "rgba(111,240,224,0.14)" : callout.kind === "road" ? "rgba(59,130,246,0.2)" : "rgba(255,81,0,0.18)", color: callout.kind === "night" ? "#6ff0e0" : callout.kind === "road" ? "#93c5fd" : "#ff9a66" }}>
+              {callout.kind === "night" ? <BedDouble className="w-4 h-4" /> : callout.kind === "road" ? <Car className="w-4 h-4" /> : <Mountain className="w-4 h-4" />}
             </span>
             <span className="min-w-0">
               <span className="block text-[15px] font-bold leading-tight">{callout.title}</span>
@@ -644,7 +701,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
               <button key={b.day} type="button" onClick={() => ctl.current?.seekKm(b.from + 0.01)} title={b.label}
                 aria-label={`Go to day ${b.day}`} aria-current={day?.n === b.day || undefined}
                 className={`absolute top-0 -translate-x-1/2 h-5 min-w-5 px-1 rounded-md text-[10px] font-bold tabular-nums transition-colors ${day?.n === b.day ? "bg-[#ff5100] text-white" : "bg-white/8 text-white/60 hover:bg-white/15 hover:text-white"}`}
-                style={{ left: `${clamp(((b.from + b.to) / 2 / total) * 100, 2.5, 97.5)}%` }}>{b.day}</button>
+                style={{ left: `${clamp(((eff(b.from) + eff(b.to)) / 2 / effTotal) * 100, 2.5, 97.5)}%` }}>{b.day}</button>
             ))}
           </div>
           {/* Click or drag along the profile to jump there */}
@@ -653,7 +710,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
             aria-valuetext={`${km.toFixed(1)} of ${total.toFixed(1)} km${ele != null ? `, ${fmt(ele)} m` : ""}`}
             className="mt-1 relative cursor-pointer select-none touch-none"
             onPointerDown={(e) => {
-              const el = e.currentTarget, go = (cx: number) => { const r = el.getBoundingClientRect(); ctl.current?.seekKm(clamp((cx - r.left) / r.width, 0, 1) * total); };
+              const el = e.currentTarget, go = (cx: number) => { const r = el.getBoundingClientRect(); ctl.current?.seekKm(kmOfEff(clamp((cx - r.left) / r.width, 0, 1) * effTotal)); };
               go(e.clientX);
               el.setPointerCapture(e.pointerId);
               el.onpointermove = (m) => go(m.clientX);
@@ -661,7 +718,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
             }}
             onKeyDown={(e) => {
               const step = e.key === "ArrowRight" ? 0.02 : e.key === "ArrowLeft" ? -0.02 : 0;
-              if (step) { e.preventDefault(); ctl.current?.seekKm(clamp(frac + step, 0, 1) * total); }
+              if (step) { e.preventDefault(); ctl.current?.seekKm(kmOfEff(clamp(frac + step, 0, 1) * effTotal)); }
             }}
           >
             <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="block w-full h-12 sm:h-14" aria-hidden>
@@ -670,6 +727,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
               </defs>
               {/* Every other day faintly banded */}
               {walkBands.map((b, i) => i % 2 === 0 && <rect key={b.day} x={x(b.from)} y="0" width={Math.max(0, x(b.to) - x(b.from))} height={H} fill="rgba(255,255,255,0.035)" />)}
+              {(trail.drives ?? []).map((d) => <rect key={d.fromKm} x={x(d.fromKm)} y="0" width={Math.max(0, x(d.toKm) - x(d.fromKm))} height={H} fill="rgba(59,130,246,0.16)" />)}
               <path d={area} fill="rgba(255,255,255,0.08)" />
               <path d={ridge} fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
               <g clipPath="url(#tm-fly-done)">
@@ -680,7 +738,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
             </svg>
             {/* The hiker on the profile (outside the SVG so it keeps its shape) */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={HIKER_URL} alt="" width={22} height={22} className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none rounded-full"
+            <img src={road ? CAR_URL : HIKER_URL} alt="" width={22} height={22} className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none rounded-full"
               style={{ left: `${frac * 100}%`, top: `${(ele != null ? y(ele) / H : 0.5) * 100}%`, boxShadow: "0 0 12px rgba(255,154,102,0.8)" }} />
           </div>
           <div className="mt-1 flex justify-between text-[10px] text-white/40 tabular-nums">

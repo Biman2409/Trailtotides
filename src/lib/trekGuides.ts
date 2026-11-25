@@ -58,6 +58,11 @@ export const ACCESS: Record<string, Access> = {
   "satopanth-lake": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Badrinath, about 300 km and 11 to 12 hours. Mana village is 3 km beyond" },
   "deoriatal-chandrashila": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh or Haridwar to Sari village near Ukhimath, about 200 km and 8 to 9 hours" },
   "panch-kedar": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Guptkashi, about 7 to 8 hours" },
+  "kedarnath": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Sonprayag, about 210 km and 8 to 9 hours, then a shared jeep to Gaurikund" },
+  "madhmaheshwar": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Ransi via Ukhimath, about 200 km and 8 to 9 hours" },
+  "tungnath-chandrashila": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Chopta via Ukhimath, about 210 km and 8 to 9 hours" },
+  "rudranath": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Sagar near Gopeshwar, about 230 km and 9 to 10 hours" },
+  "kalpeshwar": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to the Urgam valley via Helang near Joshimath, about 260 km and 10 to 11 hours" },
   "rudranath-kalpeshwar": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Helang near Joshimath, about 250 km and 9 to 10 hours. The trek ends at Sagar, about 30 minutes from Gopeshwar" },
   "panwali-kantha": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Ghuttu, about 180 km and 7 to 8 hours" },
   "surya-top": { gateway: "Dehradun", ...DEHRADUN, note: "The roadhead is Barsu in Uttarkashi district, past Uttarkashi town, a full day's drive from Dehradun. Your operator confirms the pickup point" },
@@ -126,6 +131,7 @@ const TREK_PERMITS: Record<string, string> = {
   "manaslu-circuit": "Manaslu is a restricted area: a special permit, a licensed guide and at least two trekkers are required, plus the Manaslu and Annapurna conservation area permits.",
   "markha-valley": "Hemis National Park fees are collected on the trail.",
   "rudranath-kalpeshwar": "Rudranath is inside the Kedarnath Wildlife Sanctuary: a forest permit and fee, checked on the trail. Operators normally arrange it.",
+  "rudranath": "Rudranath is inside the Kedarnath Wildlife Sanctuary: a forest permit and fee, checked on the trail. Operators normally arrange it.",
 };
 
 export function permitNotes(a: Adventure): string[] {

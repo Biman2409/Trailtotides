@@ -230,6 +230,13 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
           L.polyline(sp, { color: "#0e7c86", weight: 3, opacity: 1, dashArray: "6 5" })
             .bindTooltip(`Side trip: ${s.name} · ${s.km} km each way from ${s.from}, out and back`, { sticky: true, opacity: 0.95, className: "ttt-nearby-tooltip" }).addTo(map);
         });
+        // Road stretches between treks (a circuit): dashed blue, said so
+        (trail.drives ?? []).forEach((d) => {
+          const seg = lineBetweenKm(trail.line, d.fromKm, d.toKm);
+          if (seg.length < 2) return;
+          L.polyline(seg, { color: "#3b82f6", weight: 3.5, opacity: 1, dashArray: "8 6" })
+            .bindTooltip(`By road: ${d.from} → ${d.to} · ${Math.round(d.toKm - d.fromKm)} km`, { sticky: true, opacity: 0.95, className: "ttt-nearby-tooltip" }).addTo(map);
+        });
         // Unmapped stretches: drawn over the line in white dashes, and said so
         const unmapped = [
           ...(trail.unmapped ?? []).map((u) => ({ u, l: trail.line, where: `km ${u.fromKm.toFixed(1)}–${u.toKm.toFixed(1)}` })),

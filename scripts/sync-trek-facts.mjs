@@ -68,8 +68,8 @@ for (const file of readdirSync(DIR).filter((f) => f.endsWith(".json"))) {
   if (!/\bdurationRange: /.test(entry)) entry = entry.replace(/(\bdurationDays: "[^"]*")/, `$1, durationRange: ""`);
   if (!/\bdistanceRange: /.test(entry)) entry = entry.replace(/(\bdistance: "[^"]*")/, `$1, distanceRange: ""`);
   set("duration", bucket(days, entry.match(/\bduration: "([^"]*)"/)?.[1]));
-  set("durationDays", `${days} days`);
-  set("durationRange", `${days} Days`, false);
+  set("durationDays", `${days} day${days === 1 ? "" : "s"}`);
+  set("durationRange", `${days} Day${days === 1 ? "" : "s"}`, false);
   set("distance", `${walked}km`);
   set("distanceRange", `${walked} km`, false);
   set("baseCamp", trail.days[0].from);

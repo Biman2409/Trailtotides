@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { X, Download, ArrowRight, Box, ArrowUp, ArrowDown, BedDouble, Route, Mountain, CalendarDays, TrendingUp } from "lucide-react";
+import { X, Download, ArrowRight, Box, ArrowUp, ArrowDown, BedDouble, Car, Route, Mountain, CalendarDays, TrendingUp } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 import TrailElevation from "@/components/ui/custom/TrailElevation";
 import { dayBands } from "@/lib/trails/dayBands";
@@ -95,9 +95,10 @@ export default function ItineraryPanel({ adventure: a, trail, onClose, phone }: 
                     {!!d.up && <span className="inline-flex items-center gap-1"><ArrowUp className="w-3 h-3 text-[var(--tm-peach)]" />{fmt(d.up)} m up</span>}
                     {!!d.down && <span className="inline-flex items-center gap-1"><ArrowDown className="w-3 h-3 text-[var(--tm-mint)]" />{fmt(d.down)} m down</span>}
                     {d.sleepEle != null && <span className="inline-flex items-center gap-1"><BedDouble className="w-3 h-3" />sleep at {fmt(d.sleepEle)} m</span>}
+                    {d.driveKm != null && <span className="inline-flex items-center gap-1"><Car className="w-3 h-3" />{fmt(d.driveKm)} km by road</span>}
                   </p>
                 )}
-                {d.kind === "travel" && <p className="text-[11.5px] text-white/50 mt-1">By road, not on foot</p>}
+                {(d.kind === "travel" || d.kind === "drive") && <p className="text-[11.5px] text-white/50 mt-1">By road, not on foot{d.driveKm != null ? `: ${fmt(d.driveKm)} km` : ""}</p>}
               </div>
             </li>
           ))}

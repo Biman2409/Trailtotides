@@ -14,16 +14,20 @@ export interface TrailStop {
 /** One day of the itinerary. Distances and climbs are measured along the trail line. */
 export interface TrailDay {
   day: number;
-  /** walk: a trekking day; rest: acclimatisation, sleep in the same place; travel: not on foot */
-  kind: "walk" | "rest" | "travel";
+  /** walk: a trekking day (it may start or end with a drive: driveKm); rest: acclimatisation,
+   *  sleep in the same place; drive: by road the whole day; travel: not on foot, not drawn */
+  kind: "walk" | "rest" | "travel" | "drive";
   from: string;
   /** Where you sleep that night (null on a travel day out) */
   to: string | null;
   /** Places visited on the way (Base Camp, a summit viewpoint) */
   via?: string[];
+  /** On foot (the climbs too) */
   km?: number;
   up?: number;
   down?: number;
+  /** By road the same day, to or from a trailhead (a circuit of treks: see Trail.drives) */
+  driveKm?: number;
   /** The day starts or ends off the mapped line, so its figures are estimates */
   approx?: boolean;
   sleepEle: number | null;
@@ -32,6 +36,9 @@ export interface TrailDay {
 
 /** A stretch of a line, in km from its start */
 export interface TrailStretch { fromKm: number; toKm: number }
+
+/** A stretch of the line driven by road between two treks' trailheads */
+export interface TrailDrive extends TrailStretch { from: string; to: string }
 
 /** An out-and-back trip off the main line (a summit, a lake), routed and drawn */
 export interface TrailSideTrip {
@@ -72,6 +79,8 @@ export interface Trail {
   stops: TrailStop[];
   /** Stretches of the main line with no mapped path or GPS track (drawn straight between their ends) */
   unmapped?: TrailStretch[];
+  /** Stretches of the main line by road (a circuit of treks joined by drives: scripts/build-circuit.mjs) */
+  drives?: TrailDrive[];
   /** Side trips off the main line (summit viewpoints), as points */
   side: Omit<TrailStop, "km">[];
   /** The way to each side trip the itinerary makes, routed */
@@ -85,6 +94,12 @@ export interface Trail {
   /** [lat, lng, elevation in m], thinned to ~10 m accuracy */
   line: [number, number, number][];
 }
+
+/** The drive a km mark of the line is on, if it's on one */
+export const driveAt = (t: Pick<Trail, "drives">, km: number) => t.drives?.find((d) => km > d.fromKm && km <= d.toKm) ?? null;
+
+/** Km by road over the itinerary's days */
+export const trailDriveKm = (t: Trail) => Math.round(t.days.reduce((s, d) => s + (d.driveKm ?? 0), 0));
 
 /** What the site says wherever a stretch has no mapped path and no GPS track */
 export const NO_TRACK = "Tracking data unavailable for this section";

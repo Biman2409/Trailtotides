@@ -487,6 +487,12 @@ export default function MapCanvas(props: Props) {
       leaflet.polyline(sp, { color: "#0e7c86", weight: 3.5, opacity: 1, dashArray: "6 5" })
         .bindTooltip(`<b>Side trip: ${esc(s.name)}</b><span>${s.km} km each way from ${esc(s.from)}, out and back</span>`, { sticky: true, className: "tm-tip" }).addTo(layer);
     });
+    // Road stretches between treks (a circuit): dashed blue, said so
+    (trail.drives ?? []).forEach((d) => {
+      const seg = lineBetweenKm(trail.line, d.fromKm, d.toKm);
+      if (seg.length > 1) leaflet.polyline(seg, { color: "#3b82f6", weight: 4, opacity: 1, dashArray: "8 6" })
+        .bindTooltip(`<b>By road: ${esc(d.from)} → ${esc(d.to)}</b><span>${Math.round(d.toKm - d.fromKm)} km by road between the treks</span>`, { sticky: true, className: "tm-tip" }).addTo(layer);
+    });
     [
       ...(trail.unmapped ?? []).map((u) => ({ u, l: trail.line, where: `km ${u.fromKm.toFixed(1)}–${u.toKm.toFixed(1)}` })),
       ...(trail.sideTrips ?? []).flatMap((s) => (s.unmapped ?? []).map((u) => ({ u, l: s.line, where: `side trip to ${s.name}` }))),

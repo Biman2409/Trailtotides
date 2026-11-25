@@ -4,8 +4,8 @@
 // elevation profile, and the weather at every place the itinerary sleeps.
 
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, ArrowDown, ArrowUp, BedDouble, Footprints, Moon, Plane, Route, RotateCw } from "lucide-react";
-import { acclimatisation, NO_TRACK, NO_TRACK_NOTE, sideTripOn, stretchPlace, trailHighPoint, trailProfile, trailWalkKm, type Trail, type TrailDay } from "@/lib/trails/shared";
+import { AlertTriangle, ArrowDown, ArrowUp, BedDouble, Car, Footprints, Moon, Plane, Route, RotateCw } from "lucide-react";
+import { acclimatisation, NO_TRACK, NO_TRACK_NOTE, sideTripOn, stretchPlace, trailDriveKm, trailHighPoint, trailProfile, trailWalkKm, type Trail, type TrailDay } from "@/lib/trails/shared";
 import { WeatherIcon, iconColor, desc } from "./WeatherWidget";
 
 const ORANGE = "#ff5100";
@@ -28,7 +28,7 @@ export function ItineraryPanel({ trail }: { trail: Trail }) {
   return (
     <div className="p-4 sm:p-5">
       <p className="text-[13px] mb-4" style={{ color: "var(--text-secondary)" }}>
-        <b style={{ color: "var(--text-primary)" }}>{trail.days.length} days</b> from {trail.days[0].from}: {walking.length} walking, {rest} rest {rest === 1 ? "day" : "days"} to acclimatise, about {trailWalkKm(trail)} km on foot. A typical plan; operators vary it a little.
+        <b style={{ color: "var(--text-primary)" }}>{trail.days.length} days</b> from {trail.days[0].from}: {walking.length} walking, {rest} rest {rest === 1 ? "day" : "days"} to acclimatise, about {trailWalkKm(trail)} km on foot{trailDriveKm(trail) > 0 ? <> and {fmt(trailDriveKm(trail))} km by road between the trailheads</> : null}. A typical plan; operators vary it a little.
         {jumps.length > 0 && <> {jumps.length === 1 ? "One night climbs" : `${jumps.length} nights climb`} faster than the usual 300 to 500 m a night above 3,000 m: marked below.</>}
       </p>
       {/* Where the line has no mapped path under it, said place by place, not as a km total */}
@@ -47,7 +47,7 @@ export function ItineraryPanel({ trail }: { trail: Trail }) {
       )}
       <ol className="relative">
         {trail.days.map((d, i) => {
-          const Icon = d.kind === "rest" ? Moon : d.kind === "travel" ? Plane : Footprints;
+          const Icon = d.kind === "rest" ? Moon : d.kind === "travel" ? Plane : d.kind === "drive" ? Car : Footprints;
           const last = i === trail.days.length - 1;
           const jump = jumps.find((j) => j.day === d.day);
           const side = sideTripOn(trail, d);
@@ -79,7 +79,11 @@ export function ItineraryPanel({ trail }: { trail: Trail }) {
                     <span className="inline-flex items-center gap-1"><ArrowUp className="w-3 h-3" />{fmt(d.up ?? 0)} m</span>
                     <span className="inline-flex items-center gap-1"><ArrowDown className="w-3 h-3" />{fmt(d.down ?? 0)} m</span>
                     {d.sleepEle != null && <span className="inline-flex items-center gap-1"><BedDouble className="w-3 h-3" />sleep at {fmt(d.sleepEle)} m</span>}
+                    {d.driveKm != null && <span className="inline-flex items-center gap-1"><Car className="w-3 h-3" />{fmt(d.driveKm)} km by road</span>}
                   </p>
+                )}
+                {d.kind === "drive" && d.driveKm != null && (
+                  <p className="mt-1 text-[12px] inline-flex items-center gap-1" style={{ color: "var(--text-secondary)" }}><Car className="w-3 h-3" />{fmt(d.driveKm)} km by road</p>
                 )}
                 {jump && (
                   <p className="mt-1.5 inline-flex items-start gap-1.5 rounded-lg px-2 py-1 text-[12px] leading-snug"

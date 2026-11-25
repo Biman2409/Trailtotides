@@ -356,7 +356,7 @@ export const TREKS = {
     stops: [
       { name: "Sari", at: [30.51688, 79.13526] },
       { name: "Deoriatal", q: "Deoria Tal", at: [30.52211, 79.12754] },
-      { name: "Chopta", q: "Chopta Tungnath", at: [30.47786, 79.21015] },
+      { name: "Chopta", at: [30.4827, 79.2067], exact: true } /* where the Tungnath path leaves the road (OSM GPS traces); "Chopta" in OSM is a roadside campsite 700 m south */,
       // The temple, placed from ultrajourneys.org's map; OSM's Tunganath is checked within 2 km
       { name: "Tungnath", q: "Tunganath", at: [30.4887, 79.21702] },
       { name: "Chandrashila", at: [30.48806, 79.22139], ele: 3690 }, // surveyed summit; the model reads 3,642 m
@@ -689,6 +689,86 @@ export const TREKS = {
       { to: "Changabang Base Camp", note: "Over moraine to the base camp on the Bagini glacier, below Changabang's north face" },
       { to: "Dronagiri", note: "Back down the valley" },
       { to: "Dronagiri road end", note: "Down to the road" },
+    ],
+  },
+
+  // The five Panch Kedar temples, each its own trek; scripts/build-circuit.mjs joins them, with the
+  // drives between, into panch-kedar
+
+  kedarnath: {
+    near: "Rudraprayag, Uttarakhand",
+    stops: [
+      { name: "Gaurikund", at: [30.6534, 79.0268] },
+      { name: "Kedarnath", q: "Shri Kedarnath Mandir", at: [30.7354, 79.0668] },
+    ],
+    camps: { "Kedarnath base camp": ["Gaurikund", "Kedarnath", 0.9, ["Kedarnath base camp"]] },
+    days: [
+      { to: "Kedarnath", note: "The pilgrim path from Gaurikund up the Mandakini, past Rambara and Linchauli, to the temple below the Kedarnath peaks" },
+      { rest: "Darshan at the temple, and the short climb to Bhukund Bhairavnath temple above it" },
+      { to: "Gaurikund", note: "Back down the same path to Gaurikund" },
+    ],
+  },
+
+  madhmaheshwar: {
+    near: "Rudraprayag, Uttarakhand",
+    stops: [
+      { name: "Ransi", near: "Ukhimath, Uttarakhand" },
+      { name: "Gaundar", at: [30.6026, 79.1797] },
+      { name: "Madhmaheshwar", q: "Madmameshwar Temple", at: [30.6352, 79.2215] },
+    ],
+    side: [{ name: "Budha Madhmaheshwar", q: "Budha Madmaheshwar Mandir", at: [30.6338, 79.2166] }],
+    // Above Gaundar OSM has no path: through the villages it does have, Bantoli and Nanu, up the
+    // ridge to the temple (a reference GPS track would place it better: research/gpx-sources.md)
+    through: [[30.6081, 79.1945], [30.6152, 79.1986]],
+    days: [
+      { to: "Gaundar", note: "From the road at Ransi down to the Madhmaheshwar Ganga and along it to Gaundar village" },
+      { to: "Madhmaheshwar", note: "Up through Bantoli, Khatara and Nanu, oak and rhododendron forest, to the meadow temple" },
+      { rest: "A morning at Budha Madhmaheshwar, the small shrine on the meadow above, facing Chaukhamba", side: "Budha Madhmaheshwar" },
+      { to: "Ransi", note: "All the way back down to Ransi" },
+    ],
+  },
+
+  "tungnath-chandrashila": {
+    near: "Rudraprayag, Uttarakhand",
+    stops: [
+      { name: "Chopta", at: [30.4827, 79.2067], exact: true } /* where the Tungnath path leaves the road (OSM GPS traces); "Chopta" in OSM is a roadside campsite 700 m south */,
+      { name: "Tungnath", q: "Tunganath", at: [30.4887, 79.21702] },
+      { name: "Chandrashila", at: [30.48806, 79.22139], ele: 3690 }, // surveyed summit; the model reads 3,642 m
+    ],
+    days: [
+      { to: "Chopta", via: ["Tungnath", "Chandrashila"], note: "Up the paved path through the Chopta meadows to Tungnath, the highest Shiva temple, then on to the Chandrashila summit for Chaukhamba, Kedarnath and Nanda Devi, and back down" },
+    ],
+  },
+
+  rudranath: {
+    near: "Chamoli, Uttarakhand",
+    stops: [
+      { name: "Sagar", at: [30.4398, 79.3213] },
+      { name: "Pitradhar", at: [30.4883, 79.3326] },
+      { name: "Rudranath", at: [30.5186, 79.3182] },
+    ],
+    // Lyuti and Panar bugyals, on the way up from Sagar, aren't on the map by name
+    camps: {
+      "Lyuti Bugyal": ["Sagar", "Pitradhar", 0.4, ["Lyuti", "Liti Bugyal"]],
+      Panar: ["Sagar", "Pitradhar", 0.75, ["Panar Bugyal", "Pannar"]],
+    },
+    days: [
+      { to: "Panar", note: "From Sagar village up through oak forest and the Lyuti meadows to the wide Panar bugyal" },
+      { to: "Rudranath", via: ["Pitradhar"], note: "Over Pitradhar, with its stone cairns, and along the ridge to the rock shrine where Shiva is worshipped as a face" },
+      { to: "Sagar", note: "Darshan at dawn, then the long way down to Sagar" },
+    ],
+  },
+
+  kalpeshwar: {
+    near: "Chamoli, Uttarakhand",
+    stops: [
+      { name: "Urgam", at: [30.5401, 79.4566] },
+      { name: "Kalpeshwar", q: "Kalpeshwar Mandir", at: [30.5504, 79.4491] },
+      { name: "Bansi Narayan", at: [30.54, 79.4096] },
+    ],
+    days: [
+      { to: "Bansi Narayan", via: ["Kalpeshwar"], note: "From Urgam through Devgram to Kalpeshwar, the cave temple open all year, then up through oak forest to the old Vishnu temple at Bansi Narayan" },
+      { to: "Urgam", note: "Back down past Kalpeshwar to the Urgam valley" },
     ],
   },
 

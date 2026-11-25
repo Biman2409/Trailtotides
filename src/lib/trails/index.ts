@@ -29,14 +29,18 @@ import gokyoLakes from "./gokyo-lakes.json";
 import gulabiKantha from "./gulabi-kantha.json";
 import hamptaPass from "./hampta-pass.json";
 import harKiDun from "./har-ki-dun.json";
+import kalpeshwar from "./kalpeshwar.json";
 import kareriLake from "./kareri-lake.json";
 import kashmirGreatLakes from "./kashmir-great-lakes.json";
 import kedarkanthaTrek from "./kedarkantha-trek.json";
+import kedarnath from "./kedarnath.json";
 import kedartal from "./kedartal.json";
 import khopraDanda from "./khopra-danda.json";
 import kuariPass from "./kuari-pass.json";
+import madhmaheshwar from "./madhmaheshwar.json";
 import manasluCircuit from "./manaslu-circuit.json";
 import markhaValley from "./markha-valley.json";
+import panchKedar from "./panch-kedar.json";
 import pangarchullaPeak from "./pangarchulla-peak.json";
 import panwaliKantha from "./panwali-kantha.json";
 import phularaRidge from "./phulara-ridge.json";
@@ -45,6 +49,7 @@ import pinParvatiPass from "./pin-parvati-pass.json";
 import pindariGlacier from "./pindari-glacier.json";
 import ranthanKharak from "./ranthan-kharak.json";
 import roopkund from "./roopkund.json";
+import rudranath from "./rudranath.json";
 import rudranathKalpeshwar from "./rudranath-kalpeshwar.json";
 import rupinPass from "./rupin-pass.json";
 import sandakphuPhalutTrek from "./sandakphu-phalut-trek.json";
@@ -53,6 +58,7 @@ import satopanthLake from "./satopanth-lake.json";
 import suryaTop from "./surya-top.json";
 import tarsarMarsarTrek from "./tarsar-marsar-trek.json";
 import triund from "./triund.json";
+import tungnathChandrashila from "./tungnath-chandrashila.json";
 import valleyOfFlowers from "./valley-of-flowers.json";
 import yullaKanda from "./yulla-kanda.json";
 
@@ -82,14 +88,18 @@ const TRAILS: Record<string, Trail> = {
   "gulabi-kantha": gulabiKantha as unknown as Trail,
   "hampta-pass": hamptaPass as unknown as Trail,
   "har-ki-dun": harKiDun as unknown as Trail,
+  "kalpeshwar": kalpeshwar as unknown as Trail,
   "kareri-lake": kareriLake as unknown as Trail,
   "kashmir-great-lakes": kashmirGreatLakes as unknown as Trail,
   "kedarkantha-trek": kedarkanthaTrek as unknown as Trail,
+  "kedarnath": kedarnath as unknown as Trail,
   "kedartal": kedartal as unknown as Trail,
   "khopra-danda": khopraDanda as unknown as Trail,
   "kuari-pass": kuariPass as unknown as Trail,
+  "madhmaheshwar": madhmaheshwar as unknown as Trail,
   "manaslu-circuit": manasluCircuit as unknown as Trail,
   "markha-valley": markhaValley as unknown as Trail,
+  "panch-kedar": panchKedar as unknown as Trail,
   "pangarchulla-peak": pangarchullaPeak as unknown as Trail,
   "panwali-kantha": panwaliKantha as unknown as Trail,
   "phulara-ridge": phularaRidge as unknown as Trail,
@@ -98,6 +108,7 @@ const TRAILS: Record<string, Trail> = {
   "pindari-glacier": pindariGlacier as unknown as Trail,
   "ranthan-kharak": ranthanKharak as unknown as Trail,
   "roopkund": roopkund as unknown as Trail,
+  "rudranath": rudranath as unknown as Trail,
   "rudranath-kalpeshwar": rudranathKalpeshwar as unknown as Trail,
   "rupin-pass": rupinPass as unknown as Trail,
   "sandakphu-phalut-trek": sandakphuPhalutTrek as unknown as Trail,
@@ -106,6 +117,7 @@ const TRAILS: Record<string, Trail> = {
   "surya-top": suryaTop as unknown as Trail,
   "tarsar-marsar-trek": tarsarMarsarTrek as unknown as Trail,
   "triund": triund as unknown as Trail,
+  "tungnath-chandrashila": tungnathChandrashila as unknown as Trail,
   "valley-of-flowers": valleyOfFlowers as unknown as Trail,
   "yulla-kanda": yullaKanda as unknown as Trail,
 };

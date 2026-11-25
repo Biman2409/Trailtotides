@@ -22,7 +22,7 @@ import { Rich, BlockView, serif } from "../../blocks";
 import AskCompassButton from "../../activities/AskCompassButton";
 import TrailElevation from "@/components/ui/custom/TrailElevation";
 import { dayBands } from "@/lib/trails/dayBands";
-import { NO_TRACK, NO_TRACK_NOTE, sideTripOn, stretchPlace } from "@/lib/trails/shared";
+import { NO_TRACK, NO_TRACK_NOTE, sideTripOn, stretchPlace, trailDriveKm, trailWalkKm } from "@/lib/trails/shared";
 import TrekChecklist, { type ChecklistItem } from "./TrekChecklist";
 import CompareTreksButton from "./CompareTreksButton";
 import { textOf } from "@/lib/adventureText";
@@ -300,12 +300,12 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
             {trail && (
               <Section id="itinerary" kicker="Itinerary" title="Day by day">
                 <p className="text-[15px] leading-[1.7] t-text-2 mb-5">
-                  A typical plan, measured along the mapped trail: <b className="t-text">{fmt(trail.lengthKm)} km</b> with about <b className="t-text">{fmt(trail.ascentM)} m</b> of climbing{hardest ? <>. The biggest day is <b className="t-text">day {hardest.day}</b>, climbing {fmt(hardest.up ?? 0)} m</> : null}. Operators vary it a little{(trail.approxKm ?? 0) > 0 ? "; figures marked ≈ are estimates where the path isn't mapped" : ""}.
+                  A typical plan, measured along the mapped trail: <b className="t-text">{fmt(trail.drives?.length ? trailWalkKm(trail) : trail.lengthKm)} km</b>{trail.drives?.length ? <> on foot and <b className="t-text">{fmt(trailDriveKm(trail))} km</b> by road between the trailheads,</> : null} with about <b className="t-text">{fmt(trail.ascentM)} m</b> of climbing{hardest ? <>. The biggest day is <b className="t-text">day {hardest.day}</b>, climbing {fmt(hardest.up ?? 0)} m</> : null}. Operators vary it a little{(trail.approxKm ?? 0) > 0 ? "; figures marked ≈ are estimates where the path isn't mapped" : ""}.
                   {(trail.unmapped?.length ?? 0) > 0 && <> <b className="t-text">{NO_TRACK}:</b> {trail.unmapped!.map((s) => `km ${s.fromKm.toFixed(1)}–${s.toKm.toFixed(1)} ${stretchPlace(trail, s)}`).join("; ")}. {NO_TRACK_NOTE}</>}
                 </p>
                 <ol className="relative">
                   {trail.days.map((d, i) => {
-                    const Icon = d.kind === "rest" ? Moon : d.kind === "travel" ? Car : Footprints;
+                    const Icon = d.kind === "rest" ? Moon : d.kind === "travel" || d.kind === "drive" ? Car : Footprints;
                     const title = d.kind === "rest" ? `Rest day at ${d.from}` : d.kind === "travel" ? d.note.split(" (")[0] : `${d.from} → ${d.to}`;
                     return (
                       <li key={d.day} className="relative flex gap-4 pb-5 last:pb-0">
@@ -332,6 +332,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
                               <span className="inline-flex items-center gap-1"><ArrowUp className="w-3.5 h-3.5" />{fmt(d.up ?? 0)} m</span>
                               <span className="inline-flex items-center gap-1"><ArrowDown className="w-3.5 h-3.5" />{fmt(d.down ?? 0)} m</span>
                               {d.sleepEle != null && <span className="inline-flex items-center gap-1"><BedDouble className="w-3.5 h-3.5" />sleep at {fmt(d.sleepEle)} m</span>}
+                              {d.driveKm != null && <span className="inline-flex items-center gap-1"><Car className="w-3.5 h-3.5" />{fmt(d.driveKm)} km by road</span>}
                             </p>
                           )}
                         </div>

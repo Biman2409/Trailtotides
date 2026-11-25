@@ -84,8 +84,10 @@ function check(t) {
   // add up to about double the line
   const walk = (t.days ?? []).filter((d) => d.kind === "walk");
   const dayKm = walk.reduce((s, d) => s + (d.km ?? 0), 0);
-  const outAndBack = walk.length > 0 && dayKm > t.lengthKm * 1.5;
-  if (walk.length && !outAndBack && Math.abs(dayKm - t.lengthKm) > Math.max(1, t.lengthKm * 0.1)) add("days", `days add up to ${dayKm.toFixed(1)} km but the trail is ${t.lengthKm} km`);
+  // A circuit's road stretches (drives) aren't walked: compare with the line on foot
+  const footKm = t.lengthKm - (t.drives ?? []).reduce((s, d) => s + d.toKm - d.fromKm, 0);
+  const outAndBack = walk.length > 0 && dayKm > footKm * 1.5;
+  if (walk.length && !outAndBack && Math.abs(dayKm - footKm) > Math.max(1, footKm * 0.1)) add("days", `days add up to ${dayKm.toFixed(1)} km but the trail is ${+footKm.toFixed(1)} km${t.drives?.length ? " on foot" : ""}`);
   for (const d of walk) {
     if (d.km > 25) add("days", `day ${d.day} (${d.from} to ${d.to}) is ${d.km} km`);
     if (d.up > 1500) add("days", `day ${d.day} (${d.from} to ${d.to}) climbs ${d.up} m`);

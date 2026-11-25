@@ -177,6 +177,26 @@ const ADVENTURE_TEXT: Record<string, AdventureText> = {
     whoNot: "Crowds bother you: Kedarnath has huge pilgrim crowds in May–Jun · You're going from late October: the temples close for winter · You want a quiet wilderness trek: much of the way is a pilgrim route",
     safetyNotes: "Temples close by late October — verify opening dates before booking. Some sections between Rudranath and Kalpeshwar are poorly marked. Local guide strongly recommended for the full circuit.",
   },
+  "kedarnath": {
+    whoNot: "Crowds bother you: the path is busy with pilgrims and ponies all season · You're going from November to April: the temple is closed · You want a wild, quiet trail",
+    safetyNotes: "Register for the Char Dham yatra before you go. One long climb to about 3,500m: walk slowly, drink well, and come down if a headache gets worse. Rain brings landslides on the road and path in July and August.",
+  },
+  "madhmaheshwar": {
+    whoNot: "You're going from late November to April: the temple is closed and the upper trail snowbound · You want a short, easy walk: it's two days of steep forest climbing · You need phone signal",
+    safetyNotes: "Inside the Kedarnath Wildlife Sanctuary. The upper trail is steep and slippery after rain; start early and carry rain gear. Simple homestays only.",
+  },
+  "tungnath-chandrashila": {
+    whoNot: "You want a multi-day trek: this is a single day · Busy paths bother you: Chopta is popular on weekends · You're not ready for a cold, windy summit before dawn",
+    safetyNotes: "The last climb to Chandrashila is steep and icy in winter: microspikes help from December to March. The temple closes in winter, but the walk stays open. Start in the dark for the sunrise with a headlamp and warm layers.",
+  },
+  "rudranath": {
+    whoNot: "You want an easy pilgrimage: it's close to 2,000m of climbing · You're going from late October to May: the temple is closed · You want lodges: shelters on the meadows are very basic",
+    safetyNotes: "Inside the Kedarnath Wildlife Sanctuary: a forest permit is checked on the trail. Long, steep climb with little water on the upper meadows; carry enough. Weather turns fast on the open ridge.",
+  },
+  "kalpeshwar": {
+    whoNot: "You want a big Himalayan summit · You want a well-trodden route: the trail to Bansi Narayan is quiet and little-marked in places · You need phone signal on the meadow",
+    safetyNotes: "Kalpeshwar is open all year, but the climb to Bansi Narayan can be snowbound in winter. Go with someone who knows the forest trail above Devgram; carry water and warm layers for the night on the meadow.",
+  },
   "pangarchulla-peak": {
     whoNot: "You've never done a Himalayan trek · You're going after April: the snow melts and the summit block turns to loose rock · Long drives make you sick: Rishikesh to Joshimath is 9–10 hours",
     safetyNotes: "Snow conditions vary year to year — check with operators for March snowpack. Summit push in pre-dawn conditions requires headlamp and warm layers. Crampon training provided by operators on approach days.",
