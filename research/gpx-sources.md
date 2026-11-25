@@ -37,3 +37,35 @@ blog mentions a GPX file of its own route (an operator: ask them).
 > treks. Your [trek name] track on Wikiloc is the most accurate record of the route we've found.
 > May we use it to draw the route on our map and offer it as a GPX download on the trek's page? We'd
 > credit you by name with a link to your Wikiloc profile, and remove it any time you ask.
+
+## Stretches with no tracking data (checked 2026-11-25)
+
+29 stretches on 20 trails, 14.3 km in all (Panch Kedar's 0.6 km is Kalpeshwar's). Each is drawn
+straight and marked "no tracking data". The Wikiloc track listed is the likeliest to cover it,
+chosen by its name and start; check it once downloaded (download.do?id=<id>, File → Original).
+
+| Trek | Stretch | Length | Track to try (Wikiloc id) |
+|---|---|---|---|
+| Pangarchulla Peak | Khullara → summit, km 10.5–12.5 | 1,990 m | Khullara to Pangarchulla Peak (170404519) |
+| Kedartal | Gangotri → Kedar Kharak, km 4.8–6.8 and 7.8–8.0 | 1,980 + 160 m | Gangotri to Kedar Khadak (84498203) |
+| Kedartal | Kedar Kharak → Kedartal, km 10.7–10.9 | 220 m | Kedar Khadak to Kedartal (84498194) |
+| Doodhpathri | Gurwansar → Tosa Maidan, km 14.4–16.1 | 1,700 m | Gurwansar Lakes (161261096) |
+| Ali Bedni Bugyal | Ali Bugyal → Bedni Bugyal, km 17.9–18.9 | 940 m | Ali Bedni day 3, Ali to Bedni (248099772) |
+| Dodital Darwa Pass | Dodital → Darwa Pass, km 21.1–21.9 | 820 m | Dodital to Darwa Pass (41402764) |
+| Dodital Darwa Pass | Manjhi → Dodital, km 14.6–14.8 and 15.4–15.6 | 190 + 190 m | Agoda to Dodital (13062978) |
+| Kalpeshwar (and Rudranath Kalpeshwar, Panch Kedar) | Kalpeshwar → towards Bansi Narayan | 620 m | Kalpeshwar to Dumak (233304479) |
+| Goechala | Samiti Lake → Viewpoint 1, km 31.4–32.0 | 600 m | Lamuney to Goecha La Viewpoint 1 (189045851) |
+| Dayara Bugyal | Gui → Dayara Bugyal, km 11.2–11.8 | 550 m | Dayara Bugyal trek (62031585) |
+| Bali Pass | Bali Pass → Janki Chatti, km 38.1–38.7 | 540 m | Upper Dhamni to Bali Pass (41744786) |
+| Rupin Pass | Sewa → Buras Kandi, km 18.4–18.7; past the pass, km 41.8–41.9 and 48.2–48.5 | 330 + 160 + 240 m | Rupin Pass trek (42721841) |
+| Har Ki Dun | Osla → Har Ki Dun, km 22.4–22.7 | 310 m | Seematra, Har Ki Dun, Marinda Tal (41748563) |
+| Pindari Glacier | Khati → Dwali, km 7.4–7.7; Dwali → Phurkia, km 11.5–11.7 | 310 + 180 m | Khati to base camp (214436475) |
+| Tarsar Marsar | Aru → Lidderwat; Tarsar Pass → Sundersar → Marsar | 200 + 300 + 280 m | Tarsar Marsar one way (144544619) |
+| Pin Parvati Pass | Odi Thach → Mantalai, km 41.0–41.2 | 270 m | none found |
+| Kashmir Great Lakes | Gadsar → Gangbal, km 45.2–45.4 | 200 m | KGL 4, Gadsar to Satsar (114915491) |
+| Kashmir Great Lakes | Sonamarg → Vishansar, km 12.5–12.7 | 190 m | KGL 1, Shekhdur to Nichnai (114927915) |
+| Buran Ghati | Dayara Thach → Litham, km 12.0–12.2 | 180 m | Buran Ghati day 2, Dayara to Litham (140353544) |
+| Gaumukh Tapovan | Bhojbasa → Gaumukh, km 18.3–18.5 | 180 m | Bhojwasa to Gaumukh (2158417) |
+| Kareri Lake | Kareri → Kareri Lake, km 0.4–0.6 | 170 m | Kareri village to Kareri Lake (56272230) |
+
+Bajre Dara: searched again around Yuksom, Pelling and Khecheopalri; still no track of the route.
