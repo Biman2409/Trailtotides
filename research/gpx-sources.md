@@ -10,7 +10,8 @@ each trek's `guide` in scripts/trek-configs.mjs, and our own line is drawn betwe
 OpenStreetMap's paths where they match and along the terrain elsewhere. Built this way:
 bagini-glacier, phulara-ridge, surya-top, ranthan-kharak, gulabi-kantha (to Seema Thatch; the
 summit has no track), doodhpathri (the lakes loop from Tosa Maidan, joined to OSM's paths from
-Doodhpathri to Gurwansar). Bajre Dara has no track anywhere yet.
+Doodhpathri to Gurwansar), and madhmaheshwar above Gaundar ("Madhyamaheswar to Ransi",
+[89441101](https://www.wikiloc.com/hiking-trails/madhyamaheswar-to-ransi-89441101), 2021). Bajre Dara has no track anywhere yet.
 
 | Trek | Track on Wikiloc | Recorded by | What it covers |
 |---|---|---|---|

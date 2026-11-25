@@ -717,9 +717,12 @@ export const TREKS = {
       { name: "Madhmaheshwar", q: "Madmameshwar Temple", at: [30.6352, 79.2215] },
     ],
     side: [{ name: "Budha Madhmaheshwar", q: "Budha Madmaheshwar Mandir", at: [30.6338, 79.2166] }],
-    // Above Gaundar OSM has no path: through the villages it does have, Bantoli and Nanu, up the
-    // ridge to the temple (a reference GPS track would place it better: research/gpx-sources.md)
-    through: [[30.6081, 79.1945], [30.6152, 79.1986]],
+    // Above Gaundar OSM has no path: guide points every 350 m read off a GPS track on Wikiloc
+    // ("Madhyamaheswar to Ransi", research/gpx-sources.md), through Bantoli and Nanu to the temple
+    guide: [
+      [[30.59176, 79.14300], [30.59267, 79.14644], [30.59137, 79.14927], [30.58995, 79.15193], [30.58962, 79.15473], [30.59122, 79.15621], [30.59237, 79.15928], [30.59403, 79.16033], [30.59408, 79.16182], [30.59489, 79.16269], [30.59745, 79.16312], [30.59600, 79.16628], [30.59678, 79.16871], [30.59809, 79.17101], [30.60125, 79.17298], [30.60159, 79.17593]],
+      [[30.60511, 79.18209], [30.60615, 79.18463], [30.60689, 79.18772], [30.60744, 79.18880], [30.60606, 79.19180], [30.60787, 79.19137], [30.60774, 79.19259], [30.60838, 79.19474], [30.61053, 79.19617], [30.61284, 79.19815], [30.61447, 79.20088], [30.61566, 79.20105], [30.61708, 79.20112], [30.61862, 79.20209], [30.61945, 79.20363], [30.62000, 79.20644], [30.62142, 79.20773], [30.62165, 79.20981], [30.62284, 79.20962], [30.62373, 79.21104], [30.62433, 79.21434], [30.62637, 79.21532], [30.62768, 79.21747], [30.62986, 79.21834]],
+    ],
     days: [
       { to: "Gaundar", note: "From the road at Ransi down to the Madhmaheshwar Ganga and along it to Gaundar village" },
       { to: "Madhmaheshwar", note: "Up through Bantoli, Khatara and Nanu, oak and rhododendron forest, to the meadow temple" },

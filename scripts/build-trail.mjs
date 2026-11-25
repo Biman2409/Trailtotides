@@ -173,6 +173,9 @@ async function leg(a, b, track) {
     // Between guide points read off a GPS track the way is known: a mapped path that goes round
     // by another way (up the next ridge, past another summit) isn't it
     if ((a.through || b.through) && len > 1.6 * straight + 150) throw new Error(`the mapped path goes round (${(len / 1000).toFixed(1)} km for ${(straight / 1000).toFixed(1)} km)`);
+    // and the router snaps a point to the nearest mapped path, which may be on another slope: a
+    // guide point off every path is reached along the terrain, not by a path 500 m away
+    if ((a.through && offA > 40) || (b.through && offB > 40)) throw new Error(`no mapped path at the guide point (${Math.round(Math.max(a.through ? offA : 0, b.through ? offB : 0))} m away)`);
     if (offA > 1500 || offB > 1500) throw new Error(`nearest path is ${Math.round(Math.max(offA, offB))} m away`);
     return { coords, approxKm: 0 };
   } catch (e) {
