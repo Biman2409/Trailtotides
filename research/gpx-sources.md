@@ -69,3 +69,19 @@ chosen by its name and start; check it once downloaded (download.do?id=<id>, Fil
 | Kareri Lake | Kareri → Kareri Lake, km 0.4–0.6 | 170 m | Kareri village to Kareri Lake (56272230) |
 
 Bajre Dara: searched again around Yuksom, Pelling and Khecheopalri; still no track of the route.
+
+### Status after the first batch (2026-11-25)
+
+Closed: Pindari Glacier (both gaps; commit 21e4c78a). Chains ready in `gapGuides`, waiting for a
+rebuild (BRouter was refusing requests): Kedartal (Gangotri → Kedar Kharak), Ali Bedni Bugyal,
+Dodital (Manjhi → Dodital, both bits), Kashmir Great Lakes (both bits). Rebuild with
+`node scripts/build-trail.mjs <slug> --force`, one at a time.
+
+The downloaded track didn't reach the gap (turned back, or took another line); try instead:
+Pangarchulla summit 297186125 or 121679013 · Darwa top 13063044 · Kalpeshwar 29075858 ·
+Goechala Viewpoint 1 11358610 · Dayara (Gui) 43944224 and 44398444 · Bali Pass descent 41744144 and
+41438326 · Rupin Pass 42721768 and 135879090 · Kareri 217553251 · Kedar Kharak → Kedartal 84498194.
+Not downloaded yet: Doodhpathri 161261096, Tarsar Marsar 144544619.
+Not route gaps: Buran Ghati (Litham), Gaumukh and Har Ki Dun are short stubs from the path to a
+camp marker placed off it; moving the marker onto the path would close them.
+No track anywhere: Pin Parvati (Odi Thach → Mantalai), Bajre Dara.
