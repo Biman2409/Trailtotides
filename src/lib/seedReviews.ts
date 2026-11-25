@@ -266,9 +266,9 @@ export const SEED_REVIEWS: Record<string, SeedReview[]> = {
       { id: "sr-satopanth-3", username: "yogesh_n", rating: 4, body: "Moraine walk after Chakratirtha is slow and tiring, pace yourself. Permits take time so let your operator start early. Lake with Chaukhamba behind it is worth all of it.", created_at: "2025-06-08T15:48:00Z", user_id: "" },
     ],
   "surya-top": [
-      { id: "sr-surya-1", username: "tanvi_c", avatar_id: 8, rating: 5, body: "Sunrise from Surya Top with Nanda Devi, Trishul, Kamet and Kedarnath all clear. Can't believe this trek isn't more famous.", created_at: "2025-05-22T17:12:00Z", user_id: "" },
+      { id: "sr-surya-1", username: "tanvi_c", avatar_id: 8, rating: 5, body: "Sunrise from Surya Top with Bandarpunch, Srikanth and the Gangotri peaks all clear. Can't believe this trek isn't more famous.", created_at: "2025-05-22T17:12:00Z", user_id: "" },
       { id: "sr-surya-2", username: "rajiv_n", rating: 4, body: "Quiet and rewarding. Summit plateau has one of the best views in Uttarakhand. Seven days is a commitment but October clarity makes it worth it.", created_at: "2025-11-02T19:36:00Z", user_id: "" },
-      { id: "sr-surya-3", username: "rashmi_k", rating: 5, body: "October skies were spotless. Small group of six, nobody else on the summit, and our guide named every peak from Nanda Devi round to Chaukhamba.", created_at: "2025-10-18T21:03:00Z", user_id: "" },
+      { id: "sr-surya-3", username: "rashmi_k", rating: 5, body: "October skies were spotless. Small group of six, nobody else on the summit, and our guide named every peak from Bandarpunch round to Draupadi ka Danda.", created_at: "2025-10-18T21:03:00Z", user_id: "" },
     ],
   "rishikesh-river-rafting": [
       { id: "sr-raft-1", username: "ankita_s", avatar_id: 3, rating: 5, body: "Did the Shivpuri run with college friends, none of us had rafted before. Roller Coaster soaked everyone in the first ten seconds. The guide let us jump in on a calm stretch, best part of the day.", created_at: "2025-04-12T10:20:00Z", user_id: "" },

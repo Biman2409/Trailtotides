@@ -60,13 +60,13 @@ export const ACCESS: Record<string, Access> = {
   "panch-kedar": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Guptkashi, about 7 to 8 hours" },
   "rudranath-kalpeshwar": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Helang near Joshimath, about 250 km and 9 to 10 hours. The trek ends at Sagar, about 30 minutes from Gopeshwar" },
   "panwali-kantha": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Ghuttu, about 180 km and 7 to 8 hours" },
-  "surya-top": { gateway: "Rishikesh", ...RISHIKESH, note: "The roadhead is in Chamoli district, a full day's drive from Rishikesh. Your operator confirms the pickup point" },
+  "surya-top": { gateway: "Dehradun", ...DEHRADUN, note: "The roadhead is Barsu or Raithal in Uttarkashi district, past Uttarkashi town, a full day's drive from Dehradun. Your operator confirms the pickup point" },
   // Kumaon and Chamoli via Kathgodam
   "ali-bedni-bugyal": { gateway: "Kathgodam", ...KATHGODAM, drive: "Kathgodam to Lohajung, about 10 to 11 hours" },
   "brahmatal": { gateway: "Kathgodam", ...KATHGODAM, drive: "Kathgodam to Lohajung, about 10 to 11 hours" },
   "roopkund": { gateway: "Kathgodam", ...KATHGODAM, drive: "Kathgodam to Lohajung, about 10 to 11 hours" },
   "pindari-glacier": { gateway: "Kathgodam", ...KATHGODAM, drive: "Kathgodam to the roadhead beyond Bageshwar, about 9 to 10 hours" },
-  "ranthan-kharak": { gateway: "Kathgodam", ...KATHGODAM, note: "The roadhead is a remote Kumaon village, a long day's drive from Kathgodam. Your operator confirms the pickup point" },
+  "ranthan-kharak": { gateway: "Kathgodam", ...KATHGODAM, note: "The roadhead is Gogina, a remote village in Bageshwar district, a long day's drive from Kathgodam. Your operator confirms the pickup point" },
   // Himachal Pradesh
   "beas-kund": { gateway: "Manali", ...MANALI, drive: "Manali to Solang, about 30 minutes" },
   "bhrigu-lake": { gateway: "Manali", ...MANALI, drive: "Manali to Gulaba, about 45 minutes" },

@@ -1257,7 +1257,10 @@ export const adventures: Adventure[] = [
     bestSeason: "May–Jun, Sep–Oct", bestMonths: ["May","Jun","Sep","Oct"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/ranthan-kharak-v2.jpeg",
     galleryImages: ["https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/ranthan-kharak-v2.jpeg"],
-    lat: 29.82, lng: 79.62,
+    // Bageshwar district, above Gogina and Namik: the pin is on Bajimanian Kharak on the route;
+    // Ranthan Kharak itself isn't on OpenStreetMap
+    lat: 30.0812, lng: 80.1139,
+    baseCamp: "Gogina",
     description: "Ranthan Kharak is one of Kumaon's most secret high meadows — **a vast open grassland at 4,115m** reached through dense forest and remote herder villages, with **almost no other trekkers**. **Emerging from the forest onto the meadow, with the whole Kumaon skyline from Nanda Devi and Trishul to Panchachuli** in front of you, is one of Indian trekking's great surprise moments.",
     whoFor: "You want real solitude: you may not meet another group · You want Nanda Devi and Panchachuli views from a high meadow · Tent camping, and no phone signal for days, are fine",
     operators: [
@@ -1336,13 +1339,16 @@ export const adventures: Adventure[] = [
     bestSeason: "May–Jun, Oct–Nov", bestMonths: ["May","Jun","Oct","Nov"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/surya-top-v2.jpeg",
     galleryImages: ["https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/surya-top-v2.jpeg"],
-    lat: 30.32, lng: 78.82,
-    description: "Surya Top is a high ridgeline summit at 3,901m in Chamoli, reached over 7 days through mixed forest and alpine meadow to **a rarely visited summit plateau** — **very few trekkers know it exists**. At sunrise, **first light hits Nanda Devi and the full Garhwal arc from Kedarnath to Kamet**, with Trishul too: one of the most complete Himalayan panoramas on **a moderate trek**.",
+    // Above Dayara Bugyal in Uttarkashi: the pin is on Siyari ("Syari" on OpenStreetMap), the high
+    // meadow ridge below the summit, which isn't on the map by name
+    lat: 30.8829, lng: 78.5667,
+    baseCamp: "Barsu / Raithal",
+    description: "Surya Top is a high ridgeline summit at 3,901m in Uttarkashi, reached over 7 days from Barsu or Raithal, past the Dayara Bugyal meadows and Devkund to Siyari Bugyal and **a rarely visited summit ridge** — **very few trekkers know it exists**. At sunrise, **first light hits Bandarpunch, Srikanth, Draupadi ka Danda and the Gangotri peaks**: one of the widest Garhwal panoramas on **a moderate trek**.",
     whoFor: "You want big Garhwal views without any crowds · You can walk 5–6 hours a day with a daypack · Tent camping, and little phone signal, are fine",
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹11,500", googleRating: 4.7, website: "https://trekthehimalayas.com/surya-top-trek" },
     ],
-    tags: ["Surya Top", "Nanda Devi", "Chamoli", "panorama", "Uttarakhand"], featured: false,
+    tags: ["Surya Top", "Dayara Bugyal", "Uttarkashi", "Bandarpunch", "panorama", "Uttarakhand"], featured: false,
   },
   // Operators to be added once their prices are checked on their own sites
   {
