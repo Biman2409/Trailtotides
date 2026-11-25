@@ -7,12 +7,12 @@ import { Compass, Map, User, Home, Library } from "lucide-react";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { BOOK_BAR_ATTR, BOOK_BAR_EVENT } from "@/lib/bookBar";
 
-// The same sections as the navbar (Operators stays in the menu); Home sits in the middle
+// The same sections as the navbar (Operators stays in the menu), Home first as it is there
 const links = [
+  { href: "/", label: "Home", icon: Home, isHome: true },
   { href: "/explore", label: "Explore", icon: Compass },
   { href: "/map", label: "Map", icon: Map },
   { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark },
-  { href: "/", label: "Home", icon: Home, isHome: true },
   { href: "/adventurepedia", label: "Learn", icon: Library },
   { href: "/profile", label: "Profile", icon: User },
 ];

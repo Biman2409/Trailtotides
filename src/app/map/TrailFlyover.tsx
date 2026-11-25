@@ -169,7 +169,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
   useEffect(() => {
     const box = boxRef.current;
     if (!box) return;
-    let cancelled = false, raf = 0, resumeTimer = 0, countdown = 0, calloutTimer = 0;
+    let cancelled = false, raf = 0, resumeTimer = 0, countdown = 0, calloutTimer = 0, settleTimer = 0;
     const cleanups: (() => void)[] = [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let map: any = null;
@@ -248,6 +248,11 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       else return false;
       const q = (ll: [number, number]) => (USE_MAPBOX ? map.queryTerrainElevation(ll, { exaggerated: true }) : map.queryTerrainElevation(ll));
       const w = at(s.km), wAlt = q([w.lng, w.lat]) ?? w.ele * EXAGGERATION;
+      // In a deep gorge the map lifts the camera clear of the cliffs behind it, which drops the
+      // walker down the screen and under the controls (or up behind the day card): look down
+      // more steeply, as for a ridge in the way
+      const sp = map.project([w.lng, w.lat]), h = map.getContainer().clientHeight;
+      if (h >= 560 && (sp.y > h - 250 || sp.y < 190)) return true;
       for (let i = 1; i < 9; i++) {
         const t = i / 10;
         const lng = cam.lng + (w.lng - cam.lng) * t, lat = cam.lat + (w.lat - cam.lat) * t, alt = camAlt + (wAlt - camAlt) * t;
@@ -312,6 +317,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
     // Looking around: the walk pauses while you move the map, then glides back and carries on
     const cancelLook = () => { clearTimeout(resumeTimer); clearInterval(countdown); setLookAround(null); };
     const takeOver = () => {
+      clearTimeout(settleTimer); // the person is looking around; leave the camera to them
       if (s.playing) { s.resume = true; stop(); }
       clearTimeout(resumeTimer); clearInterval(countdown);
       if (s.resume) setLookAround(Math.ceil(RESUME_MS / 1000));
@@ -342,11 +348,22 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       if (e) showCallout(e); else setCallout(null);
       s.brg = heading(s.km);
       if (wasPlaying) { s.playing = true; setPlaying(true); glideThen(() => { if (s.playing) run(); }, 900); }
-      else { map?.setCenterClampedToGround?.(false); map?.easeTo({ ...camera(s.km), bearing: s.brg, duration: 900 }); }
+      else { map?.setCenterClampedToGround?.(false); map?.easeTo({ ...camera(s.km), bearing: s.brg, duration: 900 }); settleSoon(950); }
+    };
+    // Paused, nothing steers the camera, so after a jump look down a step at a time until the
+    // walker is in clear view. On a timer, not moveend: starting a move ends the one before it,
+    // and that moveend would fire straight away.
+    const settleSoon = (ms: number, n = 5) => { clearTimeout(settleTimer); settleTimer = window.setTimeout(() => settle(n), ms); };
+    const settle = (n = 5) => {
+      if (!map || s.playing || n <= 0 || !blocked()) return;
+      s.pitch = s.pitchWant = Math.max(PITCH_MIN, s.pitch - 10);
+      s.zoomOff = s.zoomOffWant = Math.max(-1.4, s.zoomOff - 0.25);
+      map.easeTo({ ...camera(s.km), bearing: s.brg, duration: 400 });
+      settleSoon(450, n - 1);
     };
 
     ctl.current = {
-      toggle: () => (s.playing ? stop() : s.resume ? backToTrail() : start()),
+      toggle: () => (s.playing ? (stop(), settleSoon(0)) : s.resume ? backToTrail() : start()),
       restart: () => { stop(); cancelLook(); s.resume = false; s.km = 0; setCallout(null); paintProgress(); report(); start(); },
       seekKm,
       speed: (v) => { s.speed = v; setSpeed(v); },
@@ -362,12 +379,18 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
         const lats = pts.map((p) => p.lat), lngs = pts.map((p) => p.lng);
         const bounds: [[number, number], [number, number]] = [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]];
         map = new ml.Map({
-          container: box, style: USE_MAPBOX ? MAPBOX_STYLE : DARK_STYLE, bounds, fitBoundsOptions: { padding: 60 },
+          container: box, style: USE_MAPBOX ? MAPBOX_STYLE : DARK_STYLE, bounds,
+          // The whole trail in the open middle, clear of the title and day cards and the controls
+          // (a short screen, like a phone on its side, just gets an even margin)
+          fitBoundsOptions: { padding: window.innerHeight >= 560 ? { top: 160, bottom: 240, left: 40, right: 40 } : 30 },
           pitch: 58, maxPitch: USE_MAPBOX ? 85 : 78, dragRotate: true,
           // Mapbox's own logo and credit stay as its terms ask; MapLibre's credit folds away
           ...(USE_MAPBOX ? { accessToken: MAPBOX_TOKEN, projection: "mercator" } : { attributionControl: { compact: true } }),
         });
         map.on("error", () => {}); // a missing tile isn't worth a console line each
+        // Keep the walker in the open part of the screen, between the day card and the controls,
+        // rather than the middle, which on a phone sits low and near the control bar
+        if (window.innerHeight >= 560) map.setPadding?.({ top: 120, bottom: 210, left: 0, right: 0 });
         map.on("style.load", () => {
           if (cancelled) return;
           if (USE_MAPBOX) setUpMapbox(); else setUpMapLibre();
@@ -500,7 +523,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
     };
 
     return () => {
-      cancelled = true; cancelAnimationFrame(raf); clearTimeout(resumeTimer); clearInterval(countdown); clearTimeout(calloutTimer);
+      cancelled = true; cancelAnimationFrame(raf); clearTimeout(resumeTimer); clearInterval(countdown); clearTimeout(calloutTimer); clearTimeout(settleTimer);
       cleanups.forEach((f) => f());
       ctl.current = null; try { map?.remove(); } catch { /* already gone */ }
     };
@@ -530,6 +553,8 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
   const walkBands = bands.filter((b) => b.to > b.from);
   // Day numbers thin out when there are too many to fit
   const every = walkBands.length > 12 ? 2 : 1;
+  // Day numbers are the itinerary's, so "of" counts its days (drive and rest days too)
+  const dayCount = trail.days.reduce((m, d) => Math.max(m, d.day), 0);
 
   return createPortal(
     <div className="tm-fly fixed inset-0 z-[3000] bg-[#0b0f14] text-white" role="dialog" aria-modal="true" aria-label={`${name}: the trail in 3D`}>
@@ -549,11 +574,12 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       {/* The day you're on, with its note from the itinerary */}
       {day && (
         <div className="absolute inset-x-0 top-[84px] sm:top-[92px] flex justify-center pointer-events-none px-4" aria-live="polite">
-          <div key={day.n} className="tm-fly-day text-center max-w-[600px]">
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--tm-peach)]">Day {day.n}</p>
-            <p className="text-[20px] sm:text-[26px] font-bold text-white leading-tight tm-fly-shadow">{day.title}</p>
-            {day.sub && <p className="text-[12px] sm:text-[13px] text-white/80 mt-1 tm-fly-shadow tabular-nums">{day.sub}{day.via ? ` · via ${day.via}` : ""}</p>}
-            {day.note && <p className="hidden sm:block text-[13px] text-white/70 mt-1.5 leading-snug tm-fly-shadow italic">{day.note}</p>}
+          {/* On its own card: the Outdoors map is light, so bare text over it is hard to read */}
+          <div key={day.n} className="tm-fly-day tm-glass rounded-2xl px-4 py-2.5 sm:px-5 sm:py-3 text-center max-w-[560px]">
+            <p className="text-[10.5px] font-bold uppercase tracking-[0.18em] text-[var(--tm-peach)]">Day {day.n}{dayCount > 1 ? ` of ${dayCount}` : ""}</p>
+            <p className="text-[17px] sm:text-[22px] font-bold text-white leading-tight mt-0.5">{day.title}</p>
+            {day.sub && <p className="text-[12px] sm:text-[13px] text-white/70 mt-1 tabular-nums">{day.sub}{day.via ? ` · via ${day.via}` : ""}</p>}
+            {day.note && <p className="hidden sm:block text-[13px] text-white/60 mt-1.5 leading-snug">{day.note}</p>}
           </div>
         </div>
       )}
