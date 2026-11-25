@@ -958,7 +958,7 @@ export const adventures: Adventure[] = [
     name: "Dodital – Darwa Pass Trek", tagline: "A sacred Himalayan lake, ancient oak forests, and a high pass in Uttarakhand's Uttarkashi",
     region: "Himalayas", state: "Uttarakhand", type: "Trekking", difficulty: "Hard",
     duration: "7+ days", durationDays: "6 days", durationRange: "6 Days",
-    distance: "44km", distanceRange: "44 km", altitude: "4,150m",
+    distance: "45km", distanceRange: "45 km", altitude: "4,150m",
     baseCamp: "Sangam Chatti",
     bestSeason: "May–Jun, Sep–Nov", bestMonths: ["May","Jun","Sep","Oct","Nov"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/dodital-v2.jpeg",
