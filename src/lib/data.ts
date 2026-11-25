@@ -410,7 +410,7 @@ export const adventures: Adventure[] = [
     name: "Ali Bedni Bugyal Trek", tagline: "Twin high-altitude meadows floating above the Himalayan treeline",
     region: "Himalayas", state: "Uttarakhand", type: "Trekking", difficulty: "Hard",
     duration: "3–5 days", durationDays: "4 days", durationRange: "4 Days",
-    distance: "30km", distanceRange: "30 km", altitude: "3,824m",
+    distance: "26km", distanceRange: "26 km", altitude: "3,824m",
     baseCamp: "Lohajung",
     bestSeason: "May–Jun, Sep–Oct", bestMonths: ["May","Jun","Sep","Oct"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/ali-bedni-bugyal-v2.jpeg",

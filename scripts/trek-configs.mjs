@@ -450,10 +450,16 @@ export const TREKS = {
 
   "ali-bedni-bugyal": {
     near: "Chamoli, Uttarakhand",
-    // Stretches with no mapped path, closed from a reference GPS track on Wikiloc (Ali Bedni day 3 (248099772)):
-    // guide points from where the line meets the track before each gap to where it meets it after
-    gapGuides: [
-      [[30.20407, 79.66884], [30.20359, 79.66963], [30.20316, 79.67055], [30.20272, 79.6713], [30.20257, 79.67236]],
+    // Over Bedni Top the line follows a GPS track on Wikiloc (Ali Bedni day 3, 248099772): up from
+    // the south to the top, down to the camp at Bedni Kund, and on west past Gharoli Patal towards
+    // Wan. OSM's paths reach the top from the west instead (the top itself was a straight spur off
+    // them) and leave the camp back south
+    guide: [
+      [],
+      [],
+      [[30.18834, 79.66685], [30.19074, 79.66573], [30.19295, 79.6671], [30.19544, 79.66841], [30.19778, 79.67001], [30.19842, 79.67193]],
+      [[30.20133, 79.67329], [30.20231, 79.67287], [30.20263, 79.67172], [30.20308, 79.6708], [30.20354, 79.66986], [30.20394, 79.66884], [30.2042, 79.66794], [30.20484, 79.6673], [30.20554, 79.6664]],
+      [[30.20565, 79.66496], [30.20412, 79.66216], [30.20219, 79.66024], [30.20191, 79.65785], [30.20247, 79.65556], [30.20369, 79.65425], [30.20402, 79.65304], [30.20439, 79.65249]],
     ],
     stops: [
       LOHAJUNG,

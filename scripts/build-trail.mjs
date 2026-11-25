@@ -149,6 +149,10 @@ function fromTrack(file, a, b) {
   return [[a.lat, a.lng], ...part, [b.lat, b.lng]];
 }
 
+// FROM_SAVED=1: the saved trail's own line is reused for every stretch between two of its points,
+// and only guide points (a gap's chain) are drawn anew, so a gap can be closed without asking the
+// router again (BRouter turns busy clients away for hours)
+let SAVED = null;
 async function leg(a, b, track) {
   const straight = dist([a.lat, a.lng], [b.lat, b.lng]);
   console.log(`  leg ${a.name} → ${b.name} (${(straight / 1000).toFixed(1)} km apart)${track ? ` along the track ${track}` : ""}`);
@@ -156,6 +160,18 @@ async function leg(a, b, track) {
     const coords = fromTrack(track, a, b);
     const ele = await heights(coords);
     return { coords: coords.map((p, i) => [p[0], p[1], ele[i]]), approxKm: 0 };
+  }
+  if (SAVED) {
+    if (a.through && b.through) {
+      const ele = await heights([[a.lat, a.lng], [b.lat, b.lng]]);
+      return { coords: [[a.lat, a.lng, ele[0]], [b.lat, b.lng, ele[1]]], approxKm: 0 };
+    }
+    const near = (p) => SAVED.reduce((best, q, i) => { const e = dist(q, [p.lat, p.lng]); return e < best[1] ? [i, e] : best; }, [0, Infinity]);
+    const [i, di] = near(a), [j, dj] = near(b);
+    if (di < 400 && dj < 400 && i !== j) {
+      const part = i <= j ? SAVED.slice(i, j + 1) : SAVED.slice(j, i + 1).reverse();
+      return { coords: part.map((p) => [p[0], p[1], p[2]]), approxKm: 0 };
+    }
   }
   try {
     const url = `https://brouter.de/brouter?lonlats=${a.lng},${a.lat}|${b.lng},${b.lat}&profile=hiking-mountain&alternativeidx=0&format=geojson`;
@@ -290,6 +306,7 @@ async function build(slug) {
   const trek = { ...TREKS[slug], centre: TREKS[slug].centre ?? centre(slug) };
   found.clear();
   previews.length = 0;
+  SAVED = process.env.FROM_SAVED ? JSON.parse(readFileSync(`src/lib/trails/${slug}.json`, "utf8")).line : null;
   gapTracks = (await readdir(new URL("./tracks/", import.meta.url))).filter((f) => f.startsWith(`${slug}-km`))
     .map((f) => JSON.parse(readFileSync(new URL(`./tracks/${f}`, import.meta.url), "utf8")));
   const name = (s) => (typeof s === "string" ? s : s.name);
@@ -372,8 +389,14 @@ async function build(slug) {
     const mid = pts[Math.floor(pts.length / 2)];
     let li = 0;
     for (let i = 0; i < stops.length - 1; i++) if (segDist(mid, stops[i], stops[i + 1]) < segDist(mid, stops[li], stops[li + 1])) li = i;
-    const from = [stops[li].lat, stops[li].lng], key = dist(from, [pts[0].lat, pts[0].lng]);
-    const at = via[li].findIndex((p) => dist(from, [p.lat, p.lng]) > key);
+    // In order along the leg: by position on the saved line when there is one (a winding leg
+    // doubles back, so distance from its start can misplace the chain), else by that distance
+    const from = [stops[li].lat, stops[li].lng];
+    const along = SAVED
+      ? (p) => SAVED.reduce((best, q, i) => { const e = dist(q, [p.lat, p.lng]); return e < best[1] ? [i, e] : best; }, [0, Infinity])[0]
+      : (p) => dist(from, [p.lat, p.lng]);
+    const key = along(pts[0]);
+    const at = via[li].findIndex((p) => along(p) > key);
     via[li].splice(at < 0 ? via[li].length : at, 0, ...pts);
   }
 
