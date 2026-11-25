@@ -104,7 +104,6 @@ Downloaded but not reaching the gap:
 - KGL 2 (Nichnai → Vishansar): starts just after the Sonamarg-side gap (already chained from KGL 1).
 - Tarsar Marsar: ends short of Sundersar and Marsar, so the Tarsar Pass → Marsar gaps stay.
 
-Still to rebuild when BRouter takes requests again (it refused most of this batch): Kashmir Great
-Lakes (chains set since the first batch; a FROM_SAVED build moved its gaps rather than closing
-them, so the saved trail stays), then the Panch Kedar circuit (`node scripts/build-circuit.mjs
-panch-kedar`), which picks up Kalpeshwar's new temple position and closes its 0.6 km.
+Rebuilt 2026-11-26: Panch Kedar has no stretch left without tracking data. Kashmir Great Lakes:
+the Sonamarg-side gap is closed; Gadsar → Gangbal (km 45.2–45.4, 190 m) is still open although its
+chain is set, so the KGL 4 track may not quite meet the line there.

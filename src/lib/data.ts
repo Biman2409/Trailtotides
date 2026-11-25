@@ -766,7 +766,7 @@ export const adventures: Adventure[] = [
     name: "Kashmir Great Lakes Trek", tagline: "Seven high-altitude lakes in one of India's most beautiful alpine circuits",
     region: "Himalayas", state: "Jammu & Kashmir", type: "Trekking", difficulty: "Moderate",
     duration: "7+ days", durationDays: "7 days", durationRange: "7 Days",
-    distance: "66km", distanceRange: "66 km", altitude: "4,191m",
+    distance: "67km", distanceRange: "67 km", altitude: "4,191m",
     baseCamp: "Sonamarg",
     bestSeason: "Jul–Aug", bestMonths: ["Jul","Aug"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/kashmir-great-lakes-v2.jpeg",
