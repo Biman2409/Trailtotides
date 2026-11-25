@@ -236,6 +236,12 @@ export const TREKS = {
 
   "dodital-darwa-pass": {
     near: "Uttarkashi, Uttarakhand",
+    // Stretches with no mapped path, closed from a reference GPS track on Wikiloc (Agoda to Dodital (13062978)):
+    // guide points from where the line meets the track before each gap to where it meets it after
+    gapGuides: [
+      [[30.88739, 78.52235], [30.88704, 78.52242], [30.887, 78.52269], [30.88763, 78.52305]],
+      [[30.89318, 78.5242], [30.89362, 78.52426], [30.89389, 78.52456], [30.89449, 78.52485]],
+    ],
     stops: [
       { name: "Sangam Chatti", at: [30.83588, 78.45063] },
       // Not in OSM by name: placed from ultrajourneys.org's map of the village
@@ -393,6 +399,12 @@ export const TREKS = {
 
   "pindari-glacier": {
     near: "Bageshwar, Uttarakhand",
+    // Stretches with no mapped path, closed from a reference GPS track on Wikiloc (Khati to base camp (214436475)):
+    // guide points from where the line meets the track before each gap to where it meets it after
+    gapGuides: [
+      [[30.1586, 79.97777], [30.15916, 79.9783], [30.15973, 79.9788], [30.16022, 79.97936], [30.16068, 79.97967]],
+      [[30.18311, 79.99706], [30.18349, 79.99707], [30.18385, 79.9968], [30.18464, 79.99702]],
+    ],
     stops: [
       { name: "Khati", at: [30.11209, 79.94006] },
       { name: "Dwali", at: [30.17736, 79.99532] },
@@ -438,6 +450,11 @@ export const TREKS = {
 
   "ali-bedni-bugyal": {
     near: "Chamoli, Uttarakhand",
+    // Stretches with no mapped path, closed from a reference GPS track on Wikiloc (Ali Bedni day 3 (248099772)):
+    // guide points from where the line meets the track before each gap to where it meets it after
+    gapGuides: [
+      [[30.20407, 79.66884], [30.20359, 79.66963], [30.20316, 79.67055], [30.20272, 79.6713], [30.20257, 79.67236]],
+    ],
     stops: [
       LOHAJUNG,
       { name: "Didna", at: [30.16473, 79.63419] },
@@ -570,6 +587,11 @@ export const TREKS = {
 
   kedartal: {
     near: "Uttarkashi, Uttarakhand",
+    // Stretches with no mapped path, closed from a reference GPS track on Wikiloc (gangotri-to-kedar-khadak (84498203)):
+    // guide points from where the line meets the track before each gap to where it meets it after
+    gapGuides: [
+      [[30.96174, 78.94289], [30.96058, 78.94344], [30.95932, 78.94333], [30.95825, 78.94286], [30.95704, 78.94331], [30.95592, 78.94327], [30.95467, 78.94351], [30.95368, 78.94427], [30.95265, 78.94495], [30.95151, 78.94549], [30.95049, 78.94623], [30.94948, 78.9467], [30.94836, 78.9468], [30.94729, 78.94701], [30.94627, 78.94754], [30.94509, 78.948]],
+    ],
     stops: [GANGOTRI, { name: "Kedar Kharak", q: "Kedar Khadak Campsite", at: [30.9359, 78.952] }, { name: "Kedartal", q: "Kedar Tal", at: [30.9122, 78.9577] }],
     // Bhoj Kharak isn't on the map by name: placed partway up the Kedar Ganga gorge
     camps: { "Bhoj Kharak": ["Gangotri", "Kedar Kharak", 0.55, ["Bhoj Kharak", "Bhojkharak", "Bhoj Khadak"]] },
@@ -995,6 +1017,12 @@ export const TREKS = {
 
   "kashmir-great-lakes": {
     near: "Ganderbal, Jammu and Kashmir",
+    // Stretches with no mapped path, closed from a reference GPS track on Wikiloc (KGL 1 (114927915) and KGL 4 (114915491)):
+    // guide points from where the line meets the track before each gap to where it meets it after
+    gapGuides: [
+      [[34.33829, 75.19437], [34.33847, 75.19392], [34.33856, 75.19354], [34.3387, 75.19283]],
+      [[34.44309, 74.99691], [34.44251, 74.99661], [34.4425, 74.99657], [34.44181, 74.99625], [34.44134, 74.99577]],
+    ],
     stops: [
       { name: "Sonamarg", at: [34.30239, 75.29656] },
       // The camps, not the middle of the lakes: OSM's Vishensar Campsite, and at Gadsar (no mapped

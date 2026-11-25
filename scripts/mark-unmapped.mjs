@@ -86,6 +86,8 @@ export async function markTrail(t) {
   const trek = TREKS[t.slug], refs = [];
   const at = (s) => (Array.isArray(s?.at) ? s.at : null);
   (trek?.guide ?? []).forEach((g, i) => { const a = at(trek.stops[i]), b = at(trek.stops[i + 1]); if (g?.length) refs.push([...(a ? [a] : []), ...g, ...(b ? [b] : [])]); });
+  // and a gap closed from a reference track (`gapGuides`): its chain of guide points
+  for (const chain of trek?.gapGuides ?? []) if (chain.length > 1) refs.push(chain);
   t.unmapped = unmappedStretches(t.line, ways, refs);
   t.approxKm = total(t.unmapped);
   for (const s of [...(t.sideTrips ?? []), ...(t.detours ?? [])]) { s.unmapped = unmappedStretches(s.line, ways, refs); s.approxKm = total(s.unmapped); }

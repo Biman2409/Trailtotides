@@ -1231,7 +1231,7 @@ export const adventures: Adventure[] = [
     name: "Pindari Glacier Trek", tagline: "Walk to a pristine Kumaon glacier beneath the walls of Nanda Devi and Nanda Kot",
     region: "Himalayas", state: "Uttarakhand", type: "Trekking", difficulty: "Hard",
     duration: "3–5 days", durationDays: "4 days", durationRange: "4 Days",
-    distance: "42km", distanceRange: "42 km", altitude: "3,658m (Zero Point)",
+    distance: "43km", distanceRange: "43 km", altitude: "3,658m (Zero Point)",
     baseCamp: "Khati",
     bestSeason: "May–Jun, Sep–Oct", bestMonths: ["May","Jun","Sep","Oct"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/pindari-glacier-v2.jpeg",

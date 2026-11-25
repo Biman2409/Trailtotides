@@ -159,9 +159,15 @@ async function leg(a, b, track) {
   }
   try {
     const url = `https://brouter.de/brouter?lonlats=${a.lng},${a.lat}|${b.lng},${b.lat}&profile=hiking-mountain&alternativeidx=0&format=geojson`;
-    const res = await fetch(url, { headers: UA, signal: AbortSignal.timeout(90000) });
-    const text = await res.text();
-    await sleep(1500);
+    // BRouter turns busy clients away ("Please, retry later!"): wait and ask again, a few times
+    let res, text;
+    for (let attempt = 0; ; attempt++) {
+      res = await fetch(url, { headers: UA, signal: AbortSignal.timeout(90000) });
+      text = await res.text();
+      await sleep(1500);
+      if (!/retry later/i.test(text) || attempt >= 4) break;
+      await sleep(10000 * (attempt + 1));
+    }
     if (!res.ok || !text.startsWith("{")) throw new Error(text.slice(0, 80).replace(/\s+/g, " "));
     const coords = JSON.parse(text).features[0].geometry.coordinates.map(([lng, lat, ele]) => [lat, lng, Math.round(ele)]);
     let len = 0;
@@ -172,7 +178,9 @@ async function leg(a, b, track) {
     if (len > Math.max(3 * straight, straight + 8000)) throw new Error(`a ${(len / 1000).toFixed(1)} km detour for ${(straight / 1000).toFixed(1)} km`);
     // Between guide points read off a GPS track the way is known: a mapped path that goes round
     // by another way (up the next ridge, past another summit) isn't it
-    if ((a.through || b.through) && len > 1.6 * straight + 150) throw new Error(`the mapped path goes round (${(len / 1000).toFixed(1)} km for ${(straight / 1000).toFixed(1)} km)`);
+    // (between two guide points only: from a camp to the first point of a gap's chain the mapped
+    // path may well wind for km down the valley, and that's the way)
+    if (a.through && b.through && len > 1.6 * straight + 150) throw new Error(`the mapped path goes round (${(len / 1000).toFixed(1)} km for ${(straight / 1000).toFixed(1)} km)`);
     // and the router snaps a point to the nearest mapped path, which may be on another slope: a
     // guide point off every path is reached along the terrain, not by a path 500 m away
     if ((a.through && offA > 40) || (b.through && offB > 40)) throw new Error(`no mapped path at the guide point (${Math.round(Math.max(a.through ? offA : 0, b.through ? offB : 0))} m away)`);
@@ -182,7 +190,7 @@ async function leg(a, b, track) {
     // BRouter gives up when one piece of path is missing; route over the mapped paths ourselves,
     // jumping only the short gaps between them, which are counted as off the mapped paths
     // Between guide points the way is known: no path search, just the terrain (much quicker)
-    if (!(a.through || b.through)) try {
+    if (!(a.through && b.through)) try {
       // Short jumps between paths first; if the paths still don't join, longer ones, so a leg with
       // one unmapped stretch (a summit off the path, a gully) is off the mapped paths only across that
       let r = null, len = 0;
@@ -190,7 +198,7 @@ async function leg(a, b, track) {
         r = await pathRoute([a.lat, a.lng], [b.lat, b.lng], opts);
         len = 0;
         if (r) for (let i = 1; i < r.coords.length; i++) len += dist(r.coords[i - 1], r.coords[i]);
-        if (r && len <= Math.max(3 * straight, straight + 8000) && r.bridgedM < 0.6 * len && !((a.through || b.through) && len > 1.6 * straight + 150)) break;
+        if (r && len <= Math.max(3 * straight, straight + 8000) && r.bridgedM < 0.6 * len && !((a.through && b.through) && len > 1.6 * straight + 150)) break;
         r = null;
       }
       if (r) {
@@ -201,7 +209,7 @@ async function leg(a, b, track) {
       }
     } catch (e2) { console.warn(`  ! path search failed: ${e2.message}`); }
     // Between guide points from a GPS track: drawn along the terrain (alongTerrain), not a gap
-    if (a.through || b.through) {
+    if (a.through && b.through) {
       const ele = await heights([[a.lat, a.lng], [b.lat, b.lng]]);
       return { coords: [[a.lat, a.lng, ele[0]], [b.lat, b.lng, ele[1]]], approxKm: 0 };
     }
@@ -357,6 +365,17 @@ async function build(slug) {
   // Guide points read off a reference GPS track, one list per leg in walking order, taken as given:
   // sorting by distance would scramble a leg that doubles back (a loop, a zigzag down a ridge)
   (trek.guide ?? []).forEach((g, i) => { if (g?.length) via[i] = g.map(([lat, lng]) => ({ name: `${lat},${lng}`, lat, lng, through: true })); });
+  // A gap closed from a reference GPS track: a chain of guide points, from where the line meets the
+  // track before the gap to where it meets it after, kept in its own order and slotted into its leg
+  for (const chain of trek.gapGuides ?? []) {
+    const pts = chain.map(([lat, lng]) => ({ name: `${lat},${lng}`, lat, lng, through: true }));
+    const mid = pts[Math.floor(pts.length / 2)];
+    let li = 0;
+    for (let i = 0; i < stops.length - 1; i++) if (segDist(mid, stops[i], stops[i + 1]) < segDist(mid, stops[li], stops[li + 1])) li = i;
+    const from = [stops[li].lat, stops[li].lng], key = dist(from, [pts[0].lat, pts[0].lng]);
+    const at = via[li].findIndex((p) => dist(from, [p.lat, p.lng]) > key);
+    via[li].splice(at < 0 ? via[li].length : at, 0, ...pts);
+  }
 
   // The line, leg by leg; each stop's position on it is where its leg starts or ends
   let full = [];
