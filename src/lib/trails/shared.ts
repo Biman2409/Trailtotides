@@ -30,6 +30,35 @@ export interface TrailDay {
   note: string;
 }
 
+/** A stretch of a line, in km from its start */
+export interface TrailStretch { fromKm: number; toKm: number }
+
+/** An out-and-back trip off the main line (a summit, a lake), routed and drawn */
+export interface TrailSideTrip {
+  name: string;
+  /** Where it starts and comes back to */
+  from: string;
+  ele: number | null;
+  /** One way */
+  km: number;
+  up: number;
+  down: number;
+  approxKm?: number;
+  /** Stretches of its line with no mapped path under them */
+  unmapped?: TrailStretch[];
+  line: [number, number, number][];
+}
+
+/** A day's way that leaves the main line (a different way down), routed and drawn */
+export interface TrailDetour {
+  from: string;
+  to: string;
+  km: number;
+  approxKm?: number;
+  unmapped?: TrailStretch[];
+  line: [number, number, number][];
+}
+
 export interface Trail {
   slug: string;
   source: string;
@@ -41,8 +70,14 @@ export interface Trail {
   /** Kilometres drawn straight because no path is mapped there; their figures are estimates */
   approxKm?: number;
   stops: TrailStop[];
+  /** Stretches of the main line with no mapped path or GPS track (drawn straight between their ends) */
+  unmapped?: TrailStretch[];
   /** Side trips off the main line (summit viewpoints), as points */
   side: Omit<TrailStop, "km">[];
+  /** The way to each side trip the itinerary makes, routed */
+  sideTrips?: TrailSideTrip[];
+  /** Days that leave the main line, routed */
+  detours?: TrailDetour[];
   /** Day-by-day plan, start to finish */
   days: TrailDay[];
   /** Every place the itinerary sleeps, once each, in order (for weather) */
@@ -50,6 +85,39 @@ export interface Trail {
   /** [lat, lng, elevation in m], thinned to ~10 m accuracy */
   line: [number, number, number][];
 }
+
+/** What the site says wherever a stretch has no mapped path and no GPS track */
+export const NO_TRACK = "Tracking data unavailable for this section";
+export const NO_TRACK_NOTE = "No mapped path or GPS track exists here, so the line is drawn straight between the known points. Follow your guide.";
+
+/** The part of a line between two km marks, for drawing a stretch of it */
+export function lineBetweenKm(line: [number, number, number][], fromKm: number, toKm: number): [number, number][] {
+  const R = 6371, r = Math.PI / 180;
+  const d = (a: number[], b: number[]) => { const h = Math.sin(((b[0] - a[0]) * r) / 2) ** 2 + Math.cos(a[0] * r) * Math.cos(b[0] * r) * Math.sin(((b[1] - a[1]) * r) / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
+  // Its ends placed exactly: an unmapped gap is often one long straight segment
+  const out: [number, number][] = [];
+  let km = 0;
+  for (let i = 1; i < line.length; i++) {
+    const a = line[i - 1], b = line[i], len = d(a, b), k0 = km, k1 = km + len;
+    km = k1;
+    if (k1 < fromKm || k0 > toKm || !len) continue;
+    const at = (k: number): [number, number] => { const f = (k - k0) / len; return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f]; };
+    if (!out.length) out.push(at(Math.max(fromKm, k0)));
+    out.push(k1 <= toKm ? [b[0], b[1]] : at(toKm));
+  }
+  return out;
+}
+
+/** Where on the main line a km mark falls, as "between A and B" (or "near A") */
+export function stretchPlace(t: Trail, s: TrailStretch): string {
+  const before = [...t.stops].reverse().find((p) => p.km <= s.fromKm + 0.05);
+  const after = t.stops.find((p) => p.km >= s.toKm - 0.05);
+  if (before && after && before !== after) return `between ${before.name} and ${after.name}`;
+  return `near ${(before ?? after ?? t.stops[0]).name}`;
+}
+
+/** The side trip a day makes, if it makes one */
+export const sideTripOn = (t: Trail, d: TrailDay) => (t.sideTrips ?? []).find((s) => d.via?.includes(s.name) && s.from === d.from);
 
 /** Where the browser loads one trail from */
 export const trailUrl = (slug: string) => `/trails/${slug}.json`;

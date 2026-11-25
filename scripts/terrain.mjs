@@ -11,7 +11,8 @@
 import { inflateSync, deflateSync } from "node:zlib";
 import { mkdir, writeFile } from "node:fs/promises";
 
-const UA = { "User-Agent": "TrailToTides/1.0 (hello@trailtotides.com)" };
+// Map services ask for a contact: MAP_CONTACT gives one, if the person running this sets it
+const UA = { "User-Agent": process.env.MAP_CONTACT ? `trail-builder/1.0 (${process.env.MAP_CONTACT})` : "trail-builder/1.0" };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export function dist([la1, lo1], [la2, lo2]) {

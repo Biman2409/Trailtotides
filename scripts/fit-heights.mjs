@@ -43,7 +43,15 @@ export function fitTrail(t) {
     if (nearest(line, s).off > NEAR) continue;
     let at = cum.findIndex((c) => (c / total) * t.lengthKm >= s.km);
     if (at < 0) at = line.length - 1;
-    const n = { i: at };
+    // The line point nearest the stop itself, within a km of where its km mark falls: the km mark
+    // alone can land a few points away (where a leg joins the stop), and the bend then misses it
+    let best = at, bd = Infinity;
+    for (let k = 0; k < line.length; k++) {
+      if (Math.abs(cum[k] - cum[at]) > 1000) continue;
+      const dd = dist(line[k], [s.lat, s.lng]);
+      if (dd < bd) { bd = dd; best = k; }
+    }
+    const n = { i: best };
     if (Math.abs(line[n.i][2] - s.ele) < 15) continue;
     const up = s.ele > line[n.i][2];
     for (let k = 0; k < line.length; k++) {

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type L from "leaflet";
 import type { GeoJsonObject } from "geojson";
 import { adventures as allAdventures, type Adventure, type Month } from "@/lib/data";
-import type { Trail } from "@/lib/trails/shared";
+import { lineBetweenKm, NO_TRACK, type Trail } from "@/lib/trails/shared";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import imageLoader from "@/lib/imageLoader";
 import {
@@ -475,6 +475,26 @@ export default function MapCanvas(props: Props) {
       leaflet.marker([st.lat, st.lng], { icon: stopIcon(String(i + 1), i === 0 ? "start" : ""), zIndexOffset: -100 })
         .bindTooltip(`<b>${esc(st.name)}</b><span>km ${st.km}${st.ele != null ? ` · ${st.ele.toLocaleString("en-IN")} m` : ""}</span>`, { direction: "top", offset: [0, -10], className: "tm-tip" })
         .addTo(layer);
+    });
+    // Days that leave the main line, side trips (dashed teal) and unmapped stretches (white dashes)
+    (trail.detours ?? []).forEach((dt) => {
+      leaflet.polyline(dt.line.map(([la, lo]) => [la, lo] as [number, number]), { color: "#ff5100", weight: 4, opacity: 0.9 })
+        .bindTooltip(`<b>${esc(dt.from)} → ${esc(dt.to)}</b><span>${dt.km} km, a different way from the main line</span>`, { sticky: true, className: "tm-tip" }).addTo(layer);
+    });
+    (trail.sideTrips ?? []).forEach((s) => {
+      const sp = s.line.map(([la, lo]) => [la, lo] as [number, number]);
+      leaflet.polyline(sp, { color: "#000", weight: 6, opacity: 0.4, interactive: false }).addTo(layer);
+      leaflet.polyline(sp, { color: "#0e7c86", weight: 3.5, opacity: 1, dashArray: "6 5" })
+        .bindTooltip(`<b>Side trip: ${esc(s.name)}</b><span>${s.km} km each way from ${esc(s.from)}, out and back</span>`, { sticky: true, className: "tm-tip" }).addTo(layer);
+    });
+    [
+      ...(trail.unmapped ?? []).map((u) => ({ u, l: trail.line, where: `km ${u.fromKm.toFixed(1)}–${u.toKm.toFixed(1)}` })),
+      ...(trail.sideTrips ?? []).flatMap((s) => (s.unmapped ?? []).map((u) => ({ u, l: s.line, where: `side trip to ${s.name}` }))),
+      ...(trail.detours ?? []).flatMap((s) => (s.unmapped ?? []).map((u) => ({ u, l: s.line, where: `${s.from} → ${s.to}` }))),
+    ].forEach(({ u, l, where }) => {
+      const seg = lineBetweenKm(l, u.fromKm, u.toKm);
+      if (seg.length > 1) leaflet.polyline(seg, { color: "#fff", weight: 4, opacity: 0.95, dashArray: "2 7" })
+        .bindTooltip(`<b>${NO_TRACK}</b><span>${esc(where)}: drawn as a straight line</span>`, { sticky: true, className: "tm-tip" }).addTo(layer);
     });
     trail.side.forEach((st) => {
       leaflet.marker([st.lat, st.lng], { icon: stopIcon("▲", "side"), zIndexOffset: -100 })

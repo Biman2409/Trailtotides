@@ -19,8 +19,10 @@
 //         than one way between two stops and the router takes the wrong one
 // near    added to place searches to pick the right one of several places with the same name
 // side    out-and-back high points off the line, as points; extra: places only the days visit
-// days    { to, via?, side?: { name, km, up }, note } walks from last night's stop;
-//         { rest } stays put. Only the days on foot: drives in and out aren't listed.
+// days    { to, via?, side?: "<side trip>", note } walks from last night's stop; side goes out and
+//         back to a place in the side list first, routed and drawn (a summit, a lake off the line);
+//         { rest, side? } stays put, optionally with a side trip. Only the days on foot: drives in
+//         and out aren't listed.
 // Treks with too little of their route on OpenStreetMap to place honestly aren't listed:
 // bagini-glacier, kedartal, hampta-pass, rupin-pass, pin-bhaba-pass, gulabi-kantha, phulara-ridge, panch-kedar,
 // ranthan-kharak, surya-top, bajre-dara, doodhpathri.
@@ -46,7 +48,7 @@ export const TREKS = {
       { rest: "Acclimatisation day: climb partway up Nangkartshang and back" },
       { to: "Lobuche", note: "Past the climbers' memorials at Thukla" },
       { to: "Gorak Shep", via: ["Everest Base Camp"], note: "On to Gorak Shep, then out to Base Camp and back" },
-      { to: "Pheriche", side: { name: "Kala Patthar", km: 4.2, up: 480 }, note: "Kala Patthar before sunrise for the Everest view, then down" },
+      { to: "Pheriche", side: "Kala Patthar", note: "Kala Patthar before sunrise for the Everest view, then down" },
       { to: "Namche Bazaar", note: "A long descent back through Pangboche and Tengboche" },
       { to: "Lukla", note: "Back to the airstrip. Flights out are early the next morning: keep a spare day, as weather cancels them" },
     ],
@@ -63,7 +65,7 @@ export const TREKS = {
       { to: "Dole", note: "Off the Everest trail, up the Gokyo valley past Mong La" },
       { to: "Machhermo", note: "A short day, to keep the height gain slow" },
       { to: "Gokyo", note: "Beside the Ngozumpa glacier past the first lakes to Gokyo, on the third" },
-      { to: "Gokyo", side: { name: "Gokyo Ri", km: 4, up: 600 }, note: "Gokyo Ri at dawn for Everest, Lhotse, Makalu and Cho Oyu, and back down" },
+      { to: "Gokyo", side: "Gokyo Ri", note: "Gokyo Ri at dawn for Everest, Lhotse, Makalu and Cho Oyu, and back down" },
       { to: "Dole", note: "Down the valley" },
       { to: "Namche Bazaar", note: "Back to Namche" },
       { to: "Lukla", note: "Back to the airstrip. Flights out are early the next morning: keep a spare day, as weather cancels them" },
@@ -106,6 +108,9 @@ export const TREKS = {
   "khopra-danda": {
     near: "Myagdi, Nepal",
     stops: ["Nayapul", "Ulleri", "Ghorepani", "Swanta", "Khopra Danda"],
+    // The sacred lake the day out from Khopra goes to: the trek's real high point (4,660 m as
+    // published; 4,500-4,660 m are quoted)
+    side: [{ name: "Khayer Lake", q: "Khayar Lake", ele: 4660 }],
     // Not on the map by name: placed on the trail where it reaches the camp's published height
     // (Upper Chistibung, 2,975 m)
     camps: { Chistibung: ["Swanta", "Khopra Danda", 0.5, [], [28.45682, 83.71329]] },
@@ -115,15 +120,20 @@ export const TREKS = {
       { to: "Swanta", note: "Off the main trail to a quiet Magar village" },
       { to: "Chistibung", note: "Up through forest to a high clearing" },
       { to: "Khopra Danda", note: "Onto the ridge facing Dhaulagiri and Annapurna South" },
-      { to: "Khopra Danda", side: { name: "Khayer Lake", km: 16, up: 1000 }, note: "A long day out to the sacred Khayer Lake at 4,660 m and back" },
+      { to: "Khopra Danda", side: "Khayer Lake", note: "A long day out to the sacred Khayer Lake at 4,660 m and back" },
       { to: "Swanta", note: "Back down the way you came" },
+      // Split in two: Swanta to the road in one go was 23 km with 750 m back up to Ghorepani
+      { to: "Ulleri", note: "Back up to Ghorepani and down its stone steps to Ulleri" },
       { to: "Nayapul", note: "Down to the road" },
     ],
   },
 
   "manaslu-circuit": {
     near: "Gorkha, Nepal",
-    stops: ["Soti Khola", { name: "Machha Khola", q: "Machhakhola", at: [28.22931, 84.87377] }, "Jagat", "Deng", "Namrung", "Lho", { name: "Samagaun", q: "Samagau", at: [28.58467, 84.64404] }, "Samdo", { name: { name: "Larkya La", ele: 5160 }, at: [28.66392, 84.52031] }, "Bimthang", { name: "Dharapani", at: [28.519, 84.35838] }],
+    // In the Budhi Gandaki gorge the elevation model reads the valley walls as 100-250 m steps over a
+    // few hundred metres of path; a gentler cap on steps (45%) keeps the profile to the path
+    maxGrade: 0.45,
+    stops: ["Soti Khola", { name: "Machha Khola", q: "Machhakhola", at: [28.22931, 84.87377] }, "Jagat", "Deng", "Namrung", "Lho", { name: "Samagaun", q: "Samagau", at: [28.58467, 84.64404] }, "Samdo", { name: "Larkya La", ele: 5160, at: [28.66392, 84.52031] }, "Bimthang", { name: "Dharapani", at: [28.519, 84.35838] }],
     // Larke Phedi from OSM ("Larke Phedi (Dharmasala)", ele 4,475 m; 4,466 m on the elevation model)
     // Larkya La: 5,106 m and 5,160 m are both quoted; the trail tops out at 5,157 m on the model,
     // which reads passes low, so 5,160 m it is
@@ -269,15 +279,17 @@ export const TREKS = {
       { name: "Ghangaria", at: [30.70145, 79.5938] },
     ],
     side: [
-      { name: "Valley of Flowers", q: "Valley of Flowers Entry", at: [30.70568, 79.59586] },
+      // A turnaround in the valley's meadows, 4.5 km from Ghangaria along the mapped valley path
+      // (published walks are 8-10 km there and back), not the entry gate 700 m from the village
+      { name: "Valley of Flowers", at: [30.7268, 79.59554], exact: true },
       // The gurdwara at the lake, where two trekkers' waypoints agree (ultrajourneys.org). Its height
       // is the one published (4,329 m); the elevation model reads the lake shore lower, about 4,150 m
       { name: "Hemkund Sahib", at: [30.69909, 79.61747], exact: true, ele: 4329 },
     ],
     days: [
       { to: "Ghangaria", note: "Up the Lakshman Ganga on a paved mule path, busy with pilgrims, to the only village up here" },
-      { to: "Ghangaria", side: { name: "Valley of Flowers", km: 10, up: 500 }, note: "Into the valley itself: walk as far as you like among the flowers and back. No camping inside" },
-      { to: "Ghangaria", side: { name: "Hemkund Sahib", km: 12, up: 1100 }, note: "A steep climb to the glacial lake and gurdwara at 4,300 m, and back down" },
+      { to: "Ghangaria", side: "Valley of Flowers", note: "Into the valley itself: walk as far as you like among the flowers and back. No camping inside" },
+      { to: "Ghangaria", side: "Hemkund Sahib", note: "A steep climb to the glacial lake and gurdwara at 4,300 m, and back down" },
       { to: "Pulna", note: "Back down to the road" },
     ],
   },
@@ -400,7 +412,9 @@ export const TREKS = {
       { name: "Ali Bugyal", at: [30.18229, 79.65865] },
       // The camp at Bedni Kund, the pond on the meadow (trekkers' waypoint, ultrajourneys.org)
       { name: "Bedni Bugyal", at: [30.20635, 79.66694], exact: true },
-      { name: "Roopkund", q: "Rup Kund", at: [30.2621, 79.73172] },
+      // The lake's height as operators publish it (4,785-4,801 m) and the elevation model reads it
+      // (~4,770 m), not OpenStreetMap's 5,029 m tag, which is the figure quoted for the area above
+      { name: "Roopkund", q: "Rup Kund", at: [30.2621, 79.73172], ele: 4785 },
     ],
     // Both camps from trekkers' waypoints (ultrajourneys.org): the shelter at Patar Nachauni, Bhagwabasa
     camps: { "Patar Nachauni": ["Bedni Bugyal", "Roopkund", 0.35, ["Patal Nachani", "Patar Nachani", "Pathar Nachauni", "Patar Nachoni", "Pathar Nachuni"], [30.23664, 79.69218]], Bhagwabasa: ["Bedni Bugyal", "Roopkund", 0.75, ["Bhagwabas", "Bhagubasa", "Bagubasa", "Bhaguwabasa"], [30.24973, 79.71051]] },
@@ -410,8 +424,11 @@ export const TREKS = {
       { to: "Patar Nachauni", note: "A short day along the ridge, good for acclimatising" },
       { to: "Bhagwabasa", note: "Over Kalu Vinayak into rock and scree, the last camp below the lake" },
       { to: "Patar Nachauni", via: ["Roopkund"], note: "Up to the lake of skeletons at 4,800 m before dawn, then all the way back down" },
-      { to: "Lohajung", note: "The long walk out" },
+      // Out by Wan, as operators finish (10-15 km), not the 23 km back to Lohajung; the drive
+      // from Wan isn't counted
+      { to: "Wan", note: "Down past Bedni Bugyal and through forest to Wan village and the road" },
     ],
+    extra: [{ name: "Wan", at: [30.20504, 79.61753] }],
   },
 
   "ali-bedni-bugyal": {
@@ -448,7 +465,7 @@ export const TREKS = {
     days: [
       { to: "Bekaltal", note: "Through oak and rhododendron forest to a lake ringed by trees" },
       { to: "Brahmatal", note: "Up onto the ridge with Trishul and Nanda Ghunti, then down to the Brahmatal lake camp" },
-      { to: "Brahmatal", side: { name: "Brahmatal Top", km: 4.1, up: 510 }, note: "An early climb to the top for the widest view of the trek, then back to camp" },
+      { to: "Brahmatal", side: "Brahmatal Top", note: "An early climb to the top for the widest view of the trek, then back to camp" },
       { to: "Lohajung", note: "Down through the forest to the road" },
     ],
   },
@@ -493,9 +510,12 @@ export const TREKS = {
     // Chaklani, the meadow camp below the pass, from ultrajourneys.org's waypoint: 3,448 m on the
     // elevation model, as published (3,400-3,450 m). The pass where the recorded trail tops out:
     // 3,656 m, as published (3,660 m)
-    camps: { Chaklani: ["Rumsu", "Malana", 0.45, ["Chiklani", "Chaklani Thach", "Stalling"], [32.06749, 77.21231]], "Chandrakhani Pass": ["Rumsu", "Malana", 0.6, ["Chanderkhani Pass", "Chandrakhani", "Chanderkhani"], [32.06642, 77.23323]] },
+    // Naya Tapru, the forest camp operators use on the way up (published 3,179-3,200 m), isn't on the
+    // map: placed on the recorded trail where it reaches that height. It splits the 1,400 m climb
+    camps: { "Naya Tapru": ["Rumsu", "Malana", 0.2, ["Naya Thapru", "Nayatapru", "Naya Tapri"], [32.08299, 77.20076]], Chaklani: ["Rumsu", "Malana", 0.45, ["Chiklani", "Chaklani Thach", "Stalling"], [32.06749, 77.21231]], "Chandrakhani Pass": ["Rumsu", "Malana", 0.6, ["Chanderkhani Pass", "Chandrakhani", "Chanderkhani"], [32.06642, 77.23323]] },
     days: [
-      { to: "Chaklani", note: "Up from Rumsu, above Naggar, through deodar forest to the open meadow of Chaklani below the pass" },
+      { to: "Naya Tapru", note: "Up from Rumsu, above Naggar, through deodar forest to a clearing camp" },
+      { to: "Chaklani", note: "A short climb out of the forest to the open meadow of Chaklani below the pass, to get used to the height" },
       { to: "Malana", via: ["Chandrakhani Pass"], note: "Over the grassy pass facing the Pir Panjal and Parvati ranges, then down to Malana, a village with its own rules: don't touch its walls or people" },
     ],
   },
@@ -603,7 +623,10 @@ export const TREKS = {
     days: [
       { to: "Dayara Thach", note: "Up from Janglik through forest onto one of the finest meadows in Himachal" },
       { to: "Litham", note: "Down through birch to Litham, below the Chandranahan waterfall" },
-      { to: "Litham", side: { name: "Chandranahan Lake", km: 8, up: 600 }, note: "Up to the glacial lakes at the source of the Pabbar river, and back to camp" },
+      // The Chandranahan lakes aren't in OpenStreetMap and published coordinates are too rough to place
+      // them (31.37, 78.10 is beside Litham, the lakes are ~700 m higher): an acclimatisation day, the
+      // walk named but not drawn
+      { rest: "Acclimatisation day at Litham: an optional walk up to the Chandranahan lakes (about 4,260 m) at the source of the Pabbar, and back. Not drawn on the map" },
       { to: "Dhunda", note: "A steep climb to the snowy camp below the pass" },
       { to: "Munirang", via: ["Buran Ghati"], note: "Up to the pass at 4,570 m, then a roped rappel down the snow wall on the far side" },
       { to: "Barua", note: "Down through forest and apple orchards into Kinnaur" },
@@ -653,14 +676,18 @@ export const TREKS = {
     ],
     camps: {
       // OSM's Sekiwas, the shepherds' huts: 3,424 m on the elevation model (published about 3,400 m)
-      Shekwas: ["Lidderwat", "Tarsar Lake", 0.5, ["Shekwas Camp", "Shekhwas", "Homwas"], [34.16735, 75.17185]]    },
+      Shekwas: ["Lidderwat", "Tarsar Lake", 0.5, ["Shekwas Camp", "Shekhwas", "Homwas"], [34.16735, 75.17185]],
+    },
     days: [
       { to: "Lidderwat", note: "Up the Lidder river from Aru through pine and meadows" },
       { to: "Shekwas", note: "Into a side valley to a camp ringed by peaks" },
       { to: "Tarsar Lake", note: "A short climb to the almond-shaped lake, the trek's showpiece" },
       { to: "Sundersar", via: ["Tarsar Pass"], note: "Over the Tarsar pass to a quiet lake camp" },
-      { to: "Sundersar", via: ["Marsar Lake"], note: "Up to the ridge above Marsar, often under cloud, and back" },
-      { to: "Lidderwat", note: "Back down the valley" },
+      // The way out operators take: Marsar, then down the Sundersar valley (mapped, about 10 km) to
+      // the Shekwas/Homwas meadow, not back over the pass to Lidderwat in one 24 km day. own: the
+      // last leg is routed on its own, so it follows that valley rather than the way you came
+      { to: "Shekwas", via: ["Marsar Lake"], own: true, note: "Up to the ridge above Marsar, often under cloud, then down the Sundersar valley to Shekwas" },
+      { to: "Lidderwat", note: "Back down the side valley to the Lidder" },
       { to: "Aru", note: "Back along the Lidder to the road" },
     ],
   },
@@ -705,7 +732,7 @@ export const TREKS = {
       { to: "Sachen", note: "Out of Yuksom into dense forest" },
       { to: "Tshoka", note: "Over the Prekchu on a high bridge and up to a small Tibetan settlement" },
       { to: "Dzongri", note: "Through rhododendron forest to the open Dzongri meadow" },
-      { rest: "Acclimatisation day: up Dzongri Top at dawn for Kanchenjunga and Pandim" },
+      { rest: "Acclimatisation day: up Dzongri Top at dawn for Kanchenjunga and Pandim", side: "Dzongri Top" },
       { to: "Thansing", note: "Down to the Prekchu and along its valley, Pandim above" },
       { to: "Lamuney", note: "A short walk to the last camp" },
       { to: "Thansing", via: ["Samiti Lake", "Goechala Viewpoint 1"], note: "Leave around 2 am, past Samiti Lake to the viewpoint facing Kanchenjunga at sunrise, then back down" },
@@ -755,11 +782,11 @@ export const TREKS = {
       { to: "Machhermo", note: "A short day, to keep the height gain slow" },
       { to: "Gokyo", note: "Beside the Ngozumpa glacier, past the first two lakes to Gokyo on the third" },
       { rest: "Acclimatisation day: walk up the valley to the fourth and fifth lakes and back" },
-      { to: "Dragnag", side: { name: "Gokyo Ri", km: 4, up: 600 }, note: "Gokyo Ri at dawn for Everest, Lhotse, Makalu and Cho Oyu, then across the Ngozumpa glacier to Dragnag" },
+      { to: "Dragnag", side: "Gokyo Ri", note: "Gokyo Ri at dawn for Everest, Lhotse, Makalu and Cho Oyu, then across the Ngozumpa glacier to Dragnag" },
       { to: "Dzongla", note: "Over the Cho La: a steep scramble up, a short glacier crossing at the top, and down to Dzongla" },
       { to: "Lobuche", note: "Round the ridge into the Khumbu valley" },
       { to: "Gorak Shep", via: ["Everest Base Camp"], note: "On to Gorak Shep, then out to Base Camp and back" },
-      { to: "Pheriche", side: { name: "Kala Patthar", km: 4.2, up: 480 }, note: "Kala Patthar before sunrise for the Everest view, then down" },
+      { to: "Pheriche", side: "Kala Patthar", note: "Kala Patthar before sunrise for the Everest view, then down" },
       { to: "Namche Bazaar", note: "A long descent back through Pangboche and Tengboche" },
       { to: "Lukla", note: "Back to the airstrip. Flights out are early the next morning: keep a spare day, as weather cancels them" },
     ],
@@ -794,12 +821,12 @@ export const TREKS = {
       { to: "Lungden", note: "Up the quiet valley through Marlung to the last lodges below the Renjo La" },
       { rest: "Acclimatisation day at Lungden before the first pass" },
       { to: "Gokyo", note: "Over the Renjo La, with Everest and the Gokyo lakes below you on the far side, and down to Gokyo" },
-      { to: "Gokyo", side: { name: "Gokyo Ri", km: 4, up: 600 }, note: "Gokyo Ri at dawn for Everest, Lhotse, Makalu and Cho Oyu, and back down to rest" },
+      { to: "Gokyo", side: "Gokyo Ri", note: "Gokyo Ri at dawn for Everest, Lhotse, Makalu and Cho Oyu, and back down to rest" },
       { to: "Dragnag", note: "A short day across the Ngozumpa glacier" },
       { to: "Dzongla", note: "Over the Cho La: a steep scramble up, a short glacier crossing at the top, and down to Dzongla" },
       { to: "Lobuche", note: "Round the ridge into the Khumbu valley" },
       { to: "Gorak Shep", via: ["Everest Base Camp"], note: "On to Gorak Shep, then out to Base Camp and back" },
-      { to: "Lobuche", side: { name: "Kala Patthar", km: 4.2, up: 480 }, note: "Kala Patthar before sunrise for the Everest view, then back down to Lobuche" },
+      { to: "Lobuche", side: "Kala Patthar", note: "Kala Patthar before sunrise for the Everest view, then back down to Lobuche" },
       { to: "Chhukung", note: "Over the Kongma La, the highest of the three, across the Khumbu glacier first, and down to Chhukung" },
       { to: "Deboche", note: "Down the Imja valley past Dingboche and Pangboche" },
       { to: "Namche Bazaar", note: "Through Tengboche and back along the valley side" },

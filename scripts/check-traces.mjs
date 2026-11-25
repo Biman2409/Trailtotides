@@ -12,7 +12,8 @@
 import { readFile, readdir, writeFile, mkdir } from "node:fs/promises";
 
 const DIR = "src/lib/trails";
-const UA = { "User-Agent": "TrailToTides/1.0 (hello@trailtotides.com)" };
+// Map services ask for a contact: MAP_CONTACT gives one, if the person running this sets it
+const UA = { "User-Agent": process.env.MAP_CONTACT ? `trail-builder/1.0 (${process.env.MAP_CONTACT})` : "trail-builder/1.0" };
 const CELL = 0.05; // degrees: tracks are fetched for each 0.05° square the trail passes through
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 

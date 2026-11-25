@@ -26,6 +26,17 @@ export default function TrailElevation({ pts, bands, compact = false, peakM }: {
   const y = (e: number) => PAD.t + (1 - (e - lo) / (hi - lo)) * (H - PAD.t - PAD.b);
   const line = pts.map(([k, e], i) => `${i ? "L" : "M"}${x(k).toFixed(1)},${y(e).toFixed(1)}`).join("");
   const top = pts.reduce((m, p) => (p[1] > m[1] ? p : m), pts[0]);
+  // The stated height labels the profile's top only when it is that point: a side-trip summit
+  // (Hemkund above Ghangaria) isn't on this line, and its height would sit on the wrong place
+  const topLabel = peakM != null && Math.abs(peakM - top[1]) <= 100 ? peakM : top[1];
+  // A return day walks the same stretch as the way in: one label for both ("Days 1 & 4"), not the
+  // later day's label drawn over the first's
+  const span = (b: DayBand) => `${Math.round(x(Math.min(b.from, b.to)))}-${Math.round(x(Math.max(b.from, b.to)))}`;
+  const bandLabel = (b: DayBand, i: number) => {
+    const same = bands.filter((o) => span(o) === span(b));
+    if (bands.findIndex((o) => span(o) === span(b)) !== i) return null;
+    return same.length > 1 ? `Days ${same.slice(0, -1).map((o) => o.day).join(", ")} & ${same[same.length - 1].day}` : `Day ${b.day}`;
+  };
   const ticks: number[] = [];
   for (let e = lo; e <= hi; e += hi - lo > 2000 ? 1000 : 500) ticks.push(e);
 
@@ -60,7 +71,7 @@ export default function TrailElevation({ pts, bands, compact = false, peakM }: {
             <g key={b.day}>
               <rect x={x0} y={PAD.t - 4} width={Math.max(1, x1 - x0)} height={H - PAD.t - PAD.b + 4}
                 fill={on ? "rgba(255,81,0,0.12)" : i % 2 ? "var(--bg-surface-2)" : "transparent"} opacity={on ? 1 : 0.6} />
-              {x1 - x0 > 34 && <text x={(x0 + x1) / 2} y={PAD.t - 12} textAnchor="middle" fontSize="12.5" fontWeight="700" fill={on ? "#ff5100" : "var(--text-tertiary)"}>Day {b.day}</text>}
+              {x1 - x0 > 34 && bandLabel(b, i) && <text x={(x0 + x1) / 2} y={PAD.t - 12} textAnchor="middle" fontSize="12.5" fontWeight="700" fill={on ? "#ff5100" : "var(--text-tertiary)"}>{bandLabel(b, i)}</text>}
             </g>
           );
         })}
@@ -75,7 +86,7 @@ export default function TrailElevation({ pts, bands, compact = false, peakM }: {
         {!at && (
           <>
             <circle cx={x(top[0])} cy={y(top[1])} r="5" fill="#ff5100" stroke="var(--bg-surface)" strokeWidth="2" />
-            <text x={x(top[0])} y={y(top[1]) - 10} textAnchor={x(top[0]) > W - 80 ? "end" : x(top[0]) < PAD.l + 60 ? "start" : "middle"} fontSize="14" fontWeight="700" fill="var(--text-primary)">{fmt(peakM ?? top[1])} m</text>
+            <text x={x(top[0])} y={y(top[1]) - 10} textAnchor={x(top[0]) > W - 80 ? "end" : x(top[0]) < PAD.l + 60 ? "start" : "middle"} fontSize="14" fontWeight="700" fill="var(--text-primary)">{fmt(topLabel)} m</text>
           </>
         )}
         {/* Where you're pointing: the kilometre, the height, the day */}

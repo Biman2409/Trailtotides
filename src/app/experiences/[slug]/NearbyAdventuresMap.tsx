@@ -12,7 +12,7 @@ import { getACE, computeDifficulty } from "@/lib/ace";
 import { haversineKm } from "@/lib/geo";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import { BASE_LAYERS, BASE_KEY, LIGHT_BASE, createBaseLayer, loadLeaflet, type LayerKey } from "@/app/map/mapShared";
-import { trailRoute, trailWalkKm, type Trail } from "@/lib/trails/shared";
+import { lineBetweenKm, NO_TRACK, trailRoute, trailWalkKm, type Trail } from "@/lib/trails/shared";
 
 interface Props {
   current: Adventure;
@@ -218,6 +218,30 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
         const pts = trail.line.map(([la, lo]) => [la, lo] as [number, number]);
         L.polyline(pts, { color: isDark ? "#000" : "#fff", weight: 6, opacity: 0.55, interactive: false }).addTo(map);
         const line = L.polyline(pts, { color: "#ff5100", weight: 3.5, opacity: 1, interactive: false }).addTo(map);
+        // Days that leave the main line (another way down): the same orange, it is the walk too
+        (trail.detours ?? []).forEach((dt) => {
+          L.polyline(dt.line.map(([la, lo]) => [la, lo] as [number, number]), { color: "#ff5100", weight: 3.5, opacity: 0.9 })
+            .bindTooltip(`${dt.from} → ${dt.to} · ${dt.km} km, a different way from the main line`, { sticky: true, opacity: 0.95, className: "ttt-nearby-tooltip" }).addTo(map);
+        });
+        // Side trips: out and back from a camp, dashed teal, named as side trips
+        (trail.sideTrips ?? []).forEach((s) => {
+          const sp = s.line.map(([la, lo]) => [la, lo] as [number, number]);
+          L.polyline(sp, { color: isDark ? "#000" : "#fff", weight: 5, opacity: 0.5, interactive: false }).addTo(map);
+          L.polyline(sp, { color: "#0e7c86", weight: 3, opacity: 1, dashArray: "6 5" })
+            .bindTooltip(`Side trip: ${s.name} · ${s.km} km each way from ${s.from}, out and back`, { sticky: true, opacity: 0.95, className: "ttt-nearby-tooltip" }).addTo(map);
+        });
+        // Unmapped stretches: drawn over the line in white dashes, and said so
+        const unmapped = [
+          ...(trail.unmapped ?? []).map((u) => ({ u, l: trail.line, where: `km ${u.fromKm.toFixed(1)}–${u.toKm.toFixed(1)}` })),
+          ...(trail.sideTrips ?? []).flatMap((s) => (s.unmapped ?? []).map((u) => ({ u, l: s.line, where: `on the side trip to ${s.name}` }))),
+          ...(trail.detours ?? []).flatMap((s) => (s.unmapped ?? []).map((u) => ({ u, l: s.line, where: `${s.from} → ${s.to}` }))),
+        ];
+        unmapped.forEach(({ u, l, where }) => {
+          const seg = lineBetweenKm(l, u.fromKm, u.toKm);
+          if (seg.length < 2) return;
+          L.polyline(seg, { color: "#fff", weight: 3.5, opacity: 0.95, dashArray: "2 6" })
+            .bindTooltip(`${NO_TRACK} (${where}): drawn as a straight line`, { sticky: true, opacity: 0.95, className: "ttt-nearby-tooltip" }).addTo(map);
+        });
         // An 18px dot inside a 32px clear square, so the stop is easy to tap without looking bigger
         const stop = (label: string, bg: string) => L.divIcon({
           className: "",

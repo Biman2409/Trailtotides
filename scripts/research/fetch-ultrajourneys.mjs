@@ -9,7 +9,8 @@ import { mkdir, writeFile } from "node:fs/promises";
 const SITE = "https://ultrajourneys.org";
 const START = `${SITE}/category/maps/`;
 const OUT = "research/ultrajourneys";
-const UA = { "User-Agent": "TrailToTides research fetch (hello@trailtotides.com)" };
+// Sites ask for a contact: MAP_CONTACT gives one, if the person running this sets it
+const UA = { "User-Agent": process.env.MAP_CONTACT ? `research-fetch/1.0 (${process.env.MAP_CONTACT})` : "research-fetch/1.0" };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // robots.txt: the Disallow lines for any user agent

@@ -27,8 +27,10 @@ import { placesNear, matchPlace, pathRoute } from "./osm.mjs";
 import { terrainPath, satellitePreview } from "./terrain.mjs";
 import { copernicusHeights } from "./copernicus.mjs";
 import { fitTrail } from "./fit-heights.mjs";
+import { markTrail } from "./mark-unmapped.mjs";
 
-const UA = { "User-Agent": "TrailToTides/1.0 (hello@trailtotides.com)" };
+// Map services ask for a contact: MAP_CONTACT gives one, if the person running this sets it
+const UA = { "User-Agent": process.env.MAP_CONTACT ? `trail-builder/1.0 (${process.env.MAP_CONTACT})` : "trail-builder/1.0" };
 
 // Every log line carries the seconds since the build started, to show where the time goes
 const T0 = Date.now();
@@ -187,29 +189,44 @@ async function leg(a, b, track) {
       if (r) {
         console.warn(`  ~ ${a.name} → ${b.name}: ${e.message}; routed over mapped paths, ${(r.bridgedM / 1000).toFixed(1)} of ${(len / 1000).toFixed(1)} km bridged`);
         // No heights yet: the whole line gets them in one go once it's joined up
-        return { coords: r.coords.map((p) => [p[0], p[1], 0]), approxKm: r.bridgedM / 1000 };
+        // (a fourth value, true, marks the end of a bridged gap: drawn straight, see alongTerrain)
+        return { coords: r.coords.map((p) => [p[0], p[1], 0, p[2] === true]), approxKm: r.bridgedM / 1000 };
       }
     } catch (e2) { console.warn(`  ! path search failed: ${e2.message}`); }
     console.warn(`  ! ${a.name} → ${b.name}: ${e.message}; drawn along the terrain`);
-    // Only the ends: the leg is drawn along the terrain between them (see alongTerrain)
+    // Only the ends, the far one flagged as a gap: with no path or GPS track, a straight line is
+    // the honest drawing (the site says tracking data is unavailable there)
     const ele = await heights([[a.lat, a.lng], [b.lat, b.lng]]);
-    return { coords: [[a.lat, a.lng, ele[0]], [b.lat, b.lng, ele[1]]], approxKm: straight / 1000 };
+    return { coords: [[a.lat, a.lng, ele[0]], [b.lat, b.lng, ele[1], true]], approxKm: straight / 1000 };
   }
 }
 
-// A line with long straight segments — a gap no mapped path fills, or a path OpenStreetMap maps
-// with few points — is drawn along the terrain instead (scripts/terrain.mjs): every segment over
-// 250 m becomes the easiest walking route between its ends. Up to a kilometre the ends are points
+// A path OpenStreetMap maps with few points (long straight segments) is drawn along the terrain
+// (scripts/terrain.mjs): every segment over 250 m becomes the easiest walking route between its
+// ends. A gap with no mapped path or GPS track (its end point flagged, p[3]) stays straight: no
+// data says where the way goes there, and the site says tracking data is unavailable. Up to a kilometre the ends are points
 // of a real path, so the route keeps close to the segment; longer gaps may wander further. Long
 // ones are saved as satellite previews for checking by eye.
 const previews = [];
+// Uploaded GPS tracks that walk a gap (scripts/tracks/<slug>-km*.json, found by find-traces.mjs
+// from OpenStreetMap's public traces, ODbL): a gap whose ends they meet is drawn along them
+let gapTracks = [];
+const trackFor = (p, q) => {
+  for (const t of gapTracks) {
+    if (dist(t[0], p) < 150 && dist(t[t.length - 1], q) < 150) return t;
+    if (dist(t[t.length - 1], p) < 150 && dist(t[0], q) < 150) return [...t].reverse();
+  }
+  return null;
+};
 async function alongTerrain(coords) {
   // A straight run of points (BRouter splits long path edges) is one segment for this purpose
   coords = simplify(coords, 3);
   const out = [coords[0]];
   for (let i = 1; i < coords.length; i++) {
     const p = coords[i - 1], q = coords[i], d = dist(p, q);
-    if (d > 250) {
+    const traced = q[3] && trackFor(p, q);
+    if (traced) { out.push(...traced.slice(1, -1).map(([la, lo]) => [la, lo, 0])); console.log(`  gap of ${Math.round(d)} m drawn along an uploaded GPS track`); }
+    else if (d > 250 && !q[3]) {
       const long = d > 1000;
       try {
         const path = await terrainPath([p[0], p[1]], [q[0], q[1]], { halfWidth: Math.min(long ? 0.4 * d : 0.25 * d, 800), step: d > 3000 ? 25 : 15, keep: long ? 0.0005 : 0.003 });
@@ -231,6 +248,8 @@ function simplify(pts, tol) {
   const xy = pts.map(([la, lo]) => [lo * k, la * 110540]);
   const keep = new Uint8Array(pts.length);
   keep[0] = keep[pts.length - 1] = 1;
+  // A gap's two ends stay, so the gap stays a segment of its own (straight, not along the terrain)
+  pts.forEach((p, i) => { if (p[3]) { keep[i] = 1; if (i) keep[i - 1] = 1; } });
   const stack = [[0, pts.length - 1]];
   while (stack.length) {
     const [s, e] = stack.pop();
@@ -251,6 +270,8 @@ async function build(slug) {
   const trek = { ...TREKS[slug], centre: TREKS[slug].centre ?? centre(slug) };
   found.clear();
   previews.length = 0;
+  gapTracks = (await readdir(new URL("./tracks/", import.meta.url))).filter((f) => f.startsWith(`${slug}-km`))
+    .map((f) => JSON.parse(readFileSync(new URL(`./tracks/${f}`, import.meta.url), "utf8")));
   const name = (s) => (typeof s === "string" ? s : s.name);
   // One Overpass query for every named place around the trek: its centre and given coordinates
   // (a stop written as a plain string has no coordinates: "Lukla".at is a string method, not a place)
@@ -335,9 +356,9 @@ async function build(slug) {
       const A = chain[k], B = chain[k + 1];
       // (the line's heights are the elevation model's, not a stop's published height). A through
       // point only steers the router: joining it would draw a spur out to it and back
-      if (k + i > 0 && !A.through && dist(l.coords[0], [A.lat, A.lng]) > 30) { l.coords.unshift([A.lat, A.lng, (await heights([[A.lat, A.lng]]))[0]]); l.approxKm += dist(l.coords[0], l.coords[1]) / 1000; }
+      if (k + i > 0 && !A.through && dist(l.coords[0], [A.lat, A.lng]) > 30) { l.coords.unshift([A.lat, A.lng, (await heights([[A.lat, A.lng]]))[0]]); l.approxKm += dist(l.coords[0], l.coords[1]) / 1000; l.coords[1][3] = true; }
       const end = l.coords[l.coords.length - 1];
-      if (!B.through && dist(end, [B.lat, B.lng]) > 30) { l.approxKm += dist(end, [B.lat, B.lng]) / 1000; l.coords.push([B.lat, B.lng, (await heights([[B.lat, B.lng]]))[0]]); }
+      if (!B.through && dist(end, [B.lat, B.lng]) > 30) { l.approxKm += dist(end, [B.lat, B.lng]) / 1000; l.coords.push([B.lat, B.lng, (await heights([[B.lat, B.lng]]))[0], true]); }
       l.coords = await alongTerrain(l.coords);
       approxKm += l.approxKm;
       full = full.concat(full.length ? l.coords.slice(1) : l.coords);
@@ -383,7 +404,7 @@ async function build(slug) {
   const limit = (order) => {
     const h = full.map((p) => p[2]);
     for (let n = 1; n < order.length; n++) {
-      const i = order[n], j = order[n - 1], max = 3 + 0.8 * dist(full[i], full[j]);
+      const i = order[n], j = order[n - 1], max = 3 + (trek.maxGrade ?? 0.8) * dist(full[i], full[j]); // maxGrade: a trek-config override for deep gorges
       h[i] = Math.min(h[j] + max, Math.max(h[j] - max, h[i]));
     }
     return h;
@@ -439,6 +460,7 @@ async function build(slug) {
 
   // A day that ends somewhere off the line (a descent through the next valley, as to Pheriche on
   // the way down from Everest) is routed on its own and measured along that route
+  const detours = [];
   async function offLine(from, to) {
     const l = await leg({ name: from.name, lat: from.lat, lng: from.lng }, to);
     const c = await alongTerrain(l.coords);
@@ -453,36 +475,98 @@ async function build(slug) {
     let up = 0, down = 0, ref = sm[0];
     for (const h of sm) { const d = h - ref; if (d >= 15) { up += d; ref = h; } else if (d <= -15) { down -= d; ref = h; } }
     console.log(`  ${from.name} → ${to.name} is off the line: routed on its own, ${(cc[cc.length - 1] / 1000).toFixed(1)} km`);
+    // Kept, so the map and the GPX draw the way the day really walks (a different way down)
+    detours.push({ from: from.name, to: to.name, km: +(cc[cc.length - 1] / 1000).toFixed(1), approxKm: +l.approxKm.toFixed(1),
+      line: simplify(c.map((p, i) => [p[0], p[1], Math.round(sm[i])]), 10).map(([la, lo, e]) => [+la.toFixed(5), +lo.toFixed(5), e]) });
     return { km: cc[cc.length - 1] / 1000, up, down, approx: l.approxKm > 0.5 };
   }
+
+  // A side trip: out from where the day starts to a summit or lake off the line, and back the same
+  // way. Routed like a leg of the line and kept, so the map and the GPX draw the way there, and the
+  // day's figures are measured on it rather than guessed
+  const sideTrips = [];
+  async function sideTrip(from, to) {
+    const known = sideTrips.find((s) => s.name === to.name && s.from === from.name);
+    if (known) return known;
+    const l = await leg({ name: from.name, lat: from.lat, lng: from.lng }, { name: to.name, lat: to.lat, lng: to.lng });
+    // The router starts and ends on the nearest mapped path: join it to the camp and the summit
+    if (dist(l.coords[0], [from.lat, from.lng]) > 30) { l.approxKm += dist(l.coords[0], [from.lat, from.lng]) / 1000; l.coords.unshift([from.lat, from.lng, 0]); l.coords[1][3] = true; }
+    const end = l.coords[l.coords.length - 1];
+    if (dist(end, [to.lat, to.lng]) > 30) { l.approxKm += dist(end, [to.lat, to.lng]) / 1000; l.coords.push([to.lat, to.lng, 0, true]); }
+    const c = await alongTerrain(l.coords);
+    const ele = await heights(c);
+    const cc = [0];
+    for (let i = 1; i < c.length; i++) cc.push(cc[i - 1] + dist(c[i - 1], c[i]));
+    // The same cleaning as the main line: median over ±100 m, then no step steeper than 4 in 5
+    const at = (x) => { let i = cc.findIndex((v) => v >= x); if (i <= 0) return ele[Math.max(i, 0)]; const d = cc[i] - cc[i - 1]; return d ? ele[i - 1] + ((ele[i] - ele[i - 1]) * (x - cc[i - 1])) / d : ele[i]; };
+    let h = c.map((_, i) => { const v = []; for (let x = Math.max(0, cc[i] - 100); x <= Math.min(cc.at(-1), cc[i] + 100); x += 10) v.push(at(x)); v.sort((a, b) => a - b); return v[v.length >> 1]; });
+    const lim = (order) => { const g = [...h]; for (let n = 1; n < order.length; n++) { const i = order[n], j = order[n - 1], m = 3 + 0.8 * (cc[Math.max(i, j)] - cc[Math.min(i, j)]); g[i] = Math.min(g[j] + m, Math.max(g[j] - m, g[i])); } return g; };
+    const ix = c.map((_, i) => i), fw = lim(ix), bw = lim([...ix].reverse());
+    h = h.map((_, i) => (fw[i] + bw[i]) / 2);
+    // The model reads narrow summits low: bend the end of the line up to the published height, at
+    // a 35% slope, as fit-heights does for the stops on the main line
+    const lift = (to.ele ?? 0) - h[h.length - 1];
+    if (lift > 0) { const span = lift / 0.35; h = h.map((v, i) => v + lift * Math.max(0, 1 - (cc.at(-1) - cc[i]) / span)); }
+    const line = c.map((p, i) => [p[0], p[1], Math.round(h[i])]);
+    const sm = line.map((_, i) => { let t = 0, n = 0; for (let k = 0; k < line.length; k++) if (Math.abs(cc[k] - cc[i]) <= 150) { t += line[k][2]; n++; } return t / n; });
+    let up = 0, down = 0, ref = sm[0];
+    for (const v of sm) { const d = v - ref; if (d >= 15) { up += d; ref = v; } else if (d <= -15) { down -= d; ref = v; } }
+    const trip = {
+      name: to.name, from: from.name, ele: to.ele ?? null,
+      km: +(cc.at(-1) / 1000).toFixed(1), up: Math.round(up / 10) * 10, down: Math.round(down / 10) * 10,
+      approxKm: +l.approxKm.toFixed(1),
+      line: simplify(line, 10).map(([la, lo, e]) => [+la.toFixed(5), +lo.toFixed(5), e]),
+    };
+    console.log(`  side trip ${from.name} → ${to.name}: ${trip.km} km each way, +${trip.up} −${trip.down}${trip.approxKm ? `, ${trip.approxKm} km off the mapped paths` : ""}`);
+    sideTrips.push(trip);
+    return trip;
+  }
+  const sideName = (s) => (typeof s === "string" ? s : s.name);
 
   const days = [];
   let here = found.get(name(trek.stops[0]));
   let hereIdx = 0;
   for (const [n, d] of (trek.days ?? []).entries()) {
     const day = n + 1;
-    if (d.rest) { days.push({ day, kind: "rest", from: here.name, to: here.name, sleepEle: here.ele, note: d.rest }); continue; }
+    if (d.rest) {
+      // A rest day can still climb something nearby and come back (Dzongri Top)
+      const sp = d.side && found.get(sideName(d.side));
+      if (sp) {
+        const s = await sideTrip(here, sp);
+        days.push({ day, kind: "rest", from: here.name, to: here.name, via: [sp.name], km: +(2 * s.km).toFixed(1), up: s.up + s.down, down: s.down + s.up, approx: s.approxKm > 0.5, sleepEle: here.ele, note: d.rest });
+      } else days.push({ day, kind: "rest", from: here.name, to: here.name, sleepEle: here.ele, note: d.rest });
+      continue;
+    }
     if (d.travel) { days.push({ day, kind: "travel", from: here.name, to: null, sleepEle: null, note: d.travel }); continue; }
     const vias = (d.via ?? []).filter((v) => !skipped.has(v));
     const route = [...vias, d.to].map((v) => found.get(v));
     if (route.some((p) => !p)) throw new Error(`Day ${day}: unknown place in ${JSON.stringify(d)}`);
     let km = 0, up = 0, down = 0, approx = false, idx = hereIdx;
     let at0 = here;
+    // The side trip goes first, from where the day starts: out to it and back, then on
+    const sidePlace = d.side && found.get(sideName(d.side));
+    if (d.side && !sidePlace && !skipped.has(sideName(d.side))) throw new Error(`Day ${day}: side trip ${sideName(d.side)} isn't in the trek's side list`);
+    if (sidePlace) {
+      const s = await sideTrip(here, sidePlace);
+      km += 2 * s.km; up += s.up + s.down; down += s.down + s.up;
+      approx ||= s.approxKm > 0.5;
+    }
     for (const p of route) {
       const B = nearestIdx(p, idx);
       // Estimated where you sleep makes the day's figures estimates; a pass placed by estimate
       // along the line only labels it, so it doesn't
       approx ||= estimated.has(p.name) && p === route[route.length - 1];
-      const s = B.off > 300 ? await offLine(at0, p) : stretch(idx, B.i);
+      // own: the day's last leg goes a different way from the line (down another valley), so it is
+      // routed on its own even though the place is on the line
+      const s = B.off > 300 || (d.own && p === route[route.length - 1]) ? await offLine(at0, p) : stretch(idx, B.i);
       approx ||= !!s.approx;
       km += s.km; up += s.up; down += s.down;
       idx = B.i;
       at0 = p;
     }
-    if (d.side) { km += d.side.km; up += d.side.up; down += d.side.up; }
     const to = found.get(d.to);
     days.push({
-      day, kind: "walk", from: here.name, to: to.name, via: [...vias, ...(d.side ? [d.side.name] : [])],
+      day, kind: "walk", from: here.name, to: to.name, via: [...(sidePlace ? [sidePlace.name] : []), ...vias],
       km: +km.toFixed(1), up: Math.round(up / 10) * 10, down: Math.round(down / 10) * 10, approx,
       sleepEle: to.ele, note: d.note ?? "",
     });
@@ -505,6 +589,8 @@ async function build(slug) {
     approxKm: +approxKm.toFixed(1),
     stops: stops.map(strip),
     side: side.map(strip),
+    sideTrips,
+    detours,
     days,
     sleepPlaces,
     line,
@@ -512,6 +598,8 @@ async function build(slug) {
 
   // The profile runs through each stop's published height, and the days' climbs follow it
   fitTrail(trail);
+  // Where the line has no mapped path under it, stretch by stretch, so the site can say where
+  try { await markTrail(trail); } catch (e) { console.warn(`  ! unmapped stretches not marked (${e.message}): run scripts/mark-unmapped.mjs ${slug}`); }
 
   await mkdir("src/lib/trails", { recursive: true });
   // The map services fail now and then, and a leg they fail on is drawn off the mapped paths: a build with

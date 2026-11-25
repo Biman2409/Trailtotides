@@ -9,7 +9,8 @@ import { execSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 
 const items = JSON.parse(readFileSync("scripts/research/landmarks.json", "utf8"));
-const UA = { "User-Agent": "trailtotides-research/1.0 (hello@trailtotides.com)" };
+// Map services ask for a contact: MAP_CONTACT gives one, if the person running this sets it
+const UA = { "User-Agent": process.env.MAP_CONTACT ? `research-fetch/1.0 (${process.env.MAP_CONTACT})` : "research-fetch/1.0" };
 
 const dist = (la1, lo1, la2, lo2) => {
   const r = Math.PI / 180;

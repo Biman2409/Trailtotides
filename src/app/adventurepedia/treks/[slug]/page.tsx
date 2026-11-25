@@ -22,6 +22,7 @@ import { Rich, BlockView, serif } from "../../blocks";
 import AskCompassButton from "../../activities/AskCompassButton";
 import TrailElevation from "@/components/ui/custom/TrailElevation";
 import { dayBands } from "@/lib/trails/dayBands";
+import { NO_TRACK, NO_TRACK_NOTE, sideTripOn, stretchPlace } from "@/lib/trails/shared";
 import TrekChecklist, { type ChecklistItem } from "./TrekChecklist";
 import CompareTreksButton from "./CompareTreksButton";
 import { textOf } from "@/lib/adventureText";
@@ -300,6 +301,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
               <Section id="itinerary" kicker="Itinerary" title="Day by day">
                 <p className="text-[15px] leading-[1.7] t-text-2 mb-5">
                   A typical plan, measured along the mapped trail: <b className="t-text">{fmt(trail.lengthKm)} km</b> with about <b className="t-text">{fmt(trail.ascentM)} m</b> of climbing{hardest ? <>. The biggest day is <b className="t-text">day {hardest.day}</b>, climbing {fmt(hardest.up ?? 0)} m</> : null}. Operators vary it a little{(trail.approxKm ?? 0) > 0 ? "; figures marked ≈ are estimates where the path isn't mapped" : ""}.
+                  {(trail.unmapped?.length ?? 0) > 0 && <> <b className="t-text">{NO_TRACK}:</b> {trail.unmapped!.map((s) => `km ${s.fromKm.toFixed(1)}–${s.toKm.toFixed(1)} ${stretchPlace(trail, s)}`).join("; ")}. {NO_TRACK_NOTE}</>}
                 </p>
                 <ol className="relative">
                   {trail.days.map((d, i) => {
@@ -314,7 +316,15 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
                         </span>
                         <div className="min-w-0 flex-1 rounded-2xl p-4" style={card}>
                           <p className="flex items-center gap-2 text-[15.5px] font-semibold t-text"><Icon className="w-4 h-4 shrink-0" style={{ color: "var(--accent-ink)" }} />{title}</p>
-                          {d.via && d.via.length > 0 && <p className="text-[13px] t-text-3 mt-0.5">via {d.via.join(", ")}</p>}
+                          {(() => {
+                            // A side trip off the main line is named as one; other places are just "via"
+                            const side = sideTripOn(trail, d);
+                            const vias = (d.via ?? []).filter((v) => v !== side?.name);
+                            return <>
+                              {side && <p className="text-[13px] mt-0.5" style={{ color: "#0e7c86" }}>▲ Side trip to {side.name}{side.ele != null ? ` (${fmt(side.ele)} m)` : ""}: {side.km} km each way from {side.from}, out and back</p>}
+                              {vias.length > 0 && <p className="text-[13px] t-text-3 mt-0.5">via {vias.join(", ")}</p>}
+                            </>;
+                          })()}
                           {d.kind !== "travel" && d.note && <p className="text-[14px] leading-[1.6] t-text-2 mt-1.5">{d.note}</p>}
                           {d.kind === "walk" && (
                             <p className="flex flex-wrap gap-x-4 gap-y-1 mt-2.5 text-[13px] tabular-nums t-text-2">

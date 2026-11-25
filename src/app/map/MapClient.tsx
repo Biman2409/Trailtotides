@@ -60,6 +60,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const light = mounted && resolvedTheme === "light";
   const [desktop, setDesktop] = useState(false);
   const [areaH, setAreaH] = useState(700);
+  const [areaW, setAreaW] = useState(1400);
   const areaRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<MapApi | null>(null);
 
@@ -143,7 +144,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   useEffect(() => {
     const el = areaRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(() => setAreaH(el.clientHeight));
+    const ro = new ResizeObserver(() => { setAreaH(el.clientHeight); setAreaW(el.clientWidth); });
     ro.observe(el);
     return () => ro.disconnect();
   }, [mounted]);
@@ -237,6 +238,15 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const gpxFor = selectedAdv && trail?.slug === selectedAdv.slug ? selectedAdv : null;
   const itineraryAdv = itineraryFor && selectedAdv?.slug === itineraryFor ? selectedAdv : null;
   const itineraryTrail = itineraryAdv && trail?.slug === itineraryAdv.slug ? trail : null;
+  // The panel and the sheet show the list or one adventure in the same scroller: an adventure
+  // opens at its top (not wherever the list was scrolled to), and Back returns to the list's place
+  const panelScrollRef = useRef<HTMLDivElement>(null), sheetScrollRef = useRef<HTMLDivElement>(null);
+  const listScroll = useRef(0);
+  const rememberListScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => { if (!selected) listScroll.current = e.currentTarget.scrollTop; }, [selected]);
+  useEffect(() => {
+    for (const el of [panelScrollRef.current, sheetScrollRef.current]) if (el) el.scrollTop = selected ? 0 : listScroll.current;
+  }, [selected]);
+
   // An adventure opened from search gets its pin even if a filter hides it, like Compass picks;
   // the counts and the list still follow the filters
   const pinned = useMemo(() => (selectedAdv && !shown.includes(selectedAdv) ? [...shown, selectedAdv] : shown), [shown, selectedAdv]);
@@ -248,10 +258,15 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
   const sheetH = sheet === "peek" ? SHEET.peek : Math.round(areaH * SHEET[sheet]);
   // The itinerary panel sits beside the side panel on a desktop, so the trail moves clear of both
   const itinOpen = !!itineraryFor && itineraryFor === selected;
-  const itinLeft = panelOpen ? GAP + PANEL_W + 44 : GAP;
+  // Beside the side panel only when that still leaves a useful strip of map (~420 px) for the
+  // trail; on a narrower screen it covers the side panel instead (the adventure it belongs to)
+  const itinBeside = panelOpen && areaW >= GAP + PANEL_W + 44 + ITIN_W + 420;
+  const itinLeft = itinBeside ? GAP + PANEL_W + 44 : GAP;
   const insets = desktop
     ? { left: itinOpen ? itinLeft + ITIN_W + GAP : panelOpen ? GAP + PANEL_W + GAP : 0, bottom: 16 }
-    : { left: 0, bottom: sheetH, top: 60 };
+    // On a phone the GPX and Fly in 3D buttons sit under the filter row while a trail is shown:
+    // frame the trail below them, so they don't cover its stops
+    : { left: 0, bottom: sheetH, top: gpxFor ? 108 : 60 };
   // When the itinerary panel opens or closes beside the side panel, move the trail into what's left
   useEffect(() => {
     if (!desktop || !trail || trail.slug !== selected) return;
@@ -481,6 +496,17 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
         {shown.length !== adventures.length && <span className="block mt-1 text-[11px] text-white/40">{shown.length} of {adventures.length} match your filters</span>}
       </p>
       <div className="ml-auto flex items-center gap-2 text-[11.5px] shrink-0">
+        {/* The order, said and changeable where the list is, not only inside Filters */}
+        {!nearMe && (
+          <label className="inline-flex items-center gap-1 text-white/50" title={sortKey === "recommended" ? "Bookable and in season first, then easier before harder" : undefined}>
+            <span className="sr-only sm:not-sr-only">Sort</span>
+            <select value={sortKey} onChange={(e) => setSort(e.target.value as SortKey)} aria-label="Sort the list"
+              className="bg-transparent font-semibold text-white/75 hover:text-white py-1.5 pr-1 cursor-pointer outline-none [&>option]:text-black">
+              {(Object.keys(SORT_LABELS) as SortKey[]).filter((k) => k !== "match" || canFit).map((k) => <option key={k} value={k}>{SORT_LABELS[k]}</option>)}
+            </select>
+          </label>
+        )}
+        {nearMe && <span className="text-white/50">Nearest first</span>}
         {listed.length < shown.length && listed.length > 0 && (
           <button type="button" onClick={showAll} className="font-semibold text-white/60 hover:text-white py-1.5">Show all</button>
         )}
@@ -523,7 +549,8 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
 
   const filtersButton = (
     <button type="button" onClick={() => setFiltersOpen(true)} aria-expanded={filtersOpen}
-      className="tm-iconbtn-lg relative" data-on={filtersOpen || panelCount(f) > 0 || undefined} aria-label="Filters">
+      className="tm-iconbtn-lg relative" data-on={filtersOpen || panelCount(f) > 0 || undefined} aria-label="Filters"
+      title="Filters: difficulty, budget, season, length and sort">
       <SlidersHorizontal className="w-4 h-4" />
       {panelCount(f) > 0 && <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-[#ff5100] text-[#1c1814] text-[9px] font-bold grid place-items-center">{panelCount(f)}</span>}
     </button>
@@ -609,7 +636,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
                 {filterChips}
               </div>
               {!selectedAdv && <div className="px-3.5 pt-3 pb-2">{statusLine}</div>}
-              <div className={`flex-1 overflow-y-auto px-3.5 tm-scroll ${selectedAdv ? "pt-3" : "pb-3.5 pt-1"}`}>{body}</div>
+              <div ref={panelScrollRef} onScroll={rememberListScroll} className={`flex-1 overflow-y-auto px-3.5 tm-scroll ${selectedAdv ? "pt-3" : "pb-3.5 pt-1"}`}>{body}</div>
             </aside>
 
             <div className="absolute z-[1000] top-3 flex items-center gap-1.5" style={{ right: 56 }}>
@@ -661,7 +688,7 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
               </FlyTrail>
             )}
 
-            <MobileSheet height={sheetH} state={sheet} onState={setSheet} areaH={areaH}>
+            <MobileSheet height={sheetH} state={sheet} onState={setSheet} areaH={areaH} scrollRef={sheetScrollRef} onScroll={rememberListScroll}>
               {/* An open adventure gets the whole sheet: on a phone the card is the point, so
                   Compass, the count and the legend step aside until you go back */}
               {!selectedAdv && (
@@ -717,8 +744,9 @@ export default function MapClient({ trailSlugs = [] }: { trailSlugs?: string[] }
 
 // ── Phone bottom sheet: tap the handle to step, or drag it ─────────────────────
 
-function MobileSheet({ height, state, onState, areaH, children }: {
+function MobileSheet({ height, state, onState, areaH, children, scrollRef, onScroll }: {
   height: number; state: SheetState; onState: (s: SheetState) => void; areaH: number; children: React.ReactNode;
+  scrollRef?: React.Ref<HTMLDivElement>; onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
 }) {
   const drag = useRef<{ y: number; h: number } | null>(null);
   const [dragH, setDragH] = useState<number | null>(null);
@@ -745,7 +773,7 @@ function MobileSheet({ height, state, onState, areaH, children }: {
       >
         <span className="w-10 h-1.5 rounded-full bg-white/25" />
       </button>
-      <div className={`flex-1 min-h-0 tm-scroll ${state === "peek" ? "overflow-hidden" : "overflow-y-auto"}`}>{children}</div>
+      <div ref={scrollRef} onScroll={onScroll} className={`flex-1 min-h-0 tm-scroll ${state === "peek" ? "overflow-hidden" : "overflow-y-auto"}`}>{children}</div>
     </section>
   );
 }

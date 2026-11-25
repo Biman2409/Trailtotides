@@ -35,7 +35,7 @@ export default function LayersMenu({
 
   return (
     <div ref={ref} className="relative">
-      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label="Map layers"
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label="Map layers" title="Map layers: map or satellite"
         className="tm-iconbtn-lg relative" data-on={open || undefined}>
         <Layers className="w-4 h-4" />
         {overlaysOn > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#eab308] text-[#1a1200] text-[9px] font-bold grid place-items-center">{overlaysOn}</span>}

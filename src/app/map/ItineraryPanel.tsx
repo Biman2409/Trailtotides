@@ -5,7 +5,7 @@ import { X, Download, ArrowRight, Box, ArrowUp, ArrowDown, BedDouble, Route, Mou
 import type { Adventure } from "@/lib/data";
 import TrailElevation from "@/components/ui/custom/TrailElevation";
 import { dayBands } from "@/lib/trails/dayBands";
-import { trailClimbM, trailHighPoint, trailProfile, trailWalkKm, type Trail } from "@/lib/trails/shared";
+import { sideTripOn, trailClimbM, trailHighPoint, trailProfile, trailWalkKm, type Trail } from "@/lib/trails/shared";
 import { hasTrekGuide, trekGuideHref } from "@/lib/trekGuides";
 import FlyTrail from "./FlyTrail";
 
@@ -58,6 +58,12 @@ export default function ItineraryPanel({ adventure: a, trail, onClose, phone }: 
         </FlyTrail>
 
         <TrailElevation pts={pts} bands={dayBands(trail)} compact peakM={top.ele} />
+        {/* The profile is the main route; say so when the high point is on a side trip */}
+        {(trail.sideTrips ?? []).length > 0 && (
+          <p className="text-[11.5px] text-white/50 -mt-2">
+            The profile is the main route. Side trips ({trail.sideTrips!.map((s) => `${s.name}${s.ele != null ? `, ${fmt(s.ele)} m` : ""}`).join("; ")}) go out and back from camp and are drawn dashed on the map.
+          </p>
+        )}
 
         <ol className="space-y-2">
           {trail.days.map((d) => (
@@ -73,7 +79,15 @@ export default function ItineraryPanel({ adventure: a, trail, onClose, phone }: 
                     : d.to && d.to !== d.from ? <><Place name={d.from} n={stopNo(d.from)} /> → <Place name={d.to} n={stopNo(d.to)} /></>
                     : <Place name={d.from} n={stopNo(d.from)} />}
                 </p>
-                {d.via?.length ? <p className="text-[11px] text-white/45">via {d.via.join(", ")}</p> : null}
+                {(() => {
+                  // A side trip off the main line is named as one; other places are just "via"
+                  const side = sideTripOn(trail, d);
+                  const vias = (d.via ?? []).filter((v) => v !== side?.name);
+                  return <>
+                    {side && <p className="text-[11px] text-[#5fd3dc]">▲ Side trip to {side.name}: {side.km} km each way, out and back</p>}
+                    {vias.length ? <p className="text-[11px] text-white/45">via {vias.join(", ")}</p> : null}
+                  </>;
+                })()}
                 {d.note && <p className="text-[12px] text-white/60 leading-snug mt-1">{d.note}</p>}
                 {d.kind === "walk" && (
                   <p className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-[11.5px] text-white/60 tabular-nums">

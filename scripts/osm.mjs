@@ -5,8 +5,12 @@
 //                connect them: short gaps between paths are bridged and counted
 // The data is OpenStreetMap's (ODbL).
 
+// Answered from a local Geofabrik extract when one covers the area (scripts/osm-local.mjs), else Overpass
+import { hasLocal, localGraph, localPlaceElements } from "./osm-local.mjs";
+
 const MIRRORS = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter", "https://overpass.private.coffee/api/interpreter"];
-const UA = { "User-Agent": "TrailToTides/1.0 (hello@trailtotides.com)" };
+// Map services ask for a contact: MAP_CONTACT gives one, if the person running this sets it
+const UA = { "User-Agent": process.env.MAP_CONTACT ? `trail-builder/1.0 (${process.env.MAP_CONTACT})` : "trail-builder/1.0" };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export function dist([la1, lo1], [la2, lo2]) {
@@ -67,7 +71,7 @@ export async function placesNear(box) {
     `["name"]["historic"]`,
     `["name"]["landuse"="meadow"]`,
   ];
-  const j = await overpass(`[out:json][timeout:120];\n(\n${filters.map((f) => `  node${f}${b};\n  way${f}${b};`).join("\n")}\n);\nout center tags;`);
+  const j = hasLocal(box) ? localPlaceElements(box) : await overpass(`[out:json][timeout:120];\n(\n${filters.map((f) => `  node${f}${b};\n  way${f}${b};`).join("\n")}\n);\nout center tags;`);
   return j.elements.map((el) => {
     const t = el.tags ?? {};
     const lat = el.lat ?? el.center?.lat, lng = el.lon ?? el.center?.lon;
@@ -114,6 +118,14 @@ export function matchPlace(index, name, { near, maxD, as = name }) {
 // ── Paths ────────────────────────────────────────────────────────────────────
 const WALKABLE = "^(path|footway|track|bridleway|steps|cycleway|pedestrian|unclassified|residential|service|tertiary|secondary|primary|trunk|living_street|road)$";
 
+/** Every walkable way OpenStreetMap has in a [south, west, north, east] box, as [lat, lng] polylines */
+export async function waysNear(box) {
+  const j = hasLocal(box) ? localGraph(box) : await overpass(`[out:json][timeout:180];way["highway"~"${WALKABLE}"]${bboxOf(box)};(._;>;);out skel qt;`);
+  const pos = new Map();
+  for (const el of j.elements) if (el.type === "node") pos.set(el.id, [el.lat, el.lon]);
+  return j.elements.filter((el) => el.type === "way").map((el) => el.nodes.map((n) => pos.get(n)).filter(Boolean)).filter((w) => w.length > 1);
+}
+
 class Heap {
   constructor() { this.a = []; }
   push(k, v) { const a = this.a; a.push([k, v]); let i = a.length - 1; while (i) { const p = (i - 1) >> 1; if (a[p][0] <= a[i][0]) break; [a[p], a[i]] = [a[i], a[p]]; i = p; } }
@@ -134,7 +146,7 @@ class Heap {
 export async function pathRoute(a, b, { bridge = 400, reach = 1500 } = {}) {
   const pad = Math.max(0.02, 0.3 * Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1])));
   const box = [Math.min(a[0], b[0]) - pad, Math.min(a[1], b[1]) - pad, Math.max(a[0], b[0]) + pad, Math.max(a[1], b[1]) + pad];
-  const j = await overpass(`[out:json][timeout:120];way["highway"~"${WALKABLE}"]${bboxOf(box)};(._;>;);out skel qt;`);
+  const j = hasLocal(box) ? localGraph(box) : await overpass(`[out:json][timeout:120];way["highway"~"${WALKABLE}"]${bboxOf(box)};(._;>;);out skel qt;`);
   const pos = new Map(), adj = new Map(), endCount = new Map();
   const edge = (u, v, w, virt) => { if (!adj.has(u)) adj.set(u, []); adj.get(u).push([v, w, virt]); };
   for (const el of j.elements) if (el.type === "node") pos.set(el.id, [el.lat, el.lon]);
@@ -187,12 +199,13 @@ export async function pathRoute(a, b, { bridge = 400, reach = 1500 } = {}) {
   const ids = [B], virts = [];
   for (let u = B; u !== A;) { const [p, virt] = prev.get(u); ids.push(p); virts.push(virt); u = p; }
   ids.reverse(); virts.reverse();
-  // Bridged stretches keep only their ends: the builder draws them along the terrain
+  // Bridged stretches keep only their ends, the far end flagged (a third value, true): with no
+  // path or track there, the builder draws them straight
   const coords = [pos.get(ids[0])];
   let bridgedM = 0;
   for (let i = 1; i < ids.length; i++) {
     if (virts[i - 1]) bridgedM += dist(pos.get(ids[i - 1]), pos.get(ids[i]));
-    coords.push(pos.get(ids[i]));
+    coords.push(virts[i - 1] ? [...pos.get(ids[i]), true] : pos.get(ids[i]));
   }
   return { coords, bridgedM };
 }
