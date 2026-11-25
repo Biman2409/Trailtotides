@@ -24,9 +24,17 @@
 //         { rest, side? } stays put, optionally with a side trip. Only the days on foot: drives in
 //         and out aren't listed.
 // Treks with too little of their route on OpenStreetMap to place honestly aren't listed:
-// bagini-glacier (no mapped path or uploaded GPS track up the Bagini valley, checked 2026-11-25),
-// gulabi-kantha (neither the summit nor its camps are on the map), phulara-ridge, panch-kedar,
-// ranthan-kharak, surya-top, bajre-dara, doodhpathri.
+// (checked 2026-11-25; routes from operators' itineraries, then looked for on OSM by name, in
+// Nominatim and in uploaded GPS traces). Each needs a GPS track shared with permission:
+//   bagini-glacier  Jumma, Dronagiri, Langatuli, Lower Bagini are mapped; no path or trace up the valley
+//   gulabi-kantha   Hanuman Chatti, Kandola, Seema Thatch, summit (~3,790 m): only Hanuman Chatti mapped
+//   phulara-ridge   Sankri, Juda ka Talab, Bhoj Gadi, the ridge, Pushtara, Taluka: Bhoj Gadi and Pushtara unmapped
+//   surya-top       Barsu/Raithal, Dayara, Devkund, Siyari bugyal, summit: Devkund and the summit unmapped
+//                   (it's above Dayara in Uttarkashi, not Chamoli as its description says)
+//   ranthan-kharak  Gogina, Namik, Bajimanian Kharak, Thal Tok are mapped; Ranthan Kharak itself isn't
+//   bajre-dara      Melli Aching, Goru Jurey, Bhanjyang, the ridge, Lamathang, Khecheopalri: only the lake mapped
+//   doodhpathri     Doodhpathri to Gurwansar is mapped; Gurwansar to Tosa Maidan (12.5 km) has no path or full trace
+//   panch-kedar     five separate temple walks joined by road drives: not one trail line
 
 const LOHAJUNG = { name: "Lohajung", at: [30.1283, 79.6190] };
 const SANKRI = { name: "Sankri", at: [31.07802, 78.18411] };
