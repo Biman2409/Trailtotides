@@ -142,7 +142,7 @@ const ADVENTURE_TEXT: Record<string, AdventureText> = {
     safetyNotes: "Darwa Pass can hold snow until late May. Dodital gets crowded during pilgrim season — camp early to secure a good spot. Trail well-marked but forest sections can be confusing.",
   },
   "doodhpathri": {
-    whoNot: "You want snow peaks, glaciers or high passes · You need phone signal: prepaid SIMs from outside J&K don't work there (postpaid does) · You want any comforts: it's tents and shepherd huts",
+    whoNot: "You want snow peaks or glaciers · You need phone signal: prepaid SIMs from outside J&K don't work there (postpaid does) · You want any comforts: it's tents and shepherd huts",
     safetyNotes: "Permits required for foreign nationals. Trail is remote — carry extra food and a guide from Srinagar/Doodhpathri. Weather can change rapidly in August.",
   },
   "gokyo-lakes": {

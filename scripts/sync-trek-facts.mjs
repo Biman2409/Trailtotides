@@ -9,6 +9,7 @@
 // Run after build-trail.mjs: node scripts/sync-trek-facts.mjs
 
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { TREKS } from "./trek-configs.mjs";
 
 const DATA = "src/lib/data.ts";
 const DIR = "src/lib/trails/";
@@ -80,7 +81,10 @@ for (const file of readdirSync(DIR).filter((f) => f.endsWith(".json"))) {
   const high = peak > (named.ele ?? 0) + 40 ? { name: null, ele: peak } : { name: named.name, ele: named.ele ?? peak };
   const old = entry.match(/\baltitude: "[\d,]+m(?: \(([^)]*)\))?"/)?.[1];
   const note = old && high.name ? (high.name.toLowerCase().includes(old.toLowerCase()) ? old : high.name) : null;
-  set("altitude", `${high.ele.toLocaleString("en-IN")}m${note ? ` (${note})` : ""}`, false);
+  // A trek whose line stops short of its summit (no recorded track up it) keeps the summit's
+  // published height, given as highPoint in trek-configs.mjs
+  const given = TREKS[trail.slug]?.highPoint;
+  set("altitude", given ?? `${high.ele.toLocaleString("en-IN")}m${note ? ` (${note})` : ""}`, false);
   let pin = keyPoint(trail, entry.match(/\bname: "([^"]*)"/)?.[1] ?? trail.slug);
   // A stop can sit a little off the drawn line (a campsite beside the path): the pin goes on the
   // line itself, at its nearest point. Side trips are drawn as their own points and keep theirs

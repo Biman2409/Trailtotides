@@ -25,15 +25,11 @@
 //         and out aren't listed.
 // Treks with too little of their route on OpenStreetMap to place honestly aren't listed:
 // (checked 2026-11-25; routes from operators' itineraries, then looked for on OSM by name, in
-// Nominatim and in uploaded GPS traces). Each needs a GPS track shared with permission:
-//   bagini-glacier  Jumma, Dronagiri, Langatuli, Lower Bagini are mapped; no path or trace up the valley
-//   gulabi-kantha   Hanuman Chatti, Kandola, Seema Thatch, summit (~3,790 m): only Hanuman Chatti mapped
-//   phulara-ridge   Sankri, Juda ka Talab, Bhoj Gadi, the ridge, Pushtara, Taluka: Bhoj Gadi and Pushtara unmapped
-//   surya-top       Barsu/Raithal, Dayara, Devkund, Siyari bugyal, summit: Devkund and the summit unmapped
-//                   (it's above Dayara in Uttarkashi, not Chamoli as its description says)
-//   ranthan-kharak  Gogina, Namik, Bajimanian Kharak, Thal Tok are mapped; Ranthan Kharak itself isn't
-//   bajre-dara      Melli Aching, Goru Jurey, Bhanjyang, the ridge, Lamathang, Khecheopalri: only the lake mapped
-//   doodhpathri     Doodhpathri to Gurwansar is mapped; Gurwansar to Tosa Maidan (12.5 km) has no path or full trace
+// Nominatim and in uploaded GPS traces). Treks that needed more (bagini-glacier, phulara-ridge,
+// surya-top, ranthan-kharak, gulabi-kantha, doodhpathri) follow reference GPS tracks instead
+// (research/gpx-sources.md). Still waiting for one:
+//   bajre-dara      Melli Aching, Goru Jurey, Bhanjyang, the ridge, Lamathang, Khecheopalri: only the lake
+//                   is mapped, and no GPS track of the route was found
 //   panch-kedar     five separate temple walks joined by road drives: not one trail line
 
 const LOHAJUNG = { name: "Lohajung", at: [30.1283, 79.6190] };
@@ -666,6 +662,158 @@ export const TREKS = {
       { to: "Rudranath", note: "The long climb through forest and over open ridges to the rock shrine" },
       { to: "Panar", note: "Darshan at dawn, then down to the wide Panar meadows" },
       { to: "Sagar", note: "Through forest to Sagar village and the road" },
+    ],
+  },
+
+  "bagini-glacier": {
+    near: "Chamoli, Uttarakhand",
+    // No mapped path up the Bagini valley. The camps, and guide points every 350 m, are read off
+    // GPS tracks White Magic Guides recorded in October 2026 (research/gpx-sources.md); the line
+    // between them is drawn along the terrain. The road now reaches about 3,085 m below
+    // Dronagiri, so the walk starts there rather than at Jumma
+    stops: [
+      { name: "Dronagiri road end", at: [30.60738, 79.85053], exact: true, ele: 3085 },
+      { name: "Dronagiri", at: [30.59875, 79.86214], exact: true, ele: 3466 },
+      { name: "Langatuli", at: [30.59346, 79.89005], exact: true, ele: 3976 },
+      { name: "Changabang Base Camp", at: [30.58123, 79.92157], exact: true, ele: 4413 },
+    ],
+    guide: [
+      [[30.60638, 79.85243], [30.60388, 79.85353], [30.60344, 79.85630], [30.60161, 79.85834], [30.60002, 79.85929]],
+      [[30.59886, 79.86574], [30.59786, 79.86906], [30.59824, 79.87071], [30.59861, 79.87398], [30.59863, 79.87697], [30.59840, 79.88022], [30.59697, 79.88300], [30.59550, 79.88590]],
+      [[30.59215, 79.89338], [30.59027, 79.89620], [30.58968, 79.89942], [30.58948, 79.90264], [30.58907, 79.90597], [30.58807, 79.90892], [30.58652, 79.91169], [30.58480, 79.91441], [30.58338, 79.91732]],
+    ],
+    days: [
+      { to: "Dronagiri", note: "From the road end up to Dronagiri, a Bhotia village that worships the mountain" },
+      { rest: "Acclimatisation day in Dronagiri" },
+      { to: "Langatuli", note: "Up the Bagini valley to a meadow camp beside the moraine" },
+      { to: "Changabang Base Camp", note: "Over moraine to the base camp on the Bagini glacier, below Changabang's north face" },
+      { to: "Dronagiri", note: "Back down the valley" },
+      { to: "Dronagiri road end", note: "Down to the road" },
+    ],
+  },
+
+  // The five below follow reference GPS tracks (research/gpx-sources.md): camps and guide points
+  // (one list per leg, in walking order) are read off them, and the line between is routed over
+  // OpenStreetMap's paths or drawn along the terrain here
+
+  "phulara-ridge": {
+    near: "Uttarkashi, Uttarakhand",
+    stops: [
+      SANKRI,
+      { name: "Sikolta Thach", at: [31.0408, 78.1866], exact: true },
+      { name: "Bhoj Gadi", at: [31.0231, 78.2043], exact: true },
+      { name: "Phulara Top", at: [31.029, 78.221], exact: true },
+      { name: "Vijay Thach", at: [31.0469, 78.2176], exact: true },
+      { name: "Taluka road", at: [31.07175, 78.21327], exact: true },
+    ],
+    guide: [
+      [[31.06636, 78.18907], [31.06421, 78.18798], [31.06156, 78.18686], [31.05880, 78.18713], [31.05693, 78.18936], [31.05423, 78.18992], [31.05222, 78.18813], [31.05209, 78.18499], [31.05054, 78.18600], [31.04794, 78.18638], [31.04527, 78.18530], [31.04249, 78.18519]],
+      [[31.03686, 78.18838], [31.03502, 78.18800], [31.03237, 78.18741], [31.03040, 78.18821], [31.02813, 78.18996], [31.02646, 78.19316], [31.02537, 78.19615], [31.02421, 78.19841], [31.02352, 78.20203]],
+      [[31.02381, 78.20793], [31.02337, 78.21125], [31.02503, 78.21400], [31.02670, 78.21681]],
+      [[31.02996, 78.21895], [31.03051, 78.21694], [31.03332, 78.21706], [31.03484, 78.21645], [31.03612, 78.21441], [31.03867, 78.21649], [31.04129, 78.21690], [31.04444, 78.21780]],
+      [[31.04953, 78.22016], [31.04545, 78.21318], [31.04557, 78.21284], [31.04633, 78.21212], [31.04832, 78.21268], [31.05131, 78.21420], [31.05384, 78.21343], [31.05586, 78.21196], [31.05882, 78.21182], [31.06212, 78.21164], [31.06469, 78.21310], [31.06679, 78.21392], [31.06994, 78.21453]],
+    ],
+    days: [
+      { to: "Sikolta Thach", note: "From Sankri up through pine and oak, past the Juda ka Talab lake, to a forest meadow" },
+      { to: "Bhoj Gadi", note: "Steeply up through the last trees onto open meadows facing Kedarkantha" },
+      { to: "Vijay Thach", via: ["Phulara Top"], note: "The ridge day: along the open crest past Phulara Top, with Swargarohini and Kala Nag ahead, then down to a meadow camp" },
+      { to: "Taluka road", note: "Down through forest to the road between Sankri and Taluka" },
+    ],
+  },
+
+  "surya-top": {
+    near: "Uttarkashi, Uttarakhand",
+    stops: [
+      { name: "Barsu", at: [30.84291, 78.60177], exact: true },
+      { name: "Utron", at: [30.8597, 78.575], exact: true },
+      { name: "Siyari", at: [30.8732, 78.5631], exact: true },
+      { name: "Surya Top", at: [30.8834, 78.5661], exact: true },
+      { name: "Barsu ka Gahra", at: [30.8614, 78.5797], exact: true },
+      { name: "Barsu", at: [30.84291, 78.60177], exact: true },
+    ],
+    guide: [
+      [[30.85101, 78.58960], [30.85281, 78.58755], [30.85396, 78.58626], [30.85666, 78.58384], [30.85638, 78.58415], [30.85659, 78.58371], [30.85808, 78.58246], [30.86036, 78.58313], [30.86019, 78.58029], [30.85942, 78.57742]],
+      [[30.86205, 78.57284], [30.86281, 78.57000], [30.86382, 78.56815], [30.86557, 78.56543], [30.86769, 78.56452], [30.87049, 78.56484]],
+      [[30.87513, 78.55971], [30.87765, 78.56044], [30.87932, 78.56252], [30.88147, 78.56504]],
+      [[30.88125, 78.56577], [30.88004, 78.56375], [30.87803, 78.56048], [30.87716, 78.55948], [30.87517, 78.55966], [30.87270, 78.56024], [30.87030, 78.56180], [30.86684, 78.56128], [30.86470, 78.56108], [30.86470, 78.56250], [30.86286, 78.56556], [30.86096, 78.56814], [30.85825, 78.57192], [30.85786, 78.57325], [30.85958, 78.57478], [30.86104, 78.57654], [30.85938, 78.57884]],
+      [[30.86090, 78.58248], [30.85871, 78.58246], [30.85739, 78.58403], [30.85547, 78.58506], [30.85360, 78.58658], [30.85288, 78.58766], [30.85116, 78.58927], [30.85029, 78.59136], [30.84939, 78.59214], [30.84828, 78.59171], [30.84803, 78.59297], [30.84792, 78.59266], [30.84827, 78.59545], [30.84709, 78.59595], [30.84730, 78.59704], [30.84625, 78.59782], [30.84524, 78.60083]],
+    ],
+    days: [
+      { to: "Utron", note: "From Barsu up through oak and rhododendron, past the Pichkiya clearing" },
+      { to: "Siyari", note: "Over Phool Gally onto the open Siyari meadows" },
+      { to: "Barsu ka Gahra", via: ["Surya Top"], note: "Summit day: up the ridge to Surya Top for sunrise on Bandarpunch, Srikanth and the Gangotri peaks, then down to Barsu ka Gahra" },
+      { to: "Barsu", note: "Down through the forest to the village" },
+    ],
+  },
+
+  "ranthan-kharak": {
+    near: "Bageshwar, Uttarakhand",
+    stops: [
+      { name: "Gogina", at: [30.08111, 80.07651], exact: true },
+      { name: "Namik", at: [30.0988, 80.0898], exact: true },
+      { name: "Bajimanian Kharak", at: [30.0812, 80.1139], exact: true },
+      { name: "Thal Tok", at: [30.0982, 80.1238], exact: true },
+      { name: "Ranthan Top", at: [30.10801, 80.13376], exact: true },
+    ],
+    guide: [
+      [[30.08407, 80.07630], [30.08385, 80.07517], [30.08501, 80.07677], [30.08772, 80.07707], [30.09028, 80.07918], [30.09301, 80.08054], [30.09520, 80.08273], [30.09798, 80.08379], [30.09752, 80.08515], [30.09891, 80.08554], [30.10025, 80.08759]],
+      [[30.10011, 80.09451], [30.10165, 80.09597], [30.10089, 80.10195], [30.10089, 80.10281], [30.09978, 80.10560], [30.09850, 80.10889], [30.09714, 80.11079], [30.09399, 80.11133], [30.09137, 80.11091], [30.08929, 80.11177], [30.08788, 80.11264], [30.08476, 80.11375]],
+      [[30.07983, 80.11536], [30.07888, 80.11801], [30.07974, 80.12180], [30.08292, 80.12309], [30.08499, 80.12434], [30.08785, 80.12339], [30.08920, 80.12092], [30.08796, 80.12244], [30.09170, 80.12249], [30.09506, 80.12333]],
+      [[30.09677, 80.12662], [30.09729, 80.12962], [30.10003, 80.13016], [30.10344, 80.13111], [30.10462, 80.13306]],
+    ],
+    days: [
+      { to: "Namik", note: "From the road at Gogina across the river and up to Namik village" },
+      { to: "Bajimanian Kharak", note: "Through dense forest to the first high meadow" },
+      { to: "Thal Tok", note: "Up through the herders' kharaks to the meadow below the top" },
+      { to: "Thal Tok", via: ["Ranthan Top"], note: "Up to Ranthan Top for Nanda Devi, Trishul and Panchachuli, and back down to camp" },
+      { to: "Namik", note: "Back down through the forest" },
+      { to: "Gogina", note: "Down to the road" },
+    ],
+  },
+
+  "gulabi-kantha": {
+    near: "Uttarkashi, Uttarakhand",
+    // The summit (about 3 km above Seema Thatch) has no recorded track, so the line ends at the
+    // camp; the trek's height stays the summit's published one
+    highPoint: "4,023m",
+    stops: [
+      { name: "Hanuman Chatti", at: [30.9312, 78.3996] },
+      { name: "Kandola", at: [30.9189, 78.4301], exact: true },
+      { name: "Seema Thatch", at: [30.91115, 78.4669], exact: true },
+    ],
+    guide: [
+      [[30.92971, 78.40440], [30.92736, 78.40568], [30.92660, 78.40856], [30.92451, 78.41108], [30.92356, 78.41408], [30.92352, 78.41748], [30.92157, 78.42045], [30.92081, 78.42340], [30.91979, 78.42649]],
+      [[30.91803, 78.43286], [30.91629, 78.43572], [30.91410, 78.43786], [30.91498, 78.44107], [30.91477, 78.44564], [30.91350, 78.44642], [30.91142, 78.44857], [30.90887, 78.45001], [30.90868, 78.45329], [30.90866, 78.45616], [30.90899, 78.45992], [30.90935, 78.46292], [30.90996, 78.46551]],
+    ],
+    days: [
+      { to: "Seema Thatch", note: "From Hanuman Chatti up past Nishni village and the Kandola shepherds' huts to the high meadow camp" },
+      { rest: "Summit day: about 3 km up to Gulabi Kantha for Bandarpunch, Swargarohini and the Gangotri peaks, and back. The summit path isn't drawn: there's no recorded track of it yet" },
+      { to: "Hanuman Chatti", note: "Back down past Kandola and Nishni" },
+    ],
+  },
+
+  doodhpathri: {
+    near: "Budgam, Jammu and Kashmir",
+    stops: [
+      { name: "Doodhpathri", at: [33.8614, 74.5672] },
+      { name: "Gurwansar", q: "Gurwansar campsite", at: [33.8036, 74.4626] },
+      { name: "Tosa Maidan", at: [33.9148, 74.5105] },
+    ],
+    // Not on the map by name: Ashtaar below the Pir Panjal, Duriem on the way down to Tosa Maidan
+    camps: {
+      Ashtaar: ["Doodhpathri", "Gurwansar", 0.55, ["Ashtar", "Ashitaar"]],
+      Duriem: ["Gurwansar", "Tosa Maidan", 0.5, ["Durium"]],
+    },
+    // Doodhpathri to Gurwansar on OSM's paths; from past Pam Sar to Tosa Maidan, over the lakes
+    guide: [
+      [],
+      [[33.825592, 74.44163], [33.82950, 74.44043], [33.83252, 74.43934], [33.83515, 74.43945], [33.83830, 74.43866], [33.84253, 74.43951], [33.84542, 74.43883], [33.84832, 74.43932], [33.85197, 74.43853], [33.85428, 74.43966], [33.85759, 74.43815], [33.86002, 74.43696], [33.86346, 74.43703], [33.86431, 74.43804], [33.86484, 74.44239], [33.86569, 74.44766], [33.86657, 74.45086], [33.86706, 74.45520], [33.86990, 74.45949], [33.87157, 74.46296], [33.87207, 74.46503], [33.87350, 74.46873], [33.87579, 74.47155], [33.87877, 74.47383], [33.88027, 74.47647], [33.88349, 74.47975], [33.88538, 74.48186], [33.88853, 74.48443], [33.89149, 74.48537], [33.89404, 74.48667], [33.89801, 74.48851], [33.90012, 74.48946], [33.90315, 74.49243], [33.90466, 74.49764], [33.90630, 74.49947], [33.90660, 74.50382], [33.90603, 74.50692], [33.90509, 74.51087], [33.90395, 74.51524], [33.90702, 74.51516], [33.90872, 74.51526]],
+    ],
+    days: [
+      { to: "Ashtaar", note: "From the Doodhpathri meadows up the valley past shepherds' huts" },
+      { to: "Gurwansar", note: "Up to the lake below the Pir Panjal ridge" },
+      { to: "Duriem", note: "Past Pam Sar and over the high lakes" },
+      { to: "Tosa Maidan", note: "Down to the great meadow of Tosa Maidan and the road" },
     ],
   },
 

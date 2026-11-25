@@ -2,10 +2,15 @@
 
 Checked 2026-11-25. OpenStreetMap (paths, place names, public GPS traces) doesn't cover these routes
 well enough to build them (see the note at the top of scripts/trek-configs.mjs). The tracks below
-are on Wikiloc. Wikiloc's terms allow personal use only and forbid re-hosting, and each track
-belongs to the person who recorded it, so **none of them can be used on Trail to Tides without the
-recorder's written permission**. With permission, a track goes in scripts/tracks/<file>.json and
-the trek's config follows it (`track: "<file>"`), as kareri-lake does.
+are on Wikiloc, where each belongs to the person who recorded it; Wikiloc's terms are personal use.
+
+**How they're used (2026-11-25, the owner's decision):** as a reference only, never copied. The
+camps and guide points every 350 m are read off the downloaded tracks (kept outside the repo) into
+each trek's `guide` in scripts/trek-configs.mjs, and our own line is drawn between them, over
+OpenStreetMap's paths where they match and along the terrain elsewhere. Built this way:
+bagini-glacier, phulara-ridge, surya-top, ranthan-kharak, gulabi-kantha (to Seema Thatch; the
+summit has no track), doodhpathri (the lakes loop from Tosa Maidan, joined to OSM's paths from
+Doodhpathri to Gurwansar). Bajre Dara has no track anywhere yet.
 
 | Trek | Track on Wikiloc | Recorded by | What it covers |
 |---|---|---|---|

@@ -60,7 +60,7 @@ export const ACCESS: Record<string, Access> = {
   "panch-kedar": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Guptkashi, about 7 to 8 hours" },
   "rudranath-kalpeshwar": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Helang near Joshimath, about 250 km and 9 to 10 hours. The trek ends at Sagar, about 30 minutes from Gopeshwar" },
   "panwali-kantha": { gateway: "Rishikesh", ...RISHIKESH, drive: "Rishikesh to Ghuttu, about 180 km and 7 to 8 hours" },
-  "surya-top": { gateway: "Dehradun", ...DEHRADUN, note: "The roadhead is Barsu or Raithal in Uttarkashi district, past Uttarkashi town, a full day's drive from Dehradun. Your operator confirms the pickup point" },
+  "surya-top": { gateway: "Dehradun", ...DEHRADUN, note: "The roadhead is Barsu in Uttarkashi district, past Uttarkashi town, a full day's drive from Dehradun. Your operator confirms the pickup point" },
   // Kumaon and Chamoli via Kathgodam
   "ali-bedni-bugyal": { gateway: "Kathgodam", ...KATHGODAM, drive: "Kathgodam to Lohajung, about 10 to 11 hours" },
   "brahmatal": { gateway: "Kathgodam", ...KATHGODAM, drive: "Kathgodam to Lohajung, about 10 to 11 hours" },

@@ -10,28 +10,14 @@ import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { waysNear, dist } from "./osm.mjs";
 
 const OFF = 40, MIN = 150, JOIN = 100;
+// A reference GPS track a trek follows is given as guide points every 350–400 m, and the line
+// between them is drawn along the terrain: within this of the guide points' chain counts as on it
+const REF_OFF = 150;
 
-/** [{ fromKm, toKm }] of `line` ([lat, lng, ...][]) away from every way in `ways` */
-export function unmappedStretches(line, ways) {
-  // A ~100 m grid of way segments, so each point only measures the segments around it
-  const cell = 0.001, grid = new Map(), key = (la, lo) => `${Math.floor(la / cell)},${Math.floor(lo / cell)}`;
-  for (const w of ways) for (let i = 1; i < w.length; i++) {
-    const a = w[i - 1], b = w[i];
-    const n = Math.max(1, Math.ceil(dist(a, b) / 80));
-    for (let k = 0; k <= n; k++) { const la = a[0] + ((b[0] - a[0]) * k) / n, lo = a[1] + ((b[1] - a[1]) * k) / n; const g = key(la, lo); if (!grid.has(g)) grid.set(g, new Set()); grid.get(g).add(`${a[0]},${a[1]},${b[0]},${b[1]}`); }
-  }
-  const segDist = (p, s) => {
-    const [a0, a1, b0, b1] = s.split(",").map(Number), k = Math.cos((p[0] * Math.PI) / 180);
-    const dx = (b1 - a1) * k, dy = b0 - a0, L = dx * dx + dy * dy;
-    const t = L ? Math.max(0, Math.min(1, (((p[1] - a1) * k) * dx + (p[0] - a0) * dy) / L)) : 0;
-    return dist(p, [a0 + t * dy, a1 + (t * dx) / k]);
-  };
-  const near = (p) => {
-    const [gy, gx] = [Math.floor(p[0] / cell), Math.floor(p[1] / cell)];
-    let best = Infinity;
-    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) for (const s of grid.get(`${gy + dy},${gx + dx}`) ?? []) best = Math.min(best, segDist(p, s));
-    return best;
-  };
+/** [{ fromKm, toKm }] of `line` ([lat, lng, ...][]) away from every way in `ways` (and from every chain in `refs`, by REF_OFF) */
+export function unmappedStretches(line, ways, refs = []) {
+  const nearWay = nearness(ways, 0.001), nearRef = refs.length ? nearness(refs, 0.003) : () => Infinity;
+  const off = (p) => nearWay(p) > OFF && nearRef(p) > REF_OFF;
   // The line every 20 m
   const pts = [];
   let km = 0;
@@ -44,9 +30,9 @@ export function unmappedStretches(line, ways) {
   }
   const runs = [];
   for (let i = 0; i < pts.length; i++) {
-    if (near(pts[i].p) <= OFF) continue;
+    if (!off(pts[i].p)) continue;
     let j = i;
-    while (j + 1 < pts.length && near(pts[j + 1].p) > OFF) j++;
+    while (j + 1 < pts.length && off(pts[j + 1].p)) j++;
     runs.push({ fromKm: pts[i].km, toKm: pts[j].km });
     i = j;
   }
@@ -56,6 +42,28 @@ export function unmappedStretches(line, ways) {
     if (last && (r.fromKm - last.toKm) * 1000 < JOIN) last.toKm = r.toKm; else joined.push({ ...r });
   }
   return joined.filter((r) => (r.toKm - r.fromKm) * 1000 >= MIN).map((r) => ({ fromKm: +r.fromKm.toFixed(2), toKm: +r.toKm.toFixed(2) }));
+}
+
+/** How far a point is from the nearest segment of `ways`, via a grid of `cell` degrees */
+function nearness(ways, cell) {
+  const grid = new Map(), key = (la, lo) => `${Math.floor(la / cell)},${Math.floor(lo / cell)}`;
+  for (const w of ways) for (let i = 1; i < w.length; i++) {
+    const a = w[i - 1], b = w[i];
+    const n = Math.max(1, Math.ceil(dist(a, b) / 80));
+    for (let k = 0; k <= n; k++) { const la = a[0] + ((b[0] - a[0]) * k) / n, lo = a[1] + ((b[1] - a[1]) * k) / n; const g = key(la, lo); if (!grid.has(g)) grid.set(g, new Set()); grid.get(g).add(`${a[0]},${a[1]},${b[0]},${b[1]}`); }
+  }
+  const segDist = (p, s) => {
+    const [a0, a1, b0, b1] = s.split(",").map(Number), k = Math.cos((p[0] * Math.PI) / 180);
+    const dx = (b1 - a1) * k, dy = b0 - a0, L = dx * dx + dy * dy;
+    const t = L ? Math.max(0, Math.min(1, (((p[1] - a1) * k) * dx + (p[0] - a0) * dy) / L)) : 0;
+    return dist(p, [a0 + t * dy, a1 + (t * dx) / k]);
+  };
+  return (p) => {
+    const [gy, gx] = [Math.floor(p[0] / cell), Math.floor(p[1] / cell)];
+    let best = Infinity;
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) for (const s of grid.get(`${gy + dy},${gx + dx}`) ?? []) best = Math.min(best, segDist(p, s));
+    return best;
+  };
 }
 
 const total = (s) => +s.reduce((n, r) => n + r.toKm - r.fromKm, 0).toFixed(1);
@@ -74,9 +82,13 @@ export async function markTrail(t) {
   // and so is a recorded track a leg follows (a stop's `track` in trek-configs: Kareri, Chandrakhani)
   const { TREKS } = await import("./trek-configs.mjs");
   for (const s of TREKS[t.slug]?.stops ?? []) if (s?.track) ways.push(JSON.parse(readFileSync(new URL(`${s.track}.json`, tracksDir), "utf8")));
-  t.unmapped = unmappedStretches(t.line, ways);
+  // and so are the guide points read off a reference GPS track (a trek's `guide`), leg by leg
+  const trek = TREKS[t.slug], refs = [];
+  const at = (s) => (Array.isArray(s?.at) ? s.at : null);
+  (trek?.guide ?? []).forEach((g, i) => { const a = at(trek.stops[i]), b = at(trek.stops[i + 1]); if (g?.length) refs.push([...(a ? [a] : []), ...g, ...(b ? [b] : [])]); });
+  t.unmapped = unmappedStretches(t.line, ways, refs);
   t.approxKm = total(t.unmapped);
-  for (const s of [...(t.sideTrips ?? []), ...(t.detours ?? [])]) { s.unmapped = unmappedStretches(s.line, ways); s.approxKm = total(s.unmapped); }
+  for (const s of [...(t.sideTrips ?? []), ...(t.detours ?? [])]) { s.unmapped = unmappedStretches(s.line, ways, refs); s.approxKm = total(s.unmapped); }
   return t.approxKm;
 }
 
