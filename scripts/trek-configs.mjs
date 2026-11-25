@@ -36,7 +36,10 @@ const LOHAJUNG = { name: "Lohajung", at: [30.1283, 79.6190] };
 const SANKRI = { name: "Sankri", at: [31.07802, 78.18411] };
 const GANGOTRI = { name: "Gangotri", at: [30.99437, 78.93987], ele: 3100 }; // OSM tags it 3,300 m
 const DHAK = { name: "Dhak", at: [30.49886, 79.61134] };
-const KHULLARA = { name: "Khullara", at: [30.45968, 79.58748] };
+// The cave temple on the valley floor where a Wikiloc track from Urgam ends (Kalpeshwar temple,
+// 2018). OSM's Kalpeshwar Mandir is 500 m east, 130 m up the slope above the river
+const KALPESHWAR = { name: "Kalpeshwar", at: [30.54961, 79.44892], exact: true };
+const KHULLARA ={ name: "Khullara", at: [30.45968, 79.58748] };
 
 export const TREKS = {
   "everest-base-camp": {
@@ -327,9 +330,11 @@ export const TREKS = {
     // Not on the map by name: placed on the trail where it reaches the camp's published height
     // (Gulling Top, about 2,900 m)
     camps: { Gulling: ["Dhak", "Khullara", 0.5, ["Guling", "Gulling Top"], [30.46828, 79.6011]] },
-    // OSM's path ends on the ridge past Kuari Pass; above it, the line follows where uploaded GPS
-    // tracks cluster, past Mini Pangarchulla to the top
-    through: [[30.43653, 79.58303], [30.43098, 79.58521], [30.42910, 79.58866], [30.42777, 79.59058], [30.42499, 79.59153]],
+    // OSM's path ends on the ridge past Kuari Pass; above it, guide points read off a Wikiloc track
+    // (Chilled Pangarchulla trail), past Mini Pangarchulla to the top
+    gapGuides: [
+      [[30.44043, 79.58229], [30.43943, 79.58175], [30.43857, 79.58229], [30.43777, 79.5817], [30.43706, 79.58261], [30.43628, 79.58304], [30.43522, 79.58307], [30.43413, 79.58357], [30.43327, 79.58426], [30.43274, 79.58519], [30.43189, 79.58553], [30.43107, 79.58624], [30.43011, 79.58666], [30.4297, 79.58772], [30.42901, 79.58861], [30.42842, 79.58939], [30.42784, 79.59002], [30.42715, 79.59103], [30.42615, 79.59127], [30.42512, 79.59147], [30.42414, 79.59168]],
+    ],
     days: [
       { to: "Gulling", note: "Drive from Joshimath to Dhak, then up past Tugasi village to a forest camp" },
       { to: "Khullara", note: "Through oak and rhododendron to a meadow facing Dronagiri and Hathi Ghoda" },
@@ -598,7 +603,9 @@ export const TREKS = {
     gapGuides: [
       [[30.96174, 78.94289], [30.96058, 78.94344], [30.95932, 78.94333], [30.95825, 78.94286], [30.95704, 78.94331], [30.95592, 78.94327], [30.95467, 78.94351], [30.95368, 78.94427], [30.95265, 78.94495], [30.95151, 78.94549], [30.95049, 78.94623], [30.94948, 78.9467], [30.94836, 78.9468], [30.94729, 78.94701], [30.94627, 78.94754], [30.94509, 78.948]],
     ],
-    stops: [GANGOTRI, { name: "Kedar Kharak", q: "Kedar Khadak Campsite", at: [30.9359, 78.952] }, { name: "Kedartal", q: "Kedar Tal", at: [30.9122, 78.9577] }],
+    // Kedar Kharak and Kedartal where a Wikiloc track (Kedar Khadak to Kedartal (84498194)) starts
+    // and ends: the camp on the path (OSM's campsite is 160 m off it) and the lake's north shore
+    stops: [GANGOTRI, { name: "Kedar Kharak", at: [30.9368, 78.95052], exact: true }, { name: "Kedartal", at: [30.91536, 78.95745], exact: true }],
     // Bhoj Kharak isn't on the map by name: placed partway up the Kedar Ganga gorge
     camps: { "Bhoj Kharak": ["Gangotri", "Kedar Kharak", 0.55, ["Bhoj Kharak", "Bhojkharak", "Bhoj Khadak"]] },
     days: [
@@ -676,7 +683,7 @@ export const TREKS = {
   "rudranath-kalpeshwar": {
     near: "Chamoli, Uttarakhand",
     stops: [
-      { name: "Kalpeshwar", at: [30.5489, 79.4548] },
+      KALPESHWAR,
       { name: "Bansi Narayan", at: [30.54, 79.4096] },
       { name: "Dumak", at: [30.5072, 79.3831] },
       { name: "Rudranath", at: [30.5186, 79.3182] },
@@ -794,7 +801,7 @@ export const TREKS = {
     near: "Chamoli, Uttarakhand",
     stops: [
       { name: "Urgam", at: [30.5401, 79.4566] },
-      { name: "Kalpeshwar", q: "Kalpeshwar Mandir", at: [30.5504, 79.4491] },
+      KALPESHWAR,
       { name: "Bansi Narayan", at: [30.54, 79.4096] },
     ],
     days: [
@@ -1059,9 +1066,17 @@ export const TREKS = {
 
   "tarsar-marsar-trek": {
     near: "Anantnag, Jammu and Kashmir",
+    // No mapped path into and out of the Lidderwat camp: guide points off the same track, one chain
+    // each side of the camp
+    gapGuides: [
+      [[34.15828, 75.24277], [34.15879, 75.2421]],
+      [[34.15987, 75.23958], [34.16053, 75.23952], [34.16101, 75.23923], [34.16151, 75.23874]],
+    ],
     stops: [
       { name: "Aru", at: [34.09029, 75.26244] },
-      { name: "Lidderwat", at: [34.17209, 75.25476] },
+      // Where a Wikiloc track (Tarsar Marsar one way, 2023) camps for the night, at 2,730 m where
+      // the Tarsar valley meets the Lidder; OSM's Lidderwat is 1.9 km on up the Kolahoi branch
+      { name: "Lidderwat", at: [34.15929, 75.24077], exact: true },
       { name: "Tarsar Lake", q: "Tar Sar", at: [34.1320, 75.14] },
       // Where the line tops out between the lake and Sundersar: the trek's high point
       { name: "Tarsar Pass", at: [34.15163, 75.11059], exact: true },
@@ -1108,6 +1123,9 @@ export const TREKS = {
 
   goechala: {
     near: "Gyalshing, Sikkim",
+    // Samiti Lake to Viewpoint 1 has no mapped path: guide points read off a Wikiloc track (Lamuni to
+    // Goechala pass (11358610))
+    gapGuides: [[[27.58092, 88.18915], [27.58266, 88.18867], [27.58441, 88.18859], [27.58614, 88.18817]]],
     stops: [
       { name: "Yuksom", at: [27.36924, 88.21848] },
       { name: "Sachen", at: [27.41394, 88.19731] },

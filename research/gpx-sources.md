@@ -85,3 +85,26 @@ Not downloaded yet: Doodhpathri 161261096, Tarsar Marsar 144544619.
 Not route gaps: Buran Ghati (Litham), Gaumukh and Har Ki Dun are short stubs from the path to a
 camp marker placed off it; moving the marker onto the path would close them.
 No track anywhere: Pin Parvati (Odi Thach → Mantalai), Bajre Dara.
+
+### Second batch (2026-11-25)
+
+Closed: Goechala (Samiti Lake → Viewpoint 1, from 11358610), Pangarchulla (Khullara → summit,
+the Chilled Pangarchulla track replaces the `through` points), Kedartal (both: Kedar Kharak and the
+lake moved onto the camp and north shore where 84498194 starts and ends), Kalpeshwar (the temple
+moved to the valley floor where the Urgam track ends; OSM's Mandir is 500 m east and 130 m up).
+Tarsar Marsar: Lidderwat moved to where the one-way track camps (34.1593, 75.2408, 2,730 m); OSM's
+Lidderwat is 1.9 km up the Kolahoi branch and the line went there and back, 3 km too long.
+
+Downloaded but not reaching the gap:
+- Kareri: the track starts 1.5 km above our trailhead.
+- Bali Pass (Lower → Upper Dhamni): starts at the top of the gap and climbs away from it.
+- Rupin day 7: covers another part of the route.
+- Dodital (to Kanasar/Darwa top): goes to the 3,780 m saddle north of the lake, not our Darwa Pass.
+- Doodhpathri (Gurwansar lakes): turns back at Gurwansar.
+- KGL 2 (Nichnai → Vishansar): starts just after the Sonamarg-side gap (already chained from KGL 1).
+- Tarsar Marsar: ends short of Sundersar and Marsar, so the Tarsar Pass → Marsar gaps stay.
+
+Still to rebuild when BRouter takes requests again (it refused most of this batch): Kashmir Great
+Lakes (chains set since the first batch; a FROM_SAVED build moved its gaps rather than closing
+them, so the saved trail stays), then the Panch Kedar circuit (`node scripts/build-circuit.mjs
+panch-kedar`), which picks up Kalpeshwar's new temple position and closes its 0.6 km.
