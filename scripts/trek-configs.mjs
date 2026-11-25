@@ -24,7 +24,8 @@
 //         { rest, side? } stays put, optionally with a side trip. Only the days on foot: drives in
 //         and out aren't listed.
 // Treks with too little of their route on OpenStreetMap to place honestly aren't listed:
-// bagini-glacier, kedartal, hampta-pass, rupin-pass, pin-bhaba-pass, gulabi-kantha, phulara-ridge, panch-kedar,
+// bagini-glacier (no mapped path or uploaded GPS track up the Bagini valley, checked 2026-11-25),
+// gulabi-kantha (neither the summit nor its camps are on the map), phulara-ridge, panch-kedar,
 // ranthan-kharak, surya-top, bajre-dara, doodhpathri.
 
 const LOHAJUNG = { name: "Lohajung", at: [30.1283, 79.6190] };
@@ -537,6 +538,126 @@ export const TREKS = {
       { to: "Rioti", note: "Up the Nyund stream from Kareri village, crossing it on rocks and small bridges" },
       { to: "Kareri Lake", note: "A short climb to the lake below the Dhauladhar, with a small Shiva temple" },
       { to: "Kareri", note: "Back down the stream to the village" },
+    ],
+  },
+
+  "hampta-pass": {
+    near: "Kullu, Himachal Pradesh",
+    stops: [
+      { name: "Jobra", q: "Jobri", at: [32.2677, 77.2459] },
+      // Balu ka Ghera is OSM's "Hamta la base camp", the flat sandy camp below the pass
+      { name: "Balu ka Ghera", q: "Hamta la base camp", at: [32.2763, 77.3172] },
+      { name: "Hampta Pass", q: "Hamta Pass", at: [32.2699, 77.3474] },
+      { name: "Chhatru", at: [32.3195, 77.3653] },
+    ],
+    // Not on the map by name: Chika on the meadow after the first climb from Jobra, Shea Goru on
+    // the Spiti side where the descent from the pass levels out
+    camps: {
+      Chika: ["Jobra", "Balu ka Ghera", 0.4, ["Chikka", "Chhika"]],
+      "Shea Goru": ["Hampta Pass", "Chhatru", 0.45, ["Shia Goru", "Siagoru"]],
+    },
+    days: [
+      { to: "Chika", note: "Drive from Manali to Jobra, then through maple and birch to the first meadow by the Rani nallah" },
+      { to: "Balu ka Ghera", note: "Up the open valley, crossing streams, to the sandy flat below the pass" },
+      { to: "Shea Goru", via: ["Hampta Pass"], note: "The long day: up to the pass at about 4,270 m, then a steep descent into the bare Spiti side" },
+      { to: "Chhatru", note: "Down the valley to the road at Chhatru, for the drive to Chandratal" },
+    ],
+  },
+
+  kedartal: {
+    near: "Uttarkashi, Uttarakhand",
+    stops: [GANGOTRI, { name: "Kedar Kharak", q: "Kedar Khadak Campsite", at: [30.9359, 78.952] }, { name: "Kedartal", q: "Kedar Tal", at: [30.9122, 78.9577] }],
+    // Bhoj Kharak isn't on the map by name: placed partway up the Kedar Ganga gorge
+    camps: { "Bhoj Kharak": ["Gangotri", "Kedar Kharak", 0.55, ["Bhoj Kharak", "Bhojkharak", "Bhoj Khadak"]] },
+    days: [
+      { to: "Bhoj Kharak", note: "Straight up the Kedar Ganga gorge from Gangotri through pine and birch" },
+      { to: "Kedar Kharak", note: "Past Spider Wall, a narrow ledge above the river, to the last meadow" },
+      { to: "Kedartal", note: "Over moraine and boulders to the lake below Thalaysagar" },
+      { to: "Bhoj Kharak", note: "Sunrise on Thalaysagar in the lake, then the long way down" },
+      { to: "Gangotri", note: "Down the gorge to the temple town" },
+    ],
+  },
+
+  "rupin-pass": {
+    near: "Uttarkashi, Uttarakhand",
+    stops: [
+      { name: "Dhaula", at: [31.1315, 78.0766] },
+      { name: "Sewa", at: [31.1738, 78.0747] },
+      { name: "Buras Kandi", q: "Burans Kandi Campsite", at: [31.3057, 78.0904] },
+      { name: "Dhanderas Thach", q: "Dhandreyas Thach Campsite", at: [31.322, 78.1287] },
+      { name: "Upper Waterfall", q: "Upper Waterfall Campsite", at: [31.3326, 78.1448] },
+      { name: "Rupin Pass", q: "Rupin Ghati", at: [31.3542, 78.1544] },
+      { name: "Sangla Kanda", at: [31.3982, 78.2337] },
+      { name: "Sangla", at: [31.4259, 78.2637] },
+    ],
+    // Villages and a camp the map doesn't name: Jiskun and Jhaka up the Rupin valley, Ronti Gad below the pass
+    camps: {
+      Jiskun: ["Sewa", "Buras Kandi", 0.35, ["Jiskoon"]],
+      Jhaka: ["Sewa", "Buras Kandi", 0.65, ["Jakha"]],
+      "Ronti Gad": ["Rupin Pass", "Sangla Kanda", 0.35, ["Ronthi Got", "Ronti Got"]],
+    },
+    days: [
+      { to: "Sewa", note: "From the road at Dhaula along the Rupin river to Sewa and its old wooden temple" },
+      { to: "Jiskun", note: "Up the valley side into Himachal, past orchards and fields" },
+      { to: "Jhaka", note: "A short climb to the 'hanging village' clinging to the cliff" },
+      { to: "Buras Kandi", note: "Through fir and rhododendron forest above the river" },
+      { to: "Dhanderas Thach", note: "Into the open meadows below the great waterfall" },
+      { to: "Upper Waterfall", note: "Steeply up beside the waterfall to a camp at its top" },
+      { to: "Ronti Gad", via: ["Rupin Pass"], note: "Up the snow gully to the pass at about 4,650 m, facing Kinnaur Kailash, then down to Ronti Gad" },
+      { to: "Sangla", note: "Down past the Sangla Kanda meadow to Sangla in the Baspa valley" },
+    ],
+  },
+
+  "pin-bhaba-pass": {
+    near: "Kinnaur, Himachal Pradesh",
+    stops: [
+      { name: "Kafnu", near: "Kinnaur, Himachal Pradesh" },
+      { name: "Karah", q: "Karag", at: [31.7301, 77.9889] },
+      { name: "Phutsirang", q: "Putling", at: [31.7624, 77.9852] },
+      { name: "Pin Bhaba Pass", q: "Pin Bhaba La", at: [31.7803, 77.9968] },
+      { name: "Mudh", near: "Spiti, Himachal Pradesh" },
+    ],
+    // Not on the map by name: Mulling in the Bhaba valley forest, Mangrup on the Spiti side below the pass
+    camps: {
+      Mulling: ["Kafnu", "Karah", 0.6, ["Muling"]],
+      Mangrup: ["Pin Bhaba Pass", "Mudh", 0.35, ["Tiya", "Mangrup"]],
+    },
+    days: [
+      { to: "Mulling", note: "From Kafnu up the Bhaba valley through forest and past the dam" },
+      { to: "Karah", note: "Into open meadows beside the Bhaba river" },
+      { to: "Phutsirang", note: "Up to the last camp below the pass" },
+      { to: "Mangrup", via: ["Pin Bhaba Pass"], note: "Over the pass at about 4,900 m and down into the bare Pin valley of Spiti" },
+      { to: "Mudh", note: "Along the Pin river to Mudh village and the road" },
+    ],
+  },
+
+  "yulla-kanda": {
+    near: "Kinnaur, Himachal Pradesh",
+    stops: [{ name: "Yulla Khas", q: "Yula", at: [31.54743, 78.137] }, { name: "Yulla Kanda", at: [31.5906, 78.1408] }],
+    camps: { "Yulla Kanda camp": ["Yulla Khas", "Yulla Kanda", 0.6, ["Yulla Kanda base"]] },
+    days: [
+      { to: "Yulla Kanda camp", note: "Up from Yulla Khas through pine and birch to the meadows" },
+      { to: "Yulla Khas", via: ["Yulla Kanda"], note: "Up to the lake and its Krishna temple, then all the way down to the village" },
+    ],
+  },
+
+  "rudranath-kalpeshwar": {
+    near: "Chamoli, Uttarakhand",
+    stops: [
+      { name: "Kalpeshwar", at: [30.5489, 79.4548] },
+      { name: "Bansi Narayan", at: [30.54, 79.4096] },
+      { name: "Dumak", at: [30.5072, 79.3831] },
+      { name: "Rudranath", at: [30.5186, 79.3182] },
+      { name: "Sagar", at: [30.4398, 79.3213] },
+    ],
+    // Panar bugyal on the way down to Sagar, not on the map by name
+    camps: { Panar: ["Rudranath", "Sagar", 0.4, ["Panar Bugyal", "Pannar"]] },
+    days: [
+      { to: "Bansi Narayan", note: "From Kalpeshwar's cave temple up through oak forest to the old Vishnu temple" },
+      { to: "Dumak", note: "Down to Dumak village" },
+      { to: "Rudranath", note: "The long climb through forest and over open ridges to the rock shrine" },
+      { to: "Panar", note: "Darshan at dawn, then down to the wide Panar meadows" },
+      { to: "Sagar", note: "Through forest to Sagar village and the road" },
     ],
   },
 
