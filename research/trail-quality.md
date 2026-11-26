@@ -1,10 +1,6 @@
 # Trail quality
 
-55 trails checked: 1 need fixing, 25 worth a look, 29 clean.
-
-## roopkund (29.6 km, 2900 m up)
-- **Fix** · off-line: Wan is 4021 m from the line
-- Check · stop height: Wan: stop at 2444 m, line at 2093 m where it passes
+55 trails checked: 0 need fixing, 24 worth a look, 31 clean.
 
 ## panch-kedar (313.4 km, 9220 m up)
 - Check · spikes: 1 height spike (worst 61 m at km 218.7)
@@ -33,10 +29,6 @@
 ## doodhpathri (32.9 km, 2080 m up, 1.7 km estimated)
 - Check · straight: 2 straight segments over 500 m (657 m at km 9.4, 613 m at km 28.0)
 - Check · estimated: 1.7 km drawn along the terrain (no mapped path)
-
-## everest-base-camp (53.4 km, 3390 m up)
-- Check · off-line: Pheriche is 577 m from the line
-- Check · stop height: Pheriche: stop at 4253 m, line at 4426 m where it passes
 
 ## rudranath-kalpeshwar (47 km, 3690 m up)
 - Check · days: day 1 (Kalpeshwar to Bansi Narayan) climbs 1550 m
@@ -95,4 +87,4 @@
 
 ## Clean
 
-ali-bedni-bugyal, beas-kund, bhrigu-lake, brahmatal, buran-ghati, dayara-bugyal, dodital-darwa-pass, everest-base-camp-gokyo-lakes, everest-three-passes, gaumukh-tapovan, goechala, gokyo-lakes, hampta-pass, har-ki-dun, kedarkantha-trek, khopra-danda, kuari-pass, pangarchulla-peak, panwali-kantha, phulara-ridge, pindari-glacier, ranthan-kharak, rupin-pass, sandakphu-phalut-trek, satopanth-lake, triund, tungnath-chandrashila, valley-of-flowers, yulla-kanda
+ali-bedni-bugyal, beas-kund, bhrigu-lake, brahmatal, buran-ghati, dayara-bugyal, dodital-darwa-pass, everest-base-camp-gokyo-lakes, everest-base-camp, everest-three-passes, gaumukh-tapovan, goechala, gokyo-lakes, hampta-pass, har-ki-dun, kedarkantha-trek, khopra-danda, kuari-pass, pangarchulla-peak, panwali-kantha, phulara-ridge, pindari-glacier, ranthan-kharak, roopkund, rupin-pass, sandakphu-phalut-trek, satopanth-lake, triund, tungnath-chandrashila, valley-of-flowers, yulla-kanda

@@ -69,12 +69,14 @@ function check(t) {
   if (spikes.length) add("spikes", `${spikes.length} height spike${spikes.length === 1 ? "" : "s"} (worst ${Math.round(Math.max(...spikes.map((s) => Math.abs(s.off))))} m at ${at(spikes.sort((a, b) => Math.abs(b.off) - Math.abs(a.off))[0].i)})`, spikes.length > 3 ? "fix" : "check");
   if (steep.length) add("spikes", `${steep.length} step${steep.length === 1 ? "" : "s"} steeper than 1 in 1 (first at ${at(steep[0])})`, "check");
 
-  // Overnight stops: distance to the line, and height against the line's height there
+  // Overnight stops: distance to the line (or to a detour, the way a day goes when it leaves the
+  // main line, e.g. out by another village), and height against the line's height there
+  const lines = [line, ...(t.detours ?? []).map((d) => d.line)];
   for (const s of [...(t.stops ?? []), ...(t.sleepPlaces ?? [])]) {
-    let best = Infinity, bi = 0;
-    line.forEach((p, i) => { const d = dist([s.lat, s.lng], p); if (d < best) { best = d; bi = i; } });
+    let best = Infinity, bi = 0, bl = line;
+    for (const l of lines) l.forEach((p, i) => { const d = dist([s.lat, s.lng], p); if (d < best) { best = d; bi = i; bl = l; } });
     if (best > 300) add("off-line", `${s.name} is ${Math.round(best)} m from the line`, best > 1000 ? "fix" : "check");
-    if (s.ele != null && Math.abs(s.ele - line[bi][2]) > 150) add("stop height", `${s.name}: stop at ${s.ele} m, line at ${line[bi][2]} m where it passes`);
+    if (s.ele != null && Math.abs(s.ele - bl[bi][2]) > 150) add("stop height", `${s.name}: stop at ${s.ele} m, line at ${bl[bi][2]} m where it passes`);
   }
   // A stop listed twice (stops and sleepPlaces) is reported once
   const seen = new Set();
