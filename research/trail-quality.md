@@ -60,8 +60,8 @@
 ## rudranath (14.5 km, 2100 m up)
 - Check · days: day 1 (Sagar to Panar) climbs 1790 m
 
-## surya-top (17.5 km, 1760 m up)
-- Check · straight: 2 straight segments over 500 m (1470 m at km 1.5, 569 m at km 12.3)
+## surya-top (18 km, 1750 m up)
+- Check · straight: 1 straight segment over 500 m (569 m at km 12.8)
 
 ## tarsar-marsar-trek (33 km, 2060 m up)
 - Check · straight: 1 straight segment over 500 m (713 m at km 27.7)

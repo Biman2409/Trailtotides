@@ -77,7 +77,8 @@ for (const f of readdirSync(DIR).filter((f) => f.endsWith(".json")).sort()) {
   }
   // G. Trek page facts against the trail
   const P = pub(t.slug);
-  const walk = Math.round(t.days.reduce((s, d) => s + (d.kind === "walk" ? d.km ?? 0 : 0), 0));
+  // As the site counts km on foot (trailWalkKm): walking days plus rest-day walks
+  const walk = Math.round(t.days.reduce((s, d) => s + (d.kind === "walk" || d.kind === "rest" ? d.km ?? 0 : 0), 0));
   if (P.km && Math.abs(P.km - walk) > 1) add("page distance", `page ${P.km} km, itinerary ${walk} km`);
   if (P.days && P.days !== t.days.length) add("page days", `page ${P.days} days, itinerary ${t.days.length}`);
   if (P.alt && Math.abs(P.alt - Math.max(hp.ele ?? 0, peak)) > 30) add("page altitude", `page ${P.alt} m, trail high point ${hp.name} ${hp.ele} m (profile peak ${peak} m)`);
