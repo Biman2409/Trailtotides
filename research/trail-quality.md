@@ -3,13 +3,11 @@
 55 trails checked: 0 need fixing, 20 worth a look, 35 clean.
 
 ## panch-kedar (313.4 km, 9210 m up)
-- Check · spikes: 1 height spike (worst 61 m at km 218.7)
-- Check · spikes: 3 steps steeper than 1 in 1 (first at km 108.2)
 - Check · days: day 1 (Guptkashi to Kedarnath) climbs 1550 m
 - Check · days: day 5 (Gaundar to Madhmaheshwar) climbs 1620 m
 - Check · days: day 9 (Sagar to Panar) climbs 1850 m
 
-## doodhpathri (31.6 km, 1810 m up, 2.6 km estimated)
+## doodhpathri (31.5 km, 1840 m up, 2.6 km estimated)
 - Check · straight: 1 straight segment over 500 m (936 m at km 6.8)
 - Check · estimated: 2.6 km drawn along the terrain (no mapped path)
 

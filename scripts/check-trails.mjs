@@ -55,8 +55,12 @@ function check(t) {
   }
 
   // Elevation spikes: a point far from both neighbours, or a step steeper than 1 in 1
+  // A circuit's road stretches (drives) aren't walked: their heights don't make a trek's profile
+  const total = cum[cum.length - 1] / 1000, kmOf = (i) => (cum[i] / 1000) * (t.lengthKm / total);
+  const onRoad = (i) => (t.drives ?? []).some((dr) => kmOf(i) >= dr.fromKm - 0.2 && kmOf(i) <= dr.toKm + 0.2);
   const spikes = [];
   for (let i = 1; i < line.length - 1; i++) {
+    if (onRoad(i)) continue;
     const [, , e0] = line[i - 1], [, , e] = line[i], [, , e1] = line[i + 1];
     const off = e - (e0 + e1) / 2;
     if (Math.abs(off) > 60 && Math.sign(e - e0) !== Math.sign(e1 - e)) spikes.push({ i, off });
@@ -64,7 +68,7 @@ function check(t) {
   const steep = [];
   for (let i = 1; i < line.length; i++) {
     const d = dist(line[i - 1], line[i]);
-    if (d > 20 && Math.abs(line[i][2] - line[i - 1][2]) > d) steep.push(i);
+    if (d > 20 && Math.abs(line[i][2] - line[i - 1][2]) > d && !onRoad(i)) steep.push(i);
   }
   if (spikes.length) add("spikes", `${spikes.length} height spike${spikes.length === 1 ? "" : "s"} (worst ${Math.round(Math.max(...spikes.map((s) => Math.abs(s.off))))} m at ${at(spikes.sort((a, b) => Math.abs(b.off) - Math.abs(a.off))[0].i)})`, spikes.length > 3 ? "fix" : "check");
   if (steep.length) add("spikes", `${steep.length} step${steep.length === 1 ? "" : "s"} steeper than 1 in 1 (first at ${at(steep[0])})`, "check");

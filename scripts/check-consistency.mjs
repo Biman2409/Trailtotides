@@ -55,6 +55,9 @@ for (const f of readdirSync(DIR).filter((f) => f.endsWith(".json")).sort()) {
     if (d.kind !== "walk") continue;
     const A = pos.get(d.from), B = pos.get(d.to); if (!A || !B || d.from === d.to) continue;
     const a = near(A.lat, A.lng, idx), b = near(B.lat, B.lng, a.i); idx = b.i;
+    // A day partly by road (a circuit's drives): its km and climb are on foot only, so the line
+    // between its ends, road included, isn't comparable
+    if (d.driveKm) continue;
     // Days with side trips aren't measured, but still move on along the line, or a place the
     // route passes twice (Lobuche before and after Base Camp) is matched on the wrong visit
     if (d.via?.length) continue;
