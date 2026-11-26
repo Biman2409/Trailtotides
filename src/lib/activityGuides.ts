@@ -9,7 +9,7 @@
 import type { AceAxis } from "@/lib/ace";
 import type { SearchEntry } from "@/lib/adventurepedia";
 import { blockText, plain } from "@/lib/guideText";
-import { ACTIVITY_DETAILS } from "@/lib/activityDetails";
+import { ACTIVITY_DETAILS, TRAINING, TRAINING_TITLE } from "@/lib/activityDetails";
 
 export type Element = "earth" | "water" | "snow" | "air";
 
@@ -418,6 +418,7 @@ export function activitySearchIndex(): SearchEntry[] {
     return [
       { ...base, text: `${a.type}. ${a.what} ${a.where.join(", ")}. ${(ACTIVITY_DETAILS[a.slug]?.tldr ?? []).map(plain).join(" ")}` },
       ...(ACTIVITY_DETAILS[a.slug]?.sections ?? []).map((s) => ({ ...base, section: s.title, sectionId: s.id, text: s.blocks.map(blockText).join(" ") })),
+      ...(TRAINING[a.slug] ? [{ ...base, section: TRAINING_TITLE, sectionId: "train", text: `Courses, schools and training for ${a.type.toLowerCase()}: ${TRAINING[a.slug].map(blockText).join(" ")}` }] : []),
       { ...base, section: "When to go", sectionId: "when", text: `Best season and months for ${a.type.toLowerCase()}: ${a.season}` },
       { ...base, section: "What to check before you book", sectionId: "operator", text: `Choosing a ${a.type.toLowerCase()} operator: ${a.operator.join(". ")}.` },
       { ...base, section: "Your first time", sectionId: "start", text: `${a.type} for beginners: ${a.start}` },

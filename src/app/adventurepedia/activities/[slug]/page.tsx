@@ -8,7 +8,7 @@ import ChatBubble from "@/components/ChatBubble";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import { ACTIVITIES, ELEMENTS, activityBySlug, activityHref } from "@/lib/activityGuides";
-import { activityDetail } from "@/lib/activityDetails";
+import { activityDetail, TRAINING, TRAINING_TITLE } from "@/lib/activityDetails";
 import { GUIDES_UPDATED, guideBySlug, guideHref, wordsOf } from "@/lib/adventurepedia";
 import { AXIS_LABEL } from "@/lib/fitness";
 import { adventures } from "@/lib/data";
@@ -55,13 +55,15 @@ export default async function ActivityPage({ params }: { params: Promise<{ slug:
   const siblings = ACTIVITIES.filter((x) => x.element === a.element && x.slug !== a.slug);
   const icon = ADVENTURE_TYPE_ICONS[a.type];
   const updated = d?.updated ?? GUIDES_UPDATED;
+  const training = TRAINING[a.slug];
   const path = activityHref(a);
-  const minutes = Math.max(3, Math.round(wordsOf([a.what, a.bodyNote, a.start, ...a.operator, ...(d?.tldr ?? [])], d?.sections ?? []) / 200));
+  const minutes = Math.max(3, Math.round(wordsOf([a.what, a.bodyNote, a.start, ...a.operator, ...(d?.tldr ?? [])], [...(d?.sections ?? []), ...(training ? [{ id: "train", title: TRAINING_TITLE, blocks: training }] : [])]) / 200));
 
   const contents = [
     ...(d ? [{ id: "short-version", title: "The short version" }] : []),
     { id: "when", title: "Where and when" },
     ...(d?.sections.map((s) => ({ id: s.id, title: s.title })) ?? []),
+    ...(training ? [{ id: "train", title: TRAINING_TITLE }] : []),
     { id: "body", title: "What it asks of your body" },
     { id: "operator", title: "What to check before you book" },
     { id: "start", title: "Your first time" },
@@ -141,6 +143,14 @@ export default async function ActivityPage({ params }: { params: Promise<{ slug:
                 {s.blocks.map((b, i) => <BlockView key={i} block={b} />)}
               </section>
             ))}
+
+            {/* ── Where to learn and train ── */}
+            {training && (
+              <section id="train" className="scroll-mt-28 pt-10">
+                <h2 className={h2} style={serif}><a href="#train" className="hover:underline decoration-[#ff5100]/40 underline-offset-4">{TRAINING_TITLE}</a></h2>
+                {training.map((b, i) => <BlockView key={i} block={b} />)}
+              </section>
+            )}
 
             {/* ── What it asks of your body ── */}
             <section id="body" className="scroll-mt-28 pt-10">

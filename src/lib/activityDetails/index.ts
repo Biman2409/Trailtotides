@@ -8,6 +8,10 @@ import { SNOW } from "./snow";
 import { AIR } from "./air";
 
 export type { ActivityDetail } from "./types";
+export { TRAINING } from "./training";
+
+/** The heading every activity page gives its training section */
+export const TRAINING_TITLE = "Where to learn and train";
 
 export const ACTIVITY_DETAILS: Record<string, ActivityDetail> = { ...EARTH, ...WATER, ...SNOW, ...AIR };
 
