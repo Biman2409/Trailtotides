@@ -115,7 +115,12 @@ Kanda onto the path where 135879090 passes them), Kashmir Great Lakes (Satsar ca
 Tarsar Marsar (Sundersar's camp and the Marsar viewpoint where the mapped path reaches them), Pin
 Parvati (Mantalai onto the path by the lake), Buran Ghati, Gaumukh and Har Ki Dun (camp markers
 onto the path).
-Still open, and no track yet reaches them (Raithal–Gui, Gui–Chilapada, Kareri and the Darwa top
-track all stop short): Doodhpathri (Gurwansar → Tosa Maidan, 1.7 km), Dodital (up to Darwa Pass,
-0.8 km), Dayara Bugyal (ridge down to the camp, 0.55 km), Kareri (0.17 km just below where the
-Kareri track starts).
+Then from Wikiloc's map (every track starting near each gap, its route read off the trail page
+and measured against the gap): Dodital ends at Darwa Top (30.9086, 78.5018), where 41402714 tops
+out; three Dodital to Darwa Pass tracks stop at the 3,800 m saddle and none goes on to the 4,129 m
+bump the line used to end at. Dayara Bugyal's camp moved 450 m north to where three tracks cross the
+meadow (24988036, 170664573, 21838496), with guide points off 24988036.
+Still open: Doodhpathri, Gurwansar → Pam Sar (1.7 km): no track walks it (Gurwansar Lakes 161261096
+turns back at Gurwansar, Greater lakes trek 82554051 at Pam Sar). Kareri (0.17 km above the village):
+three tracks leave the village by three different lanes, none along the line or onto the recorded
+climb's start.

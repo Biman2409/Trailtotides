@@ -224,13 +224,17 @@ export const TREKS = {
 
   "dayara-bugyal": {
     near: "Uttarkashi, Uttarakhand",
+    // Ridge down to the camp: guide points off a Wikiloc track (Dayara bugyal (May) (24988036))
+    gapGuides: [[[30.83479, 78.54412], [30.8354, 78.54435], [30.83589, 78.545], [30.83633, 78.54562], [30.83658, 78.54628], [30.83645, 78.54711], [30.83589, 78.54767], [30.8354, 78.54831], [30.83488, 78.54892], [30.83436, 78.54951]]],
     stops: [
       { name: "Raithal", at: [30.81672, 78.60379] },
       { name: "Gui", at: [30.81448, 78.57426] },
       // The top of the meadow the trail crosses before dropping to the camp OSM marks as Dayara
       // Bugyal: the trek's high point, without a name of its own on the map
       { name: "Dayara Bugyal ridge", at: [30.83403, 78.54458], exact: true },
-      { name: "Dayara Bugyal", at: [30.82994, 78.54964] },
+      // The camp on the meadow where three Wikiloc tracks (24988036, 170664573, 21838496) cross it,
+      // 450 m north of OSM's point, which no track reaches
+      { name: "Dayara Bugyal", at: [30.83415, 78.55024], exact: true },
     ],
     days: [
       { to: "Gui", note: "Up from Raithal village through oak and maple to a forest clearing" },
@@ -247,6 +251,8 @@ export const TREKS = {
     gapGuides: [
       [[30.88739, 78.52235], [30.88704, 78.52242], [30.887, 78.52269], [30.88763, 78.52305]],
       [[30.89318, 78.5242], [30.89362, 78.52426], [30.89389, 78.52456], [30.89449, 78.52485]],
+      // Up to Darwa Top along Darwa Pass via Darwa Top and Kanasar meadows to Seema (41402714)
+      [[30.90874, 78.50603], [30.90856, 78.50543], [30.90849, 78.50462], [30.90831, 78.50382], [30.90848, 78.50314], [30.90859, 78.50233]],
     ],
     stops: [
       { name: "Sangam Chatti", at: [30.83588, 78.45063] },
@@ -254,10 +260,11 @@ export const TREKS = {
       { name: "Agoda", at: [30.84636, 78.48161] },
       { name: "Manjhi", at: [30.87492, 78.51945] },
       { name: "Dodital", q: "Dodi tal", at: [30.89725, 78.52606] },
-      // Where Darwa Pass treks go: the top of the ridge west of the lake (Darwa or Dayara Top), at
-      // 4,129 m on the elevation model, as published (4,131-4,150 m), by a trekker's waypoint
-      // (ultrajourneys.org). The saddle north of the lake that OSM calls the pass is 3,775 m
-      { name: "Darwa Pass", at: [30.89822, 78.49873], exact: true, ele: 4150 }, // operators 4,150 m; the 90 m model reads a narrow pass low
+      // Darwa Top, the high point of the ridge west of the lake where a Wikiloc track (41402714)
+      // tops out; three tracks named Dodital to Darwa Pass stop lower, at the 3,800 m saddle north of
+      // the lake that OSM calls the pass. No track goes on to the 4,129 m bump 800 m south that a
+      // trekker's waypoint (ultrajourneys.org) marked. Operators give 4,150 m
+      { name: "Darwa Pass", at: [30.90859, 78.50183], exact: true, ele: 4150 },
     ],
     days: [
       { to: "Agoda", note: "Up from the road through fields to Agoda village" },
