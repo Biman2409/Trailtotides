@@ -25,6 +25,8 @@ const dist = (a: { 0: number; 1: number }, b: { 0: number; 1: number }) => {
 };
 /** A place this close to the line (km) is on it */
 const ON_LINE = 0.6;
+/** …and this close (km) to a stop is passing it again */
+const NEAR_STOP = 0.15;
 
 export function flyRoute(trail: Trail): FlyRoute {
   const main = trail.line;
@@ -40,23 +42,48 @@ export function flyRoute(trail: Trail): FlyRoute {
     const s = trail.stops.find((x) => x.name === name) ?? trail.sleepPlaces.find((x) => x.name === name);
     return s ? [s.lat, s.lng] : null;
   };
-  /** Where a place sits on the main line, as an index, or null when it's off it */
-  const onMain = (name: string): number | null => {
-    const st = trail.stops.find((x) => x.name === name);
+  const idxAtKm = (k: number) => { let b = 0; for (let i = 0; i < cum.length; i++) if (Math.abs(cum[i] - k) < Math.abs(cum[b] - k)) b = i; return b; };
+  /** Every point where the line passes a place. A line can pass one twice (a loop back to the
+   *  start, a descent that rejoins the way up), so a walk picks the right pass by where it is */
+  const passes = (name: string): number[] => {
     // Stops carry km on the trail's own scale (its stated length), not raw point-to-point distance
-    if (st) { const k = st.km * scale; let b = 0; for (let i = 0; i < cum.length; i++) if (Math.abs(cum[i] - k) < Math.abs(cum[b] - k)) b = i; return b; }
+    const at = trail.stops.filter((s) => s.name === name).map((s) => idxAtKm(s.km * scale));
+    // A stop's km says exactly where the line first passes it. A line can pass it again (the way
+    // down rejoining the way up), found by distance: close when the line runs through the place,
+    // so switchbacks winding near a village aren't taken for it; looser for a camp beside the line
     const c = coords(name);
-    if (!c) return null;
-    const n = nearestIdx(c);
-    return n.d <= ON_LINE ? n.i : null;
+    if (c) {
+      // Each time the line comes within reach of the place is one pass, however much it winds
+      // about while near: its closest point
+      const ds = main.map((p) => dist(c, p));
+      const reach = at.length || Math.min(...ds) <= NEAR_STOP ? NEAR_STOP : ON_LINE;
+      for (let i = 0; i < ds.length; i++) {
+        if (ds[i] > reach) continue;
+        let j = i, best = i;
+        while (j + 1 < ds.length && ds[j + 1] <= reach) { j++; if (ds[j] < ds[best]) best = j; }
+        // A stop already marks this pass
+        if (!at.some((k) => k >= i && k <= j)) at.push(best);
+        i = j;
+      }
+    }
+    return [...new Set(at)].sort((x, y) => x - y);
+  };
+  /** The pass of a place to walk to from point `from`: the next one ahead, else the nearest behind */
+  const target = (name: string, from: number): number | null => {
+    const ps = passes(name);
+    if (!ps.length) return null;
+    return ps.find((i) => i > from) ?? ps.filter((i) => i <= from).pop() ?? null;
   };
 
   const out: P[] = [main[0]];
   const push = (pts: P[]) => { for (const p of pts) { const l = out[out.length - 1]; if (dist(l, p) > 0.001) out.push(p); } };
-  const kmNow = () => { let k = 0; for (let i = 1; i < out.length; i++) k += dist(out[i - 1], out[i]); return k; };
+  // On the trail's own scale (its stated length over the drawn line), as the itinerary measures days
+  const kmNow = () => { let k = 0; for (let i = 1; i < out.length; i++) k += dist(out[i - 1], out[i]); return k / scale; };
   const alongMain = (a: number, b: number) => push(a <= b ? main.slice(a, b + 1) : main.slice(b, a + 1).reverse());
 
   let here = trail.days.find((d) => d.from)?.from ?? trail.stops[0].name;
+  /** Where you are on the main line, or null when off it (down a detour, at a camp beside it) */
+  let cur: number | null = 0;
   let extended = false;
   const summits: FlyRoute["summits"] = [];
   const bands: FlyBand[] = [];
@@ -65,15 +92,32 @@ export function flyRoute(trail: Trail): FlyRoute {
   const go = (to: string): boolean => {
     if (to === here) return true;
     const det = trail.detours?.find((d) => (d.from === here && d.to === to) || (d.from === to && d.to === here));
-    if (det) { push(det.from === here ? det.line : [...det.line].reverse()); here = to; extended = true; return true; }
-    const a = onMain(here), b = onMain(to);
-    if (a != null && b != null) { if (b < a) extended = true; alongMain(a, b); here = to; return true; }
-    // Off the line at one end (a camp in the next valley): a short link to the nearest point on it
+    if (det) { push(det.from === here ? det.line : [...det.line].reverse()); here = to; cur = null; extended = true; return true; }
+    if (cur == null) {
+      // Off the line (a camp beside it, the end of a detour): rejoin it where the way to `to` is
+      // shortest, counting the off-line link a little dearer and any climb up to it, so a camp in
+      // the next valley rejoins down that valley rather than over the ridge to the nearest point
+      const p = out[out.length - 1];
+      const ends = passes(to);
+      let best: { join: number; b: number; cost: number } | null = null;
+      for (let j = 0; j < main.length; j++) {
+        const link = dist(p, main[j]);
+        if (link > 3) continue;
+        const b = ends.length ? ends.reduce((x, y) => (Math.abs(cum[y] - cum[j]) < Math.abs(cum[x] - cum[j]) ? y : x)) : null;
+        if (b == null) break;
+        const cost = link * 1.3 + Math.abs(cum[b] - cum[j]) + Math.max(0, main[j][2] - p[2]) / 100;
+        if (!best || cost < best.cost) best = { join: j, b, cost };
+      }
+      if (best) { alongMain(best.join, best.b); here = to; cur = best.b; extended = true; return true; }
+    }
+    const from = cur ?? nearestIdx(out[out.length - 1]).i;
+    const b = target(to, from);
+    if (b != null) { if (b < from || cur == null) extended = true; alongMain(from, b); here = to; cur = b; return true; }
+    // A camp a little off the line: walk to the nearest point, then a short link to it
     const tc = coords(to);
-    if (a == null && b != null) { alongMain(nearestIdx(out[out.length - 1]).i, b); here = to; extended = true; return true; }
-    if (b == null && tc) {
+    if (tc) {
       const n = nearestIdx(tc);
-      if (a != null && n.d < 3) { alongMain(a, n.i); push([[tc[0], tc[1], main[n.i][2]]]); here = to; extended = true; return true; }
+      if (n.d < 3) { alongMain(from, n.i); push([[tc[0], tc[1], main[n.i][2]]]); here = to; cur = null; extended = true; return true; }
     }
     return false;
   };
@@ -108,7 +152,7 @@ export function flyRoute(trail: Trail): FlyRoute {
   // Each stop at the first point of the joined line that reaches it
   const cumOut: number[] = [0];
   for (let i = 1; i < out.length; i++) cumOut.push(cumOut[i - 1] + dist(out[i - 1], out[i]));
-  const firstKm = (s: TrailStop) => { let b = 0, bd = Infinity; for (let i = 0; i < out.length; i++) { const d = dist([s.lat, s.lng], out[i]); if (d < bd - 0.05) { bd = d; b = i; } } return cumOut[b]; };
+  const firstKm = (s: TrailStop) => { let b = 0, bd = Infinity; for (let i = 0; i < out.length; i++) { const d = dist([s.lat, s.lng], out[i]); if (d < bd - 0.05) { bd = d; b = i; } } return cumOut[b] / scale; };
   const stops = trail.stops.map((s) => ({ ...s, km: Math.round(firstKm(s) * 100) / 100 }));
   return {
     trail: { ...trail, line: out, lengthKm: Math.round(total * 10) / 10, stops, unmapped: [] },

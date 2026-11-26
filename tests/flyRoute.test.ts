@@ -40,3 +40,25 @@ test("the joined line never jumps more than 1.6 km in a straight line", () => {
     for (let i = 1; i < L.length; i++) assert.ok(km(L[i - 1], L[i]) < 1.6, `${t.slug}: ${km(L[i - 1], L[i]).toFixed(2)} km jump at point ${i}`);
   }
 });
+
+test("each day in the fly-through is as long and as steep as the itinerary says", () => {
+  for (const t of trails) {
+    const r = flyRoute(t);
+    if (!r.extended) continue;
+    const L = r.trail.line, cum = [0];
+    for (let i = 1; i < L.length; i++) cum.push(cum[i - 1] + km(L[i - 1], L[i]));
+    const k = r.trail.lengthKm / cum[cum.length - 1];
+    const idx = (x: number) => { let i = 0; while (i < cum.length - 1 && cum[i] * k < x) i++; return i; };
+    for (const b of r.bands) {
+      const d = t.days.find((x) => x.day === b.day)!;
+      const len = b.to - b.from;
+      if (d.km != null) assert.ok(Math.abs(len - d.km) <= Math.max(1, d.km * 0.15), `${t.slug} day ${b.day}: itinerary ${d.km} km, fly-through ${len.toFixed(1)} km`);
+      // Climbs of 15 m or more, as scripts/check-consistency.mjs measures them
+      const i0 = idx(b.from), i1 = idx(b.to);
+      let up = 0, ref = L[i0][2];
+      for (let i = i0 + 1; i <= i1; i++) { const x = L[i][2] - ref; if (x >= 15) { up += x; ref = L[i][2]; } else if (x <= -15) ref = L[i][2]; }
+      if (d.up != null && up > 200) assert.ok(Math.abs(up - d.up) <= Math.max(150, up * 0.35), `${t.slug} day ${b.day}: itinerary +${d.up} m, fly-through +${Math.round(up)} m`);
+      if (d.up != null && d.down != null) assert.ok(Math.abs(d.up - d.down - (L[i1][2] - L[i0][2])) <= 120, `${t.slug} day ${b.day}: itinerary net ${d.up - d.down} m, fly-through ${L[i0][2]} to ${L[i1][2]} m`);
+    }
+  }
+});
