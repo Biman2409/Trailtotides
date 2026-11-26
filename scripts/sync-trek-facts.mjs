@@ -56,7 +56,8 @@ for (const file of readdirSync(DIR).filter((f) => f.endsWith(".json"))) {
   const before = entry;
 
   const days = trail.days.length;
-  const walked = Math.round(trail.days.filter((d) => d.kind === "walk").reduce((s, d) => s + (d.km ?? 0), 0));
+  // As trailWalkKm in src/lib/trails/shared.ts: walking days, and rest days' hikes
+  const walked = Math.round(trail.days.filter((d) => d.kind === "walk" || d.kind === "rest").reduce((s, d) => s + (d.km ?? 0), 0));
   const set = (key, value, required = true) => {
     const re = new RegExp(`(\\b${key}: )"[^"]*"`);
     if (re.test(entry)) entry = entry.replace(re, `$1"${value}"`);

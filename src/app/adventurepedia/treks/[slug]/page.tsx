@@ -22,7 +22,7 @@ import { Rich, BlockView, serif } from "../../blocks";
 import AskCompassButton from "../../activities/AskCompassButton";
 import TrailElevation from "@/components/ui/custom/TrailElevation";
 import { dayBands } from "@/lib/trails/dayBands";
-import { NO_TRACK, NO_TRACK_NOTE, sideTripOn, stretchPlace, trailDriveKm, trailWalkKm } from "@/lib/trails/shared";
+import { NO_TRACK, NO_TRACK_NOTE, sideTripOn, stretchPlace, trailClimbM, trailDriveKm, trailWalkKm } from "@/lib/trails/shared";
 import TrekChecklist, { type ChecklistItem } from "./TrekChecklist";
 import CompareTreksButton from "./CompareTreksButton";
 import { MarkRead } from "../../readState";
@@ -302,7 +302,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
             {trail && (
               <Section id="itinerary" kicker="Itinerary" title="Day by day">
                 <p className="text-[15px] leading-[1.7] t-text-2 mb-5">
-                  A typical plan, measured along the mapped trail: <b className="t-text">{fmt(trail.drives?.length ? trailWalkKm(trail) : trail.lengthKm)} km</b>{trail.drives?.length ? <> on foot and <b className="t-text">{fmt(trailDriveKm(trail))} km</b> by road between the trailheads,</> : null} with about <b className="t-text">{fmt(trail.ascentM)} m</b> of climbing{hardest ? <>. The biggest day is <b className="t-text">day {hardest.day}</b>, climbing {fmt(hardest.up ?? 0)} m</> : null}. Operators vary it a little{(trail.approxKm ?? 0) > 0 ? "; figures marked ≈ are estimates where the path isn't mapped" : ""}.
+                  A typical plan, measured along the mapped trail: <b className="t-text">{fmt(trailWalkKm(trail))} km</b> on foot in all{trail.drives?.length ? <> and <b className="t-text">{fmt(trailDriveKm(trail))} km</b> by road between the trailheads,</> : null} with about <b className="t-text">{fmt(trailClimbM(trail))} m</b> of climbing{hardest ? <>. The biggest day is <b className="t-text">day {hardest.day}</b>, climbing {fmt(hardest.up ?? 0)} m</> : null}. Operators vary it a little{(trail.approxKm ?? 0) > 0 ? "; figures marked ≈ are estimates where the path isn't mapped" : ""}.
                   {(trail.unmapped?.length ?? 0) > 0 && <> <b className="t-text">{NO_TRACK}:</b> {trail.unmapped!.map((s) => `km ${s.fromKm.toFixed(1)}–${s.toKm.toFixed(1)} ${stretchPlace(trail, s)}`).join("; ")}. {NO_TRACK_NOTE}</>}
                 </p>
                 <ol className="relative">

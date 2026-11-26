@@ -41,19 +41,25 @@ const DHAK = { name: "Dhak", at: [30.49886, 79.61134] };
 const KALPESHWAR = { name: "Kalpeshwar", at: [30.54961, 79.44892], exact: true };
 const KHULLARA ={ name: "Khullara", at: [30.45968, 79.58748] };
 
+// Rest-day acclimatisation hikes the itineraries describe, as side trips so the map, the GPX and
+// the fly-through draw them. Points from OpenStreetMap (names as OSM has them, heights from OSM)
+const NAMCHE_VIEW = { name: "Everest viewpoint above Namche", at: [27.81162, 86.71825], exact: true, ele: 3885 };
+// OSM's Nangkartshang node is the 5,073 m shoulder people climb to from Dingboche, not the summit
+const NANGKARTSHANG = { name: "Nangkartshang viewpoint", at: [27.90548, 86.83548], exact: true, ele: 5073 };
+
 export const TREKS = {
   "everest-base-camp": {
     near: "Solukhumbu, Nepal",
     stops: ["Lukla", "Phakding", "Namche Bazaar", "Tengboche", "Dingboche", "Lobuche", "Gorak Shep", "Everest Base Camp"],
-    side: ["Kala Patthar"],
+    side: ["Kala Patthar", NAMCHE_VIEW, NANGKARTSHANG],
     extra: ["Pheriche"],
     days: [
       { to: "Phakding", note: "Fly into Lukla in the morning and walk down the Dudh Kosi valley" },
       { to: "Namche Bazaar", note: "The big climb of the trek: the Namche hill, with a first view of Everest" },
-      { rest: "Acclimatisation day: a short climb above Namche and back to sleep low" },
+      { rest: "Acclimatisation day: up to the Everest viewpoint above Syangboche, then back to sleep low in Namche", side: NAMCHE_VIEW.name },
       { to: "Tengboche", note: "Across the valley side to the monastery, facing Ama Dablam" },
       { to: "Dingboche", note: "Through Pangboche into the Imja valley" },
-      { rest: "Acclimatisation day: climb partway up Nangkartshang and back" },
+      { rest: "Acclimatisation day: up the ridge above Dingboche to the Nangkartshang viewpoint and back", side: NANGKARTSHANG.name },
       { to: "Lobuche", note: "Past the climbers' memorials at Thukla" },
       { to: "Gorak Shep", via: ["Everest Base Camp"], note: "On to Gorak Shep, then out to Base Camp and back" },
       { to: "Pheriche", side: "Kala Patthar", note: "Kala Patthar before sunrise for the Everest view, then down" },
@@ -65,11 +71,11 @@ export const TREKS = {
   "gokyo-lakes": {
     near: "Solukhumbu, Nepal",
     stops: ["Lukla", "Phakding", "Namche Bazaar", "Dole", { name: "Machhermo", q: "Macchermo", at: [27.90288, 86.7156] }, "Gokyo"],
-    side: ["Gokyo Ri"],
+    side: ["Gokyo Ri", NAMCHE_VIEW],
     days: [
       { to: "Phakding", note: "Fly into Lukla in the morning and walk down the Dudh Kosi valley" },
       { to: "Namche Bazaar", note: "The big climb of the trek: the Namche hill, with a first view of Everest" },
-      { rest: "Acclimatisation day: a short climb above Namche and back to sleep low" },
+      { rest: "Acclimatisation day: up to the Everest viewpoint above Syangboche, then back to sleep low in Namche", side: NAMCHE_VIEW.name },
       { to: "Dole", note: "Off the Everest trail, up the Gokyo valley past Mong La" },
       { to: "Machhermo", note: "A short day, to keep the height gain slow" },
       { to: "Gokyo", note: "Beside the Ngozumpa glacier past the first lakes to Gokyo, on the third" },
@@ -101,12 +107,14 @@ export const TREKS = {
 
   "annapurna-circuit": {
     near: "Manang, Nepal",
+    // Manang's acclimatisation climb: OSM's Kicho Tal (Ice Lake), 4,625 m
+    side: [{ name: "Ice Lake (Kicho Tal)", at: [28.67988, 84.06126], exact: true, ele: 4625 }],
     stops: ["Dharapani", "Chame", "Upper Pisang", "Manang", "Yak Kharka", { name: "Thorong Phedi", at: [28.77678, 83.97264] }, { name: "Thorong La", at: [28.79353, 83.93876] }, { name: "Muktinath", at: [28.81692, 83.87145] }],
     days: [
       { to: "Chame", note: "After the drive up the Marsyangdi, walk through pine forest to Chame" },
       { to: "Upper Pisang", note: "Past the great curved rock face of Paungda Danda to Pisang" },
       { to: "Manang", note: "Up the dry upper valley, Annapurna II and III across it" },
-      { rest: "Acclimatisation day in Manang: climb towards Praken Gompa or Ice Lake and back" },
+      { rest: "Acclimatisation day in Manang: the long climb to Ice Lake (Kicho Tal) and back. A shorter option is Praken Gompa", side: "Ice Lake (Kicho Tal)" },
       { to: "Yak Kharka", note: "Out of the Manang valley up to the yak pastures" },
       { to: "Thorong Phedi", note: "A short day to the foot of the pass. Sleep early" },
       { to: "Muktinath", via: ["Thorong La"], note: "Start before dawn to cross Thorong La at 5,416 m, then a long, steep descent to Muktinath's temple" },
@@ -189,7 +197,7 @@ export const TREKS = {
     days: [
       { to: "Osla", note: "Drive from Sankri to Taluka, then walk up the Supin river through walnut and chestnut forest" },
       { to: "Har Ki Dun", note: "Through terraced fields above Osla, then up into the valley below Swargarohini" },
-      { rest: "A day in the valley: walk towards the Jaundhar glacier or up to Maninda Tal" },
+      { rest: "A day in the valley: walk towards the Jaundhar glacier or up to Maninda Tal. Not drawn on the map: no mapped path or GPS track reaches either" },
       { to: "Osla", note: "Back down the valley the way you came" },
       { to: "Taluka", note: "The last walk out along the Supin, then the drive back to Sankri" },
     ],
@@ -236,10 +244,12 @@ export const TREKS = {
       // 450 m north of OSM's point, which no track reaches
       { name: "Dayara Bugyal", at: [30.83415, 78.55024], exact: true },
     ],
+    // The rest day's walk: OSM's Bakria (Bakaria Top), 3,804 m
+    side: [{ name: "Bakaria Top", at: [30.82292, 78.54111], exact: true, ele: 3804 }],
     days: [
       { to: "Gui", note: "Up from Raithal village through oak and maple to a forest clearing" },
       { to: "Dayara Bugyal", via: ["Dayara Bugyal ridge"], note: "Out of the trees onto the rolling meadow, Bandarpoonch and Srikanth on the skyline" },
-      { rest: "A day on the meadows: walk up towards Bakaria Top for the views" },
+      { rest: "A day on the meadows: up to Bakaria Top for the views, and back", side: "Bakaria Top" },
       { to: "Raithal", note: "Down the way you came" },
     ],
   },
@@ -756,9 +766,10 @@ export const TREKS = {
       { name: "Kedarnath", q: "Shri Kedarnath Mandir", at: [30.7354, 79.0668] },
     ],
     camps: { "Kedarnath base camp": ["Gaurikund", "Kedarnath", 0.9, ["Kedarnath base camp"]] },
+    side: [{ name: "Bhukund Bhairavnath temple", at: [30.73213, 79.07014], exact: true }],
     days: [
       { to: "Kedarnath", note: "The pilgrim path from Gaurikund up the Mandakini, past Rambara and Linchauli, to the temple below the Kedarnath peaks" },
-      { rest: "Darshan at the temple, and the short climb to Bhukund Bhairavnath temple above it" },
+      { rest: "Darshan at the temple, and the short climb to Bhukund Bhairavnath temple above it", side: "Bhukund Bhairavnath temple" },
       { to: "Gaurikund", note: "Back down the same path to Gaurikund" },
     ],
   },
@@ -1089,6 +1100,8 @@ export const TREKS = {
       { name: "Gangbal Lake", q: "Gangbal campsite", at: [34.42556, 74.94058] },
       { name: "Naranag", at: [34.35023, 74.97212] },
     ],
+    // The rest day's walk: OSM's Krishansar lake
+    side: [{ name: "Kishansar", at: [34.39651, 75.10157], exact: true }],
     camps: {
       Nichnai: ["Sonamarg", "Vishansar Lake", 0.45, ["Nichinai", "Nichnai Camp"]],
       "Nichnai Pass": ["Sonamarg", "Vishansar Lake", 0.7, ["Nichinai Pass", "Nichinai Bal", "Nichnai Bal"]],
@@ -1101,7 +1114,7 @@ export const TREKS = {
     days: [
       { to: "Nichnai", note: "Up from Sonamarg through maple and birch to a valley of meadows" },
       { to: "Vishansar Lake", via: ["Nichnai Pass"], note: "Over Nichnai Pass and down to camp beside Vishansar, with Kishansar above it" },
-      { rest: "A day at the twin lakes: walk up to Kishansar" },
+      { rest: "A day at the twin lakes: walk up to Kishansar, above Vishansar", side: "Kishansar" },
       { to: "Gadsar Lake", via: ["Gadsar Pass"], note: "Over Gadsar Pass, the trek's highest, with both lakes below you, then down to Gadsar" },
       { to: "Satsar", note: "Through meadows to the seven lakes of Satsar. There's an army check post on the way: carry ID" },
       { to: "Gangbal Lake", via: ["Zaj Pass"], note: "Over boulders and Zaj Pass to the twin lakes of Gangbal and Nundkol, under Harmukh" },
@@ -1232,15 +1245,15 @@ export const TREKS = {
       { name: "Tengboche", at: [27.83581, 86.76461] },
       "Lukla",
     ],
-    side: ["Gokyo Ri", "Kala Patthar"],
+    side: ["Gokyo Ri", "Kala Patthar", NAMCHE_VIEW, { name: "Ngozumpa Tsho (fifth lake)", at: [28.00535, 86.68255], exact: true }],
     days: [
       { to: "Phakding", note: "Fly into Lukla in the morning and walk down the Dudh Kosi valley" },
       { to: "Namche Bazaar", note: "The big climb of the trek: the Namche hill, with a first view of Everest" },
-      { rest: "Acclimatisation day: a short climb above Namche and back to sleep low" },
+      { rest: "Acclimatisation day: up to the Everest viewpoint above Syangboche, then back to sleep low in Namche", side: NAMCHE_VIEW.name },
       { to: "Dole", note: "Off the Everest trail over Mong La, down to the river and up into the Gokyo valley" },
       { to: "Machhermo", note: "A short day, to keep the height gain slow" },
       { to: "Gokyo", note: "Beside the Ngozumpa glacier, past the first two lakes to Gokyo on the third" },
-      { rest: "Acclimatisation day: walk up the valley to the fourth and fifth lakes and back" },
+      { rest: "Acclimatisation day: up the valley past the fourth lake (Thonak Tso) to the fifth, Ngozumpa Tsho, and back", side: "Ngozumpa Tsho (fifth lake)" },
       { to: "Dragnag", side: "Gokyo Ri", note: "Gokyo Ri at dawn for Everest, Lhotse, Makalu and Cho Oyu, then across the Ngozumpa glacier to Dragnag" },
       { to: "Dzongla", note: "Over the Cho La: a steep scramble up, a short glacier crossing at the top, and down to Dzongla" },
       { to: "Lobuche", note: "Round the ridge into the Khumbu valley" },
@@ -1271,11 +1284,11 @@ export const TREKS = {
       { name: "Deboche", at: [27.83971, 86.77041] },
       "Lukla",
     ],
-    side: ["Gokyo Ri", "Kala Patthar"],
+    side: ["Gokyo Ri", "Kala Patthar", NAMCHE_VIEW],
     days: [
       { to: "Phakding", note: "Fly into Lukla in the morning and walk down the Dudh Kosi valley" },
       { to: "Namche Bazaar", note: "The big climb of the trek: the Namche hill, with a first view of Everest" },
-      { rest: "Acclimatisation day: a short climb above Namche and back to sleep low" },
+      { rest: "Acclimatisation day: up to the Everest viewpoint above Syangboche, then back to sleep low in Namche", side: NAMCHE_VIEW.name },
       { to: "Thame", note: "West up the Bhote Kosi valley to Thame and its cliffside monastery" },
       { to: "Lungden", note: "Up the quiet valley through Marlung to the last lodges below the Renjo La" },
       { rest: "Acclimatisation day at Lungden before the first pass" },

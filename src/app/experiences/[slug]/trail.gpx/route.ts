@@ -100,7 +100,7 @@ ${pts(seg)}
 <gpx version="1.1" creator="Trail to Tides" xmlns="http://www.topografix.com/GPX/1/1">
   <metadata>
     <name>${esc(adventure.name)}</name>
-    <desc>${esc(`${trail.drives?.length ? `A circuit of ${trailWalkKm(trail)} km on foot and ${trailDriveKm(trail)} km by road from ${trail.stops[0].name}, as separate tracks marked Hike and Drive` : `${trail.lengthKm} km one way from ${trail.stops[0].name}`}${(trail.sideTrips ?? []).length ? `, plus ${trail.sideTrips!.length === 1 ? "a side trip" : `${trail.sideTrips!.length} side trips`} (${trail.sideTrips!.map((s) => s.name).join(", ")}) as separate tracks` : ""}. A planned route computed from OpenStreetMap paths (BRouter), not a recorded GPS track.${unmappedText} Check the route with your operator: paths change after landslides and snow.`)}</desc>
+    <desc>${esc(`${trail.drives?.length ? `A circuit of ${trailWalkKm(trail)} km on foot and ${trailDriveKm(trail)} km by road from ${trail.stops[0].name}, as separate tracks marked Hike and Drive` : `${trail.lengthKm} km one way from ${trail.stops[0].name} (the itinerary walks about ${trailWalkKm(trail)} km in all, there and back with its side trips)`}${(trail.sideTrips ?? []).length ? `, plus ${trail.sideTrips!.length === 1 ? "a side trip" : `${trail.sideTrips!.length} side trips`} (${trail.sideTrips!.map((s) => s.name).join(", ")}) as separate tracks` : ""}. A planned route computed from OpenStreetMap paths (BRouter), not a recorded GPS track.${unmappedText} Check the route with your operator: paths change after landslides and snow.`)}</desc>
     <copyright author="OpenStreetMap contributors"><license>https://opendatacommons.org/licenses/odbl/</license></copyright>
     <link href="${page}"><text>Trail to Tides</text></link>
   </metadata>

@@ -161,7 +161,8 @@ export function acclimatisation(trail: Trail) {
   return { startEle, highestSleep, restDays, jumps, nights: nights.length };
 }
 
-export const trailWalkKm = (t: Trail) => Math.round(t.days.reduce((s, d) => s + (d.kind === "walk" ? d.km ?? 0 : 0), 0));
+/** Km on foot over the whole itinerary: walking days, and rest days' hikes (an acclimatisation climb) */
+export const trailWalkKm = (t: Trail) => Math.round(t.days.reduce((s, d) => s + (d.kind === "walk" || d.kind === "rest" ? d.km ?? 0 : 0), 0));
 
 /** Where the trip starts (day 1) and ends (the last night's stop, or day 1's start if it ends on a travel day) */
 export function trailEnds(t: Trail): { from: string; to: string } {

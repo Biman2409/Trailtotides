@@ -638,8 +638,22 @@ async function build(slug) {
   const sleepPlaces = [...new Map(days.filter((d) => d.to).map((d) => [d.to, found.get(d.to)])).values()]
     .map(({ name, lat, lng, ele }) => ({ name, lat, lng, ele }));
 
+  // Every place a day goes by (its via: a pass, a lake) is named on the line, so all the itinerary's
+  // named points are drawn, not only the overnight stops (Nichnai Pass, Zaj Pass on the Great Lakes)
+  for (const d of days) {
+    for (const v of d.via ?? []) {
+      const p = found.get(v);
+      if (!p || stops.some((s) => s.name === v) || side.some((s) => s.name === v)) continue;
+      const B = nearestIdx(p);
+      if (B.off > 300) continue;
+      const km = +(cum[B.i] / 1000).toFixed(1);
+      const k = stops.findIndex((s) => s.km > km);
+      stops.splice(k < 0 ? stops.length : k, 0, { name: p.name, lat: p.lat, lng: p.lng, ele: p.ele, km });
+    }
+  }
+
   const line = simplify(full, 10).map(([la, lo, e]) => [+la.toFixed(5), +lo.toFixed(5), e]);
-  const strip = ({ name, lat, lng, ele, km }) => (km == null ? { name, lat, lng, ele } : { name, lat, lng, ele, km });
+  const strip =({ name, lat, lng, ele, km }) => (km == null ? { name, lat, lng, ele } : { name, lat, lng, ele, km });
   const trail = {
     slug,
     source: "© OpenStreetMap contributors (ODbL); route by BRouter",

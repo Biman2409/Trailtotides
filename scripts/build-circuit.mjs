@@ -21,7 +21,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // or { drive: [lat, lng] or "<place name in this circuit>" , name }: by road from where the last
 // piece ended. places: named points the days can end at, besides the treks' stops.
 // days: { to: "<place>", note } walks or drives (or both) on to that place, the next time the line
-// reaches it; { rest: "<note>" } stays put.
+// reaches it; { rest: "<note>" } stays put; { rest, side: { trek, name } } climbs one of a trek's side
+// trips from where you are and back (copied from that trek, as its walking pieces are).
 const HELANG = [30.52601, 79.50671]; // where the Urgam road meets the Badrinath highway
 // Private cars stop at Sonprayag; shared jeeps run the last 5 km of road to Gaurikund, routed here
 // along the road on foot's profile (the car profile won't take it) and still counted as by road
@@ -51,11 +52,11 @@ const CIRCUITS = {
     ],
     days: [
       { to: "Kedarnath", note: "A short drive from Guptkashi to Sonprayag and Gaurikund, then the pilgrim path up the Mandakini to Kedarnath, the first of the five" },
-      { rest: "Darshan at Kedarnath, and the short climb to Bhukund Bhairavnath temple above it" },
+      { rest: "Darshan at Kedarnath, and the short climb to Bhukund Bhairavnath temple above it", side: { trek: "kedarnath", name: "Bhukund Bhairavnath temple" } },
       { to: "Ransi", note: "Down to Gaurikund, then by road through Guptkashi and Ukhimath to Ransi" },
       { to: "Gaundar", note: "Down to the Madhmaheshwar Ganga and along it to Gaundar village" },
       { to: "Madhmaheshwar", note: "Up through Bantoli and Nanu to the meadow temple facing Chaukhamba, the second of the five" },
-      { rest: "A morning at Budha Madhmaheshwar on the meadow above" },
+      { rest: "A morning at Budha Madhmaheshwar on the meadow above", side: { trek: "madhmaheshwar", name: "Budha Madhmaheshwar" } },
       { to: "Chopta", note: "All the way down to Ransi, then by road over to Chopta" },
       { to: "Sagar", note: "Up to Tungnath, the third and highest of the five, and on to Chandrashila; back down to Chopta and by road through Mandal to Sagar" },
       { to: "Panar", note: "From Sagar up through oak forest and the Lyuti meadows to Panar bugyal" },
@@ -170,11 +171,22 @@ async function build(slug) {
   const cum = cumKm(line);
   const nearestFrom = (p, from) => { let best = -1, bd = Infinity; for (let i = from; i < line.length; i++) { const d = dist(line[i], [p.lat, p.lng]); if (d < bd) { bd = d; best = i; } if (bd < 30 && d > 2000) break; } return { i: best, d: bd }; };
   const onRoad = (k) => drives.some((d) => k > d.fromKm + 1e-6 && k <= d.toKm + 1e-6);
-  const days = [];
+  const days = [], sideTrips = [], side = [];
   let idx = 0, from = C.start.name, day = 0;
   for (const d of C.days) {
     day++;
-    if (d.rest) { days.push({ day, kind: "rest", from, to: from, sleepEle: places.get(from)?.ele ?? null, note: d.rest }); continue; }
+    if (d.rest) {
+      // A trek's side trip from here, carried over as it was built there
+      const st = d.side && (await load(d.side.trek)).sideTrips?.find((x) => x.name === d.side.name && x.from === from);
+      if (d.side && !st) throw new Error(`day ${day}: ${d.side.trek} has no side trip ${d.side.name} from ${from}`);
+      if (st) {
+        if (!sideTrips.includes(st)) sideTrips.push(st);
+        const pt = (await load(d.side.trek)).side.find((x) => x.name === st.name) ?? { name: st.name, lat: st.line.at(-1)[0], lng: st.line.at(-1)[1], ele: st.ele };
+        if (!side.some((x) => x.name === pt.name)) side.push(pt);
+        days.push({ day, kind: "rest", from, to: from, via: [st.name], km: +(2 * st.km).toFixed(1), up: st.up + st.down, down: st.down + st.up, sleepEle: places.get(from)?.ele ?? null, note: d.rest });
+      } else days.push({ day, kind: "rest", from, to: from, sleepEle: places.get(from)?.ele ?? null, note: d.rest });
+      continue;
+    }
     const p = places.get(d.to);
     if (!p) throw new Error(`day ${day}: no place ${d.to}`);
     const { i, d: off } = nearestFrom(p, idx);
@@ -205,11 +217,11 @@ async function build(slug) {
     builtAt: new Date().toISOString().slice(0, 10),
     lengthKm: +cum.at(-1).toFixed(1),
     ascentM: days.reduce((s, d) => s + (d.up ?? 0), 0),
-    maxEleM: Math.max(...walkLine.map((p) => p[2])),
+    maxEleM: Math.max(...walkLine.map((p) => p[2]), ...side.map((p) => p.ele ?? 0)),
     approxKm: +unmapped.reduce((s, u) => s + u.toKm - u.fromKm, 0).toFixed(1),
     stops: stopsOut,
-    side: [],
-    sideTrips: [],
+    side,
+    sideTrips,
     detours: [],
     unmapped,
     drives,
