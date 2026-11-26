@@ -88,9 +88,13 @@ export async function markTrail(t) {
   // A leg's stops join its chain only when they're as close to it as guide points are to each other:
   // a stop 2 km from the first guide point is a stretch the track doesn't cover
   const joins = (p, q) => p && q && dist(p, q) <= 500;
-  (trek?.guide ?? []).forEach((g, i) => { const a = at(trek.stops[i]), b = at(trek.stops[i + 1]); if (g?.length) refs.push([...(joins(a, g[0]) ? [a] : []), ...g, ...(joins(b, g.at(-1)) ? [b] : [])]); });
+  // Guide points placed from the map rather than read off a track (`mapOnly`) aren't tracking data
+  const mapOnly = new Set((trek?.mapOnly ?? []).map(([la, lo]) => `${la},${lo}`));
+  (trek?.guide ?? []).forEach((g0, i) => { const g = (g0 ?? []).filter(([la, lo]) => !mapOnly.has(`${la},${lo}`)); const a = at(trek.stops[i]), b = at(trek.stops[i + 1]); if (g?.length) refs.push([...(joins(a, g[0]) ? [a] : []), ...g, ...(joins(b, g.at(-1)) ? [b] : [])]); });
   // and a gap closed from a reference track (`gapGuides`): its chain of guide points
   for (const chain of trek?.gapGuides ?? []) if (chain.length > 1) refs.push(chain);
+  // and a side trip's guide points (its `guide`), joined to the summit when it's close
+  for (const x of trek?.side ?? []) if (x?.guide?.length) refs.push([...x.guide, ...(x.at && dist(x.at, x.guide.at(-1)) <= 500 ? [x.at] : [])]);
   t.unmapped = unmappedStretches(t.line, ways, refs);
   t.approxKm = total(t.unmapped);
   for (const s of [...(t.sideTrips ?? []), ...(t.detours ?? [])]) { s.unmapped = unmappedStretches(s.line, ways, refs); s.approxKm = total(s.unmapped); }

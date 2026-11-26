@@ -916,9 +916,11 @@ export const TREKS = {
 
   "gulabi-kantha": {
     near: "Uttarkashi, Uttarakhand",
-    // The summit (about 3 km above Seema Thatch) has no recorded track, so the line ends at the
-    // camp; the trek's height stays the summit's published one
-    highPoint: "4,023m",
+    // The summit: where a Wikiloc track up from Seema Thatch (Kanasar to Bainkula, Mridul 2015,
+    // 13063359) tops out on the ridge, 2.8 km and about 600 m above camp, as operators give the
+    // summit day (6 km there and back, ~550 m up, a steep finish). 3,852 m on the GPS, 3,836 m on
+    // the elevation model; operators quote 4,000-4,023 m, a height no ground within 3 km reaches
+    side: [{ name: "Gulabi Kantha", at: [30.89961, 78.47833], exact: true, guide: [[30.91053, 78.46862], [30.90932, 78.4701], [30.90811, 78.47089], [30.90664, 78.46993], [30.90498, 78.47116], [30.90356, 78.47084], [30.90291, 78.47299], [30.90203, 78.47512], [30.9003, 78.47667]] }],
     stops: [
       { name: "Hanuman Chatti", at: [30.9312, 78.3996] },
       { name: "Kandola", at: [30.9189, 78.4301], exact: true },
@@ -930,36 +932,49 @@ export const TREKS = {
     ],
     days: [
       { to: "Seema Thatch", note: "From Hanuman Chatti up past Nishni village and the Kandola shepherds' huts to the high meadow camp" },
-      { rest: "Summit day: about 3 km up to Gulabi Kantha for Bandarpunch, Swargarohini and the Gangotri peaks, and back. The summit path isn't drawn: there's no recorded track of it yet" },
+      { to: "Seema Thatch", side: "Gulabi Kantha", note: "Summit day: about 3 km up through bushes and meadows, steep at the end, to Gulabi Kantha for Bandarpunch, Swargarohini and the Gangotri peaks, and back" },
       { to: "Hanuman Chatti", note: "Back down past Kandola and Nishni" },
     ],
   },
 
   doodhpathri: {
     near: "Budgam, Jammu and Kashmir",
+    // The guide points over the pass and past Pam Sar are placed from OSM's map, not a GPS track
+    mapOnly: [[33.8197, 74.45135], [33.8213, 74.4504]],
     // A long straight on the way down to Tosa Maidan: the shape of the path from a Wikiloc track (Greater lakes trek Tosamaidan (82554051))
     gapGuides: [[[33.89199, 74.48546], [33.89257, 74.48547], [33.89305, 74.4856], [33.89356, 74.48572], [33.89372, 74.48639], [33.89419, 74.48675], [33.89473, 74.48674], [33.89528, 74.4869], [33.89568, 74.48722], [33.89604, 74.48768]]],
     stops: [
-      { name: "Doodhpathri", at: [33.8614, 74.5672] },
+      // Where trekkers set off: four Wikiloc tracks (161261096, 86280598, 85918567, 172878113)
+      // start at the meadow's road end, 1.6 km south of OSM's Doodhpathri point
+      { name: "Doodhpathri", at: [33.84666, 74.56889], exact: true },
       { name: "Gurwansar", q: "Gurwansar campsite", at: [33.8036, 74.4626] },
-      { name: "Tosa Maidan", at: [33.9148, 74.5105] },
+      // The trek's high point: the pass OSM marks north of Gurwansar (unnamed there)
+      { name: "Pass above Gurwansar", at: [33.8075, 74.4581], exact: true },
+      // Where the Greater Lakes track finishes on the meadow; OSM's point is 500 m on, past where
+      // any track goes
+      { name: "Tosa Maidan", at: [33.91065, 74.51622], exact: true },
     ],
     // Not on the map by name: Ashtaar below the Pir Panjal, Duriem on the way down to Tosa Maidan
     camps: {
       Ashtaar: ["Doodhpathri", "Gurwansar", 0.55, ["Ashtar", "Ashitaar"]],
-      Duriem: ["Gurwansar", "Tosa Maidan", 0.5, ["Durium"]],
+      Duriem: ["Pass above Gurwansar", "Tosa Maidan", 0.45, ["Durium"]],
     },
     // Doodhpathri to Gurwansar on OSM's paths; from past Pam Sar to Tosa Maidan, over the lakes
     guide: [
       // Doodhpathri to Gurwansar as a Wikiloc track walks it (Gurwansar Lakes (161261096)); OSM's
       // paths take other lines up the valley
       [[33.84479, 74.56786], [33.84437, 74.56471], [33.84263, 74.56206], [33.84114, 74.55986], [33.83964, 74.55691], [33.83931, 74.55371], [33.83817, 74.55088], [33.83613, 74.54863], [33.83624, 74.54689], [33.83534, 74.54364], [33.83464, 74.54029], [33.83425, 74.53742], [33.83208, 74.53539], [33.83012, 74.53283], [33.82852, 74.53045], [33.82659, 74.52806], [33.82531, 74.52556], [33.82287, 74.52368], [33.82004, 74.52258], [33.81911, 74.51951], [33.81808, 74.51634], [33.81719, 74.51305], [33.81776, 74.50998], [33.81934, 74.50732], [33.82122, 74.50465], [33.82314, 74.50224], [33.82371, 74.49957], [33.82196, 74.49671], [33.82157, 74.49333], [33.82047, 74.49014], [33.81932, 74.48707], [33.8178, 74.4844], [33.81537, 74.48251], [33.8133, 74.48024], [33.81124, 74.47796], [33.81044, 74.47499], [33.80943, 74.47177], [33.80799, 74.46882], [33.80689, 74.46574], [33.80486, 74.46346]],
-      [[33.825592, 74.44163], [33.82950, 74.44043], [33.83252, 74.43934], [33.83515, 74.43945], [33.83830, 74.43866], [33.84253, 74.43951], [33.84542, 74.43883], [33.84832, 74.43932], [33.85197, 74.43853], [33.85428, 74.43966], [33.85759, 74.43815], [33.86002, 74.43696], [33.86346, 74.43703], [33.86431, 74.43804], [33.86484, 74.44239], [33.86569, 74.44766], [33.86657, 74.45086], [33.86706, 74.45520], [33.86990, 74.45949], [33.87157, 74.46296], [33.87207, 74.46503], [33.87350, 74.46873], [33.87579, 74.47155], [33.87877, 74.47383], [33.88027, 74.47647], [33.88349, 74.47975], [33.88538, 74.48186], [33.88853, 74.48443], [33.89149, 74.48537], [33.89404, 74.48667], [33.89801, 74.48851], [33.90012, 74.48946], [33.90315, 74.49243], [33.90466, 74.49764], [33.90630, 74.49947], [33.90660, 74.50382], [33.90603, 74.50692], [33.90509, 74.51087], [33.90395, 74.51524], [33.90702, 74.51516], [33.90872, 74.51526]],
+      // Gurwansar to Duriem "via Pamsar Lake" (operators): over the pass OSM marks north of
+      // Gurwansar, past Pam Sar to Pathri ki Gali, where the Greater Lakes track turns back. No GPS
+      // track walks this stretch (none of ~290 on Wikiloc, none on OSM), so it is drawn along the
+      // terrain through those mapped points and shown as having no tracking data
+      [],
+      [[33.8197, 74.45135], [33.8213, 74.4504], [33.825592, 74.44163], [33.82950, 74.44043], [33.83252, 74.43934], [33.83515, 74.43945], [33.83830, 74.43866], [33.84253, 74.43951], [33.84542, 74.43883], [33.84832, 74.43932], [33.85197, 74.43853], [33.85428, 74.43966], [33.85759, 74.43815], [33.86002, 74.43696], [33.86346, 74.43703], [33.86431, 74.43804], [33.86484, 74.44239], [33.86569, 74.44766], [33.86657, 74.45086], [33.86706, 74.45520], [33.86990, 74.45949], [33.87157, 74.46296], [33.87207, 74.46503], [33.87350, 74.46873], [33.87579, 74.47155], [33.87877, 74.47383], [33.88027, 74.47647], [33.88349, 74.47975], [33.88538, 74.48186], [33.88853, 74.48443], [33.89149, 74.48537], [33.89404, 74.48667], [33.89801, 74.48851], [33.90012, 74.48946], [33.90315, 74.49243], [33.90466, 74.49764], [33.90630, 74.49947], [33.90660, 74.50382], [33.90603, 74.50692], [33.90509, 74.51087], [33.90395, 74.51524], [33.90702, 74.51516], [33.90872, 74.51526], [33.90883, 74.51592], [33.9093, 74.51636], [33.91008, 74.51636]],
     ],
     days: [
       { to: "Ashtaar", note: "From the Doodhpathri meadows up the valley past shepherds' huts" },
       { to: "Gurwansar", note: "Up to the lake below the Pir Panjal ridge" },
-      { to: "Duriem", note: "Past Pam Sar and over the high lakes" },
+      { to: "Duriem", via: ["Pass above Gurwansar"], note: "Over the pass above Gurwansar, past Pam Sar and over the high lakes" },
       { to: "Tosa Maidan", note: "Down to the great meadow of Tosa Maidan and the road" },
     ],
   },

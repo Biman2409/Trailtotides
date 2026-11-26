@@ -1,6 +1,6 @@
 # Trail quality
 
-55 trails checked: 0 need fixing, 21 worth a look, 34 clean.
+55 trails checked: 0 need fixing, 20 worth a look, 35 clean.
 
 ## panch-kedar (313.4 km, 9210 m up)
 - Check · spikes: 1 height spike (worst 61 m at km 218.7)
@@ -9,9 +9,9 @@
 - Check · days: day 5 (Gaundar to Madhmaheshwar) climbs 1620 m
 - Check · days: day 9 (Sagar to Panar) climbs 1850 m
 
-## doodhpathri (34.5 km, 1820 m up, 2.8 km estimated)
-- Check · straight: 2 straight segments over 500 m (3107 m at km 18.0, 936 m at km 9.2)
-- Check · estimated: 2.8 km drawn along the terrain (no mapped path)
+## doodhpathri (31.6 km, 1810 m up, 2.6 km estimated)
+- Check · straight: 1 straight segment over 500 m (936 m at km 6.8)
+- Check · estimated: 2.6 km drawn along the terrain (no mapped path)
 
 ## rudranath-kalpeshwar (47.8 km, 3690 m up)
 - Check · days: day 1 (Kalpeshwar to Bansi Narayan) climbs 1550 m
@@ -31,9 +31,6 @@
 
 ## deoriatal-chandrashila (22.4 km, 2100 m up)
 - Check · days: days add up to 28.3 km but the trail is 22.4 km
-
-## gulabi-kantha (7.9 km, 1220 m up)
-- Check · published: highest point 3246 m; the trek page says 4023 m
 
 ## kalpeshwar (8.9 km, 1570 m up)
 - Check · days: day 1 (Urgam to Bansi Narayan) climbs 1570 m
@@ -73,4 +70,4 @@
 
 ## Clean
 
-ali-bedni-bugyal, beas-kund, bhrigu-lake, brahmatal, buran-ghati, chandrakhani-pass, dayara-bugyal, dodital-darwa-pass, everest-base-camp-gokyo-lakes, everest-base-camp, everest-three-passes, gaumukh-tapovan, goechala, gokyo-lakes, hampta-pass, har-ki-dun, kareri-lake, kedarkantha-trek, khopra-danda, kuari-pass, pangarchulla-peak, panwali-kantha, phulara-ridge, pindari-glacier, ranthan-kharak, roopkund, rupin-pass, sandakphu-phalut-trek, sar-pass, satopanth-lake, triund, tungnath-chandrashila, valley-of-flowers, yulla-kanda
+ali-bedni-bugyal, beas-kund, bhrigu-lake, brahmatal, buran-ghati, chandrakhani-pass, dayara-bugyal, dodital-darwa-pass, everest-base-camp-gokyo-lakes, everest-base-camp, everest-three-passes, gaumukh-tapovan, goechala, gokyo-lakes, gulabi-kantha, hampta-pass, har-ki-dun, kareri-lake, kedarkantha-trek, khopra-danda, kuari-pass, pangarchulla-peak, panwali-kantha, phulara-ridge, pindari-glacier, ranthan-kharak, roopkund, rupin-pass, sandakphu-phalut-trek, sar-pass, satopanth-lake, triund, tungnath-chandrashila, valley-of-flowers, yulla-kanda

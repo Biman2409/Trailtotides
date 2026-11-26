@@ -545,7 +545,12 @@ async function build(slug) {
   async function sideTrip(from, to) {
     const known = sideTrips.find((s) => s.name === to.name && s.from === from.name);
     if (known) return known;
-    const l = await leg({ name: from.name, lat: from.lat, lng: from.lng }, { name: to.name, lat: to.lat, lng: to.lng });
+    // A side trip with guide points read off a reference GPS track (its `guide` in trek-configs)
+    // is routed through them in order, as a leg of the line is
+    const cfg = (trek.side ?? []).find((x) => typeof x === "object" && x.name === to.name);
+    const via = [{ name: from.name, lat: from.lat, lng: from.lng }, ...(cfg?.guide ?? []).map(([lat, lng]) => ({ name: `${lat},${lng}`, lat, lng, through: true })), { name: to.name, lat: to.lat, lng: to.lng }];
+    const l = { coords: [], approxKm: 0 };
+    for (let k = 0; k < via.length - 1; k++) { const p = await leg(via[k], via[k + 1]); l.coords.push(...(k ? p.coords.slice(1) : p.coords)); l.approxKm += p.approxKm; }
     // The router starts and ends on the nearest mapped path: join it to the camp and the summit
     if (dist(l.coords[0], [from.lat, from.lng]) > 30) { l.approxKm += dist(l.coords[0], [from.lat, from.lng]) / 1000; l.coords.unshift([from.lat, from.lng, 0]); l.coords[1][3] = true; }
     const end = l.coords[l.coords.length - 1];
