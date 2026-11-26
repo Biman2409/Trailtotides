@@ -25,6 +25,7 @@ import { dayBands } from "@/lib/trails/dayBands";
 import { NO_TRACK, NO_TRACK_NOTE, sideTripOn, stretchPlace, trailDriveKm, trailWalkKm } from "@/lib/trails/shared";
 import TrekChecklist, { type ChecklistItem } from "./TrekChecklist";
 import CompareTreksButton from "./CompareTreksButton";
+import { MarkRead } from "../../readState";
 import { textOf } from "@/lib/adventureText";
 
 const SITE = "https://www.trailtotides.com";
@@ -179,6 +180,7 @@ export default async function TrekGuidePage({ params }: { params: Promise<{ slug
 
   return (
     <div className="min-h-screen">
+      <MarkRead href={trekGuideHref(a.slug)} />
       <Navbar />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson(jsonLd) }} />
 

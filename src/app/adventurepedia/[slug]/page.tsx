@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
-import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, ChevronRight, Clock, Search, Stethoscope } from "lucide-react";
+import { ArrowRight, ChevronRight, Clock, Search } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { GUIDES, TOPICS, guideBySlug, guideHref, readMinutes } from "@/lib/adventurepedia";
+import { GUIDES, GUIDES_UPDATED, TOPICS, guideBySlug, guideHref, readMinutes } from "@/lib/adventurepedia";
 import { adventures } from "@/lib/data";
-import { BlockView, GuideIcon, Rich, TopicChip, serif } from "../blocks";
+import { BlockView, GuideIcon, TopicChip, serif } from "../blocks";
+import { ArticleLd, HealthNote, ShortVersion, Sources, Updated } from "../article";
+import { InlineContents, SideContents } from "../Contents";
+import { MarkRead } from "../readState";
+
+// Guides that give health advice without being in the health topic still carry the note
+const HEALTH_ADVICE = new Set(["getting-fit", "riding-the-high-passes", "trail-craft"]);
 
 const SITE = "https://www.trailtotides.com";
 
@@ -25,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${g.short}: Adventurepedia`,
     description: g.summary,
     alternates: { canonical: url },
-    openGraph: { title: `${g.title} — Adventurepedia`, description: g.summary, url, type: "article", images: [DEFAULT_OG_IMAGE] },
+    openGraph: { title: `${g.title} — Adventurepedia`, description: g.summary, url, type: "article" },
   };
 }
 
@@ -34,10 +39,15 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   if (!g || g.custom) notFound();
   const topic = TOPICS.find((t) => t.id === g.topic)!;
   const related = g.related.map(guideBySlug).filter((r): r is NonNullable<typeof r> => !!r);
+  const updated = g.updated ?? GUIDES_UPDATED;
+  const contents = [{ id: "short-version", title: "The short version" }, ...g.sections.map((s) => ({ id: s.id, title: s.title }))];
   const applies = g.appliesTo?.map((type) => ({ type, n: adventures.filter((a) => a.type === type).length })).filter((x) => x.n > 0) ?? [];
 
   return (
     <div className="min-h-screen">
+      <ArticleLd title={g.title} description={g.summary} path={guideHref(g)} updated={updated}
+        crumbs={[{ name: "Adventurepedia", path: "/adventurepedia" }, { name: topic.label, path: `/adventurepedia?topic=${g.topic}` }, { name: g.short, path: guideHref(g) }]} />
+      <MarkRead href={guideHref(g)} />
       <Navbar />
       <main className="pt-28 pb-20 px-5 sm:px-6">
         <div className="max-w-6xl mx-auto lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-14">
@@ -47,6 +57,8 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
               <Link href="/adventurepedia" className="font-semibold hover:underline underline-offset-2" style={{ color: "var(--accent-ink)" }}>Adventurepedia</Link>
               <ChevronRight className="w-3 h-3" />
               <Link href={`/adventurepedia?topic=${g.topic}`} className="hover:underline underline-offset-2">{topic.label}</Link>
+              <ChevronRight className="w-3 h-3" />
+              <span aria-current="page">{g.short}</span>
             </nav>
             <div className="flex items-start gap-4">
               <span className="hidden sm:flex w-14 h-14 rounded-2xl items-center justify-center shrink-0 mt-1" style={{ background: "#ff5100", boxShadow: "0 8px 24px rgba(255,81,0,0.25)" }}>
@@ -58,32 +70,11 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-[13px] t-text-3">
               <TopicChip>{topic.label}</TopicChip>
               <span className="inline-flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{readMinutes(g)} min read</span>
+              <Updated date={updated} />
             </div>
 
-            {/* ── The short version ── */}
-            <section id="short-version" className="scroll-mt-28 mt-8 rounded-2xl p-5 sm:p-6" style={{ background: "rgba(255,81,0,0.05)", border: "1px solid rgba(255,81,0,0.2)" }}>
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] mb-3" style={{ color: "var(--accent-ink)" }}>The short version</p>
-              <ul className="space-y-2.5">
-                {g.tldr.map((t, i) => (
-                  <li key={i} className="flex gap-3 text-[15px] leading-[1.6] t-text">
-                    <span className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold text-[#1c1814] shrink-0 mt-0.5" style={{ background: "#ff5100" }}>{i + 1}</span>
-                    <span><Rich text={t} /></span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            {/* ── Contents (phones and tablets) ── */}
-            <details className="lg:hidden mt-6 rounded-2xl group" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
-              <summary className="flex items-center justify-between px-4 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden text-[14px] font-semibold t-text">
-                In this guide <ChevronRight className="w-4 h-4 t-text-3 transition-transform group-open:rotate-90" />
-              </summary>
-              <ol className="px-4 pb-3 space-y-1">
-                {g.sections.map((s, i) => (
-                  <li key={s.id}><a href={`#${s.id}`} className="flex gap-2 py-1.5 text-[14px] t-text-2"><span className="t-text-3 tabular-nums w-5">{i + 1}.</span>{s.title}</a></li>
-                ))}
-              </ol>
-            </details>
+            <ShortVersion items={g.tldr} />
+            <InlineContents items={contents} />
 
             {/* ── Sections ── */}
             <div className="mt-4">
@@ -97,12 +88,8 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
               ))}
             </div>
 
-            {g.topic === "health" && (
-              <p className="mt-10 flex gap-2.5 text-[13px] leading-[1.6] t-text-3">
-                <Stethoscope className="w-4 h-4 shrink-0 mt-0.5" />
-                This guide is general information to help you prepare, not medical advice. Talk to a doctor about your own health before a high-altitude trip, and follow your trek leader on the mountain.
-              </p>
-            )}
+            <Sources sources={g.sources} />
+            {(g.topic === "health" || HEALTH_ADVICE.has(g.slug)) && <HealthNote />}
 
             {/* ── Adventures it applies to ── */}
             {applies.length > 0 && (
@@ -142,15 +129,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
                   className="w-full h-10 pl-9 pr-3 rounded-xl text-[13.5px] t-text outline-none focus:border-[#ff5100]/60"
                   style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }} />
               </form>
-              <nav aria-label="In this guide">
-                <p className="text-[11px] font-bold uppercase tracking-[0.16em] t-text-3 mb-3">In this guide</p>
-                <ol className="space-y-1.5 text-[13.5px] border-l" style={{ borderColor: "var(--border-subtle)" }}>
-                  <li><a href="#short-version" className="block pl-3 -ml-px border-l border-transparent t-text-2 hover:text-[#ff5100] hover:border-[#ff5100]">The short version</a></li>
-                  {g.sections.map((s) => (
-                    <li key={s.id}><a href={`#${s.id}`} className="block pl-3 -ml-px border-l border-transparent t-text-2 hover:text-[#ff5100] hover:border-[#ff5100]">{s.title}</a></li>
-                  ))}
-                </ol>
-              </nav>
+              <SideContents items={contents} />
               <Link href="/adventurepedia" className="inline-flex items-center gap-1.5 text-[13px] font-semibold" style={{ color: "var(--accent-ink)" }}>
                 All {GUIDES.length} guides <ArrowRight className="w-3.5 h-3.5" />
               </Link>

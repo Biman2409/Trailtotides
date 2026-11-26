@@ -1,3 +1,4 @@
+import { MarkRead } from "../readState";
 import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import Link from "next/link";
@@ -115,6 +116,7 @@ export default function OfflineMapsGuide() {
 
   return (
     <div className="min-h-screen">
+      <MarkRead href="/adventurepedia/offline-maps" />
       <Navbar />
       <main className="pt-28 pb-20 px-5 sm:px-6">
         <div className="max-w-5xl mx-auto lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-12">

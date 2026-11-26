@@ -8,6 +8,10 @@
 
 import { ACTIVITIES } from "@/lib/activityGuides";
 import { AXIS_LABEL } from "@/lib/fitness";
+import { EXTRA_GUIDES } from "@/lib/guidesExtra";
+import { blockText, plain } from "@/lib/guideText";
+
+export { blockText, plain };
 
 /** An activity's name, linked to its primer page */
 const act = (a: (typeof ACTIVITIES)[number]) => `[${a.type}](/adventurepedia/activities/${a.slug})`;
@@ -21,13 +25,18 @@ export type Block =
 
 export interface GuideSection { id: string; title: string; blocks: Block[] }
 
-export type Topic = "plan" | "health" | "trail" | "rides";
+/** A published reference behind a guide's facts, listed at the foot of the page */
+export interface Source { label: string; url: string }
+
+/** When the guides were last revised. A guide with its own `updated` overrides it. */
+export const GUIDES_UPDATED = "2026-11-26";
+
+export type Topic = "plan" | "health" | "trail";
 
 export const TOPICS: { id: Topic; label: string; blurb: string }[] = [
   { id: "plan", label: "Plan & prepare", blurb: "Seasons, operators, permits, fitness and gear" },
   { id: "health", label: "Health & safety", blurb: "Altitude, first aid, water and emergencies" },
-  { id: "trail", label: "On the trail", blurb: "Navigation, trail craft and leaving no trace" },
-  { id: "rides", label: "By activity", blurb: "Guides for one kind of adventure, from riding the high passes to rafting" },
+  { id: "trail", label: "On the trail", blurb: "Trail craft, navigation, riding the high passes and leaving no trace" },
 ];
 
 export interface Guide {
@@ -46,9 +55,12 @@ export interface Guide {
   appliesTo?: string[];
   custom?: boolean;
   featured?: boolean;
+  /** ISO date of the last real revision; defaults to GUIDES_UPDATED */
+  updated?: string;
+  sources?: Source[];
 }
 
-export const GUIDES: Guide[] = [
+const CORE_GUIDES: Guide[] = [
   // ── Health & safety ─────────────────────────────────────────────────────────
   {
     slug: "altitude-sickness",
@@ -104,7 +116,7 @@ export const GUIDES: Guide[] = [
             "**Drink to stay hydrated** (pale urine), eat well, and keep alcohol for the way down. Dehydration feels like altitude sickness and makes it harder to spot.",
             "**Walk slowly enough to talk.** If you can't speak a full sentence, slow down.",
           ] },
-          { callout: "tip", title: "Read the itinerary before you book", text: "Look at each night's sleeping height on the trek page's Itinerary tab. Big jumps between camps above 3,000 m, or no rest day on a 6-day trek that tops out above 4,000 m, are worth asking the operator about." },
+          { callout: "tip", title: "Read the itinerary before you book", text: "Every [trek guide](/adventurepedia/treks) checks its own itinerary against these rules and flags the nights that climb fast. Big jumps between camps above 3,000 m, or no rest day on a 6-day trek that tops out above 4,000 m, are worth asking the operator about." },
         ],
       },
       {
@@ -145,8 +157,9 @@ export const GUIDES: Guide[] = [
         ],
       },
     ],
-    related: ["first-aid-and-water", "insurance-and-emergencies", "getting-fit"],
+    related: ["first-aid-and-water", "insurance-and-emergencies", "cold-injuries"],
     appliesTo: ["Trekking", "Motorcycling", "Mountaineering"],
+    sources: [{ label: "High-altitude travel and altitude illness — CDC Yellow Book", url: "https://www.cdc.gov/yellow-book/hcp/environmental-hazards-risks/high-altitude-travel-and-altitude-illness.html" }],
   },
   {
     slug: "first-aid-and-water",
@@ -286,6 +299,7 @@ export const GUIDES: Guide[] = [
       },
     ],
     related: ["altitude-sickness", "choosing-an-operator", "offline-maps"],
+    sources: [{ label: "Department of Telecommunications, Government of India (satellite phone rules)", url: "https://dot.gov.in/" }],
   },
   {
     slug: "trail-craft",
@@ -363,7 +377,7 @@ export const GUIDES: Guide[] = [
         ],
       },
     ],
-    related: ["offline-maps", "what-to-pack", "leave-no-trace"],
+    related: ["offline-maps", "wildlife-on-the-trail", "cold-injuries"],
     appliesTo: ["Trekking", "Mountaineering"],
   },
 
@@ -449,7 +463,7 @@ export const GUIDES: Guide[] = [
         ],
       },
     ],
-    related: ["choosing-a-season", "trail-craft", "first-aid-and-water"],
+    related: ["choosing-a-season", "camp-life", "budgeting"],
     appliesTo: ["Trekking"],
   },
   {
@@ -527,7 +541,7 @@ export const GUIDES: Guide[] = [
         ],
       },
     ],
-    related: ["altitude-sickness", "what-to-pack", "choosing-a-season"],
+    related: ["altitude-sickness", "what-to-pack", "families-and-older-trekkers"],
     appliesTo: ["Trekking", "Mountaineering", "Cycling"],
   },
   {
@@ -599,7 +613,7 @@ export const GUIDES: Guide[] = [
         ],
       },
     ],
-    related: ["what-to-pack", "riding-the-high-passes", "river-rafting"],
+    related: ["what-to-pack", "riding-the-high-passes", "getting-fit"],
   },
   {
     slug: "choosing-an-operator",
@@ -832,16 +846,17 @@ export const GUIDES: Guide[] = [
         ],
       },
     ],
-    related: ["trail-craft", "choosing-an-operator", "first-aid-and-water"],
+    related: ["trail-craft", "wildlife-on-the-trail", "camp-life"],
+    sources: [{ label: "The 7 principles — Leave No Trace", url: "https://lnt.org/why/7-principles/" }],
   },
 
-  // ── Rides & rivers ──────────────────────────────────────────────────────────
+  // ── On the road ──────────────────────────────────────────────────────────
   {
     slug: "riding-the-high-passes",
     title: "Riding the high passes: Ladakh and Spiti",
     short: "Riding the high passes",
     summary: "Acclimatising on two wheels, fuel gaps, water crossings, bike prep and permits for the Manali to Leh highway, Ladakh and Spiti.",
-    topic: "rides",
+    topic: "trail",
     icon: "ride",
     tldr: [
       "Altitude hits riders hard: you climb fast without the exercise that helps acclimatise.",
@@ -922,82 +937,9 @@ export const GUIDES: Guide[] = [
     related: ["altitude-sickness", "permits-and-documents", "choosing-a-season"],
     appliesTo: ["Motorcycling", "Cycling"],
   },
-  {
-    slug: "river-rafting",
-    title: "River rafting: grades, safety and what to expect",
-    short: "River rafting",
-    summary: "What rapid grades mean, the safety briefing that matters, how to swim a rapid if you fall in, and what to wear.",
-    topic: "rides",
-    icon: "raft",
-    tldr: [
-      "Rapids are graded I (gentle) to VI (unrunnable). Most commercial trips are II to IV.",
-      "Wear the life jacket and helmet properly, even if you can swim.",
-      "If you fall in: on your back, feet up and pointing downstream, then swim to the raft.",
-      "Listen to the guide's commands; paddling together is what keeps the raft upright.",
-    ],
-    sections: [
-      {
-        id: "grades",
-        title: "What the grades mean",
-        blocks: [
-          { table: { head: ["Grade", "What it's like"], rows: [
-            ["I", "Moving water with small waves. Beginners"],
-            ["II", "Clear channels, some waves and rocks. Fun for first-timers"],
-            ["III", "Bigger waves, more manoeuvring. Swims are possible"],
-            ["IV", "Powerful, fast rapids that need precise moves. Swims are harder"],
-            ["V", "Long, violent rapids. Experts with specialist safety only"],
-            ["VI", "Rarely or never run"],
-          ] } },
-          { p: "Grades change with water levels: the same rapid can go up a grade after rain or in the snowmelt season. Rishikesh's popular stretches on the Ganga are grade II to IV." },
-        ],
-      },
-      {
-        id: "briefing",
-        title: "The safety briefing",
-        blocks: [
-          { p: "Every trip starts on the bank with a briefing. Pay attention, even if you've rafted before:" },
-          { list: [
-            "**Life jacket (PFD):** snug, all buckles done. The guide should be able to pull it up by the shoulders without it reaching your ears.",
-            "**Helmet:** strap fastened, sits low on your forehead.",
-            "**Seating:** sit on the side tube, feet wedged under the tube in front or in foot cups.",
-            "**Paddle:** one hand always on the T-grip at the top. That's what stops it hitting someone's face.",
-            "**Commands:** forward, back, stop, left back, right back, and \"get down\" (sit in the raft holding the line).",
-          ] },
-        ],
-      },
-      {
-        id: "swimming",
-        title: "If you fall in",
-        blocks: [
-          { steps: [
-            "Don't panic. Your life jacket will bring you up.",
-            "Get on your back with your feet up and pointing downstream, to bounce off rocks with your feet, not your head.",
-            "Never try to stand up in fast water: your foot can get trapped between rocks.",
-            "Look for the raft or a safety kayak and swim towards it when it's calm enough. Grab the rope or paddle offered to you.",
-            "When someone pulls you in, help by kicking.",
-          ] },
-          { callout: "warn", title: "Who shouldn't raft", text: "Skip white water if you're pregnant, have a heart condition, epilepsy, or a back or neck injury. Most operators set a minimum age around 14 for grade III and above." },
-        ],
-      },
-      {
-        id: "wear",
-        title: "What to wear and bring",
-        blocks: [
-          { list: [
-            "Quick-dry shorts and a T-shirt or rash guard. No cotton or jeans.",
-            "Shoes or sandals that strap on firmly; flip-flops come off.",
-            "Sunscreen and a strap for your glasses.",
-            "A full change of clothes and a towel left in the vehicle.",
-            "Leave phones and valuables behind, or use the operator's dry bag.",
-          ] },
-          { p: "Season: rafting in Rishikesh runs roughly September to June, and stops in the monsoon when the river runs high." },
-        ],
-      },
-    ],
-    related: ["choosing-a-season", "choosing-an-operator", "insurance-and-emergencies"],
-    appliesTo: ["River Rafting"],
-  },
 ];
+
+export const GUIDES: Guide[] = [...CORE_GUIDES, ...EXTRA_GUIDES];
 
 export const guideBySlug = (slug: string) => GUIDES.find((g) => g.slug === slug);
 
@@ -1005,30 +947,22 @@ export const guideBySlug = (slug: string) => GUIDES.find((g) => g.slug === slug)
 export function guidesForAdventure(type: string, altitudeM: number, hasTrail: boolean): Guide[] {
   const high = altitudeM >= 2500;
   const picks =
-    type === "River Rafting" ? ["river-rafting", "choosing-an-operator", "insurance-and-emergencies"]
+    type === "River Rafting" ? ["choosing-an-operator", "insurance-and-emergencies", "choosing-a-season"]
     : type === "Motorcycling" || type === "Cycling" ? ["riding-the-high-passes", "altitude-sickness", "permits-and-documents"]
     : [high ? "altitude-sickness" : "trail-craft", "what-to-pack", hasTrail ? "offline-maps" : "getting-fit", type === "Mountaineering" ? "insurance-and-emergencies" : "choosing-a-season"];
   return picks.map(guideBySlug).filter((g): g is Guide => !!g);
 }
 export const guideHref = (g: Pick<Guide, "slug">) => `/adventurepedia/${g.slug}`;
 
-/** Plain text of inline markup: strips **bold** and turns [label](href) into label */
-export function plain(s: string) {
-  return s.replace(/\*\*(.+?)\*\*/g, "$1").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
-}
 
-function blockText(b: Block): string {
-  if ("p" in b) return plain(b.p);
-  if ("list" in b) return b.list.map(plain).join(" · ");
-  if ("steps" in b) return b.steps.map(plain).join(" · ");
-  if ("callout" in b) return `${b.title}. ${plain(b.text)}`;
-  return [b.table.head.join(" "), ...b.table.rows.map((r) => r.join(" "))].join(" ");
+/** Words in some loose text plus guide sections, for reading times */
+export function wordsOf(text: string[], sections: GuideSection[]) {
+  return [...text, ...sections.flatMap((s) => s.blocks.map(blockText))].join(" ").split(/\s+/).length;
 }
 
 /** Reading time from the words in a guide, at a relaxed 200 words a minute */
 export function readMinutes(g: Guide) {
-  const words = [g.summary, ...g.tldr, ...g.sections.flatMap((s) => s.blocks.map(blockText))].join(" ").split(/\s+/).length;
-  return Math.max(2, Math.round(words / 200));
+  return Math.max(2, Math.round(wordsOf([g.summary, ...g.tldr], g.sections) / 200));
 }
 
 /**

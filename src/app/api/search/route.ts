@@ -9,6 +9,7 @@ import { operatorPages } from "@/lib/operatorPages";
 import { fromPrice } from "@/lib/leadPrices";
 import { stripEmphasis } from "@/lib/emphasis";
 import { hasTrekGuide, trekGuideHref } from "@/lib/trekGuides";
+import { ACTIVITIES, activityHref } from "@/lib/activityGuides";
 
 // The index Compass.AI search matches as you type, everywhere on the site (the hero, the header,
 // Explore, the map): adventures, places, trek guides, operators, Adventurepedia and stories.
@@ -93,6 +94,18 @@ export async function GET(req: NextRequest) {
       subtitle: `Adventurepedia · ${g.title}`,
       url: `/adventurepedia/${g.slug}`,
       type: "guide",
+    });
+  }
+
+  // Every kind of adventure has a full guide, live or coming soon
+  for (const a of ACTIVITIES) {
+    results.push({
+      id: `activity-${a.slug}`,
+      title: `${a.type} in India`,
+      subtitle: `Adventurepedia · Full guide to ${a.type.toLowerCase()}`,
+      url: activityHref(a),
+      type: "guide",
+      keywords: `${a.type} ${a.where.join(" ")}`,
     });
   }
 

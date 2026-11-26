@@ -22,6 +22,12 @@ const CSP = [
 const nextConfig: NextConfig = {
   // Don't advertise the framework in every response
   poweredByHeader: false,
+  async redirects() {
+    return [
+      // The rafting guide now lives on the rafting activity page, with the rest of the full guides
+      { source: "/adventurepedia/river-rafting", destination: "/adventurepedia/activities/river-rafting", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

@@ -5,6 +5,7 @@ export const CONTACT_TOPICS = [
   "Partnership",
   "Press",
   "Report a problem",
+  "Suggest a guide",
   "Feedback",
 ] as const;
 

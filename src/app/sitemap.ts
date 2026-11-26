@@ -28,6 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/ace`, priority: 0.7 },
     { url: `${BASE}/adventurepedia`, priority: 0.7 },
     { url: `${BASE}/adventurepedia/offline-maps`, priority: 0.5 },
+    { url: `${BASE}/adventurepedia/ready`, priority: 0.5 },
     ...GUIDES.filter((g) => !g.custom).map((g) => ({ url: `${BASE}/adventurepedia/${g.slug}`, priority: 0.6 })),
     ...ACTIVITIES.map((a) => ({ url: `${BASE}${activityHref(a)}`, priority: 0.6 })),
     { url: `${BASE}/adventurepedia/treks`, priority: 0.7 },

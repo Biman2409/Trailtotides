@@ -8,6 +8,8 @@
 
 import type { AceAxis } from "@/lib/ace";
 import type { SearchEntry } from "@/lib/adventurepedia";
+import { blockText, plain } from "@/lib/guideText";
+import { ACTIVITY_DETAILS } from "@/lib/activityDetails";
 
 export type Element = "earth" | "water" | "snow" | "air";
 
@@ -198,8 +200,8 @@ export const ACTIVITIES: Activity[] = [
     type: "River Rafting", slug: "river-rafting", element: "water",
     what: "Paddling an inflatable raft through rapids with a guide steering, from gentle floats to big white water.",
     where: ["Rishikesh (Ganga)", "Kolad (Kundalika)", "Dandeli (Kali)", "Coorg (Barapole)", "Ladakh (Zanskar and Indus)", "Sikkim (Teesta)"],
-    season: "Rishikesh from autumn to early summer (rafting stops in the monsoon); dam-fed rivers like Kolad in the rains; Ladakh in summer.",
-    months: months("Mar", "Apr", "May", "Jun", "Sep", "Oct", "Nov"),
+    season: "Somewhere in India all year: Rishikesh from autumn to early summer (it stops in the monsoon), dam-fed rivers like Kolad and the Barapole in the rains, Ladakh in summer.",
+    months: ALL,
     body: ["power", "water", "nerve"],
     bodyNote: "Hard paddling in short bursts, and staying calm if you end up in the water.",
     operator: [
@@ -208,7 +210,7 @@ export const ACTIVITIES: Activity[] = [
       "A rapid grade that matches your group",
     ],
     start: "Start with a grade II to III stretch, like a short Rishikesh run, before the bigger rapids.",
-    guides: ["river-rafting", "choosing-an-operator", "insurance-and-emergencies", "choosing-a-season"],
+    guides: ["choosing-an-operator", "insurance-and-emergencies", "choosing-a-season"],
   },
   {
     type: "Kayaking", slug: "kayaking", element: "water",
@@ -224,7 +226,7 @@ export const ACTIVITIES: Activity[] = [
       "A safety boat or second kayaker on the water",
     ],
     start: "Begin on flat water or the sea with an instructor before any white water.",
-    guides: ["river-rafting", "choosing-an-operator", "insurance-and-emergencies"],
+    guides: ["choosing-an-operator", "insurance-and-emergencies", "choosing-a-season"],
   },
   {
     type: "Diving", slug: "diving", element: "water",
@@ -289,7 +291,7 @@ export const ACTIVITIES: Activity[] = [
       "Avalanche training and gear (beacon, probe, shovel) for anything off-piste",
     ],
     start: "Take a week of lessons at Gulmarg or Auli.",
-    guides: ["what-to-pack", "insurance-and-emergencies", "choosing-an-operator"],
+    guides: ["insurance-and-emergencies", "choosing-an-operator", "choosing-a-season"],
   },
   {
     type: "Snowboarding", slug: "snowboarding", element: "snow",
@@ -305,7 +307,7 @@ export const ACTIVITIES: Activity[] = [
       "Avalanche gear and training for off-piste",
     ],
     start: "Take a few days of lessons before riding on your own.",
-    guides: ["what-to-pack", "insurance-and-emergencies", "choosing-an-operator"],
+    guides: ["insurance-and-emergencies", "choosing-an-operator", "choosing-a-season"],
   },
   {
     type: "Ice Climbing", slug: "ice-climbing", element: "snow",
@@ -321,7 +323,7 @@ export const ACTIVITIES: Activity[] = [
       "Warm kit and a plan for the cold",
     ],
     start: "Join a winter ice-climbing course or camp.",
-    guides: ["what-to-pack", "insurance-and-emergencies", "choosing-an-operator"],
+    guides: ["insurance-and-emergencies", "choosing-an-operator", "choosing-a-season"],
   },
   {
     type: "Ice Skating", slug: "ice-skating", element: "snow",
@@ -336,7 +338,7 @@ export const ACTIVITIES: Activity[] = [
       "A coach if you're new",
     ],
     start: "Hire skates at an outdoor rink and take a short lesson.",
-    guides: ["what-to-pack"],
+    guides: ["choosing-a-season"],
   },
 
   // ── Air ────────────────────────────────────────────────────────────────────
@@ -409,12 +411,13 @@ export const activityHref = (a: Activity) => `/adventurepedia/activities/${a.slu
 
 const ICON_OF: Record<Element, SearchEntry["icon"]> = { earth: "trail", water: "raft", snow: "altitude", air: "map" };
 
-/** Each activity primer, for the library's search: the page, then its sections */
+/** Each activity's page, for the library's search: the page, its full guide's sections, then the fixed ones */
 export function activitySearchIndex(): SearchEntry[] {
   return ACTIVITIES.flatMap((a) => {
     const base = { href: activityHref(a), guide: `${a.type} in India`, summary: a.what, icon: ICON_OF[a.element], topic: "activities" as const };
     return [
-      { ...base, text: `${a.type}. ${a.what} ${a.where.join(", ")}.` },
+      { ...base, text: `${a.type}. ${a.what} ${a.where.join(", ")}. ${(ACTIVITY_DETAILS[a.slug]?.tldr ?? []).map(plain).join(" ")}` },
+      ...(ACTIVITY_DETAILS[a.slug]?.sections ?? []).map((s) => ({ ...base, section: s.title, sectionId: s.id, text: s.blocks.map(blockText).join(" ") })),
       { ...base, section: "When to go", sectionId: "when", text: `Best season and months for ${a.type.toLowerCase()}: ${a.season}` },
       { ...base, section: "What to check before you book", sectionId: "operator", text: `Choosing a ${a.type.toLowerCase()} operator: ${a.operator.join(". ")}.` },
       { ...base, section: "Your first time", sectionId: "start", text: `${a.type} for beginners: ${a.start}` },

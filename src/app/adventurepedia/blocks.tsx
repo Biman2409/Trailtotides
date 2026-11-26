@@ -83,10 +83,10 @@ export function BlockView({ block }: { block: Block }) {
     );
   }
 
-  // Tables scroll sideways on phones rather than squeezing their columns
+  // Wide tables scroll sideways on phones rather than squeezing their columns; two-column ones fit
   return (
     <div className="my-5 overflow-x-auto rounded-xl">
-      <table className="min-w-[540px] w-full text-[14px] border-separate border-spacing-0 rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+      <table className={`${block.table.head.length <= 2 ? "" : block.table.head.length === 3 ? "min-w-[520px]" : "min-w-[600px]"} w-full text-[14px] border-separate border-spacing-0 rounded-xl overflow-hidden`} style={{ border: "1px solid var(--border-subtle)" }}>
         <thead>
           <tr>
             {block.table.head.map((h) => (

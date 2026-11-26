@@ -17,7 +17,13 @@ export type AdventureType =
   | "Urban Adventure"
   | "Paragliding"
   | "Hot Air Balloon"
-  | "Ice Skating";
+  | "Ice Skating"
+  | "Surfing"
+  | "Snorkelling"
+  | "Snowboarding"
+  | "Ice Climbing"
+  | "Skydiving"
+  | "Hang Gliding";
 
 export type Region =
   | "Himalayas"

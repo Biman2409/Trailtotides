@@ -18,7 +18,7 @@ const TYPE_ALIASES: Record<string, string> = {
 };
 
 // Guides a tag can point to, with the hashtag each one reads as and the words that call for it
-const GUIDE_TAGS: { slug: string; label: string; words: RegExp }[] = [
+const GUIDE_TAGS: { slug: string; label: string; words: RegExp; href?: string }[] = [
   { slug: "altitude-sickness", label: "Altitude Sickness", words: /\b(altitude|ams|summit|high pass|\d,?\d{3} ?(m|ft)|breathless|thin air)\b/i },
   { slug: "riding-the-high-passes", label: "High Passes", words: /\b(pass|la\b|ride|rider|riding|motorcycl|bike|bikes)\b/i },
   { slug: "what-to-pack", label: "Packing List", words: /\b(pack|gear|layers?|kit|poncho|rain liner|jacket)\b/i },
@@ -26,7 +26,7 @@ const GUIDE_TAGS: { slug: string; label: string; words: RegExp }[] = [
   { slug: "permits-and-documents", label: "Permits", words: /\b(permit|border|customs|passport|visa|inner line)\b/i },
   { slug: "insurance-and-emergencies", label: "Travel Safety", words: /\b(emergency|rescue|accident|injur|fever|landslide|stranded)\b/i },
   { slug: "offline-maps", label: "Offline Maps", words: /\b(network|signal|map|lost|shortcut|gps)\b/i },
-  { slug: "river-rafting", label: "Rafting Guide", words: /\b(raft|rapids?|river)\b/i },
+  { slug: "river-rafting", label: "Rafting Guide", words: /\b(raft|rapids?|river)\b/i, href: "/adventurepedia/activities/river-rafting" },
   { slug: "getting-fit", label: "Trek Fitness", words: /\b(fit|fitness|training|knees|stamina)\b/i },
   { slug: "choosing-an-operator", label: "Choosing An Operator", words: /\b(operator|guide|tour|agency|company)\b/i },
   { slug: "leave-no-trace", label: "Leave No Trace", words: /\b(litter|plastic|waste|campsite|camping)\b/i },
@@ -45,7 +45,7 @@ function resolve(tag: string): StoryTag | null {
   const type = typeFor(tag);
   if (type) return { label: type, href: `/explore?type=${encodeURIComponent(type)}` };
   const g = guideFor(tag);
-  if (g) return { label: g.label, href: `/adventurepedia/${g.slug}` };
+  if (g) return { label: g.label, href: g.href ?? `/adventurepedia/${g.slug}` };
   if ((STORY_ACTIVITIES as readonly string[]).includes(tag)) return { label: tag, href: `/stories?activity=${encodeURIComponent(tag)}` };
   if (hasTrips(tag)) return { label: tag, href: `/explore?q=${encodeURIComponent(tag)}` };
   return null;

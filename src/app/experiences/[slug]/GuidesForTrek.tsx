@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpenText } from "lucide-react";
 import { guidesForAdventure, guideHref } from "@/lib/adventurepedia";
 import { trekGuideHref, TREK_TYPES } from "@/lib/trekGuides";
+import { ACTIVITIES, activityHref } from "@/lib/activityGuides";
 import { GuideIcon } from "@/app/adventurepedia/blocks";
 
 /**
@@ -11,7 +12,9 @@ import { GuideIcon } from "@/app/adventurepedia/blocks";
 export default function GuidesForTrek({ slug, name, type, altitudeM, hasTrail }: { slug: string; name: string; type: string; altitudeM: number; hasTrail: boolean }) {
   const guides = guidesForAdventure(type, altitudeM, hasTrail);
   const hasTrekGuide = (TREK_TYPES as readonly string[]).includes(type);
-  if (!guides.length && !hasTrekGuide) return null;
+  // Everything else gets its activity's full guide: rafting, rides, and whatever is listed next
+  const activity = hasTrekGuide ? undefined : ACTIVITIES.find((a) => a.type === type);
+  if (!guides.length && !hasTrekGuide && !activity) return null;
   const pill = "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors hover:text-[#ff5100]";
   return (
     <div>
@@ -22,6 +25,14 @@ export default function GuidesForTrek({ slug, name, type, altitudeM, hasTrail }:
             <Link href={trekGuideHref(slug)} className={pill} style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.28)", color: "var(--text-primary)" }}
               title="Getting there, day by day, permits, packing and cost">
               <BookOpenText className="w-3.5 h-3.5 text-[#ff5100]" /> The complete {name} guide <ArrowRight className="w-3 h-3" />
+            </Link>
+          </li>
+        )}
+        {activity && (
+          <li>
+            <Link href={activityHref(activity)} className={pill} style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.28)", color: "var(--text-primary)" }}
+              title="Where and when, safety, what to expect and how to start">
+              <BookOpenText className="w-3.5 h-3.5 text-[#ff5100]" /> The complete {activity.type.toLowerCase()} guide <ArrowRight className="w-3 h-3" />
             </Link>
           </li>
         )}

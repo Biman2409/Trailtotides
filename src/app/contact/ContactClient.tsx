@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, MotionConfig } from "framer-motion";
-import { ArrowRight, Check, Copy, Instagram, Youtube, Twitter, Linkedin, MapPin, Clock, Mail, MessageCircle, Mountain, Handshake, Newspaper, AlertTriangle, Sparkles, Loader2 } from "lucide-react";
+import { ArrowRight, Check, Copy, Instagram, Youtube, Twitter, Linkedin, MapPin, Clock, Mail, MessageCircle, Mountain, Handshake, Newspaper, AlertTriangle, Sparkles, Loader2, BookOpen } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
@@ -22,6 +22,7 @@ const TOPIC_ICONS: Record<string, React.ComponentType<{ className?: string; stro
   "Partnership": Handshake,
   "Press": Newspaper,
   "Report a problem": AlertTriangle,
+  "Suggest a guide": BookOpen,
   "Feedback": Sparkles,
 };
 
@@ -38,6 +39,11 @@ export default function ContactPage() {
 
   useEffect(() => {
     startedAt.current = Date.now();
+    // Links can start the form off: /contact?topic=Suggest a guide&message=…
+    const p = new URLSearchParams(window.location.search);
+    const topic = CONTACT_TOPICS.find((t) => t === p.get("topic"));
+    const message = p.get("message")?.slice(0, 500);
+    if (topic || message) setForm((f) => ({ ...f, topic: topic ?? f.topic, message: message ?? f.message }));
     // The postmark date is the visitor's own day, so it's set after mount
     setToday(new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase());
   }, []);
