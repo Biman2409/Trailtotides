@@ -155,6 +155,9 @@ export const TREKS = {
     // Larke Phedi from OSM ("Larke Phedi (Dharmasala)", ele 4,475 m; 4,466 m on the elevation model)
     // Larkya La: 5,106 m and 5,160 m are both quoted; the trail tops out at 5,157 m on the model,
     // which reads passes low, so 5,160 m it is
+    // The acclimatisation walk: OSM's Birendra Tal, the glacier lake below Manaslu above Samagaun
+    // (its east shore, where the path from Samagaun reaches the water; OSM's lake point is mid-lake)
+    side: [{ name: "Birendra Tal", at: [28.5956, 84.635], exact: true }],
     camps: { Dharmasala: ["Samdo", "Larkya La", 0.55, ["Larkya Phedi", "Dharamsala", "Dharamshala", "Larke Phedi"], [28.65892, 84.58443]] },
     days: [
       { to: "Machha Khola", note: "Up the Budhi Gandaki gorge on a path cut into its side" },
@@ -163,7 +166,7 @@ export const TREKS = {
       { to: "Namrung", note: "Through forest, with the first views of Manaslu" },
       { to: "Lho", note: "Past mani walls and monasteries, Manaslu straight ahead" },
       { to: "Samagaun", note: "A short day to the largest village of the upper valley" },
-      { rest: "Acclimatisation day: up towards Manaslu Base Camp or Birendra Tal and back" },
+      { rest: "Acclimatisation day: up to Birendra Tal, the glacier lake below Manaslu, and back. Some carry on towards Manaslu Base Camp (not drawn)", side: "Birendra Tal" },
       { to: "Samdo", note: "Up to the last village before Tibet" },
       { to: "Dharmasala", note: "A short climb to the stone huts below the pass" },
       { to: "Bimthang", via: ["Larkya La"], note: "Leave around 4 am to cross Larkya La at 5,160 m, then a long descent to Bimthang" },
@@ -196,10 +199,13 @@ export const TREKS = {
       { name: "Osla", at: [31.1189, 78.34277] },
       { name: "Har Ki Dun", at: [31.15113, 78.43218], exact: true }, // where the mapped path reaches the meadow
     ],
+    // The rest day's walk to Maninda Tal: where a GPS track of it turns round (Wikiloc "Seematra -
+    // Har ki Dun - Marinda Tal and return", Sept 2019), 1.8 km above the meadow; not on the map
+    side: [{ name: "Maninda Tal", at: [31.16672, 78.42867], exact: true, guide: [[31.1532, 78.42999], [31.15587, 78.42939], [31.15857, 78.42896], [31.16126, 78.42841], [31.16397, 78.42836]] }],
     days: [
       { to: "Osla", note: "Drive from Sankri to Taluka, then walk up the Supin river through walnut and chestnut forest" },
       { to: "Har Ki Dun", note: "Through terraced fields above Osla, then up into the valley below Swargarohini" },
-      { rest: "A day in the valley: walk towards the Jaundhar glacier or up to Maninda Tal. Not drawn on the map: no mapped path or GPS track reaches either" },
+      { rest: "A day in the valley: up to Maninda Tal, the small lake above the meadow, and back. Some walk towards the Jaundhar glacier instead (not drawn: no mapped path or GPS track)", side: "Maninda Tal" },
       { to: "Osla", note: "Back down the valley the way you came" },
       { to: "Taluka", note: "The last walk out along the Supin, then the drive back to Sankri" },
     ],
@@ -425,7 +431,7 @@ export const TREKS = {
     days: [
       { to: "Gaurmanda", note: "Up from Ghuttu through oak forest to a clearing ringed by banj oak" },
       { to: "Panwali Kantha", via: ["Panwali Kantha ridge"], note: "Onto the great meadow on the old pilgrim route to Kedarnath, the Gangotri and Kedar peaks in view" },
-      { rest: "A day on the meadow, walking the ridge for the views" },
+      { rest: "A day on the meadow, wandering the ridge for the views: an open walk with no set route, so not drawn" },
       { to: "Ghuttu", note: "Down the way you came. Some groups continue to Triyuginarayan instead" },
     ],
   },
@@ -606,18 +612,18 @@ export const TREKS = {
   "hampta-pass": {
     near: "Kullu, Himachal Pradesh",
     stops: [
-      { name: "Jobra", q: "Jobri", at: [32.2677, 77.2459] },
+      // The road head where trekkers set off (both GPS tracks start here); OSM's Jobri is the
+      // hamlet 1 km up, beside Chika
+      { name: "Jobra", at: [32.25913, 77.24168], exact: true },
+      // Chika and Shea Goru aren't on the map by name: where two GPS tracks of one 2019 trek
+      // (Wikiloc "Hampta pass trek" 40712032 and "Hampta pass" 40712146) spend those nights
+      { name: "Chika", at: [32.26956, 77.24837], exact: true },
       // Balu ka Ghera is OSM's "Hamta la base camp", the flat sandy camp below the pass
       { name: "Balu ka Ghera", q: "Hamta la base camp", at: [32.2763, 77.3172] },
       { name: "Hampta Pass", q: "Hamta Pass", at: [32.2699, 77.3474] },
+      { name: "Shea Goru", at: [32.28474, 77.3585], exact: true },
       { name: "Chhatru", at: [32.3195, 77.3653] },
     ],
-    // Not on the map by name: Chika on the meadow after the first climb from Jobra, Shea Goru on
-    // the Spiti side where the descent from the pass levels out
-    camps: {
-      Chika: ["Jobra", "Balu ka Ghera", 0.4, ["Chikka", "Chhika"]],
-      "Shea Goru": ["Hampta Pass", "Chhatru", 0.45, ["Shia Goru", "Siagoru"]],
-    },
     days: [
       { to: "Chika", note: "Drive from Manali to Jobra, then through maple and birch to the first meadow by the Rani nallah" },
       { to: "Balu ka Ghera", note: "Up the open valley, crossing streams, to the sandy flat below the pass" },
@@ -683,16 +689,15 @@ export const TREKS = {
     near: "Kinnaur, Himachal Pradesh",
     stops: [
       { name: "Kafnu", near: "Kinnaur, Himachal Pradesh" },
+      // Mulling and Mangrup aren't on the map by name: where White Magic Guides' GPS track of the
+      // trek (Wikiloc "Pin baba pa" 277602121, July 2026) spends those nights
+      { name: "Mulling", at: [31.69895, 77.99457], exact: true },
       { name: "Karah", q: "Karag", at: [31.7301, 77.9889] },
       { name: "Phutsirang", q: "Putling", at: [31.7624, 77.9852] },
       { name: "Pin Bhaba Pass", q: "Pin Bhaba La", at: [31.7803, 77.9968] },
+      { name: "Mangrup", at: [31.86515, 78.00802], exact: true },
       { name: "Mudh", near: "Spiti, Himachal Pradesh" },
     ],
-    // Not on the map by name: Mulling in the Bhaba valley forest, Mangrup on the Spiti side below the pass
-    camps: {
-      Mulling: ["Kafnu", "Karah", 0.6, ["Muling"]],
-      Mangrup: ["Pin Bhaba Pass", "Mudh", 0.35, ["Tiya", "Mangrup"]],
-    },
     days: [
       { to: "Mulling", note: "From Kafnu up the Bhaba valley through forest and past the dam" },
       { to: "Karah", note: "Into open meadows beside the Bhaba river" },
@@ -957,13 +962,16 @@ export const TREKS = {
   doodhpathri: {
     near: "Budgam, Jammu and Kashmir",
     // The guide points over the pass and past Pam Sar are placed from OSM's map, not a GPS track
-    mapOnly: [[33.8197, 74.45135], [33.8213, 74.4504]],
+    mapOnly: [[33.8197, 74.45135], [33.8213, 74.4504], [33.80456, 74.46114], [33.80508, 74.46018], [33.80571, 74.45957], [33.80631, 74.45888], [33.807, 74.45799]],
     // A long straight on the way down to Tosa Maidan: the shape of the path from a Wikiloc track (Greater lakes trek Tosamaidan (82554051))
     gapGuides: [[[33.89199, 74.48546], [33.89257, 74.48547], [33.89305, 74.4856], [33.89356, 74.48572], [33.89372, 74.48639], [33.89419, 74.48675], [33.89473, 74.48674], [33.89528, 74.4869], [33.89568, 74.48722], [33.89604, 74.48768]]],
     stops: [
       // Where trekkers set off: four Wikiloc tracks (161261096, 86280598, 85918567, 172878113)
       // start at the meadow's road end, 1.6 km south of OSM's Doodhpathri point
       { name: "Doodhpathri", at: [33.84666, 74.56889], exact: true },
+      // Ashtaar camp, where a GPS track starts (Wikiloc "Ashtaar to Doodhpathri" 146093908, 2023);
+      // a second track ("Ashtaar valley" 172878113) walks the same way through it
+      { name: "Ashtaar", at: [33.78569, 74.49867], exact: true },
       { name: "Gurwansar", q: "Gurwansar campsite", at: [33.8036, 74.4626] },
       // The trek's high point: the pass OSM marks north of Gurwansar (unnamed there)
       { name: "Pass above Gurwansar", at: [33.8075, 74.4581], exact: true },
@@ -971,21 +979,22 @@ export const TREKS = {
       // any track goes
       { name: "Tosa Maidan", at: [33.91065, 74.51622], exact: true },
     ],
-    // Not on the map by name: Ashtaar below the Pir Panjal, Duriem on the way down to Tosa Maidan
+    // Not on the map by name: Duriem on the way down to Tosa Maidan
     camps: {
-      Ashtaar: ["Doodhpathri", "Gurwansar", 0.55, ["Ashtar", "Ashitaar"]],
       Duriem: ["Pass above Gurwansar", "Tosa Maidan", 0.45, ["Durium"]],
     },
-    // Doodhpathri to Gurwansar on OSM's paths; from past Pam Sar to Tosa Maidan, over the lakes
+    // Guide points per leg, in walking order
     guide: [
-      // Doodhpathri to Gurwansar as a Wikiloc track walks it (Gurwansar Lakes (161261096)); OSM's
-      // paths take other lines up the valley
-      [[33.84479, 74.56786], [33.84437, 74.56471], [33.84263, 74.56206], [33.84114, 74.55986], [33.83964, 74.55691], [33.83931, 74.55371], [33.83817, 74.55088], [33.83613, 74.54863], [33.83624, 74.54689], [33.83534, 74.54364], [33.83464, 74.54029], [33.83425, 74.53742], [33.83208, 74.53539], [33.83012, 74.53283], [33.82852, 74.53045], [33.82659, 74.52806], [33.82531, 74.52556], [33.82287, 74.52368], [33.82004, 74.52258], [33.81911, 74.51951], [33.81808, 74.51634], [33.81719, 74.51305], [33.81776, 74.50998], [33.81934, 74.50732], [33.82122, 74.50465], [33.82314, 74.50224], [33.82371, 74.49957], [33.82196, 74.49671], [33.82157, 74.49333], [33.82047, 74.49014], [33.81932, 74.48707], [33.8178, 74.4844], [33.81537, 74.48251], [33.8133, 74.48024], [33.81124, 74.47796], [33.81044, 74.47499], [33.80943, 74.47177], [33.80799, 74.46882], [33.80689, 74.46574], [33.80486, 74.46346]],
+      // Doodhpathri up the Ashtaar valley to Ashtaar, as the Ashtaar to Doodhpathri track walks it
+      [[33.84373,74.56098],[33.84128,74.55858],[33.83975,74.55514],[33.83868,74.55136],[33.8363,74.54888],[33.83427,74.54558],[33.83207,74.54187],[33.82904,74.53894],[33.82647,74.53625],[33.82368,74.53393],[33.82052,74.53275],[33.81706,74.53158],[33.81349,74.53088],[33.81089,74.52803],[33.80799,74.526],[33.80477,74.5245],[33.80133,74.52297],[33.799,74.51994],[33.79657,74.51713],[33.79514,74.51342],[33.79299,74.51053],[33.79058,74.50758],[33.78815,74.50457],[33.78631,74.50143]],
+      // Ashtaar to Gurwansar: no GPS track walks it; routed over OpenStreetMap's paths
+      [],
+      // Gurwansar straight up to the pass (left to itself the router loops 6 km east and back)
+      [[33.80456, 74.46114], [33.80508, 74.46018], [33.80571, 74.45957], [33.80631, 74.45888], [33.807, 74.45799]],
       // Gurwansar to Duriem "via Pamsar Lake" (operators): over the pass OSM marks north of
       // Gurwansar, past Pam Sar to Pathri ki Gali, where the Greater Lakes track turns back. No GPS
       // track walks this stretch (none of ~290 on Wikiloc, none on OSM), so it is drawn along the
       // terrain through those mapped points and shown as having no tracking data
-      [],
       [[33.8197, 74.45135], [33.8213, 74.4504], [33.825592, 74.44163], [33.82950, 74.44043], [33.83252, 74.43934], [33.83515, 74.43945], [33.83830, 74.43866], [33.84253, 74.43951], [33.84542, 74.43883], [33.84832, 74.43932], [33.85197, 74.43853], [33.85428, 74.43966], [33.85759, 74.43815], [33.86002, 74.43696], [33.86346, 74.43703], [33.86431, 74.43804], [33.86484, 74.44239], [33.86569, 74.44766], [33.86657, 74.45086], [33.86706, 74.45520], [33.86990, 74.45949], [33.87157, 74.46296], [33.87207, 74.46503], [33.87350, 74.46873], [33.87579, 74.47155], [33.87877, 74.47383], [33.88027, 74.47647], [33.88349, 74.47975], [33.88538, 74.48186], [33.88853, 74.48443], [33.89149, 74.48537], [33.89404, 74.48667], [33.89801, 74.48851], [33.90012, 74.48946], [33.90315, 74.49243], [33.90466, 74.49764], [33.90630, 74.49947], [33.90660, 74.50382], [33.90603, 74.50692], [33.90509, 74.51087], [33.90395, 74.51524], [33.90702, 74.51516], [33.90872, 74.51526], [33.90883, 74.51592], [33.9093, 74.51636], [33.91008, 74.51636]],
     ],
     days: [
@@ -1070,12 +1079,13 @@ export const TREKS = {
       { name: "Janglik", at: [31.31716, 78.00958] },
       { name: "Dayara Thach", q: "Dehra Thach", at: [31.34772, 78.0609] }, // OSM spells it Dehra
       { name: "Litham", at: [31.3624, 78.10387], exact: true }, // on the path; OSM's point is 110 m off it
+      // Dhunda isn't on the map by name: where a GPS track starts from the camp (Wikiloc "Mule
+      // trail from Dhunda to Janglik" 233575429, June 2025), 4,054 m
+      { name: "Dhunda", at: [31.37498, 78.13818], exact: true },
       { name: "Buran Ghati", at: [31.38742, 78.14567] },
       { name: "Munirang", at: [31.41578, 78.1545] }, // OSM's campsite below the pass, unnamed there
       { name: "Barua", at: [31.4682, 78.17846] },
     ],
-    // Not in OSM: placed where the line reaches ~4,050 m, the height trek operators give for Dhunda
-    camps: { Dhunda: ["Litham", "Buran Ghati", 0.68, ["Dunda", "Dhunda Camp"]] },
     days: [
       { to: "Dayara Thach", note: "Up from Janglik through forest onto one of the finest meadows in Himachal" },
       { to: "Litham", note: "Down through birch to Litham, below the Chandranahan waterfall" },

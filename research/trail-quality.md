@@ -1,15 +1,15 @@
 # Trail quality
 
-55 trails checked: 0 need fixing, 20 worth a look, 35 clean.
+55 trails checked: 0 need fixing, 21 worth a look, 34 clean.
 
 ## panch-kedar (313.4 km, 9400 m up)
 - Check · days: day 1 (Guptkashi to Kedarnath) climbs 1550 m
 - Check · days: day 5 (Gaundar to Madhmaheshwar) climbs 1620 m
 - Check · days: day 9 (Sagar to Panar) climbs 1800 m
 
-## doodhpathri (31.5 km, 1840 m up, 2.6 km estimated)
-- Check · straight: 1 straight segment over 500 m (936 m at km 6.8)
-- Check · estimated: 2.6 km drawn along the terrain (no mapped path)
+## doodhpathri (34.6 km, 1790 m up, 5 km estimated)
+- Check · straight: 6 straight segments over 500 m (2519 m at km 13.6, 1493 m at km 17.7, 767 m at km 6.1)
+- Check · estimated: 5 km drawn along the terrain (no mapped path)
 
 ## rudranath-kalpeshwar (47.8 km, 3690 m up)
 - Check · days: day 1 (Kalpeshwar to Bansi Narayan) climbs 1550 m
@@ -29,6 +29,9 @@
 
 ## deoriatal-chandrashila (22.4 km, 2100 m up)
 - Check · days: days add up to 28.3 km but the trail is 22.4 km
+
+## har-ki-dun (22.6 km, 1590 m up)
+- Check · straight: 1 straight segment over 500 m (594 m at km 3.8)
 
 ## kalpeshwar (8.9 km, 1570 m up)
 - Check · days: day 1 (Urgam to Bansi Narayan) climbs 1570 m
@@ -51,8 +54,8 @@
 ## markha-valley (65.7 km, 2210 m up)
 - Check · straight: 1 straight segment over 500 m (824 m at km 51.8)
 
-## pin-bhaba-pass (49.3 km, 2680 m up)
-- Check · straight: 1 straight segment over 500 m (610 m at km 45.8)
+## pin-bhaba-pass (49.4 km, 2680 m up)
+- Check · straight: 1 straight segment over 500 m (610 m at km 45.9)
 
 ## pin-parvati-pass (80.2 km, 3310 m up)
 - Check · straight: 2 straight segments over 500 m (538 m at km 35.6, 520 m at km 30.2)
@@ -68,4 +71,4 @@
 
 ## Clean
 
-ali-bedni-bugyal, beas-kund, bhrigu-lake, brahmatal, buran-ghati, chandrakhani-pass, dayara-bugyal, dodital-darwa-pass, everest-base-camp-gokyo-lakes, everest-base-camp, everest-three-passes, gaumukh-tapovan, goechala, gokyo-lakes, gulabi-kantha, hampta-pass, har-ki-dun, kareri-lake, kedarkantha-trek, khopra-danda, kuari-pass, pangarchulla-peak, panwali-kantha, phulara-ridge, pindari-glacier, ranthan-kharak, roopkund, rupin-pass, sandakphu-phalut-trek, sar-pass, satopanth-lake, triund, tungnath-chandrashila, valley-of-flowers, yulla-kanda
+ali-bedni-bugyal, beas-kund, bhrigu-lake, brahmatal, buran-ghati, chandrakhani-pass, dayara-bugyal, dodital-darwa-pass, everest-base-camp-gokyo-lakes, everest-base-camp, everest-three-passes, gaumukh-tapovan, goechala, gokyo-lakes, gulabi-kantha, hampta-pass, kareri-lake, kedarkantha-trek, khopra-danda, kuari-pass, pangarchulla-peak, panwali-kantha, phulara-ridge, pindari-glacier, ranthan-kharak, roopkund, rupin-pass, sandakphu-phalut-trek, sar-pass, satopanth-lake, triund, tungnath-chandrashila, valley-of-flowers, yulla-kanda

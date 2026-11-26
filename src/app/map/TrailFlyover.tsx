@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { X, Play, Pause, RotateCcw, Mountain, BedDouble, LocateFixed, Car } from "lucide-react";
-import { driveAt, trailProfile, type Trail } from "@/lib/trails/shared";
+import { X, Play, Pause, RotateCcw, Mountain, Tent, LocateFixed, Car, SkipBack, SkipForward, Footprints, Maximize2, Flag, Triangle } from "lucide-react";
+import { driveAt, trailProfile, trailWalkKm, type Trail } from "@/lib/trails/shared";
 import { loadLeaflet, loadMapLibre, tuneStyle, TERRARIUM } from "./mapShared";
 import { DARK_STYLE, MAPBOX_CSS, MAPBOX_JS, MAPBOX_STYLE, MAPBOX_TOKEN } from "./mapAssets";
 import { flyRoute } from "./flyRoute";
@@ -30,7 +30,7 @@ const fmt = (n: number) => Math.round(n).toLocaleString("en-IN");
 const RAD = Math.PI / 180;
 /** A whole trek takes about this long at 1×, whatever its length */
 const PLAY_SECONDS = 75;
-const SPEEDS = [1, 2, 4] as const;
+const SPEEDS = [0.5, 1, 2, 4] as const;
 const EXAGGERATION = 1.6;
 /** The camera's preferred tilt, and how low it may drop to see over a ridge */
 const PITCH = 70, PITCH_MIN = 34;
@@ -100,6 +100,8 @@ const ROAD_FASTER = 8;
 const ROAD = "#3b82f6";
 
 type Pt = { km: number; lat: number; lng: number; ele: number };
+/** follow: the camera walks behind the hiker; overview: the whole trail in view, the hiker moving along it */
+type CamMode = "follow" | "overview";
 type Callout = { key: string; km: number; kind: "landmark" | "night" | "road"; title: string; meta: string; note?: string; day?: number };
 
 function bearing(a: Pt, b: Pt) {
@@ -175,7 +177,14 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
   const trail = route.trail;
   const boxRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const ctl = useRef<{ toggle: () => void; restart: () => void; seekKm: (k: number) => void; speed: (s: number) => void; stay: () => void; back: () => void } | null>(null);
+  const ctl = useRef<{ toggle: () => void; restart: () => void; seekKm: (k: number) => void; speed: (s: number) => void; stay: () => void; back: () => void; day: (dir: 1 | -1) => void; mode: (m: CamMode) => void } | null>(null);
+  /** Before the first play the camera circles the whole trail behind the intro card; at the end, a summary */
+  const [phase, setPhase] = useState<"intro" | "fly" | "done">("intro");
+  const phaseRef = useRef(phase);
+  phaseRef.current = phase;
+  const [camMode, setCamMode] = useState<CamMode>("follow");
+  /** Hovering the profile: where, for the readout above it */
+  const [hover, setHover] = useState<{ km: number; frac: number } | null>(null);
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState<number>(1);
   const [ready, setReady] = useState(false);
@@ -240,8 +249,34 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
       resume: false,
       // On a road stretch, by car
       car: false,
+      mode: "follow" as CamMode,
+      // The intro's slow circle round the trail
+      orbiting: false, orbitRaf: 0,
     };
-    const baseZoom = () => 13.5 - 0.35 * Math.log2(s.speed);
+    const baseZoom = () => 13.5 - 0.35 * Math.log2(Math.max(1, s.speed));
+    let bounds: [[number, number], [number, number]] = [[0, 0], [0, 0]];
+    // Wide screens keep the intro and summary cards on the left, so the trail is framed to their right
+    const fitPad = () => (window.innerHeight < 560 ? 30 : { top: 110, bottom: 230, left: window.innerWidth >= 1000 ? 470 : 50, right: 50 });
+    // The intro: the whole trail tilted, the camera turning slowly round it
+    const orbit = () => {
+      if (!map || reduced) return;
+      s.orbiting = true;
+      let last = performance.now();
+      const spin = (now: number) => {
+        if (!s.orbiting || !map) return;
+        const dt = Math.min(0.1, (now - last) / 1000); last = now;
+        map.setBearing((map.getBearing() + dt * 3.2) % 360);
+        s.orbitRaf = requestAnimationFrame(spin);
+      };
+      s.orbitRaf = requestAnimationFrame(spin);
+    };
+    const stopOrbit = () => { s.orbiting = false; cancelAnimationFrame(s.orbitRaf); };
+    // Overview: the whole trail in view, turned to the way the walker faces
+    const toOverview = (ms = 1400) => {
+      if (!map) return;
+      const cam = map.cameraForBounds(bounds, { padding: fitPad() });
+      map.easeTo({ ...(cam ?? {}), pitch: 50, bearing: s.brg, duration: reduced ? 0 : ms, essential: true });
+    };
     // Development only: lets a test read the camera's state
     if (process.env.NODE_ENV !== "production") (window as unknown as { __fly?: unknown }).__fly = { s, blocked: () => blocked(), map: () => map, at: (k: number) => at(k) };
 
@@ -351,11 +386,15 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
       // Turn smoothly toward the way ahead, the short way round
       const diff = ((heading(s.km) - s.brg + 540) % 360) - 180;
       s.brg = (s.brg + diff * (1 - Math.exp(-dt * 1.8)) + 360) % 360;
-      steer(now, dt);
       moveWalker(s.km);
-      map.jumpTo({ ...camera(s.km), bearing: s.brg });
+      if (s.mode === "follow") { steer(now, dt); map.jumpTo({ ...camera(s.km), bearing: s.brg }); }
       if (now - s.painted > 90) { s.painted = now; paintProgress(); report(); }
-      if (s.km >= total) { stop(); report(); paintProgress(); return; }
+      if (s.km >= total) {
+        stop(); report(); paintProgress(); setPhase("done");
+        // Pull back to see the whole of what was walked
+        toOverview(2200);
+        return;
+      }
       raf = requestAnimationFrame(tick);
     };
     const run = () => { s.last = performance.now(); raf = requestAnimationFrame(tick); };
@@ -367,17 +406,21 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
     };
     const start = () => {
       if (!map || s.playing) return;
-      if (s.km >= total) { s.km = 0; paintProgress(); report(); }
+      stopOrbit(); setPhase("fly");
+      if (s.km >= total) { s.km = 0; setCallout(null); paintProgress(); report(); }
       cancelLook();
       s.playing = true; setPlaying(true);
       s.brg = heading(s.km); s.pitch = s.pitchWant = PITCH; s.zoomOff = s.zoomOffWant = 0;
-      glideThen(() => { if (s.playing) run(); }, 1800);
+      if (s.mode === "overview") { toOverview(900); run(); return; }
+      // From the intro's height, a longer, gentler descent to the trailhead
+      glideThen(() => { if (s.playing) run(); }, phaseRef.current === "intro" ? 2600 : 1800);
     };
     const stop = () => { s.playing = false; setPlaying(false); cancelAnimationFrame(raf); };
 
     // Looking around: the walk pauses while you move the map, then glides back and carries on
     const cancelLook = () => { clearTimeout(resumeTimer); clearInterval(countdown); setLookAround(null); };
     const takeOver = () => {
+      stopOrbit();
       clearTimeout(settleTimer); // the person is looking around; leave the camera to them
       if (s.playing) { s.resume = true; stop(); }
       clearTimeout(resumeTimer); clearInterval(countdown);
@@ -395,21 +438,41 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
     const backToTrail = () => {
       cancelLook();
       s.resume = false;
-      s.playing = true; setPlaying(true);
+      s.playing = true; setPlaying(true); setPhase("fly");
       s.pitch = s.pitchWant = PITCH; s.zoomOff = s.zoomOffWant = 0;
+      if (s.mode === "overview") { toOverview(900); run(); return; }
       glideThen(() => { if (s.playing) run(); }, 1200);
     };
     const seekKm = (k: number) => {
       const wasPlaying = s.playing || s.resume;
-      stop(); cancelLook(); s.resume = false;
+      stop(); cancelLook(); stopOrbit(); s.resume = false;
       s.km = clamp(k, 0, total);
+      // At the very end, the summary
+      if (s.km >= total) { paintProgress(); report(); moveWalker(s.km); setCallout(null); setPhase("done"); toOverview(1200); return; }
+      setPhase("fly");
       paintProgress(); report(); moveWalker(s.km);
       // Jumping to a callout's spot shows it
       const e = events.find((x) => Math.abs(x.km - s.km) < 0.15);
       if (e) showCallout(e); else setCallout(null);
       s.brg = heading(s.km);
+      if (s.mode === "overview") { if (wasPlaying) { s.playing = true; setPlaying(true); run(); } return; }
       if (wasPlaying) { s.playing = true; setPlaying(true); glideThen(() => { if (s.playing) run(); }, 900); }
       else { map?.setCenterClampedToGround?.(false); map?.easeTo({ ...camera(s.km), bearing: s.brg, duration: 900 }); settleSoon(950); }
+    };
+    // The next day's start, or this day's start (the one before if this one has only just begun)
+    const jumpDay = (dir: 1 | -1) => {
+      const walk = bands.filter((b) => b.to > b.from);
+      if (!walk.length) return;
+      if (dir > 0) { const n = walk.find((b) => b.from > s.km + 0.05); if (n) seekKm(n.from + 0.01); else seekKm(total); return; }
+      const cur = [...walk].reverse().find((b) => b.from <= s.km + 0.01);
+      const i = cur ? walk.indexOf(cur) : 0;
+      seekKm((cur && s.km - cur.from > 0.4 ? cur : walk[Math.max(0, i - 1)]).from + 0.01);
+    };
+    const setMode = (m: CamMode) => {
+      s.mode = m; setCamMode(m);
+      stopOrbit();
+      if (m === "overview") toOverview();
+      else { s.brg = heading(s.km); s.pitch = s.pitchWant = PITCH; s.zoomOff = s.zoomOffWant = 0; map?.setCenterClampedToGround?.(false); map?.easeTo({ ...camera(s.km), bearing: s.brg, duration: reduced ? 0 : 1400, essential: true }); }
     };
     // Paused, nothing steers the camera, so after a jump look down a step at a time until the
     // walker is in clear view. On a timer, not moveend: starting a move ends the one before it,
@@ -427,6 +490,8 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
       toggle: () => (s.playing ? (stop(), settleSoon(0)) : s.resume ? backToTrail() : start()),
       restart: () => { stop(); cancelLook(); s.resume = false; s.km = 0; setCallout(null); paintProgress(); report(); start(); },
       seekKm,
+      day: jumpDay,
+      mode: setMode,
       speed: (v) => { s.speed = v; setSpeed(v); },
       stay: () => { cancelLook(); s.resume = false; setLookAround("stay"); },
       back: () => { s.resume = true; backToTrail(); },
@@ -438,13 +503,13 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const ml = USE_MAPBOX ? (window as any).mapboxgl : (window as any).maplibregl;
         const lats = pts.map((p) => p.lat), lngs = pts.map((p) => p.lng);
-        const bounds: [[number, number], [number, number]] = [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]];
+        bounds = [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]];
         map = new ml.Map({
           container: box, style: USE_MAPBOX ? MAPBOX_STYLE : DARK_STYLE, bounds,
-          // The whole trail in the open middle, clear of the title and day cards and the controls
+          // The whole trail in the open middle, clear of the intro card and the controls
           // (a short screen, like a phone on its side, just gets an even margin)
-          fitBoundsOptions: { padding: window.innerHeight >= 560 ? { top: 100, bottom: 200, left: 40, right: 40 } : 30 },
-          pitch: 58, maxPitch: USE_MAPBOX ? 85 : 78, dragRotate: true,
+          fitBoundsOptions: { padding: fitPad() },
+          pitch: 52, bearing: -18, maxPitch: USE_MAPBOX ? 85 : 78, dragRotate: true,
           // Mapbox's own logo and credit stay as its terms ask; MapLibre's credit folds away
           ...(USE_MAPBOX ? { accessToken: MAPBOX_TOKEN, projection: "mercator" } : { attributionControl: { compact: true } }),
         });
@@ -587,29 +652,46 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
           window.addEventListener("pointerup", release);
           cleanups.push(() => window.removeEventListener("pointerup", release), () => clearTimeout(wheelEnd));
           map.on("moveend", (e: { originalEvent?: Event }) => { if (e.originalEvent && s.resume) letGo(); });
-          if (!reduced) setTimeout(() => { if (!cancelled) start(); }, 900);
+          // The intro: the trail turning slowly until Start
+          orbit();
     };
 
     return () => {
-      cancelled = true; cancelAnimationFrame(raf); clearTimeout(resumeTimer); clearInterval(countdown); clearTimeout(calloutTimer); clearTimeout(settleTimer);
+      cancelled = true; stopOrbit(); cancelAnimationFrame(raf); clearTimeout(resumeTimer); clearInterval(countdown); clearTimeout(calloutTimer); clearTimeout(settleTimer);
       cleanups.forEach((f) => f());
       ctl.current = null; try { map?.remove(); } catch { /* already gone */ }
     };
   }, [trail, route, total, bands, pts, effTotal]);
 
-  // Esc closes, Space plays and pauses; focus starts on Close
+  // Keys: Esc closes, Space plays and pauses, ← → step a day, O switches the camera; focus starts on Close
   useEffect(() => {
     closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
       // Caught first and kept here, so the map page behind doesn't also close its panel
-      if (e.key === "Escape") { e.preventDefault(); e.stopImmediatePropagation(); onClose(); }
-      if (e.key === " " && (e.target as HTMLElement)?.tagName !== "BUTTON") { e.preventDefault(); e.stopImmediatePropagation(); ctl.current?.toggle(); }
+      if (e.key === "Escape") { e.preventDefault(); e.stopImmediatePropagation(); onClose(); return; }
+      if (e.key === " " && el?.tagName !== "BUTTON") { e.preventDefault(); e.stopImmediatePropagation(); ctl.current?.toggle(); return; }
+      // The profile slider keeps its own arrows (fine steps)
+      if (el?.getAttribute("role") === "slider") return;
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); e.stopImmediatePropagation(); ctl.current?.day(e.key === "ArrowRight" ? 1 : -1); return; }
+      if (e.key === "o" || e.key === "O") { e.preventDefault(); ctl.current?.mode(camModeRef.current === "follow" ? "overview" : "follow"); }
     };
     window.addEventListener("keydown", onKey, true);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => { window.removeEventListener("keydown", onKey, true); document.body.style.overflow = prev; };
   }, [onClose]);
+  const camModeRef = useRef(camMode);
+  camModeRef.current = camMode;
+
+  // The trek at a glance, for the intro and the summary
+  const glance = useMemo(() => {
+    const days = oneWay.days.reduce((m, d) => Math.max(m, d.day), 0);
+    const climb = oneWay.days.reduce((s, d) => s + (d.kind === "walk" || d.kind === "rest" ? d.up ?? 0 : 0), 0);
+    // The last day ends at the road
+    const nights = Math.max(0, days - 1);
+    return { days, walkKm: trailWalkKm(oneWay), top: oneWay.maxEleM, climb, nights, sideTrips: route.summits.length };
+  }, [oneWay, route]);
 
   // The live profile: area under the elevation, walked part in orange, the walker as a dot
   const W = 600, H = 64, PAD = 4;
@@ -623,38 +705,71 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
   // Day numbers thin out when there are too many to fit
   const every = walkBands.length > 12 ? 2 : 1;
   // Day numbers are the itinerary's, so "of" counts its days (drive and rest days too)
-  const dayCount = trail.days.reduce((m, d) => Math.max(m, d.day), 0);
+  const dayCount = glance.days;
+  const eleAt = (k: number) => (profile.pts.find((p) => p.km >= k) ?? profile.pts[profile.pts.length - 1]).ele;
+  const bandAt = (k: number) => walkBands.find((b) => k >= b.from && k < b.to) ?? null;
+  // Marks on the profile: each night's camp, and the tops (side summits and the trek's high point)
+  const marks = useMemo(() => {
+    const out: { km: number; kind: "night" | "top"; label: string }[] = [];
+    walkBands.forEach((b, i) => {
+      if (i === walkBands.length - 1) return;
+      const d = trail.days.find((x) => x.day === b.day);
+      if (d?.to) out.push({ km: b.to, kind: "night", label: `Night ${b.day}: ${d.to}` });
+    });
+    route.summits.forEach((s) => out.push({ km: s.km, kind: "top", label: `${s.name}${s.ele != null ? `, ${fmt(s.ele)} m` : ""}` }));
+    const top = trail.stops.reduce((a, s) => ((s.ele ?? 0) > (a.ele ?? 0) ? s : a), trail.stops[0]);
+    if (top && !route.summits.some((s) => s.name === top.name)) out.push({ km: top.km, kind: "top", label: `${top.name}${top.ele != null ? `, ${fmt(top.ele)} m` : ""}` });
+    return out;
+  }, [walkBands, trail, route]);
+  // How far through today's walk
+  const band = bandAt(km);
+  const dayFrac = band ? clamp((km - band.from) / (band.to - band.from), 0, 1) : 0;
+  const curBandIdx = band ? walkBands.indexOf(band) : -1;
+
+  const Stat = ({ v, l }: { v: string; l: string }) => (
+    <div className="rounded-xl bg-white/[0.06] border border-white/[0.07] px-3 py-2">
+      <p className="text-[16px] font-bold leading-none tabular-nums text-white">{v}</p>
+      <p className="text-[10px] uppercase tracking-[0.12em] text-white/45 mt-1">{l}</p>
+    </div>
+  );
 
   return createPortal(
     <div className="tm-fly fixed inset-0 z-[3000] bg-[#0b0f14] text-white" role="dialog" aria-modal="true" aria-label={`${name}: the trail in 3D`}>
       {/* MapLibre makes its container position: relative, so it fills a positioned wrapper */}
       <div className="absolute inset-0"><div ref={boxRef} className="w-full h-full" /></div>
+      {/* A soft vignette top and bottom, so the cards read over bright snow */}
+      <div className="absolute inset-x-0 top-0 h-28 pointer-events-none bg-gradient-to-b from-black/45 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-44 pointer-events-none bg-gradient-to-t from-black/55 to-transparent" />
 
-      {/* Title, the day you're on, and what you've just reached: one small stack in the top-left
-          corner, so the middle of the screen is the trail's */}
+      {/* Top: the day you're on (or the trek's name), what you've just reached, and Close */}
       <div className="absolute top-0 inset-x-0 p-2.5 sm:p-3 flex items-start gap-2 pointer-events-none">
-        <div className="flex flex-col gap-1.5 w-[min(300px,calc(100vw-72px))]" aria-live="polite">
-          <div className="tm-glass rounded-xl px-3 py-2 pointer-events-auto">
-            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-white/45 truncate">Fly the trail · {name}</p>
-            {day ? (
-              <div key={day.n} className="tm-fly-day">
-                <p className="text-[13.5px] font-bold text-white leading-tight mt-0.5">
-                  <span className="text-[var(--tm-peach)]">Day {day.n}{dayCount > 1 ? `/${dayCount}` : ""}</span> · {day.title}
-                </p>
-                {day.sub && <p className="text-[11px] text-white/60 mt-0.5 tabular-nums leading-snug">{day.sub}</p>}
-                {(day.via || day.note) && <p className="hidden md:block text-[11px] text-white/50 mt-0.5 leading-snug line-clamp-2">{[day.via ? `via ${day.via}` : "", day.note ?? ""].filter(Boolean).join(" · ")}</p>}
-              </div>
-            ) : (
-              <p className="text-[13.5px] font-bold text-white leading-tight mt-0.5 truncate">{name}</p>
-            )}
-          </div>
-          {callout && (
-            <div key={callout.key} className="tm-fly-call tm-glass rounded-xl pl-1.5 pr-3 py-1.5 flex gap-2 items-center self-start max-w-full">
-              <span className="w-6 h-6 rounded-lg grid place-items-center shrink-0" style={{ background: callout.kind === "night" ? "rgba(111,240,224,0.14)" : callout.kind === "road" ? "rgba(59,130,246,0.2)" : "rgba(255,81,0,0.18)", color: callout.kind === "night" ? "#6ff0e0" : callout.kind === "road" ? "#93c5fd" : "#ff9a66" }}>
-                {callout.kind === "night" ? <BedDouble className="w-3.5 h-3.5" /> : callout.kind === "road" ? <Car className="w-3.5 h-3.5" /> : <Mountain className="w-3.5 h-3.5" />}
+        <div className="flex flex-col gap-1.5 w-[min(340px,calc(100vw-72px))]" aria-live="polite">
+          {phase !== "intro" && (
+            <div className="tm-glass rounded-2xl px-3.5 py-2.5 pointer-events-auto">
+              <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-white/45 truncate">Fly the trail · {name}</p>
+              {day ? (
+                <div key={day.n} className="tm-fly-day">
+                  <p className="text-[14px] font-bold text-white leading-tight mt-0.5">
+                    <span className="text-[var(--tm-peach)]">Day {day.n}{dayCount > 1 ? ` of ${dayCount}` : ""}</span> · {day.title}
+                  </p>
+                  {day.sub && <p className="text-[11px] text-white/60 mt-0.5 tabular-nums leading-snug">{day.sub}</p>}
+                  {(day.via || day.note) && <p className="hidden sm:block text-[11px] text-white/50 mt-1 leading-snug line-clamp-2">{[day.via ? `via ${day.via}` : "", day.note ?? ""].filter(Boolean).join(" · ")}</p>}
+                  {/* Today's progress */}
+                  <div className="mt-2 h-1 rounded-full bg-white/10 overflow-hidden"><div className="h-full rounded-full bg-gradient-to-r from-[#ff5100] to-[#ffb38a]" style={{ width: `${dayFrac * 100}%` }} /></div>
+                </div>
+              ) : (
+                <p className="text-[14px] font-bold text-white leading-tight mt-0.5 truncate">{name}</p>
+              )}
+            </div>
+          )}
+          {callout && phase === "fly" && (
+            <div key={callout.key} className="tm-fly-call tm-glass rounded-2xl pl-2 pr-3.5 py-2 flex gap-2.5 items-center self-start max-w-full">
+              <span className="w-8 h-8 rounded-xl grid place-items-center shrink-0" style={{ background: callout.kind === "night" ? "rgba(111,240,224,0.14)" : callout.kind === "road" ? "rgba(59,130,246,0.2)" : "rgba(255,81,0,0.18)", color: callout.kind === "night" ? "#6ff0e0" : callout.kind === "road" ? "#93c5fd" : "#ff9a66" }}>
+                {callout.kind === "night" ? <Tent className="w-4 h-4" /> : callout.kind === "road" ? <Car className="w-4 h-4" /> : <Mountain className="w-4 h-4" />}
               </span>
-              <span className="min-w-0 text-[12px] leading-tight truncate">
-                <b className="font-bold">{callout.title}</b>{callout.meta && <span className="text-white/60"> · {callout.meta}</span>}
+              <span className="min-w-0 leading-tight">
+                <b className="block text-[13px] font-bold truncate">{callout.title}</b>
+                {callout.meta && <span className="block text-[11px] text-white/60 truncate">{callout.meta}</span>}
               </span>
             </div>
           )}
@@ -663,9 +778,63 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
           className="ml-auto tm-glass rounded-xl w-10 h-10 grid place-items-center text-white/80 hover:text-white pointer-events-auto"><X className="w-4 h-4" /></button>
       </div>
 
+      {/* The intro: the trek at a glance and its days, while the camera circles the trail */}
+      {phase === "intro" && ready && (
+        <div className="absolute inset-x-0 bottom-0 sm:inset-0 sm:grid sm:place-items-center lg:place-items-start lg:items-center lg:pl-6 p-2.5 sm:p-6 pointer-events-none">
+          <div className="tm-fly-intro tm-glass rounded-3xl p-4 sm:p-5 w-full sm:w-[420px] max-h-[70vh] overflow-y-auto pointer-events-auto">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--tm-peach)]">Fly the trail in 3D</p>
+            <h2 className="text-[22px] sm:text-[24px] font-bold leading-tight mt-1">{name}</h2>
+            <div className="grid grid-cols-4 gap-1.5 mt-3">
+              <Stat v={String(glance.days)} l={glance.days === 1 ? "day" : "days"} />
+              <Stat v={`${fmt(glance.walkKm)}`} l="km on foot" />
+              <Stat v={`${fmt(glance.climb)}`} l="m climbed" />
+              <Stat v={`${fmt(glance.top)}`} l="m high" />
+            </div>
+            {/* The days, each a way in */}
+            <ol className="mt-3 space-y-0.5">
+              {oneWay.days.map((d) => {
+                const b = walkBands.find((x) => x.day === d.day);
+                return (
+                  <li key={d.day}>
+                    <button type="button" disabled={!b} onClick={() => b && ctl.current?.seekKm(b.from + 0.01)}
+                      className="w-full flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-left hover:bg-white/[0.06] disabled:hover:bg-transparent disabled:cursor-default">
+                      <span className="w-6 h-6 rounded-md grid place-items-center text-[10.5px] font-bold tabular-nums bg-white/[0.08] text-white/75 shrink-0">{d.day}</span>
+                      <span className="min-w-0 flex-1 text-[12.5px] leading-tight">
+                        <span className="text-white/90 truncate block">{d.kind === "rest" ? `Rest day at ${d.from}` : d.kind === "drive" ? `Drive to ${d.to}` : `${d.from} → ${d.to}`}</span>
+                        {d.kind === "rest" && d.via?.length ? <span className="text-[10.5px] text-white/45">walk to {d.via.join(", ")}</span> : null}
+                      </span>
+                      {d.km != null && <span className="text-[11px] text-white/50 tabular-nums shrink-0">{d.km} km</span>}
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+            <button type="button" onClick={() => ctl.current?.toggle()} className="tm-btn tm-btn-primary w-full !h-12 mt-3 !text-[14px]">
+              <Play className="w-4 h-4" /> Start the flight
+            </button>
+            <p className="hidden sm:block text-center text-[10.5px] text-white/40 mt-2">Space to play or pause · ← → for days · drag to look around</p>
+          </div>
+        </div>
+      )}
+
+      {/* The end: what was walked, and again */}
+      {phase === "done" && (
+        <div className="absolute inset-0 grid place-items-center lg:place-items-start lg:items-center lg:pl-6 p-4 pointer-events-none">
+          <div className="tm-fly-intro tm-glass rounded-3xl p-5 w-full max-w-[380px] text-center pointer-events-auto">
+            <div className="w-12 h-12 rounded-2xl mx-auto grid place-items-center" style={{ background: "linear-gradient(135deg,#ff5100,#ff9a66)" }}><Flag className="w-6 h-6" /></div>
+            <h2 className="text-[20px] font-bold mt-3">That&apos;s the whole trek</h2>
+            <p className="text-[12.5px] text-white/60 mt-1">{name}: {glance.days} days, {fmt(glance.walkKm)} km on foot, {fmt(glance.climb)} m of climbing, up to {fmt(glance.top)} m{glance.nights > 1 ? `, ${glance.nights} nights out` : ""}.</p>
+            <div className="flex gap-2 mt-4">
+              <button type="button" onClick={() => ctl.current?.restart()} className="tm-btn tm-btn-primary flex-1 !h-11"><RotateCcw className="w-4 h-4" /> Fly it again</button>
+              <button type="button" onClick={onClose} className="tm-btn flex-1 !h-11">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Looking around: the walk carries on shortly, unless you stay */}
       {lookAround != null && (
-        <div className="absolute inset-x-0 bottom-[150px] sm:bottom-[156px] flex justify-center px-4 pointer-events-none">
+        <div className="absolute inset-x-0 bottom-[178px] sm:bottom-[186px] flex justify-center px-4 pointer-events-none">
           <div className="tm-glass rounded-full pl-4 pr-1.5 py-1.5 flex items-center gap-2 text-[12.5px] pointer-events-auto" role="status">
             {lookAround === "stay" ? <span className="text-white/75">Looking around</span> : <span className="text-white/75 tabular-nums">Back to the trail in {lookAround}s</span>}
             {lookAround !== "stay" && <button type="button" onClick={() => ctl.current?.stay()} className="h-8 px-3 rounded-full text-[12px] font-semibold text-white/80 hover:text-white bg-white/5 hover:bg-white/10">Stay here</button>}
@@ -676,26 +845,44 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
         </div>
       )}
 
-      {!ready && !failed && <p className="absolute inset-0 grid place-items-center text-white/60 text-[13px]">Loading the terrain…</p>}
+      {!ready && !failed && (
+        <div className="absolute inset-0 grid place-items-center">
+          <div className="text-center">
+            <div className="tm-fly-spin w-9 h-9 rounded-full border-2 border-white/15 border-t-[#ff7d47] mx-auto" />
+            <p className="text-white/60 text-[13px] mt-3">Loading the mountains…</p>
+          </div>
+        </div>
+      )}
       {failed && <p className="absolute inset-0 grid place-items-center text-white/70 text-[13px] px-6 text-center">The 3D view couldn&apos;t load. Check your connection and try again.</p>}
 
-      {/* Controls, and the live profile that doubles as the scrubber */}
-      {/* Bottom padding keeps the bar clear of the map's credit in the corner */}
-      <div className="absolute bottom-0 inset-x-0 px-2.5 pt-2 pb-8 sm:px-4 sm:pb-8 pointer-events-none">
-        <div className="tm-glass rounded-2xl px-3 py-2.5 max-w-[680px] mx-auto pointer-events-auto">
-          <div className="flex items-center gap-2">
-            <button type="button" onClick={() => ctl.current?.toggle()} disabled={!ready} className="tm-btn tm-btn-primary !h-9 !px-3.5 min-w-[88px]" aria-label={playing ? "Pause" : "Play"}>
-              {playing ? <><Pause className="w-3.5 h-3.5" /> Pause</> : <><Play className="w-3.5 h-3.5" /> {km > 0 && km < total ? "Play" : "Play trail"}</>}
+      {/* Controls, and the live profile that doubles as the scrubber (hidden behind the intro on phones) */}
+      <div className={`absolute bottom-0 inset-x-0 px-2.5 pt-2 pb-8 sm:px-4 sm:pb-8 pointer-events-none ${phase === "intro" ? "hidden sm:block sm:opacity-60" : ""}`}>
+        <div className="tm-glass rounded-2xl px-3 py-2.5 max-w-[720px] mx-auto pointer-events-auto">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <button type="button" onClick={() => ctl.current?.day(-1)} disabled={!ready} className="tm-btn !h-9 !w-9 !px-0" aria-label="Previous day" title="Previous day (←)"><SkipBack className="w-3.5 h-3.5" /></button>
+            <button type="button" onClick={() => ctl.current?.toggle()} disabled={!ready} className="tm-btn tm-btn-primary !h-9 !px-3.5 min-w-[92px]" aria-label={playing ? "Pause" : "Play"}>
+              {playing ? <><Pause className="w-3.5 h-3.5" /> Pause</> : <><Play className="w-3.5 h-3.5" /> {km > 0 && km < total ? "Play" : "Fly"}</>}
             </button>
-            <button type="button" onClick={() => ctl.current?.restart()} disabled={!ready} className="tm-btn !h-9 !w-9 !px-0" aria-label="From the start"><RotateCcw className="w-3.5 h-3.5" /></button>
-            <div className="flex rounded-xl overflow-hidden border border-white/10" role="group" aria-label="Speed">
+            <button type="button" onClick={() => ctl.current?.day(1)} disabled={!ready} className="tm-btn !h-9 !w-9 !px-0" aria-label="Next day" title="Next day (→)"><SkipForward className="w-3.5 h-3.5" /></button>
+            <div className="hidden sm:flex rounded-xl overflow-hidden border border-white/10 ml-1" role="group" aria-label="Speed">
               {SPEEDS.map((v) => (
                 <button key={v} type="button" onClick={() => ctl.current?.speed(v)} aria-pressed={speed === v}
-                  className={`h-9 px-2.5 text-[12px] font-bold tabular-nums ${speed === v ? "bg-white/15 text-white" : "text-white/55 hover:text-white"}`}>{v}×</button>
+                  className={`h-9 px-2 text-[11.5px] font-bold tabular-nums ${speed === v ? "bg-white/15 text-white" : "text-white/55 hover:text-white"}`}>{v === 0.5 ? "½" : v}×</button>
               ))}
             </div>
+            {/* Phones: one button cycles the speed */}
+            <div className="sm:hidden">
+              <button type="button" onClick={() => ctl.current?.speed(SPEEDS[(SPEEDS.indexOf(speed as (typeof SPEEDS)[number]) + 1) % SPEEDS.length])}
+                className="tm-btn !h-9 !px-2.5 tabular-nums" aria-label={`Speed ${speed}×, change`}>{speed === 0.5 ? "½" : speed}×</button>
+            </div>
+            <div className="flex rounded-xl overflow-hidden border border-white/10" role="group" aria-label="Camera">
+              <button type="button" onClick={() => ctl.current?.mode("follow")} aria-pressed={camMode === "follow"} title="Follow the walker"
+                className={`h-9 px-2.5 inline-flex items-center gap-1.5 text-[11.5px] font-bold ${camMode === "follow" ? "bg-white/15 text-white" : "text-white/55 hover:text-white"}`}><Footprints className="w-3.5 h-3.5" /><span className="hidden md:inline">Follow</span></button>
+              <button type="button" onClick={() => ctl.current?.mode("overview")} aria-pressed={camMode === "overview"} title="The whole trail (O)"
+                className={`h-9 px-2.5 inline-flex items-center gap-1.5 text-[11.5px] font-bold ${camMode === "overview" ? "bg-white/15 text-white" : "text-white/55 hover:text-white"}`}><Maximize2 className="w-3.5 h-3.5" /><span className="hidden md:inline">Whole trail</span></button>
+            </div>
             <p className="ml-auto text-right text-[11.5px] text-white/60 tabular-nums leading-tight">
-              <span className="text-white font-semibold">{km.toFixed(1)}</span> / {total.toFixed(1)} km
+              <span className="text-white font-semibold">{km.toFixed(1)}</span><span className="hidden sm:inline"> / {total.toFixed(1)}</span> km
               {ele != null && <><br /><span className="text-white font-semibold">{fmt(ele)}</span> m</>}
             </p>
           </div>
@@ -705,11 +892,11 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
             {walkBands.map((b, i) => (i % every === 0 || day?.n === b.day) && (
               <button key={b.day} type="button" onClick={() => ctl.current?.seekKm(b.from + 0.01)} title={b.label}
                 aria-label={`Go to day ${b.day}`} aria-current={day?.n === b.day || undefined}
-                className={`absolute top-0 -translate-x-1/2 h-5 min-w-5 px-1 rounded-md text-[10px] font-bold tabular-nums transition-colors ${day?.n === b.day ? "bg-[#ff5100] text-white" : "bg-white/8 text-white/60 hover:bg-white/15 hover:text-white"}`}
+                className={`absolute top-0 -translate-x-1/2 h-5 min-w-5 px-1 rounded-md text-[10px] font-bold tabular-nums transition-colors ${day?.n === b.day ? "bg-[#ff5100] text-white" : i < curBandIdx ? "bg-[#ff5100]/25 text-[#ffc2a3] hover:bg-[#ff5100]/40" : "bg-white/8 text-white/60 hover:bg-white/15 hover:text-white"}`}
                 style={{ left: `${clamp(((eff(b.from) + eff(b.to)) / 2 / effTotal) * 100, 2.5, 97.5)}%` }}>{b.day}</button>
             ))}
           </div>
-          {/* Click or drag along the profile to jump there */}
+          {/* Click or drag along the profile to jump there; hover to read it */}
           <div
             role="slider" tabIndex={0} aria-label="Position along the trail" aria-valuemin={0} aria-valuemax={Math.round(total)} aria-valuenow={Math.round(km)}
             aria-valuetext={`${km.toFixed(1)} of ${total.toFixed(1)} km${ele != null ? `, ${fmt(ele)} m` : ""}`}
@@ -721,24 +908,40 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
               el.onpointermove = (m) => go(m.clientX);
               el.onpointerup = () => { el.onpointermove = null; el.onpointerup = null; };
             }}
+            onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); const f = clamp((e.clientX - r.left) / r.width, 0, 1); setHover({ frac: f, km: kmOfEff(f * effTotal) }); }}
+            onMouseLeave={() => setHover(null)}
             onKeyDown={(e) => {
               const step = e.key === "ArrowRight" ? 0.02 : e.key === "ArrowLeft" ? -0.02 : 0;
               if (step) { e.preventDefault(); ctl.current?.seekKm(kmOfEff(clamp(frac + step, 0, 1) * effTotal)); }
             }}
           >
-            <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="block w-full h-9 sm:h-10" aria-hidden>
+            {/* Camps and tops along the profile */}
+            {marks.map((m, i) => (
+              <span key={i} title={m.label} className="absolute -top-0.5 -translate-x-1/2 pointer-events-none" style={{ left: `${(eff(m.km) / effTotal) * 100}%` }}>
+                {m.kind === "night" ? <Tent className="w-2.5 h-2.5 text-[#6ff0e0]/80" /> : <Triangle className="w-2.5 h-2.5 fill-current text-[#ffd9c2]/85" />}
+              </span>
+            ))}
+            {hover && (
+              <div className="absolute bottom-full mb-1.5 -translate-x-1/2 pointer-events-none tm-glass rounded-lg px-2 py-1 text-[10.5px] whitespace-nowrap tabular-nums"
+                style={{ left: `${clamp(hover.frac * 100, 8, 92)}%` }}>
+                <b className="text-white">{hover.km.toFixed(1)} km</b> · {fmt(eleAt(hover.km))} m{bandAt(hover.km) ? <span className="text-white/55"> · day {bandAt(hover.km)!.day}</span> : null}
+              </div>
+            )}
+            <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="block w-full h-10 sm:h-11" aria-hidden>
               <defs>
                 <clipPath id="tm-fly-done"><rect x="0" y="0" width={x(km)} height={H} /></clipPath>
+                <linearGradient id="tm-fly-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="rgba(255,125,71,0.45)" /><stop offset="1" stopColor="rgba(255,81,0,0.04)" /></linearGradient>
               </defs>
               {/* Every other day faintly banded */}
               {walkBands.map((b, i) => i % 2 === 0 && <rect key={b.day} x={x(b.from)} y="0" width={Math.max(0, x(b.to) - x(b.from))} height={H} fill="rgba(255,255,255,0.035)" />)}
               {(trail.drives ?? []).map((d) => <rect key={d.fromKm} x={x(d.fromKm)} y="0" width={Math.max(0, x(d.toKm) - x(d.fromKm))} height={H} fill="rgba(59,130,246,0.16)" />)}
-              <path d={area} fill="rgba(255,255,255,0.08)" />
+              <path d={area} fill="rgba(255,255,255,0.07)" />
               <path d={ridge} fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
               <g clipPath="url(#tm-fly-done)">
-                <path d={area} fill="rgba(255,81,0,0.28)" />
-                <path d={ridge} fill="none" stroke="#ff7d47" strokeWidth="1.8" vectorEffect="non-scaling-stroke" />
+                <path d={area} fill="url(#tm-fly-fill)" />
+                <path d={ridge} fill="none" stroke="#ff7d47" strokeWidth="2" vectorEffect="non-scaling-stroke" />
               </g>
+              {hover && <line x1={hover.frac * W} x2={hover.frac * W} y1="0" y2={H} stroke="rgba(255,255,255,0.35)" strokeDasharray="3 3" strokeWidth="1" vectorEffect="non-scaling-stroke" />}
               <line x1={x(km)} x2={x(km)} y1="0" y2={H} stroke="rgba(255,255,255,0.5)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
             </svg>
             {/* The hiker on the profile (outside the SVG so it keeps its shape) */}
@@ -748,7 +951,7 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
           </div>
           <div className="mt-1 flex justify-between text-[10px] text-white/40 tabular-nums">
             <span>{fmt(profile.lo)} m</span>
-            <span className="hidden sm:inline">Drag the map to look around · tap a day or a stop to go there</span>
+            <span className="hidden sm:inline">Drag the map to look around · ← → for days · O for the whole trail</span>
             <span>{fmt(profile.hi)} m</span>
           </div>
         </div>
@@ -758,18 +961,23 @@ export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: s
         /* Its own copies of the map page's glass, buttons and colours, so it looks the same opened
            from the adventure page, where the map's styles aren't loaded */
         .tm-fly { --tm-ink: 255,255,255; --tm-fg: 255,255,255; --tm-bg: 17,20,24; --tm-card: #111418; --tm-peach: #ff9a66; --tm-orange: #ff7d47; font-family: var(--font-dm-sans, 'DM Sans'), sans-serif; }
-        .tm-fly .tm-glass { background: rgba(17,20,24,0.86); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 16px 48px rgba(0,0,0,0.45); }
-        .tm-fly .tm-btn { height: 40px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); transition: all .2s; }
-        .tm-fly .tm-btn:hover:not(:disabled) { background: rgba(255,255,255,0.09); }
+        .tm-fly .tm-glass { background: rgba(17,20,24,0.82); backdrop-filter: blur(18px) saturate(1.25); -webkit-backdrop-filter: blur(18px) saturate(1.25); border: 1px solid rgba(255,255,255,0.09); box-shadow: 0 18px 50px rgba(0,0,0,0.45); }
+        .tm-fly .tm-btn { height: 40px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); transition: background .2s, transform .15s; }
+        .tm-fly .tm-btn:hover:not(:disabled) { background: rgba(255,255,255,0.1); }
+        .tm-fly .tm-btn:active:not(:disabled) { transform: scale(0.97); }
         .tm-fly .tm-btn:disabled { opacity: 0.45; cursor: not-allowed; }
         .tm-fly .tm-btn-primary { color: #fff; border: 0; background: linear-gradient(135deg,#ff5100,#ff7d47); box-shadow: 0 6px 20px -6px rgba(255,81,0,0.6); }
+        .tm-fly .tm-btn-primary:hover:not(:disabled) { background: linear-gradient(135deg,#ff6116,#ff8b5a); }
         .tm-fly .bg-white\\/8 { background: rgba(255,255,255,0.08); }
         @media (prefers-reduced-transparency: reduce) { .tm-fly .tm-glass { background: #111418; backdrop-filter: none; } }
-        .tm-fly-shadow { text-shadow: 0 2px 18px rgba(0,0,0,0.8), 0 1px 3px rgba(0,0,0,0.9); }
         .tm-fly-day { animation: tm-fly-in 0.6s ease-out both; }
-        .tm-fly-call { animation: tm-fly-in 0.45s ease-out both; }
-        @keyframes tm-fly-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-        @media (prefers-reduced-motion: reduce) { .tm-fly-day, .tm-fly-call { animation: none; } }
+        .tm-fly-call { animation: tm-fly-pop 0.5s cubic-bezier(.2,.9,.3,1.2) both; }
+        .tm-fly-intro { animation: tm-fly-in 0.7s cubic-bezier(.2,.8,.2,1) both; }
+        .tm-fly-spin { animation: tm-fly-spin 0.9s linear infinite; }
+        @keyframes tm-fly-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        @keyframes tm-fly-pop { from { opacity: 0; transform: translateY(6px) scale(0.96); } to { opacity: 1; transform: none; } }
+        @keyframes tm-fly-spin { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) { .tm-fly-day, .tm-fly-call, .tm-fly-intro { animation: none; } }
       `}</style>
     </div>,
     document.body,

@@ -36,8 +36,19 @@ test("a joined route covers every walking day and every side trip in the itinera
 
 test("the joined line never jumps more than 1.6 km in a straight line", () => {
   for (const t of trails) {
+    // A stretch the trail itself marks as having no tracking data (no mapped path, no GPS track) is
+    // drawn straight between its known ends: the fly-through may walk that, and nothing else
+    const M = t.line, cum = [0];
+    for (let i = 1; i < M.length; i++) cum.push(cum[i - 1] + km(M[i - 1], M[i]));
+    const scale = t.lengthKm / (cum[cum.length - 1] || 1);
+    const gaps: number[][][] = [];
+    for (let i = 1; i < M.length; i++) {
+      const mid = ((cum[i - 1] + cum[i]) / 2) * scale;
+      if ((t.unmapped ?? []).some((u) => mid >= u.fromKm - 0.1 && mid <= u.toKm + 0.1)) gaps.push([M[i - 1], M[i]]);
+    }
+    const known = (a: number[], b: number[]) => gaps.some(([p, q]) => (km(a, p) < 0.05 && km(b, q) < 0.05) || (km(a, q) < 0.05 && km(b, p) < 0.05));
     const L = flyRoute(t).trail.line;
-    for (let i = 1; i < L.length; i++) assert.ok(km(L[i - 1], L[i]) < 1.6, `${t.slug}: ${km(L[i - 1], L[i]).toFixed(2)} km jump at point ${i}`);
+    for (let i = 1; i < L.length; i++) assert.ok(km(L[i - 1], L[i]) < 1.6 || known(L[i - 1], L[i]), `${t.slug}: ${km(L[i - 1], L[i]).toFixed(2)} km jump at point ${i}`);
   }
 });
 
