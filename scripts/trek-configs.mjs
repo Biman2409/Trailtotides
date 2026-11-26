@@ -40,6 +40,8 @@ const DHAK = { name: "Dhak", at: [30.49886, 79.61134] };
 // 2018). OSM's Kalpeshwar Mandir is 500 m east, 130 m up the slope above the river
 const KALPESHWAR = { name: "Kalpeshwar", at: [30.54961, 79.44892], exact: true };
 const KHULLARA ={ name: "Khullara", at: [30.45968, 79.58748] };
+// Panar bugyal's camp: OSM's "Panaar Bugyal" dhaba where trekkers stay, on the path between Sagar and Pitradhar
+const PANAR = { name: "Panar", at: [30.4702, 79.34652], exact: true };
 
 // Rest-day acclimatisation hikes the itineraries describe, as side trips so the map, the GPX and
 // the fly-through draw them. Points from OpenStreetMap (names as OSM has them, heights from OSM)
@@ -369,12 +371,14 @@ export const TREKS = {
     near: "Chamoli, Uttarakhand",
     stops: [
       { name: "Mana", at: [30.77048, 79.49594] },
+      // OSM's campsites, on the path: Lakshmiban, and the Chakratirtha camp nearer the lake
+      { name: "Laxmi Van", at: [30.78199, 79.43651], exact: true },
+      { name: "Chakrateertha", at: [30.75427, 79.37746], exact: true },
       // The lake where OSM and ultrajourneys.org's waypoint agree; its published height (4,600 m:
       // Wikipedia, Uttarakhand Tourism, operators). The elevation model reads about 4,340 m
       // Not the 4,600 m often quoted: the lake surface reads 4,346 m (one operator gives 4,400 m)
       { name: "Satopanth Lake", at: [30.74352, 79.357], exact: true },
     ],
-    camps: { "Laxmi Van": ["Mana", "Satopanth Lake", 0.35, ["Laxmiban", "Lakshmi Van", "Laxmi Ban", "Lakshmiban"]], Chakrateertha: ["Mana", "Satopanth Lake", 0.75, ["Chakratirtha", "Chakra Tirth", "Chakrateerth", "Chakra Tirtha"]] },
     days: [
       { to: "Laxmi Van", note: "From India's last village along the Alaknanda, past the Vasudhara falls" },
       { to: "Chakrateertha", note: "Over moraine and boulders beside the Bhagirath Kharak glacier" },
@@ -716,10 +720,9 @@ export const TREKS = {
       // The trek's high point, the ridge with its stone cairns between Rudranath and Panar
       // (the Rudranath trek's Pitradhar)
       { name: "Pitradhar", at: [30.48826, 79.33259], exact: true, ele: 3757 },
+      PANAR,
       { name: "Sagar", at: [30.4398, 79.3213] },
     ],
-    // Panar bugyal on the way down to Sagar, not on the map by name
-    camps: { Panar: ["Pitradhar", "Sagar", 0.2, ["Panar Bugyal", "Pannar"]] },
     days: [
       { to: "Bansi Narayan", note: "From Kalpeshwar's cave temple up through oak forest to the old Vishnu temple" },
       { to: "Dumak", note: "Down to Dumak village" },
@@ -814,13 +817,13 @@ export const TREKS = {
     near: "Chamoli, Uttarakhand",
     stops: [
       { name: "Sagar", at: [30.4398, 79.3213] },
+      PANAR,
       { name: "Pitradhar", at: [30.4883, 79.3326] },
       { name: "Rudranath", at: [30.5186, 79.3182] },
     ],
-    // Lyuti and Panar bugyals, on the way up from Sagar, aren't on the map by name
+    // Lyuti bugyal, on the way up from Sagar, isn't on the map by name
     camps: {
-      "Lyuti Bugyal": ["Sagar", "Pitradhar", 0.4, ["Lyuti", "Liti Bugyal"]],
-      Panar: ["Sagar", "Pitradhar", 0.75, ["Panar Bugyal", "Pannar"]],
+      "Lyuti Bugyal": ["Sagar", "Panar", 0.55, ["Lyuti", "Liti Bugyal"]],
     },
     days: [
       { to: "Panar", note: "From Sagar village up through oak forest and the Lyuti meadows to the wide Panar bugyal" },
@@ -1102,7 +1105,9 @@ export const TREKS = {
       { name: "Naranag", at: [34.35023, 74.97212] },
     ],
     // The rest day's walk: OSM's Krishansar lake
-    side: [{ name: "Kishansar", at: [34.39651, 75.10157], exact: true }],
+    // Kishansar's east shore (OSM's "Krishansar" lake), where the path towards Gadsar passes 90 m
+    // away, not the middle of the lake
+    side: [{ name: "Kishansar", at: [34.39959, 75.10518], exact: true }],
     camps: {
       Nichnai: ["Sonamarg", "Vishansar Lake", 0.45, ["Nichinai", "Nichnai Camp"]],
       "Nichnai Pass": ["Sonamarg", "Vishansar Lake", 0.7, ["Nichinai Pass", "Nichinai Bal", "Nichnai Bal"]],
