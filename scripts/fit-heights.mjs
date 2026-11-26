@@ -36,8 +36,22 @@ export function fitTrail(t) {
   const line = t.line, cum = along(line);
   const before = line.map((p) => p[2]);
 
-  // 1. Bend the line to the stops' heights, at the km the profile draws each stop at
   const total = cum[cum.length - 1];
+  // 0. Each stop's km mark where the line actually passes it, on the profile's scale (the line's
+  // own length stretched to lengthKm), to 0.01 km: the builder measures stops on the line before
+  // it is thinned, and a mark rounded to 0.1 km on a steep slope puts the profile's dot up to
+  // 100 m off the line. Searched within 1.5 km of the old mark, so a loop's second pass isn't taken
+  for (const s of t.stops) {
+    if (s.km == null) continue;
+    let best = -1, bd = Infinity;
+    for (let k = 0; k < line.length; k++) {
+      if (Math.abs((cum[k] / total) * t.lengthKm - s.km) > 1.5) continue;
+      const dd = dist(line[k], [s.lat, s.lng]);
+      if (dd < bd) { bd = dd; best = k; }
+    }
+    if (best >= 0 && bd <= NEAR) s.km = +((cum[best] / total) * t.lengthKm).toFixed(2);
+  }
+  // 1. Bend the line to the stops' heights, at the km the profile draws each stop at
   for (const s of t.stops) {
     if (s.ele == null) continue;
     if (nearest(line, s).off > NEAR) continue;
@@ -58,6 +72,26 @@ export function fitTrail(t) {
       const cone = s.ele - (up ? 1 : -1) * GRADE * Math.abs(cum[k] - cum[n.i]);
       if (up ? cone > line[k][2] : cone < line[k][2]) line[k][2] = Math.round(cone);
     }
+  }
+
+  // 1b. A spike: one point far above or below both neighbours, where the 90 m model catches a
+  // cliff edge or a gorge beside the path. It goes to its neighbours' mean, except near a stop,
+  // whose summit or pass is a real top
+  const nearStop = line.map((p) => t.stops.some((s) => s.ele != null && dist(p, [s.lat, s.lng]) < 200));
+  for (let pass = 0; pass < 3; pass++) {
+    for (let i = 1; i < line.length - 1; i++) {
+      if (nearStop[i]) continue;
+      const e0 = line[i - 1][2], e = line[i][2], e1 = line[i + 1][2];
+      if (Math.abs(e - (e0 + e1) / 2) > 60 && Math.sign(e - e0) !== Math.sign(e1 - e)) line[i][2] = Math.round((e0 + e1) / 2);
+    }
+  }
+  // and a step steeper than 1 in 1 between two points: the model again, not the path. Limited
+  // to 1 in 1 forwards and backwards and the two averaged, so neither end is favoured
+  {
+    const lim = (order) => { const g = line.map((p) => p[2]); for (let n = 1; n < order.length; n++) { const i = order[n], j = order[n - 1]; if (nearStop[i]) continue; const m = 0.95 * Math.abs(cum[i] - cum[j]); g[i] = Math.min(g[j] + m, Math.max(g[j] - m, g[i])); } return g; };
+    const ix = line.map((_, i) => i), fw = lim(ix), bw = lim([...ix].reverse());
+    const steep = ix.some((i) => i && Math.abs(line[i][2] - line[i - 1][2]) > cum[i] - cum[i - 1] && cum[i] - cum[i - 1] > 20);
+    if (steep) line.forEach((p, i) => { p[2] = Math.round((fw[i] + bw[i]) / 2); });
   }
 
   // 2. Name the highest point when it is a pass the itinerary crosses but not a stop

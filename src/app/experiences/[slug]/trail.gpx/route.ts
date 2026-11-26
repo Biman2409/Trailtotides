@@ -1,5 +1,5 @@
 import { adventures } from "@/lib/data";
-import { getTrail, TRAIL_SLUGS, lineBetweenKm, NO_TRACK, NO_TRACK_NOTE, stretchPlace, trailDriveKm, trailWalkKm, type TrailStretch } from "@/lib/trails";
+import { getTrail, TRAIL_SLUGS, lineBetweenKm, NO_TRACK, NO_TRACK_NOTE, TRAIL_END_NOTES, stretchPlace, trailDriveKm, trailWalkKm, type TrailStretch } from "@/lib/trails";
 
 // The trail as a GPX file, for phone map apps (Organic Maps, OsmAnd, Gaia) that navigate offline.
 // Stops are waypoints; the walking line is a track. Built at deploy time, one file per trail.
@@ -59,7 +59,7 @@ ${pts(s.line)}
   const mainTrks = (() => {
     if (!trail.drives?.length) return `  <trk>
     <name>${esc(adventure.name)}</name>
-    <desc>${esc(`The main route, ${trail.lengthKm} km one way.${unmappedText}`)}</desc>
+    <desc>${esc(`The main route, ${trail.lengthKm} km one way.${unmappedText}${TRAIL_END_NOTES[slug] ? ` ${TRAIL_END_NOTES[slug]}` : ""}`)}</desc>
     <trkseg>
 ${pts(trail.line)}
     </trkseg>

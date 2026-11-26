@@ -263,8 +263,10 @@ export const TREKS = {
       // Darwa Top, the high point of the ridge west of the lake where a Wikiloc track (41402714)
       // tops out; three tracks named Dodital to Darwa Pass stop lower, at the 3,800 m saddle north of
       // the lake that OSM calls the pass. No track goes on to the 4,129 m bump 800 m south that a
-      // trekker's waypoint (ultrajourneys.org) marked. Operators give 4,150 m
-      { name: "Darwa Pass", at: [30.90859, 78.50183], exact: true, ele: 4150 },
+      // trekker's waypoint (ultrajourneys.org) marked. Operators give 4,150 m for the pass; the top
+      // the treks reach reads 3,976 m on the elevation model and 3,966 m on the track, so its own
+      // height is used
+      { name: "Darwa Pass", at: [30.90859, 78.50183], exact: true },
     ],
     days: [
       { to: "Agoda", note: "Up from the road through fields to Agoda village" },
@@ -568,7 +570,9 @@ export const TREKS = {
     stops: [
       { name: "Kareri", q: "Kareri village", at: [32.27896, 76.27862] },
       // Up the Nyund stream on the trail as ultrajourneys.org recorded it: OSM's paths take a longer
-      // way round over the ridge to the east
+      // way round over the ridge to the east. Out of the village the track (scripts/tracks/kareri-lake.json) starts with
+      // the lane two Wikiloc tracks (167737193, 13625439) and an OSM trace (3865398) all take, east
+      // round the houses to the foot of the climb
       { name: "Kareri Lake", at: [32.32565, 76.27389], track: "kareri-lake" },
     ],
     // Rioti (Reoti) on that trail where it reaches the published 2,450 m
@@ -699,15 +703,18 @@ export const TREKS = {
       { name: "Bansi Narayan", at: [30.54, 79.4096] },
       { name: "Dumak", at: [30.5072, 79.3831] },
       { name: "Rudranath", at: [30.5186, 79.3182] },
+      // The trek's high point, the ridge with its stone cairns between Rudranath and Panar
+      // (the Rudranath trek's Pitradhar)
+      { name: "Pitradhar", at: [30.48826, 79.33259], exact: true, ele: 3757 },
       { name: "Sagar", at: [30.4398, 79.3213] },
     ],
     // Panar bugyal on the way down to Sagar, not on the map by name
-    camps: { Panar: ["Rudranath", "Sagar", 0.4, ["Panar Bugyal", "Pannar"]] },
+    camps: { Panar: ["Pitradhar", "Sagar", 0.2, ["Panar Bugyal", "Pannar"]] },
     days: [
       { to: "Bansi Narayan", note: "From Kalpeshwar's cave temple up through oak forest to the old Vishnu temple" },
       { to: "Dumak", note: "Down to Dumak village" },
       { to: "Rudranath", note: "The long climb through forest and over open ridges to the rock shrine" },
-      { to: "Panar", note: "Darshan at dawn, then down to the wide Panar meadows" },
+      { to: "Panar", via: ["Pitradhar"], note: "Darshan at dawn, then over Pitradhar and down to the wide Panar meadows" },
       { to: "Sagar", note: "Through forest to Sagar village and the road" },
     ],
   },
@@ -758,6 +765,8 @@ export const TREKS = {
 
   madhmaheshwar: {
     near: "Rudraprayag, Uttarakhand",
+    // Up to the temple as two Wikiloc tracks walk it (Bon-P-Lan 118077703, Guy The Explorer 89441102)
+    gapGuides: [[[30.6301, 79.21827], [30.6306, 79.21885], [30.63075, 79.21964], [30.63108, 79.22031], [30.63188, 79.22028], [30.63253, 79.22023], [30.63318, 79.22078], [30.6338, 79.22127], [30.63439, 79.22164]]],
     stops: [
       { name: "Ransi", near: "Ukhimath, Uttarakhand" },
       { name: "Gaundar", at: [30.6026, 79.1797] },
@@ -828,6 +837,8 @@ export const TREKS = {
 
   "phulara-ridge": {
     near: "Uttarkashi, Uttarakhand",
+    // Out of Sankri the way six Wikiloc tracks take (Shankar_raju_g 31522546, afreen jaffer 44873971 and others), 280 m east of the line OSM's paths gave
+    gapGuides: [[[31.07557, 78.1853], [31.07496, 78.18602], [31.07454, 78.18692], [31.07431, 78.18783], [31.07384, 78.18874], [31.07314, 78.18934], [31.07251, 78.19008], [31.07193, 78.19061], [31.07167, 78.19136], [31.07099, 78.19156], [31.07016, 78.1911], [31.0696, 78.1907], [31.06895, 78.19049], [31.06806, 78.18972], [31.06722, 78.18926], [31.06644, 78.18908]]],
     stops: [
       SANKRI,
       { name: "Sikolta Thach", at: [31.0408, 78.1866], exact: true },
@@ -853,6 +864,8 @@ export const TREKS = {
 
   "surya-top": {
     near: "Uttarkashi, Uttarakhand",
+    // A long straight: the path's shape from two Wikiloc tracks that agree (Surya top ih (241332541), and 2567250)
+    gapGuides: [[[30.86277, 78.56592], [30.86243, 78.56626], [30.86217, 78.56668], [30.86181, 78.56709], [30.86144, 78.56753], [30.86113, 78.56791], [30.86092, 78.56801], [30.86075, 78.56856], [30.86057, 78.56901], [30.86045, 78.56957], [30.86019, 78.57001], [30.85985, 78.57023]]],
     stops: [
       { name: "Barsu", at: [30.84291, 78.60177], exact: true },
       { name: "Utron", at: [30.8597, 78.575], exact: true },
@@ -924,6 +937,8 @@ export const TREKS = {
 
   doodhpathri: {
     near: "Budgam, Jammu and Kashmir",
+    // A long straight on the way down to Tosa Maidan: the shape of the path from a Wikiloc track (Greater lakes trek Tosamaidan (82554051))
+    gapGuides: [[[33.89199, 74.48546], [33.89257, 74.48547], [33.89305, 74.4856], [33.89356, 74.48572], [33.89372, 74.48639], [33.89419, 74.48675], [33.89473, 74.48674], [33.89528, 74.4869], [33.89568, 74.48722], [33.89604, 74.48768]]],
     stops: [
       { name: "Doodhpathri", at: [33.8614, 74.5672] },
       { name: "Gurwansar", q: "Gurwansar campsite", at: [33.8036, 74.4626] },
@@ -936,7 +951,9 @@ export const TREKS = {
     },
     // Doodhpathri to Gurwansar on OSM's paths; from past Pam Sar to Tosa Maidan, over the lakes
     guide: [
-      [],
+      // Doodhpathri to Gurwansar as a Wikiloc track walks it (Gurwansar Lakes (161261096)); OSM's
+      // paths take other lines up the valley
+      [[33.84479, 74.56786], [33.84437, 74.56471], [33.84263, 74.56206], [33.84114, 74.55986], [33.83964, 74.55691], [33.83931, 74.55371], [33.83817, 74.55088], [33.83613, 74.54863], [33.83624, 74.54689], [33.83534, 74.54364], [33.83464, 74.54029], [33.83425, 74.53742], [33.83208, 74.53539], [33.83012, 74.53283], [33.82852, 74.53045], [33.82659, 74.52806], [33.82531, 74.52556], [33.82287, 74.52368], [33.82004, 74.52258], [33.81911, 74.51951], [33.81808, 74.51634], [33.81719, 74.51305], [33.81776, 74.50998], [33.81934, 74.50732], [33.82122, 74.50465], [33.82314, 74.50224], [33.82371, 74.49957], [33.82196, 74.49671], [33.82157, 74.49333], [33.82047, 74.49014], [33.81932, 74.48707], [33.8178, 74.4844], [33.81537, 74.48251], [33.8133, 74.48024], [33.81124, 74.47796], [33.81044, 74.47499], [33.80943, 74.47177], [33.80799, 74.46882], [33.80689, 74.46574], [33.80486, 74.46346]],
       [[33.825592, 74.44163], [33.82950, 74.44043], [33.83252, 74.43934], [33.83515, 74.43945], [33.83830, 74.43866], [33.84253, 74.43951], [33.84542, 74.43883], [33.84832, 74.43932], [33.85197, 74.43853], [33.85428, 74.43966], [33.85759, 74.43815], [33.86002, 74.43696], [33.86346, 74.43703], [33.86431, 74.43804], [33.86484, 74.44239], [33.86569, 74.44766], [33.86657, 74.45086], [33.86706, 74.45520], [33.86990, 74.45949], [33.87157, 74.46296], [33.87207, 74.46503], [33.87350, 74.46873], [33.87579, 74.47155], [33.87877, 74.47383], [33.88027, 74.47647], [33.88349, 74.47975], [33.88538, 74.48186], [33.88853, 74.48443], [33.89149, 74.48537], [33.89404, 74.48667], [33.89801, 74.48851], [33.90012, 74.48946], [33.90315, 74.49243], [33.90466, 74.49764], [33.90630, 74.49947], [33.90660, 74.50382], [33.90603, 74.50692], [33.90509, 74.51087], [33.90395, 74.51524], [33.90702, 74.51516], [33.90872, 74.51526]],
     ],
     days: [

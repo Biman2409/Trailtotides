@@ -25,7 +25,8 @@ for (const f of readdirSync(DIR).filter((f) => f.endsWith(".json")).sort()) {
   for (let i = 1; i < L.length; i++) cum.push(cum[i - 1] + dist(L[i - 1], L[i]));
   const kk = t.lengthKm * 1000 / cum[cum.length - 1]; for (let i = 0; i < cum.length; i++) cum[i] *= kk; // as the chart now does
   const near = (lat, lng, from = 0) => { const look = (lo) => { let b = lo, bd = Infinity; for (let i = lo; i < L.length; i++) { const d = dist([lat, lng], L[i]); if (d < bd) { bd = d; b = i; } } return { i: b, off: bd }; }; const a = look(from); return a.off <= 300 || from === 0 ? a : look(0); };
-  const eleAtKm = (km) => { let i = cum.findIndex((c) => c >= km * 1000); if (i < 0) i = L.length - 1; return L[i][2]; };
+  // On the profile's scale (the line stretched to lengthKm), between the two points either side
+  const eleAtKm = (km) => { const m = (km * 1000 * cum[cum.length - 1]) / (t.lengthKm * 1000); let i = cum.findIndex((c) => c >= m); if (i < 0) return L[L.length - 1][2]; if (i === 0) return L[0][2]; const f = (m - cum[i - 1]) / (cum[i] - cum[i - 1] || 1); return Math.round(L[i - 1][2] + f * (L[i][2] - L[i - 1][2])); };
   const issues = [];
   const add = (kind, text) => issues.push(`${kind}: ${text}`);
 

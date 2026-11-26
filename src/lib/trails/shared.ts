@@ -104,6 +104,13 @@ export const trailDriveKm = (t: Trail) => Math.round(t.days.reduce((s, d) => s +
 /** What the site says wherever a stretch has no mapped path and no GPS track */
 export const NO_TRACK = "Tracking data unavailable for this section";
 export const NO_TRACK_NOTE = "No mapped path or GPS track exists here, so the line is drawn straight between the known points. Follow your guide.";
+/** What a trek's page and GPX say where accurate GPS data stops short of the trek: past a point the
+ * route has never been recorded, so nothing is drawn there */
+export const TRAIL_END_NOTES: Record<string, string> = {
+  "gulabi-kantha": "Accurate GPX data isn't available beyond Seema Thatch: no recorded GPS track reaches the Gulabi Kantha summit, so the last stretch to the top isn't drawn. Go up with your guide.",
+};
+/** What a trek's page says when it has no trail at all */
+export const NO_GPX_NOTE = "GPX data isn't available for this trek: no recorded GPS track of the route exists yet, so it isn't drawn on the map.";
 
 /** The part of a line between two km marks, for drawing a stretch of it */
 export function lineBetweenKm(line: [number, number, number][], fromKm: number, toKm: number): [number, number][] {

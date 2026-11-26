@@ -1,0 +1,495 @@
+{
+ "surya-top": [
+  {
+   "fromKm": 0.52,
+   "toKm": 1.19,
+   "candidates": 0
+  },
+  {
+   "fromKm": 1.34,
+   "toKm": 1.81,
+   "candidates": 0
+  },
+  {
+   "fromKm": 2.25,
+   "toKm": 3.35,
+   "candidates": 0
+  },
+  {
+   "fromKm": 3.68,
+   "toKm": 4.33,
+   "candidates": 0
+  },
+  {
+   "fromKm": 5.09,
+   "toKm": 6.27,
+   "candidates": 0
+  },
+  {
+   "fromKm": 10.47,
+   "toKm": 10.82,
+   "candidates": 0
+  },
+  {
+   "fromKm": 11.21,
+   "toKm": 11.55,
+   "candidates": 0
+  },
+  {
+   "fromKm": 11.83,
+   "toKm": 12.48,
+   "candidates": 0
+  },
+  {
+   "fromKm": 12.73,
+   "toKm": 13.91,
+   "candidates": 0
+  },
+  {
+   "fromKm": 14.39,
+   "toKm": 14.85,
+   "candidates": 0
+  },
+  {
+   "fromKm": 15.11,
+   "toKm": 15.86,
+   "candidates": 0
+  }
+ ],
+ "gulabi-kantha": [
+  {
+   "fromKm": 0.09,
+   "toKm": 0.43,
+   "candidates": 0
+  },
+  {
+   "fromKm": 0.85,
+   "toKm": 1.44,
+   "candidates": 0
+  },
+  {
+   "fromKm": 1.82,
+   "toKm": 2.26,
+   "candidates": 0
+  },
+  {
+   "fromKm": 3.06,
+   "toKm": 3.44,
+   "candidates": 0
+  },
+  {
+   "fromKm": 4.24,
+   "toKm": 5.23,
+   "candidates": 0
+  },
+  {
+   "fromKm": 7.06,
+   "toKm": 7.75,
+   "candidates": 0
+  }
+ ],
+ "yulla-kanda": [
+  {
+   "fromKm": 0.31,
+   "toKm": 1.06,
+   "candidates": 0
+  },
+  {
+   "fromKm": 2.32,
+   "toKm": 2.78,
+   "candidates": 0
+  }
+ ],
+ "dodital-darwa-pass": [
+  {
+   "fromKm": 0.41,
+   "toKm": 1.51,
+   "candidates": 0
+  },
+  {
+   "fromKm": 1.65,
+   "toKm": 2.2,
+   "candidates": 0
+  },
+  {
+   "fromKm": 3.25,
+   "toKm": 3.61,
+   "candidates": 0
+  },
+  {
+   "fromKm": 5.5,
+   "toKm": 5.9,
+   "candidates": 0
+  },
+  {
+   "fromKm": 6.39,
+   "toKm": 6.91,
+   "candidates": 0
+  },
+  {
+   "fromKm": 11.19,
+   "toKm": 11.55,
+   "candidates": 0
+  },
+  {
+   "fromKm": 11.64,
+   "toKm": 12.09,
+   "candidates": 0
+  },
+  {
+   "fromKm": 15.19,
+   "toKm": 16.08,
+   "candidates": 0
+  },
+  {
+   "fromKm": 18.23,
+   "toKm": 18.63,
+   "candidates": 0
+  }
+ ],
+ "kedartal": [
+  {
+   "fromKm": 0.47,
+   "toKm": 0.84,
+   "candidates": 0
+  }
+ ],
+ "ali-bedni-bugyal": [
+  {
+   "fromKm": 1.35,
+   "toKm": 2.6,
+   "candidates": 0
+  },
+  {
+   "fromKm": 8.15,
+   "toKm": 8.66,
+   "candidates": 0
+  },
+  {
+   "fromKm": 11.27,
+   "toKm": 11.61,
+   "candidates": 0
+  },
+  {
+   "fromKm": 12.53,
+   "toKm": 13,
+   "candidates": 0
+  },
+  {
+   "fromKm": 14.51,
+   "toKm": 14.89,
+   "candidates": 0
+  },
+  {
+   "fromKm": 15.3,
+   "toKm": 15.99,
+   "candidates": 0
+  },
+  {
+   "fromKm": 17.05,
+   "toKm": 17.4,
+   "candidates": 0
+  },
+  {
+   "fromKm": 17.76,
+   "toKm": 18.26,
+   "candidates": 0
+  },
+  {
+   "fromKm": 18.82,
+   "toKm": 20.14,
+   "candidates": 0
+  },
+  {
+   "fromKm": 20.76,
+   "toKm": 22.18,
+   "candidates": 0
+  },
+  {
+   "fromKm": 23.69,
+   "toKm": 24.27,
+   "candidates": 0
+  }
+ ],
+ "phulara-ridge": [
+  {
+   "fromKm": 0.58,
+   "toKm": 0.98,
+   "candidates": 0
+  },
+  {
+   "fromKm": 3.87,
+   "toKm": 4.92,
+   "candidates": 0
+  },
+  {
+   "fromKm": 6.11,
+   "toKm": 7,
+   "candidates": 0
+  },
+  {
+   "fromKm": 10.22,
+   "toKm": 11.05,
+   "candidates": 0
+  },
+  {
+   "fromKm": 13.5,
+   "toKm": 14.34,
+   "candidates": 0
+  },
+  {
+   "fromKm": 15.86,
+   "toKm": 16.46,
+   "candidates": 0
+  }
+ ],
+ "roopkund": [
+  {
+   "fromKm": 1.35,
+   "toKm": 2.6,
+   "candidates": 0
+  },
+  {
+   "fromKm": 8.04,
+   "toKm": 8.55,
+   "candidates": 0
+  },
+  {
+   "fromKm": 11.11,
+   "toKm": 11.46,
+   "candidates": 0
+  },
+  {
+   "fromKm": 12.39,
+   "toKm": 12.84,
+   "candidates": 0
+  },
+  {
+   "fromKm": 14.24,
+   "toKm": 14.63,
+   "candidates": 0
+  },
+  {
+   "fromKm": 16.08,
+   "toKm": 16.42,
+   "candidates": 0
+  },
+  {
+   "fromKm": 17.87,
+   "toKm": 18.33,
+   "candidates": 0
+  },
+  {
+   "fromKm": 24.43,
+   "toKm": 25.85,
+   "candidates": 0
+  },
+  {
+   "fromKm": 26.67,
+   "toKm": 26.97,
+   "candidates": 0
+  }
+ ],
+ "buran-ghati": [
+  {
+   "fromKm": 10.02,
+   "toKm": 12.63,
+   "candidates": 0
+  },
+  {
+   "fromKm": 15.7,
+   "toKm": 16.32,
+   "candidates": 0
+  },
+  {
+   "fromKm": 18.67,
+   "toKm": 19.08,
+   "candidates": 0
+  },
+  {
+   "fromKm": 22.97,
+   "toKm": 24.65,
+   "candidates": 0
+  },
+  {
+   "fromKm": 27.61,
+   "toKm": 28.32,
+   "candidates": 0
+  }
+ ],
+ "ranthan-kharak": [
+  {
+   "fromKm": 3.62,
+   "toKm": 4.67,
+   "candidates": 0
+  },
+  {
+   "fromKm": 5.15,
+   "toKm": 5.55,
+   "candidates": 0
+  },
+  {
+   "fromKm": 6.77,
+   "toKm": 7.18,
+   "candidates": 0
+  },
+  {
+   "fromKm": 7.5,
+   "toKm": 7.93,
+   "candidates": 0
+  },
+  {
+   "fromKm": 11.21,
+   "toKm": 11.63,
+   "candidates": 0
+  }
+ ],
+ "pin-parvati-pass": [
+  {
+   "fromKm": 8.94,
+   "toKm": 9.25,
+   "candidates": 0
+  },
+  {
+   "fromKm": 9.61,
+   "toKm": 9.97,
+   "candidates": 0
+  },
+  {
+   "fromKm": 42.9,
+   "toKm": 43.33,
+   "candidates": 0
+  },
+  {
+   "fromKm": 44.18,
+   "toKm": 45.38,
+   "candidates": 0
+  },
+  {
+   "fromKm": 45.74,
+   "toKm": 46.63,
+   "candidates": 0
+  },
+  {
+   "fromKm": 46.97,
+   "toKm": 47.97,
+   "candidates": 1
+  },
+  {
+   "fromKm": 48.3,
+   "toKm": 49.22,
+   "candidates": 0
+  },
+  {
+   "fromKm": 49.43,
+   "toKm": 51.14,
+   "candidates": 0
+  },
+  {
+   "fromKm": 66.98,
+   "toKm": 67.68,
+   "candidates": 0
+  },
+  {
+   "fromKm": 67.78,
+   "toKm": 68.42,
+   "candidates": 0
+  },
+  {
+   "fromKm": 68.86,
+   "toKm": 70.16,
+   "candidates": 0
+  },
+  {
+   "fromKm": 70.21,
+   "toKm": 72.36,
+   "candidates": 0
+  },
+  {
+   "fromKm": 72.6,
+   "toKm": 75.46,
+   "candidates": 0
+  },
+  {
+   "fromKm": 75.97,
+   "toKm": 76.94,
+   "candidates": 0
+  },
+  {
+   "fromKm": 77,
+   "toKm": 77.71,
+   "candidates": 0
+  },
+  {
+   "fromKm": 78,
+   "toKm": 78.31,
+   "candidates": 0
+  }
+ ],
+ "rudranath-kalpeshwar": [
+  {
+   "fromKm": 11.4,
+   "toKm": 11.73,
+   "candidates": 0
+  },
+  {
+   "fromKm": 12.82,
+   "toKm": 13.25,
+   "candidates": 0
+  },
+  {
+   "fromKm": 13.6,
+   "toKm": 14.01,
+   "candidates": 0
+  },
+  {
+   "fromKm": 14.13,
+   "toKm": 14.5,
+   "candidates": 0
+  },
+  {
+   "fromKm": 18.13,
+   "toKm": 18.49,
+   "candidates": 0
+  },
+  {
+   "fromKm": 21.17,
+   "toKm": 22.52,
+   "candidates": 0
+  },
+  {
+   "fromKm": 45.37,
+   "toKm": 45.96,
+   "candidates": 0
+  }
+ ],
+ "panwali-kantha": [
+  {
+   "fromKm": 9.47,
+   "toKm": 9.82,
+   "candidates": 0
+  },
+  {
+   "fromKm": 10.63,
+   "toKm": 11.07,
+   "candidates": 1
+  },
+  {
+   "fromKm": 11.42,
+   "toKm": 12.03,
+   "candidates": 1
+  }
+ ],
+ "kuari-pass": [
+  {
+   "fromKm": 0.28,
+   "toKm": 1.06,
+   "candidates": 0
+  },
+  {
+   "fromKm": 9.81,
+   "toKm": 10.24,
+   "candidates": 0
+  }
+ ]
+}

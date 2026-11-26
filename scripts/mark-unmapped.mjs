@@ -85,7 +85,10 @@ export async function markTrail(t) {
   // and so are the guide points read off a reference GPS track (a trek's `guide`), leg by leg
   const trek = TREKS[t.slug], refs = [];
   const at = (s) => (Array.isArray(s?.at) ? s.at : null);
-  (trek?.guide ?? []).forEach((g, i) => { const a = at(trek.stops[i]), b = at(trek.stops[i + 1]); if (g?.length) refs.push([...(a ? [a] : []), ...g, ...(b ? [b] : [])]); });
+  // A leg's stops join its chain only when they're as close to it as guide points are to each other:
+  // a stop 2 km from the first guide point is a stretch the track doesn't cover
+  const joins = (p, q) => p && q && dist(p, q) <= 500;
+  (trek?.guide ?? []).forEach((g, i) => { const a = at(trek.stops[i]), b = at(trek.stops[i + 1]); if (g?.length) refs.push([...(joins(a, g[0]) ? [a] : []), ...g, ...(joins(b, g.at(-1)) ? [b] : [])]); });
   // and a gap closed from a reference track (`gapGuides`): its chain of guide points
   for (const chain of trek?.gapGuides ?? []) if (chain.length > 1) refs.push(chain);
   t.unmapped = unmappedStretches(t.line, ways, refs);

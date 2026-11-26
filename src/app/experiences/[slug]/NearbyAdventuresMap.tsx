@@ -12,7 +12,7 @@ import { getACE, computeDifficulty } from "@/lib/ace";
 import { haversineKm } from "@/lib/geo";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import { BASE_LAYERS, BASE_KEY, LIGHT_BASE, createBaseLayer, loadLeaflet, type LayerKey } from "@/app/map/mapShared";
-import { lineBetweenKm, NO_TRACK, trailRoute, trailWalkKm, type Trail } from "@/lib/trails/shared";
+import { lineBetweenKm, NO_GPX_NOTE, NO_TRACK, TRAIL_END_NOTES, trailRoute, trailWalkKm, type Trail } from "@/lib/trails/shared";
 
 interface Props {
   current: Adventure;
@@ -439,6 +439,14 @@ export default function NearbyAdventuresMap({ current, nearby, trail, compact = 
             <Link href={`/adventurepedia/offline-maps?trek=${current.slug}`} className="inline-flex items-center min-h-11 -my-3 font-semibold text-[#ff5100] hover:underline underline-offset-2 whitespace-nowrap">Take this trail offline →</Link>
           </p>
         </div>
+      )}
+
+      {/* Where accurate GPS data stops short of the trek, or a trek has none at all */}
+      {trail && TRAIL_END_NOTES[current.slug] && (
+        <p className="px-4 pb-3 text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>{TRAIL_END_NOTES[current.slug]}</p>
+      )}
+      {!trail && current.type === "Trekking" && (
+        <p className="px-4 py-3 text-[12px] leading-snug" style={{ borderTop: "1px solid var(--border-subtle)", color: "var(--text-secondary)" }}>{NO_GPX_NOTE}</p>
       )}
 
       {/* List (folded away on phones until asked for) */}

@@ -29,13 +29,15 @@ for (const a of adventures) {
   else if (a.lat < box[0] || a.lat > box[1] || a.lng < box[2] || a.lng > box[3]) add("coordinates outside state", `${a.slug}: ${a.lat},${a.lng} not in ${a.state}`);
   (heroes.get(a.heroImage) ?? heroes.set(a.heroImage, []).get(a.heroImage)!).push(a.slug);
   if (a.heroImage.startsWith("/") && !fs.existsSync("public" + a.heroImage.split("?")[0])) add("hero image file missing", `${a.slug}: ${a.heroImage}`);
-  for (const f of ["description", "whoFor", "bestSeason", "tagline"] as const) if (!a[f] || String(a[f]).trim().length < 10) add("missing/short field", `${a.slug}.${f}`);
+  // A season is a month range ("Jul–Sep"), short by nature: only an empty one is missing
+  for (const f of ["description", "whoFor", "bestSeason", "tagline"] as const) if (!a[f] || String(a[f]).trim().length < (f === "bestSeason" ? 3 : 10)) add("missing/short field", `${a.slug}.${f}`);
   for (const [f, v] of Object.entries(textOf(a.slug))) if (v.trim().length < 10) add("missing/short field", `${a.slug}.${f}`);
   if (!a.altitude && a.type === "Trekking") add("trek without altitude", a.slug);
   if (!a.distance && a.type === "Trekking") add("trek without distance", a.slug);
   if (!a.bestMonths.length) add("no bestMonths", a.slug);
   // bestSeason text vs bestMonths
-  const seasonMonths = MONTHS.filter((m) => new RegExp(`\\b${m}`, "i").test(a.bestSeason));
+  // In the order the text names them, so a range over the new year ("Dec–Mar") runs Dec to Mar
+  const seasonMonths = MONTHS.map((m) => ({ m, i: a.bestSeason.search(new RegExp(`\\b${m}`, "i")) })).filter((x) => x.i >= 0).sort((x, y) => x.i - y.i).map((x) => x.m);
   if (seasonMonths.length >= 2) {
     const [s, e] = [MONTHS.indexOf(seasonMonths[0]), MONTHS.indexOf(seasonMonths[seasonMonths.length - 1])];
     if (/[–-]/.test(a.bestSeason) && seasonMonths.length === 2) {
