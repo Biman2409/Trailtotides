@@ -39,8 +39,8 @@
 ## kedarnath (14.3 km, 1520 m up)
 - Check · days: day 1 (Gaurikund to Kedarnath) climbs 1520 m
 
-## kedartal (10.7 km, 1850 m up)
-- Check · straight: 1 straight segment over 500 m (625 m at km 3.7)
+## kedartal (10.6 km, 1840 m up)
+- Check · straight: 2 straight segments over 500 m (625 m at km 3.7, 624 m at km 6.7)
 
 ## madhmaheshwar (12.1 km, 1720 m up)
 - Check · days: day 2 (Gaundar to Madhmaheshwar) climbs 1570 m

@@ -98,6 +98,9 @@ export async function markTrail(t) {
   t.unmapped = unmappedStretches(t.line, ways, refs);
   t.approxKm = total(t.unmapped);
   for (const s of [...(t.sideTrips ?? []), ...(t.detours ?? [])]) { s.unmapped = unmappedStretches(s.line, ways, refs); s.approxKm = total(s.unmapped); }
+  // A rest day is only its side trip: approximate as that walk now measures (the builder flagged
+  // it before guide points counted as tracked)
+  for (const d of t.days ?? []) if (d.kind === "rest") { const s = (t.sideTrips ?? []).find((x) => x.from === d.from && d.via?.includes(x.name)); if (s) d.approx = s.approxKm > 0.5; }
   return t.approxKm;
 }
 

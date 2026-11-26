@@ -614,7 +614,7 @@ export const adventures: Adventure[] = [
     name: "Dayara Bugyal Trek", tagline: "Uttarakhand's widest alpine meadow, stunning year-round",
     region: "Himalayas", state: "Uttarakhand", type: "Trekking", difficulty: "Hard",
     duration: "3–5 days", durationDays: "4 days", durationRange: "4 Days",
-    distance: "28km", distanceRange: "28 km", altitude: "3,804m",
+    distance: "29km", distanceRange: "29 km", altitude: "3,804m",
     baseCamp: "Raithal",
     bestSeason: "May–Jun, Sep–Nov", bestMonths: ["May","Jun","Sep","Oct","Nov"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/adventure-images/dayara-bugyal-v2.jpeg",

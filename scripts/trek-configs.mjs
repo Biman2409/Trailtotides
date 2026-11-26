@@ -246,8 +246,10 @@ export const TREKS = {
       // 450 m north of OSM's point, which no track reaches
       { name: "Dayara Bugyal", at: [30.83415, 78.55024], exact: true },
     ],
-    // The rest day's walk: OSM's Bakria (Bakaria Top), 3,804 m
-    side: [{ name: "Bakaria Top", at: [30.82292, 78.54111], exact: true, ele: 3804 }],
+    // The rest day's walk: OSM's Bakria (Bakaria Top), 3,804 m. OSM's path stops 900 m short; the
+    // way up from the ridge read off a Wikiloc track whose "Summit" waypoint is 53 m from OSM's
+    // peak (Dayara-surya-bakriya-dec 25 (244540999))
+    side: [{ name: "Bakaria Top", at: [30.82292, 78.54111], exact: true, ele: 3804, guide: [[30.83336, 78.5447], [30.83187, 78.54366], [30.83056, 78.54386], [30.82879, 78.54321], [30.82638, 78.54139], [30.82301, 78.54055]] }],
     days: [
       { to: "Gui", note: "Up from Raithal village through oak and maple to a forest clearing" },
       { to: "Dayara Bugyal", via: ["Dayara Bugyal ridge"], note: "Out of the trees onto the rolling meadow, Bandarpoonch and Srikanth on the skyline" },
@@ -633,9 +635,9 @@ export const TREKS = {
     ],
     // Kedar Kharak and Kedartal where a Wikiloc track (Kedar Khadak to Kedartal (84498194)) starts
     // and ends: the camp on the path (OSM's campsite is 160 m off it) and the lake's north shore
-    stops: [GANGOTRI, { name: "Kedar Kharak", at: [30.9368, 78.95052], exact: true }, { name: "Kedartal", at: [30.91536, 78.95745], exact: true }],
-    // Bhoj Kharak isn't on the map by name: placed partway up the Kedar Ganga gorge
-    camps: { "Bhoj Kharak": ["Gangotri", "Kedar Kharak", 0.55, ["Bhoj Kharak", "Bhojkharak", "Bhoj Khadak"]] },
+    // Bhoj Kharak isn't on the map by name: the one long halt (33 min, 3,763 m) on the Gangotri to
+    // Kedar Khadak track, partway up the Kedar Ganga gorge
+    stops: [GANGOTRI, { name: "Bhoj Kharak", at: [30.96358, 78.94162], exact: true }, { name: "Kedar Kharak", at: [30.9368, 78.95052], exact: true }, { name: "Kedartal", at: [30.91536, 78.95745], exact: true }],
     days: [
       { to: "Bhoj Kharak", note: "Straight up the Kedar Ganga gorge from Gangotri through pine and birch" },
       { to: "Kedar Kharak", note: "Past Spider Wall, a narrow ledge above the river, to the last meadow" },
