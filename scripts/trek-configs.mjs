@@ -184,7 +184,7 @@ export const TREKS = {
     stops: [
       { name: "Taluka", at: [31.07782, 78.24579] },
       { name: "Osla", at: [31.1189, 78.34277] },
-      { name: "Har Ki Dun", at: [31.14813, 78.43242] },
+      { name: "Har Ki Dun", at: [31.15113, 78.43218], exact: true }, // where the mapped path reaches the meadow
     ],
     days: [
       { to: "Osla", note: "Drive from Sankri to Taluka, then walk up the Supin river through walnut and chestnut forest" },
@@ -271,7 +271,7 @@ export const TREKS = {
     stops: [
       GANGOTRI,
       { name: "Bhojbasa", at: [30.95045, 79.05151] },
-      { name: "Gaumukh", at: [30.92574, 79.08182] },
+      { name: "Gaumukh", at: [30.9245, 79.0829], exact: true }, // the end of the path facing the snout; OSM's point is 110 m out on the moraine
       // The meadow where OSM and ultrajourneys.org's waypoint agree; its published height (4,463 m).
       // The elevation model reads about 4,320 m
       // Not the 4,463 m operators quote: both mapped camps on the meadow read 4,311 m, and flat ground reads true
@@ -1008,7 +1008,7 @@ export const TREKS = {
     stops: [
       { name: "Janglik", at: [31.31716, 78.00958] },
       { name: "Dayara Thach", q: "Dehra Thach", at: [31.34772, 78.0609] }, // OSM spells it Dehra
-      { name: "Litham", at: [31.36158, 78.10317] },
+      { name: "Litham", at: [31.3624, 78.10387], exact: true }, // on the path; OSM's point is 110 m off it
       { name: "Buran Ghati", at: [31.38742, 78.14567] },
       { name: "Munirang", at: [31.41578, 78.1545] }, // OSM's campsite below the pass, unnamed there
       { name: "Barua", at: [31.4682, 78.17846] },
