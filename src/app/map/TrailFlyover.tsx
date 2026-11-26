@@ -6,8 +6,12 @@ import { X, Play, Pause, RotateCcw, Mountain, BedDouble, LocateFixed, Car } from
 import { driveAt, trailProfile, type Trail } from "@/lib/trails/shared";
 import { loadLeaflet, loadMapLibre, tuneStyle, TERRARIUM } from "./mapShared";
 import { DARK_STYLE, MAPBOX_CSS, MAPBOX_JS, MAPBOX_STYLE, MAPBOX_TOKEN } from "./mapAssets";
+import { flyRoute } from "./flyRoute";
 
 // "Fly the trail": the trek in 3D, the camera walking the mapped line over real terrain.
+//   - It walks the whole itinerary: out, up each side trip and back, down any detour, and home
+//     the way the days go (flyRoute), not just the one-way line the map draws.
+//   - Labels stay small and the cards sit in the corners, so the trail has the screen.
 //   - The camera looks at the walker at the trail's own height, and checks its line of sight to
 //     the walker against the terrain a few times a second: when a ridge is in the way it drops
 //     its tilt and backs off, then eases back to the cinematic angle once the view is clear.
@@ -137,8 +141,13 @@ function dayMarks(trail: Trail, pts: Pt[]): DayBand[] {
   return out;
 }
 
-function calloutsFor(trail: Trail, bands: DayBand[]): Callout[] {
+function calloutsFor(trail: Trail, bands: DayBand[], summits: { name: string; ele: number | null; km: number }[] = []): Callout[] {
   const out: Callout[] = [];
+  // Side trips' tops, as the walker reaches them
+  summits.forEach((sm, i) => {
+    const b = bands.find((x) => sm.km >= x.from - 0.05 && sm.km <= x.to + 0.05);
+    out.push({ key: `s-${i}`, km: sm.km, kind: "landmark", title: sm.name, day: b?.day, meta: [sm.ele != null ? `${fmt(sm.ele)} m` : "", "side trip"].filter(Boolean).join(" · ") });
+  });
   const top = trail.stops.reduce((a, s) => ((s.ele ?? 0) > (a.ele ?? 0) ? s : a), trail.stops[0]);
   const bandAt = (k: number) => bands.find((b) => b.from < b.to && k >= b.from - 0.05 && k <= b.to + 0.05);
   trail.stops.forEach((st, i) => {
@@ -160,7 +169,10 @@ function calloutsFor(trail: Trail, bands: DayBand[]): Callout[] {
   return out.sort((a, b) => a.km - b.km);
 }
 
-export default function TrailFlyover({ name, trail, onClose }: { name: string; trail: Trail; onClose: () => void }) {
+export default function TrailFlyover({ name, trail: oneWay, onClose }: { name: string; trail: Trail; onClose: () => void }) {
+  // The whole itinerary as one line (see flyRoute): everything below walks this
+  const route = useMemo(() => flyRoute(oneWay), [oneWay]);
+  const trail = route.trail;
   const boxRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const ctl = useRef<{ toggle: () => void; restart: () => void; seekKm: (k: number) => void; speed: (s: number) => void; stay: () => void; back: () => void } | null>(null);
@@ -189,7 +201,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
 
   // The line with the distance along it at every point, and the days laid along it
   const pts = useMemo<Pt[]>(() => { const prof = trailProfile(trail); return trail.line.map((p, i) => ({ km: prof[i].km, lat: p[0], lng: p[1], ele: p[2] })); }, [trail]);
-  const bands = useMemo(() => dayMarks(trail, pts), [trail, pts]);
+  const bands = useMemo(() => (route.extended ? route.bands : dayMarks(trail, pts)), [route, trail, pts]);
   const profile = useMemo(() => {
     // The profile thinned to ~240 points, for the live chart
     const p = trailProfile(trail), n = 240, out: { km: number; ele: number }[] = [];
@@ -217,7 +229,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
     // Where the walker faces: a little behind to a little ahead, so switchbacks don't spin the camera
     const heading = (k: number) => bearing(at(k - 0.25), at(k + Math.max(0.8, total / 90)));
     const dayAt = (k: number) => bands.find((b) => b.from < b.to && k >= b.from && k < b.to) ?? null;
-    const events = calloutsFor(trail, bands);
+    const events = calloutsFor(trail, bands, route.summits);
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const s = {
@@ -250,7 +262,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
     const showCallout = (c: Callout) => {
       setCallout(c);
       clearTimeout(calloutTimer);
-      calloutTimer = window.setTimeout(() => setCallout((cur) => (cur?.key === c.key ? null : cur)), 5200);
+      calloutTimer = window.setTimeout(() => setCallout((cur) => (cur?.key === c.key ? null : cur)), 4200);
     };
     const paintProgress = () => {
       if (!map?.getLayer("fly-trail")) return;
@@ -297,7 +309,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       // walker down the screen and under the controls (or up behind the day card): look down
       // more steeply, as for a ridge in the way
       const sp = map.project([w.lng, w.lat]), h = map.getContainer().clientHeight;
-      if (h >= 560 && (sp.y > h - 250 || sp.y < 190)) return true;
+      if (h >= 560 && (sp.y > h - 200 || sp.y < 110)) return true;
       for (let i = 1; i < 9; i++) {
         const t = i / 10;
         const lng = cam.lng + (w.lng - cam.lng) * t, lat = cam.lat + (w.lat - cam.lat) * t, alt = camAlt + (wAlt - camAlt) * t;
@@ -431,7 +443,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
           container: box, style: USE_MAPBOX ? MAPBOX_STYLE : DARK_STYLE, bounds,
           // The whole trail in the open middle, clear of the title and day cards and the controls
           // (a short screen, like a phone on its side, just gets an even margin)
-          fitBoundsOptions: { padding: window.innerHeight >= 560 ? { top: 160, bottom: 240, left: 40, right: 40 } : 30 },
+          fitBoundsOptions: { padding: window.innerHeight >= 560 ? { top: 100, bottom: 200, left: 40, right: 40 } : 30 },
           pitch: 58, maxPitch: USE_MAPBOX ? 85 : 78, dragRotate: true,
           // Mapbox's own logo and credit stay as its terms ask; MapLibre's credit folds away
           ...(USE_MAPBOX ? { accessToken: MAPBOX_TOKEN, projection: "mercator" } : { attributionControl: { compact: true } }),
@@ -439,7 +451,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
         map.on("error", () => {}); // a missing tile isn't worth a console line each
         // Keep the walker in the open part of the screen, between the day card and the controls,
         // rather than the middle, which on a phone sits low and near the control bar
-        if (window.innerHeight >= 560) map.setPadding?.({ top: 120, bottom: 210, left: 0, right: 0 });
+        if (window.innerHeight >= 560) map.setPadding?.({ top: 70, bottom: 170, left: 0, right: 0 });
         map.on("style.load", () => {
           if (cancelled) return;
           if (USE_MAPBOX) setUpMapbox(); else setUpMapLibre();
@@ -500,17 +512,17 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
           // Context: named peaks around the trail from the map data, quiet and only once you're close
           const halo = { "text-halo-color": "rgba(10,12,16,0.85)", "text-halo-width": 1.4, "text-halo-blur": 0.4 };
           if (map.getSource("openmaptiles")) {
-            map.addLayer({ id: "fly-peak-dot", type: "circle", source: "openmaptiles", "source-layer": "mountain_peak", minzoom: 10, filter: ["has", "name"],
-              paint: { "circle-radius": 2, "circle-color": "rgba(255,255,255,0.7)", "circle-pitch-alignment": "viewport" } });
-            map.addLayer({ id: "fly-peak", type: "symbol", source: "openmaptiles", "source-layer": "mountain_peak", minzoom: 10, filter: ["has", "name"],
+            map.addLayer({ id: "fly-peak-dot", type: "circle", source: "openmaptiles", "source-layer": "mountain_peak", minzoom: 11, filter: ["has", "name"],
+              paint: { "circle-radius": 1.6, "circle-color": "rgba(255,255,255,0.55)", "circle-pitch-alignment": "viewport" } });
+            map.addLayer({ id: "fly-peak", type: "symbol", source: "openmaptiles", "source-layer": "mountain_peak", minzoom: 11, filter: ["has", "name"],
               layout: { "text-field": ["format", ["coalesce", ["get", "name_en"], ["get", "name:latin"], ["get", "name"]], {}, ["case", ["has", "ele"], ["concat", "\n", ["to-string", ["get", "ele"]], " m"], ""], { "font-scale": 0.85 }],
-                "text-font": ["Noto Sans Italic"], "text-size": 11, "text-anchor": "top", "text-offset": [0, 0.4], "text-padding": 8 },
-              paint: { "text-color": "rgba(235,240,248,0.62)", ...halo } });
+                "text-font": ["Noto Sans Italic"], "text-size": 9.5, "text-anchor": "top", "text-offset": [0, 0.4], "text-padding": 12 },
+              paint: { "text-color": "rgba(235,240,248,0.5)", ...halo } });
           }
 
           map.addSource("fly-line", { type: "geojson", lineMetrics: true, data: { type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: pts.map((p) => [p.lng, p.lat]) } } });
-          map.addLayer({ id: "fly-trail-casing", type: "line", source: "fly-line", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "rgba(0,0,0,0.55)", "line-width": 7 } });
-          map.addLayer({ id: "fly-trail", type: "line", source: "fly-line", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-width": 3.5, "line-gradient": ["step", ["line-progress"], "#ff5100", 0.0001, "rgba(255,255,255,0.55)"] } });
+          map.addLayer({ id: "fly-trail-casing", type: "line", source: "fly-line", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "rgba(0,0,0,0.6)", "line-width": 8 } });
+          map.addLayer({ id: "fly-trail", type: "line", source: "fly-line", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-width": 4.5, "line-gradient": ["step", ["line-progress"], "#ff5100", 0.0001, "rgba(255,255,255,0.55)"] } });
           // Road stretches between the treks: dashed blue over the trail line
           if (trail.drives?.length) {
             map.addSource("fly-roads", { type: "geojson", data: { type: "Feature", properties: {}, geometry: { type: "MultiLineString",
@@ -530,19 +542,19 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
             properties: { n: String(i + 1), first: i === 0, name: st.name, km: st.km, notable: NOTABLE.test(st.name) || st === top, ele: st.ele != null ? `${fmt(st.ele)} m` : "" },
             geometry: { type: "Point", coordinates: [st.lng, st.lat] },
           })) } });
-          map.addLayer({ id: "fly-stop", type: "circle", source: "fly-stops", paint: { "circle-radius": 10, "circle-color": ["case", ["get", "first"], "#16a34a", "#ff5100"], "circle-stroke-color": "#ffffff", "circle-stroke-width": 2, "circle-pitch-alignment": "viewport", "circle-pitch-scale": "viewport" } });
-          map.addLayer({ id: "fly-stop-n", type: "symbol", source: "fly-stops", layout: { "text-field": ["get", "n"], "text-font": FONT_BOLD, "text-size": 11, "text-allow-overlap": true, "text-ignore-placement": true, "text-pitch-alignment": "viewport" }, paint: { "text-color": ["case", ["get", "first"], "#ffffff", "#1c1814"] } });
+          map.addLayer({ id: "fly-stop", type: "circle", source: "fly-stops", paint: { "circle-radius": 7, "circle-color": ["case", ["get", "first"], "#16a34a", "#ff5100"], "circle-stroke-color": "#ffffff", "circle-stroke-width": 1.5, "circle-pitch-alignment": "viewport", "circle-pitch-scale": "viewport" } });
+          map.addLayer({ id: "fly-stop-n", type: "symbol", source: "fly-stops", layout: { "text-field": ["get", "n"], "text-font": FONT_BOLD, "text-size": 8.5, "text-allow-overlap": true, "text-ignore-placement": true, "text-pitch-alignment": "viewport" }, paint: { "text-color": ["case", ["get", "first"], "#ffffff", "#1c1814"] } });
           map.addLayer({ id: "fly-stop-name", type: "symbol", source: "fly-stops", layout: {
             "text-field": ["case", ["get", "notable"], ["format", ["get", "name"], { "font-scale": 1 }, "\n", {}, ["get", "ele"], { "font-scale": 0.82 }], ["get", "name"]],
-            "text-font": FONT_BOLD, "text-size": ["case", ["get", "notable"], 13, 11], "text-anchor": "left", "text-offset": [1.1, 0], "text-justify": "left",
-            "text-pitch-alignment": "viewport", "text-padding": 4,
-          }, paint: { "text-color": ["case", ["get", "notable"], "#ffd9c2", "rgba(255,255,255,0.85)"], ...halo } });
+            "text-font": FONT_BOLD, "text-size": ["case", ["get", "notable"], 11, 9.5], "text-anchor": "left", "text-offset": [0.9, 0], "text-justify": "left",
+            "text-pitch-alignment": "viewport", "text-padding": 6, "text-optional": true,
+          }, paint: { "text-color": ["case", ["get", "notable"], "#ffd9c2", "rgba(255,255,255,0.72)"], ...halo } });
           // Side summits off the line (Gokyo Ri, Kala Patthar): a triangle, name and height
           map.addSource("fly-side", { type: "geojson", data: { type: "FeatureCollection", features: trail.side.map((st) => ({ type: "Feature", properties: { label: `▲ ${st.name}${st.ele != null ? `\n${fmt(st.ele)} m` : ""}` }, geometry: { type: "Point", coordinates: [st.lng, st.lat] } })) } });
-          map.addLayer({ id: "fly-side", type: "symbol", source: "fly-side", layout: { "text-field": ["get", "label"], "text-font": FONT_BOLD, "text-size": 12, "text-anchor": "bottom", "text-pitch-alignment": "viewport" }, paint: { "text-color": "#a7f3e8", ...halo } });
+          map.addLayer({ id: "fly-side", type: "symbol", source: "fly-side", layout: { "text-field": ["get", "label"], "text-font": FONT_BOLD, "text-size": 10, "text-anchor": "bottom", "text-pitch-alignment": "viewport", "text-padding": 6 }, paint: { "text-color": "#a7f3e8", ...halo } });
 
           map.addSource("fly-walker", { type: "geojson", data: { type: "Feature", properties: {}, geometry: { type: "Point", coordinates: [pts[0].lng, pts[0].lat] } } });
-          map.addLayer({ id: "fly-walker-glow", type: "circle", source: "fly-walker", paint: { "circle-radius": 22, "circle-color": "rgba(255,154,102,0.45)", "circle-blur": 0.8, "circle-pitch-alignment": "viewport", "circle-pitch-scale": "viewport" } });
+          map.addLayer({ id: "fly-walker-glow", type: "circle", source: "fly-walker", paint: { "circle-radius": 15, "circle-color": "rgba(255,154,102,0.4)", "circle-blur": 0.8, "circle-pitch-alignment": "viewport", "circle-pitch-scale": "viewport" } });
           // The walker is a small hiker; until its image has loaded (or if it can't), a dot
           map.addLayer({ id: "fly-walker", type: "circle", source: "fly-walker", paint: { "circle-radius": 6, "circle-color": "#ffffff", "circle-stroke-color": "#ff5100", "circle-stroke-width": 3, "circle-pitch-alignment": "viewport", "circle-pitch-scale": "viewport" } });
           const hiker = new Image(64, 64), car = new Image(64, 64);
@@ -553,7 +565,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
             if (!map.hasImage("fly-car")) map.addImage("fly-car", car, { pixelRatio: 2 });
             map.removeLayer("fly-walker");
             map.addLayer({ id: "fly-walker", type: "symbol", source: "fly-walker", layout: {
-              "icon-image": s.car ? "fly-car" : "fly-hiker", "icon-size": 1, "icon-allow-overlap": true, "icon-ignore-placement": true, "icon-pitch-alignment": "viewport",
+              "icon-image": s.car ? "fly-car" : "fly-hiker", "icon-size": 0.8, "icon-allow-overlap": true, "icon-ignore-placement": true, "icon-pitch-alignment": "viewport",
             } });
           }).catch(() => { /* keep the dot */ });
 
@@ -583,7 +595,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       cleanups.forEach((f) => f());
       ctl.current = null; try { map?.remove(); } catch { /* already gone */ }
     };
-  }, [trail, total, bands, pts, effTotal]);
+  }, [trail, route, total, bands, pts, effTotal]);
 
   // Esc closes, Space plays and pauses; focus starts on Close
   useEffect(() => {
@@ -618,49 +630,42 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
       {/* MapLibre makes its container position: relative, so it fills a positioned wrapper */}
       <div className="absolute inset-0"><div ref={boxRef} className="w-full h-full" /></div>
 
-      {/* Title and close */}
-      <div className="absolute top-0 inset-x-0 p-3 sm:p-4 flex items-start gap-3 pointer-events-none">
-        <div className="tm-glass rounded-2xl px-4 py-3 min-w-0 pointer-events-auto">
-          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Fly the trail</p>
-          <h2 className="text-[16px] sm:text-[18px] font-bold text-white leading-tight truncate">{name}</h2>
+      {/* Title, the day you're on, and what you've just reached: one small stack in the top-left
+          corner, so the middle of the screen is the trail's */}
+      <div className="absolute top-0 inset-x-0 p-2.5 sm:p-3 flex items-start gap-2 pointer-events-none">
+        <div className="flex flex-col gap-1.5 w-[min(300px,calc(100vw-72px))]" aria-live="polite">
+          <div className="tm-glass rounded-xl px-3 py-2 pointer-events-auto">
+            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-white/45 truncate">Fly the trail · {name}</p>
+            {day ? (
+              <div key={day.n} className="tm-fly-day">
+                <p className="text-[13.5px] font-bold text-white leading-tight mt-0.5">
+                  <span className="text-[var(--tm-peach)]">Day {day.n}{dayCount > 1 ? `/${dayCount}` : ""}</span> · {day.title}
+                </p>
+                {day.sub && <p className="text-[11px] text-white/60 mt-0.5 tabular-nums leading-snug">{day.sub}</p>}
+                {(day.via || day.note) && <p className="hidden md:block text-[11px] text-white/50 mt-0.5 leading-snug line-clamp-2">{[day.via ? `via ${day.via}` : "", day.note ?? ""].filter(Boolean).join(" · ")}</p>}
+              </div>
+            ) : (
+              <p className="text-[13.5px] font-bold text-white leading-tight mt-0.5 truncate">{name}</p>
+            )}
+          </div>
+          {callout && (
+            <div key={callout.key} className="tm-fly-call tm-glass rounded-xl pl-1.5 pr-3 py-1.5 flex gap-2 items-center self-start max-w-full">
+              <span className="w-6 h-6 rounded-lg grid place-items-center shrink-0" style={{ background: callout.kind === "night" ? "rgba(111,240,224,0.14)" : callout.kind === "road" ? "rgba(59,130,246,0.2)" : "rgba(255,81,0,0.18)", color: callout.kind === "night" ? "#6ff0e0" : callout.kind === "road" ? "#93c5fd" : "#ff9a66" }}>
+                {callout.kind === "night" ? <BedDouble className="w-3.5 h-3.5" /> : callout.kind === "road" ? <Car className="w-3.5 h-3.5" /> : <Mountain className="w-3.5 h-3.5" />}
+              </span>
+              <span className="min-w-0 text-[12px] leading-tight truncate">
+                <b className="font-bold">{callout.title}</b>{callout.meta && <span className="text-white/60"> · {callout.meta}</span>}
+              </span>
+            </div>
+          )}
         </div>
         <button ref={closeRef} type="button" onClick={onClose} aria-label="Close the 3D view"
-          className="ml-auto tm-glass rounded-xl w-11 h-11 grid place-items-center text-white/80 hover:text-white pointer-events-auto"><X className="w-4 h-4" /></button>
+          className="ml-auto tm-glass rounded-xl w-10 h-10 grid place-items-center text-white/80 hover:text-white pointer-events-auto"><X className="w-4 h-4" /></button>
       </div>
-
-      {/* The day you're on, with its note from the itinerary */}
-      {day && (
-        <div className="absolute inset-x-0 top-[84px] sm:top-[92px] flex justify-center pointer-events-none px-4" aria-live="polite">
-          {/* On its own card: the Outdoors map is light, so bare text over it is hard to read */}
-          <div key={day.n} className="tm-fly-day tm-glass rounded-2xl px-4 py-2.5 sm:px-5 sm:py-3 text-center max-w-[560px]">
-            <p className="text-[10.5px] font-bold uppercase tracking-[0.18em] text-[var(--tm-peach)]">Day {day.n}{dayCount > 1 ? ` of ${dayCount}` : ""}</p>
-            <p className="text-[17px] sm:text-[22px] font-bold text-white leading-tight mt-0.5">{day.title}</p>
-            {day.sub && <p className="text-[12px] sm:text-[13px] text-white/70 mt-1 tabular-nums">{day.sub}{day.via ? ` · via ${day.via}` : ""}</p>}
-            {day.note && <p className="hidden sm:block text-[13px] text-white/60 mt-1.5 leading-snug">{day.note}</p>}
-          </div>
-        </div>
-      )}
-
-      {/* Reaching a high point or the night's camp */}
-      {callout && (
-        <div className="absolute inset-x-0 bottom-[214px] sm:bottom-[206px] flex justify-center pointer-events-none px-4" aria-live="polite">
-          <div key={callout.key} className="tm-fly-call tm-glass rounded-2xl px-4 py-3 max-w-[460px] flex gap-3 items-start">
-            <span className="w-9 h-9 rounded-xl grid place-items-center shrink-0" style={{ background: callout.kind === "night" ? "rgba(111,240,224,0.14)" : callout.kind === "road" ? "rgba(59,130,246,0.2)" : "rgba(255,81,0,0.18)", color: callout.kind === "night" ? "#6ff0e0" : callout.kind === "road" ? "#93c5fd" : "#ff9a66" }}>
-              {callout.kind === "night" ? <BedDouble className="w-4 h-4" /> : callout.kind === "road" ? <Car className="w-4 h-4" /> : <Mountain className="w-4 h-4" />}
-            </span>
-            <span className="min-w-0">
-              <span className="block text-[15px] font-bold leading-tight">{callout.title}</span>
-              {callout.meta && <span className="block text-[12px] text-white/65 mt-0.5">{callout.meta}</span>}
-              {/* The note on wider screens; on a phone it would cover the trail */}
-              {callout.note && <span className="hidden sm:block text-[12.5px] text-white/80 mt-1 leading-snug">{callout.note}</span>}
-            </span>
-          </div>
-        </div>
-      )}
 
       {/* Looking around: the walk carries on shortly, unless you stay */}
       {lookAround != null && (
-        <div className="absolute inset-x-0 top-[84px] sm:top-auto sm:bottom-[214px] flex justify-center px-4 pointer-events-none">
+        <div className="absolute inset-x-0 bottom-[150px] sm:bottom-[156px] flex justify-center px-4 pointer-events-none">
           <div className="tm-glass rounded-full pl-4 pr-1.5 py-1.5 flex items-center gap-2 text-[12.5px] pointer-events-auto" role="status">
             {lookAround === "stay" ? <span className="text-white/75">Looking around</span> : <span className="text-white/75 tabular-nums">Back to the trail in {lookAround}s</span>}
             {lookAround !== "stay" && <button type="button" onClick={() => ctl.current?.stay()} className="h-8 px-3 rounded-full text-[12px] font-semibold text-white/80 hover:text-white bg-white/5 hover:bg-white/10">Stay here</button>}
@@ -676,17 +681,17 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
 
       {/* Controls, and the live profile that doubles as the scrubber */}
       {/* Bottom padding keeps the bar clear of the map's credit in the corner */}
-      <div className="absolute bottom-0 inset-x-0 px-3 pt-3 pb-9 sm:px-4 sm:pt-4 sm:pb-9 pointer-events-none">
-        <div className="tm-glass rounded-2xl p-3 max-w-[760px] mx-auto pointer-events-auto">
+      <div className="absolute bottom-0 inset-x-0 px-2.5 pt-2 pb-8 sm:px-4 sm:pb-8 pointer-events-none">
+        <div className="tm-glass rounded-2xl px-3 py-2.5 max-w-[680px] mx-auto pointer-events-auto">
           <div className="flex items-center gap-2">
-            <button type="button" onClick={() => ctl.current?.toggle()} disabled={!ready} className="tm-btn tm-btn-primary !h-10 !px-4 min-w-[96px]" aria-label={playing ? "Pause" : "Play"}>
+            <button type="button" onClick={() => ctl.current?.toggle()} disabled={!ready} className="tm-btn tm-btn-primary !h-9 !px-3.5 min-w-[88px]" aria-label={playing ? "Pause" : "Play"}>
               {playing ? <><Pause className="w-3.5 h-3.5" /> Pause</> : <><Play className="w-3.5 h-3.5" /> {km > 0 && km < total ? "Play" : "Play trail"}</>}
             </button>
-            <button type="button" onClick={() => ctl.current?.restart()} disabled={!ready} className="tm-btn !h-10 !w-10 !px-0" aria-label="From the start"><RotateCcw className="w-3.5 h-3.5" /></button>
+            <button type="button" onClick={() => ctl.current?.restart()} disabled={!ready} className="tm-btn !h-9 !w-9 !px-0" aria-label="From the start"><RotateCcw className="w-3.5 h-3.5" /></button>
             <div className="flex rounded-xl overflow-hidden border border-white/10" role="group" aria-label="Speed">
               {SPEEDS.map((v) => (
                 <button key={v} type="button" onClick={() => ctl.current?.speed(v)} aria-pressed={speed === v}
-                  className={`h-10 px-2.5 text-[12px] font-bold tabular-nums ${speed === v ? "bg-white/15 text-white" : "text-white/55 hover:text-white"}`}>{v}×</button>
+                  className={`h-9 px-2.5 text-[12px] font-bold tabular-nums ${speed === v ? "bg-white/15 text-white" : "text-white/55 hover:text-white"}`}>{v}×</button>
               ))}
             </div>
             <p className="ml-auto text-right text-[11.5px] text-white/60 tabular-nums leading-tight">
@@ -696,7 +701,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
           </div>
 
           {/* Day markers: tap one to go to the start of that day */}
-          <div className="relative h-5 mt-2.5" aria-label="Days">
+          <div className="relative h-5 mt-2" aria-label="Days">
             {walkBands.map((b, i) => (i % every === 0 || day?.n === b.day) && (
               <button key={b.day} type="button" onClick={() => ctl.current?.seekKm(b.from + 0.01)} title={b.label}
                 aria-label={`Go to day ${b.day}`} aria-current={day?.n === b.day || undefined}
@@ -721,7 +726,7 @@ export default function TrailFlyover({ name, trail, onClose }: { name: string; t
               if (step) { e.preventDefault(); ctl.current?.seekKm(kmOfEff(clamp(frac + step, 0, 1) * effTotal)); }
             }}
           >
-            <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="block w-full h-12 sm:h-14" aria-hidden>
+            <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="block w-full h-9 sm:h-10" aria-hidden>
               <defs>
                 <clipPath id="tm-fly-done"><rect x="0" y="0" width={x(km)} height={H} /></clipPath>
               </defs>
