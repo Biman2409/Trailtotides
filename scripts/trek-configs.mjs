@@ -197,6 +197,9 @@ export const TREKS = {
 
   "bali-pass": {
     near: "Uttarkashi, Uttarakhand",
+    // Below Lower Dhamni towards Janki Chatti there's no mapped path: guide points read off a Wikiloc
+    // track (Janakichatti to Lower Dhamni via Jamunotri (41438326))
+    gapGuides: [[[30.99836, 78.45408], [30.99774, 78.45481], [30.9968, 78.45584], [30.996, 78.45577], [30.99524, 78.45584], [30.9944, 78.45592], [30.99378, 78.45628]]],
     stops: [
       { name: "Taluka", at: [31.07782, 78.24579] },
       { name: "Seema", at: [31.11703, 78.34994] },
@@ -626,14 +629,16 @@ export const TREKS = {
       { name: "Dhanderas Thach", q: "Dhandreyas Thach Campsite", at: [31.322, 78.1287] },
       { name: "Upper Waterfall", q: "Upper Waterfall Campsite", at: [31.3326, 78.1448] },
       { name: "Rupin Pass", q: "Rupin Ghati", at: [31.3542, 78.1544] },
-      { name: "Sangla Kanda", at: [31.3982, 78.2337] },
+      { name: "Sangla Kanda", at: [31.39663, 78.23394], exact: true }, // on the path, as the track passes
       { name: "Sangla", at: [31.4259, 78.2637] },
     ],
     // Villages and a camp the map doesn't name: Jiskun and Jhaka up the Rupin valley, Ronti Gad below the pass
     camps: {
-      Jiskun: ["Sewa", "Buras Kandi", 0.35, ["Jiskoon"]],
+      // Jiskun and Ronti Gad on the path, where a Wikiloc track (Rupin Pass (135879090)) passes them;
+      // OSM's points sit 100-180 m off it
+      Jiskun: ["Sewa", "Buras Kandi", 0.35, ["Jiskoon"], [31.24379, 78.09847]],
       Jhaka: ["Sewa", "Buras Kandi", 0.65, ["Jakha"]],
-      "Ronti Gad": ["Rupin Pass", "Sangla Kanda", 0.35, ["Ronthi Got", "Ronti Got"]],
+      "Ronti Gad": ["Rupin Pass", "Sangla Kanda", 0.35, ["Ronthi Got", "Ronti Got"], [31.36299, 78.19624]],
     },
     days: [
       { to: "Sewa", note: "From the road at Dhaula along the Rupin river to Sewa and its old wooden temple" },
@@ -982,7 +987,7 @@ export const TREKS = {
       { name: "Tunda Bhuj", at: [31.9711, 77.59167] },
       { name: "Thakur Kuan", at: [31.95332, 77.64521] },
       { name: "Odi Thach", at: [31.9269, 77.70268] },
-      { name: "Mantalai", at: [31.86779, 77.78389], ele: 4120 }, // OSM 4,248 m; operators 4,100–4,150
+      { name: "Mantalai", at: [31.86775, 77.78228], exact: true, ele: 4120 }, // on the path by the lake (OSM's point is 150 m out); // OSM 4,248 m; operators 4,100–4,150
       { name: "Pin Parvati Pass", at: [31.8355, 77.84444], ele: 5319 },
       // The Spiti side from ultrajourneys.org's recorded trail ("Shepherd Camp to Mudh"): the
       // shepherds' camp below the glacier where it starts, and its end above Tiya's meadows
@@ -1049,7 +1054,8 @@ export const TREKS = {
       Nichnai: ["Sonamarg", "Vishansar Lake", 0.45, ["Nichinai", "Nichnai Camp"]],
       "Nichnai Pass": ["Sonamarg", "Vishansar Lake", 0.7, ["Nichinai Pass", "Nichinai Bal", "Nichnai Bal"]],
       "Gadsar Pass": ["Vishansar Lake", "Gadsar Lake", 0.5, ["Gadsar Bal"]],
-      Satsar: ["Gadsar Lake", "Gangbal Lake", 0.45, ["Satsar Lake", "Satsar Lakes", "Satsar Camp"]],
+      // On the path; OSM's camp point is 150 m off it
+      Satsar: ["Gadsar Lake", "Gangbal Lake", 0.45, ["Satsar Lake", "Satsar Lakes", "Satsar Camp"], [34.43935, 74.9948]],
       // OSM's Zajibal Gali, the pass (4,073 m on the elevation model)
       "Zaj Pass": ["Gadsar Lake", "Gangbal Lake", 0.75, ["Zach Pass", "Zajibal Pass", "Zajibal"], [34.42863, 74.97433]],
     },
@@ -1080,8 +1086,10 @@ export const TREKS = {
       { name: "Tarsar Lake", q: "Tar Sar", at: [34.1320, 75.14] },
       // Where the line tops out between the lake and Sundersar: the trek's high point
       { name: "Tarsar Pass", at: [34.15163, 75.11059], exact: true },
-      { name: "Sundersar", at: [34.15611, 75.11275] },
-      { name: "Marsar Lake", q: "Mar Sar", at: [34.14426, 75.10983] },
+      { name: "Sundersar", at: [34.15757, 75.1122], exact: true }, // the camp on the path by the lake; OSM's point is mid-lake
+      // Where the mapped path ends on the ridge above the lake, the viewpoint treks turn back at
+
+      { name: "Marsar Lake", at: [34.14619, 75.11213], exact: true },
     ],
     camps: {
       // OSM's Sekiwas, the shepherds' huts: 3,424 m on the elevation model (published about 3,400 m)

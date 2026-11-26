@@ -1,6 +1,6 @@
 # Trail quality
 
-55 trails checked: 1 need fixing, 28 worth a look, 26 clean.
+55 trails checked: 1 need fixing, 27 worth a look, 27 clean.
 
 ## roopkund (29.6 km, 2900 m up)
 - **Fix** · off-line: Wan is 4021 m from the line
@@ -26,9 +26,9 @@
 - Check · straight: 1 straight segment over 500 m (530 m at km 13.5)
 - Check · spikes: 1 step steeper than 1 in 1 (first at km 62.7)
 
-## bali-pass (42.7 km, 3000 m up, 0.5 km estimated)
-- Check · straight: 2 straight segments over 500 m (731 m at km 38.7, 594 m at km 3.8)
-- Check · estimated: 0.5 km drawn along the terrain (no mapped path)
+## bali-pass (43 km, 2980 m up)
+- Check · straight: 1 straight segment over 500 m (594 m at km 3.8)
+- Check · spikes: 1 height spike (worst 84 m at km 38.4)
 
 ## dayara-bugyal (12.2 km, 1520 m up, 0.5 km estimated)
 - Check · straight: 1 straight segment over 500 m (607 m at km 11.8)
@@ -46,25 +46,9 @@
 - Check · off-line: Pheriche is 577 m from the line
 - Check · stop height: Pheriche: stop at 4253 m, line at 4426 m where it passes
 
-## kashmir-great-lakes (67.1 km, 3010 m up, 0.2 km estimated)
-- Check · straight: 3 straight segments over 500 m (787 m at km 1.1, 766 m at km 28.1, 518 m at km 43.4)
-- Check · estimated: 0.2 km drawn along the terrain (no mapped path)
-
-## pin-parvati-pass (80.5 km, 3350 m up, 0.3 km estimated)
-- Check · straight: 2 straight segments over 500 m (538 m at km 35.6, 520 m at km 30.2)
-- Check · estimated: 0.3 km drawn along the terrain (no mapped path)
-
 ## rudranath-kalpeshwar (47 km, 3690 m up)
 - Check · days: day 1 (Kalpeshwar to Bansi Narayan) climbs 1550 m
 - Check · days: day 3 (Dumak to Rudranath) climbs 1750 m
-
-## rupin-pass (54.4 km, 3580 m up, 0.7 km estimated)
-- Check · spikes: 1 height spike (worst 82 m at km 18.5)
-- Check · estimated: 0.7 km drawn along the terrain (no mapped path)
-
-## tarsar-marsar-trek (33.5 km, 2070 m up, 0.6 km estimated)
-- Check · straight: 1 straight segment over 500 m (713 m at km 27.7)
-- Check · estimated: 0.6 km drawn along the terrain (no mapped path)
 
 ## bagini-glacier (8 km, 1410 m up)
 - Check · straight: 2 straight segments over 500 m (792 m at km 8.0, 639 m at km 7.2)
@@ -84,6 +68,9 @@
 ## kareri-lake (6.6 km, 1190 m up, 0.2 km estimated)
 - Check · estimated: 0.2 km drawn along the terrain (no mapped path)
 
+## kashmir-great-lakes (65.7 km, 2990 m up)
+- Check · straight: 3 straight segments over 500 m (787 m at km 1.1, 766 m at km 28.1, 518 m at km 43.4)
+
 ## kedarnath (14.3 km, 1520 m up)
 - Check · days: day 1 (Gaurikund to Kedarnath) climbs 1520 m
 
@@ -99,6 +86,9 @@
 ## pin-bhaba-pass (49.3 km, 2680 m up)
 - Check · straight: 1 straight segment over 500 m (610 m at km 45.8)
 
+## pin-parvati-pass (80.2 km, 3310 m up)
+- Check · straight: 2 straight segments over 500 m (538 m at km 35.6, 520 m at km 30.2)
+
 ## rudranath (14.5 km, 2100 m up)
 - Check · days: day 1 (Sagar to Panar) climbs 1790 m
 
@@ -108,6 +98,9 @@
 ## surya-top (16.6 km, 1680 m up)
 - Check · straight: 1 straight segment over 500 m (569 m at km 11.4)
 
+## tarsar-marsar-trek (33 km, 2060 m up)
+- Check · straight: 1 straight segment over 500 m (713 m at km 27.7)
+
 ## Clean
 
-ali-bedni-bugyal, beas-kund, bhrigu-lake, brahmatal, buran-ghati, everest-base-camp-gokyo-lakes, everest-three-passes, gaumukh-tapovan, goechala, gokyo-lakes, hampta-pass, har-ki-dun, kedarkantha-trek, khopra-danda, kuari-pass, pangarchulla-peak, panwali-kantha, phulara-ridge, pindari-glacier, ranthan-kharak, sandakphu-phalut-trek, satopanth-lake, triund, tungnath-chandrashila, valley-of-flowers, yulla-kanda
+ali-bedni-bugyal, beas-kund, bhrigu-lake, brahmatal, buran-ghati, everest-base-camp-gokyo-lakes, everest-three-passes, gaumukh-tapovan, goechala, gokyo-lakes, hampta-pass, har-ki-dun, kedarkantha-trek, khopra-danda, kuari-pass, pangarchulla-peak, panwali-kantha, phulara-ridge, pindari-glacier, ranthan-kharak, rupin-pass, sandakphu-phalut-trek, satopanth-lake, triund, tungnath-chandrashila, valley-of-flowers, yulla-kanda

@@ -107,3 +107,15 @@ Downloaded but not reaching the gap:
 Rebuilt 2026-11-26: Panch Kedar has no stretch left without tracking data. Kashmir Great Lakes:
 the Sonamarg-side gap is closed; Gadsar → Gangbal (km 45.2–45.4, 190 m) is still open although its
 chain is set, so the KGL 4 track may not quite meet the line there.
+
+### Third batch (2026-11-26)
+
+Closed: Bali Pass (below Lower Dhamni, from 41438326), Rupin Pass (Jiskun, Ronti Gad and Sangla
+Kanda onto the path where 135879090 passes them), Kashmir Great Lakes (Satsar camp onto the path),
+Tarsar Marsar (Sundersar's camp and the Marsar viewpoint where the mapped path reaches them), Pin
+Parvati (Mantalai onto the path by the lake), Buran Ghati, Gaumukh and Har Ki Dun (camp markers
+onto the path).
+Still open, and no track yet reaches them (Raithal–Gui, Gui–Chilapada, Kareri and the Darwa top
+track all stop short): Doodhpathri (Gurwansar → Tosa Maidan, 1.7 km), Dodital (up to Darwa Pass,
+0.8 km), Dayara Bugyal (ridge down to the camp, 0.55 km), Kareri (0.17 km just below where the
+Kareri track starts).
